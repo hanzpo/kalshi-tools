@@ -81,7 +81,7 @@
   min-height: 240px;
 }
 
-.landing-option--betslip {
+.landing-option--tradeslip {
   background: linear-gradient(135deg, rgba(124, 244, 204, 0.96) 0%, rgba(18, 155, 110, 0.98) 55%, rgba(3, 125, 82, 0.95) 100%);
 }
 
@@ -153,7 +153,7 @@
   z-index: 1;
 }
 
-.landing-option--betslip .option-icon {
+.landing-option--tradeslip .option-icon {
   background: linear-gradient(135deg, rgba(9, 194, 133, 0.26) 0%, rgba(0, 180, 120, 0.16) 100%);
 }
 

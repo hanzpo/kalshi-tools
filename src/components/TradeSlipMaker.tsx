@@ -1,10 +1,10 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { BetSlipConfig, BetSlipMode, ParlayLeg } from '../types';
+import { TradeSlipConfig, TradeSlipMode, ParlayLeg } from '../types';
 import '../components/ControlPanel.css';
 
-interface BetSlipMakerProps {
-  config: BetSlipConfig;
-  onConfigChange: (config: Partial<BetSlipConfig>) => void;
+interface TradeSlipMakerProps {
+  config: TradeSlipConfig;
+  onConfigChange: (config: Partial<TradeSlipConfig>) => void;
   onImageUpload: (file: File) => void;
   onExport: () => void;
   onCopyToClipboard: () => void;
@@ -38,21 +38,21 @@ function calculateAmericanPayout(wager: number, odds: number): number {
 
 const BRAND_GREEN = '#09C285';
 
-export function BetSlipMaker({
+export function TradeSlipMaker({
   config,
   onConfigChange,
   onImageUpload,
   onExport,
   onCopyToClipboard,
   onBack,
-}: BetSlipMakerProps) {
+}: TradeSlipMakerProps) {
   const [isDragging, setIsDragging] = useState(false);
   const isSingleMode = config.mode === 'single';
   const payout = isSingleMode
     ? calculateSinglePayout(config.wager, config.odds)
     : calculateAmericanPayout(config.wager, config.parlayOdds);
 
-  function handleModeChange(mode: BetSlipMode) {
+  function handleModeChange(mode: TradeSlipMode) {
     if (mode === config.mode) return;
 
     if (mode === 'parlay' && config.parlayLegs.length === 0) {
@@ -139,13 +139,13 @@ export function BetSlipMaker({
         <span aria-hidden="true">&larr;</span>
         Back
       </button>
-      <h1 className="panel-title">Bet Slip Maker</h1>
+      <h1 className="panel-title">Trade Slip Maker</h1>
       <p className="panel-subtitle">
-        Create Kalshi-style bet slips
+        Create Kalshi-style trade slips
       </p>
 
       <div className="control-group">
-        <label>Bet Slip Type</label>
+        <label>Trade Slip Type</label>
         <div className="segmented-control">
           <button
             type="button"
@@ -460,7 +460,7 @@ export function BetSlipMaker({
           />
           <span>Show Watermark</span>
         </label>
-        <p className="help-text">Display watermark on bet slip</p>
+        <p className="help-text">Display watermark on trade slip</p>
       </div>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '24px' }}>
@@ -482,5 +482,4 @@ export function BetSlipMaker({
     </div>
   );
 }
-
 

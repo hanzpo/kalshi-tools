@@ -20,7 +20,7 @@ export function LandingPage() {
             </span>
             <span className="landing-title-text">Tools</span>
           </h1>
-          <p>Make fake Kalshi charts and bet slips.</p>
+          <p>Make fake Kalshi charts and trade slips.</p>
         </header>
 
         <div className="landing-grid">
@@ -49,7 +49,7 @@ export function LandingPage() {
             </div>
           </Link>
 
-          <Link to="/bet-slip" className="landing-option landing-option--betslip">
+          <Link to="/trade-slip" className="landing-option landing-option--tradeslip">
             <div className="option-body">
               <div className="option-header">
                 <span className="option-icon" aria-hidden="true">
@@ -62,11 +62,11 @@ export function LandingPage() {
                 </span>
                 <div className="option-title-group">
                   <span className="option-subtitle">Create a</span>
-                  <span className="option-label">Bet Slip</span>
+                  <span className="option-label">Trade Slip</span>
                 </div>
               </div>
               <p className="option-description">
-                Build realistic Kalshi bet slips with customizable questions, answers, wager amounts, odds, automatic payout calculations, and optional images.
+                Build realistic Kalshi trade slips with customizable questions, answers, wager amounts, odds, automatic payout calculations, and optional images.
               </p>
               <span className="option-cta">Open builder &rarr;</span>
             </div>

@@ -1,5 +1,5 @@
 export type MarketType = 'binary' | 'multi';
-export type BetSlipMode = 'single' | 'parlay';
+export type TradeSlipMode = 'single' | 'parlay';
 export type TimeHorizon = '6H' | '1D' | '1W' | '1M' | 'ALL';
 
 export interface Outcome {
@@ -38,8 +38,8 @@ export interface ParlayLeg {
   image: string | null;
 }
 
-export interface BetSlipConfig {
-  mode: BetSlipMode;
+export interface TradeSlipConfig {
+  mode: TradeSlipMode;
   title: string;
   marketName: string;
   outcome: string;

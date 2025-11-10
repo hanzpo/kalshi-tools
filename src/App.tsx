@@ -4,7 +4,7 @@ import { LandingPage } from './components/LandingPage';
 import './App.css';
 
 const ChartBuilder = lazy(() => import('./pages/ChartBuilder'));
-const BetSlipBuilder = lazy(() => import('./pages/BetSlipBuilder'));
+const TradeSlipBuilder = lazy(() => import('./pages/TradeSlipBuilder'));
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/chart" element={<ChartBuilder />} />
-          <Route path="/bet-slip" element={<BetSlipBuilder />} />
+          <Route path="/trade-slip" element={<TradeSlipBuilder />} />
           <Route path="*" element={<LandingPage />} />
         </Routes>
       </Suspense>

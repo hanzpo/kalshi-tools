@@ -1,4 +1,4 @@
-.bet-slip-container {
+.trade-slip-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,7 +7,7 @@
   width: 100%;
 }
 
-.bet-slip-preview {
+.trade-slip-preview {
   position: relative;
   width: clamp(320px, 90vw, 500px);
   max-width: 500px;
@@ -20,13 +20,13 @@
   --d: clamp(8px, 1.5vw, 10px);
 }
 
-.bet-slip-logo {
+.trade-slip-logo {
   width: clamp(60px, 10vw, 80px);
   height: auto;
   color: inherit;
 }
 
-.bet-slip-content {
+.trade-slip-content {
   background: white;
   border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
   margin: 0 clamp(8px, 2vw, 16px);
@@ -49,7 +49,7 @@
   mask-composite: exclude;
 }
 
-.bet-slip-question {
+.trade-slip-question {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -57,13 +57,13 @@
   padding-right: 0;
 }
 
-.bet-slip-question-copy {
+.trade-slip-question-copy {
   flex: 1;
   min-width: 0;
   width: 100%;
 }
 
-.bet-slip-market-name {
+.trade-slip-market-name {
   font-size: clamp(16px, 4vw, 20px);
   font-weight: 500;
   color: #4b5563;
@@ -71,13 +71,13 @@
   line-height: 1.35;
 }
 
-.bet-slip-market-name-large {
+.trade-slip-market-name-large {
   font-size: clamp(20px, 5vw, 28px);
   font-weight: 600;
   margin: 0 0 clamp(8px, 2vw, 14px) 0;
 }
 
-.bet-slip-outcome {
+.trade-slip-outcome {
   font-size: clamp(26px, 6vw, 38px);
   font-weight: 700;
   color: #111827;
@@ -86,13 +86,13 @@
   word-break: break-word;
 }
 
-.bet-slip-image-container {
+.trade-slip-image-container {
   flex-shrink: 0;
   align-self: flex-start;
   margin: 0 0 clamp(8px, 1.5vw, 12px) 0;
 }
 
-.bet-slip-image {
+.trade-slip-image {
   width: clamp(60px, 12vw, 80px);
   height: clamp(60px, 12vw, 80px);
   border-radius: clamp(8px, 2vw, 12px);
@@ -100,7 +100,7 @@
   border: none;
 }
 
-.bet-slip-answer {
+.trade-slip-answer {
   font-size: clamp(16px, 3.5vw, 20px);
   font-weight: 500;
   color: #00C688;
@@ -108,7 +108,7 @@
   line-height: 1.3;
 }
 
-.bet-slip-top-section {
+.trade-slip-top-section {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -116,57 +116,57 @@
   min-height: clamp(15px, 3vw, 20px);
 }
 
-.bet-slip-brand-container {
+.trade-slip-brand-container {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
   flex-shrink: 0;
 }
 
-.bet-slip-brand {
+.trade-slip-brand {
   display: inline-flex;
   color: #09C285;
   text-decoration: none;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.bet-slip-brand:hover {
+.trade-slip-brand:hover {
   opacity: 0.85;
   transform: translateY(-1px);
 }
 
-.bet-slip-details {
+.trade-slip-details {
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 2vw, 18px);
 }
 
-.bet-slip-row {
+.trade-slip-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.bet-slip-label {
+.trade-slip-label {
   font-size: clamp(16px, 3vw, 20px);
   color: #666666;
   font-weight: 400;
   line-height: 1.3;
 }
 
-.bet-slip-value {
+.trade-slip-value {
   font-size: clamp(18px, 3.5vw, 22px);
   color: #1a1a1a;
   font-weight: 500;
   line-height: 1.3;
 }
 
-.bet-slip-payout-row {
+.trade-slip-payout-row {
   margin-top: 0;
   padding-top: 0;
 }
 
-.bet-slip-payout {
+.trade-slip-payout {
   font-size: clamp(24px, 6vw, 36px);
   color: #00C688;
   font-weight: 700;
@@ -175,7 +175,7 @@
 
 /* Footer elements removed; scallops are punched out of the white card itself */
 
-.bet-slip-watermark {
+.trade-slip-watermark {
   position: absolute;
   bottom: clamp(25px, 5vw, 42px);
   right: clamp(16px, 3vw, 24px);
@@ -185,26 +185,26 @@
   z-index: 10;
 }
 
-/* Responsive breakpoints for bet slip preview */
+/* Responsive breakpoints for trade slip preview */
 
 /* Tablet and smaller screens */
 @media (max-width: 1024px) {
-  .bet-slip-container {
+  .trade-slip-container {
     padding: clamp(16px, 3vw, 24px);
   }
 }
 
 /* Mobile landscape and small tablets */
 @media (max-width: 768px) {
-  .bet-slip-container {
+  .trade-slip-container {
     padding: clamp(12px, 2vw, 16px);
   }
 
-  .bet-slip-top-section {
+  .trade-slip-top-section {
     gap: clamp(8px, 1.5vw, 12px);
   }
 
-  .bet-slip-image {
+  .trade-slip-image {
     width: clamp(50px, 10vw, 60px);
     height: clamp(50px, 10vw, 60px);
   }
@@ -212,30 +212,30 @@
 
 /* Mobile portrait */
 @media (max-width: 480px) {
-  .bet-slip-container {
+  .trade-slip-container {
     padding: 12px;
   }
 
-  .bet-slip-preview {
+  .trade-slip-preview {
     width: 100%;
     max-width: 100%;
   }
 
-  .bet-slip-content {
+  .trade-slip-content {
     margin: 0 8px;
     padding: 16px;
   }
 
-  .bet-slip-image {
+  .trade-slip-image {
     width: 50px;
     height: 50px;
   }
 
-  .bet-slip-details {
+  .trade-slip-details {
     gap: 12px;
   }
 
-  .bet-slip-payout-row {
+  .trade-slip-payout-row {
     margin-top: 0;
     padding-top: 0;
   }
@@ -243,28 +243,28 @@
 
 /* Very small screens */
 @media (max-width: 360px) {
-  .bet-slip-container {
+  .trade-slip-container {
     padding: 8px;
   }
 
-  .bet-slip-content {
+  .trade-slip-content {
     margin: 0 6px;
     padding: 12px;
   }
 
-  .bet-slip-image {
+  .trade-slip-image {
     width: 40px;
     height: 40px;
   }
 }
 
-.bet-slip-preview.parlay-mode {
+.trade-slip-preview.parlay-mode {
   /* Black background for parlay */
   background: #000000;
 }
 
-.parlay-card.bet-slip-content {
-  /* Inherit all the base bet-slip-content styles */
+.parlay-card.trade-slip-content {
+  /* Inherit all the base trade-slip-content styles */
   display: flex;
   flex-direction: column;
   gap: clamp(16px, 3vw, 22px);
@@ -401,3 +401,4 @@
     gap: 6px;
   }
 }
+

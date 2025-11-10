@@ -1,8 +1,8 @@
-import { BetSlipConfig } from '../types';
-import './BetSlipPreview.css';
+import { TradeSlipConfig } from '../types';
+import './TradeSlipPreview.css';
 
-interface BetSlipPreviewProps {
-  config: BetSlipConfig;
+interface TradeSlipPreviewProps {
+  config: TradeSlipConfig;
 }
 
 function calculateSinglePayout(wager: number, odds: number): number {
@@ -23,7 +23,7 @@ function formatAmericanOdds(odds: number): string {
   return odds > 0 ? `+${odds}` : `${odds}`;
 }
 
-export function BetSlipPreview({ config }: BetSlipPreviewProps) {
+export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isParlay = config.mode === 'parlay';
   const payout = isParlay
     ? calculateAmericanPayout(config.wager, config.parlayOdds)
@@ -33,7 +33,7 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
     ? config.title
     : isParlay
       ? 'Parlay'
-      : 'Untitled Bet Slip';
+      : 'Untitled Trade Slip';
 
   const marketName = (config.marketName?.trim() || config.title.trim())
     || 'Market name goes here';
@@ -41,16 +41,16 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
   const tradeColor = config.tradeSide === 'No' ? '#d91616' : '#00C688';
 
   return (
-    <div className="bet-slip-container">
+    <div className="trade-slip-container">
       <div
-        id="bet-slip-preview"
-        className={`bet-slip-preview${isParlay ? ' parlay-mode' : ''}`}
+        id="trade-slip-preview"
+        className={`trade-slip-preview${isParlay ? ' parlay-mode' : ''}`}
       >
         {isParlay ? (
-          <div className="parlay-card bet-slip-content">
+          <div className="parlay-card trade-slip-content">
             <div className="parlay-header">
               <span className="parlay-label">{title}</span>
-              <div className="bet-slip-brand-container">
+              <div className="trade-slip-brand-container">
                 <a
                   href="https://kalshi.com/?utm_source=kalshitools"
                   target="_blank"
@@ -63,7 +63,7 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
                     viewBox="0 0 78 20"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="bet-slip-logo"
+                    className="trade-slip-logo"
                   >
                     <path
                       d="M40.1043 0H36.0332V19.9986H40.1043V0Z"
@@ -154,23 +154,23 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
           </div>
         ) : (
           <>
-            <div className="bet-slip-content">
-              <div className="bet-slip-top-section">
-                <div className="bet-slip-image-container">
+            <div className="trade-slip-content">
+              <div className="trade-slip-top-section">
+                <div className="trade-slip-image-container">
                   {config.image && (
                     <img
                       src={config.image}
-                      alt="Bet slip"
-                      className="bet-slip-image"
+                      alt="Trade slip"
+                      className="trade-slip-image"
                     />
                   )}
                 </div>
-                <div className="bet-slip-brand-container">
+                <div className="trade-slip-brand-container">
                   <a
                     href="https://kalshi.com/?utm_source=kalshitools"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bet-slip-brand"
+                    className="trade-slip-brand"
                   >
                     <svg
                       width="78"
@@ -178,7 +178,7 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
                       viewBox="0 0 78 20"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      className="bet-slip-logo"
+                      className="trade-slip-logo"
                     >
                       <path
                         d="M40.1043 0H36.0332V19.9986H40.1043V0Z"
@@ -217,16 +217,16 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
                 </div>
               </div>
 
-              <div className="bet-slip-question">
-                <div className="bet-slip-question-copy">
+              <div className="trade-slip-question">
+                <div className="trade-slip-question-copy">
                   <div 
-                    className={`bet-slip-market-name${!outcome ? ' bet-slip-market-name-large' : ''}`}
+                    className={`trade-slip-market-name${!outcome ? ' trade-slip-market-name-large' : ''}`}
                   >
                     {marketName}
                   </div>
-                  {outcome && <div className="bet-slip-outcome">{outcome}</div>}
+                  {outcome && <div className="trade-slip-outcome">{outcome}</div>}
                   <div
-                    className="bet-slip-answer"
+                    className="trade-slip-answer"
                     style={{ color: tradeColor }}
                   >
                     I traded {config.tradeSide}
@@ -234,22 +234,22 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
                 </div>
               </div>
 
-              <div className="bet-slip-details">
-                <div className="bet-slip-row">
-                  <span className="bet-slip-label">Cost</span>
-                  <span className="bet-slip-value">
+              <div className="trade-slip-details">
+                <div className="trade-slip-row">
+                  <span className="trade-slip-label">Cost</span>
+                  <span className="trade-slip-value">
                     ${config.wager.toLocaleString()}
                   </span>
                 </div>
-                <div className="bet-slip-row">
-                  <span className="bet-slip-label">Odds</span>
-                  <span className="bet-slip-value">
+                <div className="trade-slip-row">
+                  <span className="trade-slip-label">Odds</span>
+                  <span className="trade-slip-value">
                     {config.odds}% chance
                   </span>
                 </div>
-                <div className="bet-slip-row bet-slip-payout-row">
-                  <span className="bet-slip-label">Payout if win</span>
-                  <span className="bet-slip-payout">
+                <div className="trade-slip-row trade-slip-payout-row">
+                  <span className="trade-slip-label">Payout if win</span>
+                  <span className="trade-slip-payout">
                     ${payout.toLocaleString()}
                   </span>
                 </div>
@@ -259,7 +259,7 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
         )}
 
         {config.showWatermark && (
-          <div className="bet-slip-watermark">
+          <div className="trade-slip-watermark">
             kalshi.tools
           </div>
         )}
@@ -267,3 +267,4 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
     </div>
   );
 }
+

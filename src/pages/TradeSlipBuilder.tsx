@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BetSlipConfig } from '../types';
-import { BetSlipMaker } from '../components/BetSlipMaker';
-import { BetSlipPreview } from '../components/BetSlipPreview';
+import { TradeSlipConfig } from '../types';
+import { TradeSlipMaker } from '../components/TradeSlipMaker';
+import { TradeSlipPreview } from '../components/TradeSlipPreview';
 import { ImageCropper } from '../components/ImageCropper';
 import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
 import '../App.css';
 
-const BET_SLIP_PREVIEW_ID = 'bet-slip-preview';
+const TRADE_SLIP_PREVIEW_ID = 'trade-slip-preview';
 
 function createFileName(title: string): string {
-  const safeName = title.slice(0, 50).replace(/[^a-z0-9]/gi, '-') || 'kalshi-bet-slip';
+  const safeName = title.slice(0, 50).replace(/[^a-z0-9]/gi, '-') || 'kalshi-trade-slip';
   return `${safeName}.png`;
 }
 
-export default function BetSlipBuilder() {
+export default function TradeSlipBuilder() {
   const navigate = useNavigate();
-  const [config, setConfig] = useState<BetSlipConfig>({
+  const [config, setConfig] = useState<TradeSlipConfig>({
     mode: 'single',
     title: '',
     marketName: '',
@@ -36,7 +36,7 @@ export default function BetSlipBuilder() {
   const [cropperImage, setCropperImage] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  function handleConfigChange(updates: Partial<BetSlipConfig>) {
+  function handleConfigChange(updates: Partial<TradeSlipConfig>) {
     setConfig((prev) => ({ ...prev, ...updates }));
   }
 
@@ -83,7 +83,7 @@ export default function BetSlipBuilder() {
   }, [handleImageUpload]);
 
   async function handleExport() {
-    const element = document.getElementById(BET_SLIP_PREVIEW_ID);
+    const element = document.getElementById(TRADE_SLIP_PREVIEW_ID);
     if (!element) return;
 
     try {
@@ -92,8 +92,8 @@ export default function BetSlipBuilder() {
       const marketName = config.marketName?.trim();
       const titleName = config.title?.trim();
       const nameSource = config.mode === 'single'
-        ? (outcomeName || marketName || titleName || 'bet-slip')
-        : (titleName || 'bet-slip');
+        ? (outcomeName || marketName || titleName || 'trade-slip')
+        : (titleName || 'trade-slip');
       downloadDataUrl(dataUrl, createFileName(nameSource));
     } catch (error) {
       console.error('Error exporting image:', error);
@@ -102,13 +102,13 @@ export default function BetSlipBuilder() {
   }
 
   async function handleCopyToClipboard() {
-    const element = document.getElementById(BET_SLIP_PREVIEW_ID);
+    const element = document.getElementById(TRADE_SLIP_PREVIEW_ID);
     if (!element) return;
 
     try {
       const dataUrl = await captureElementAsPng(element);
       await copyDataUrlToClipboard(dataUrl);
-      showToast('Bet slip copied to clipboard!');
+      showToast('Trade slip copied to clipboard!');
     } catch (error) {
       console.error('Error copying to clipboard:', error);
       showToast('Failed to copy to clipboard');
@@ -118,7 +118,7 @@ export default function BetSlipBuilder() {
   return (
     <div className="app">
       <div className="app-container">
-        <BetSlipMaker
+        <TradeSlipMaker
           config={config}
           onConfigChange={handleConfigChange}
           onImageUpload={handleImageUpload}
@@ -127,7 +127,7 @@ export default function BetSlipBuilder() {
           onBack={() => navigate('/')}
         />
         <div className="preview-section">
-          <BetSlipPreview config={config} />
+          <TradeSlipPreview config={config} />
           <div className="attribution">
             <p>
               Built by{' '}
