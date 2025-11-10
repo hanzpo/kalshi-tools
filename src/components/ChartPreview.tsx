@@ -136,7 +136,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
           </div>
         </div>
         <div className="google-nav-tabs">
-          <button className="google-nav-tab active">AI Mode</button>
+          <button className="google-nav-tab">AI Mode</button>
           <button className="google-nav-tab active">All</button>
           <button className="google-nav-tab">News</button>
           <button className="google-nav-tab">Images</button>
