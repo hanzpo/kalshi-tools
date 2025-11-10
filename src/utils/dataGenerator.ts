@@ -90,6 +90,61 @@ function normalRandom(): number {
   return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 }
 
+function applyMonteCarloToForecastTrend(
+  customTrend: number[],
+  targetValue: number,
+  volatility: number,
+  startDate: Date,
+  endDate: Date,
+  timeHorizon: TimeHorizon
+): DataPoint[] {
+  const data: number[] = [];
+  
+  // Scale the custom trend to end at targetValue
+  const lastValue = customTrend[customTrend.length - 1];
+  const firstValue = customTrend[0];
+  const scaleFactor = lastValue !== firstValue ? (targetValue - firstValue) / (lastValue - firstValue) : 1;
+  
+  // Apply Monte Carlo noise to each point
+  for (let i = 0; i < customTrend.length; i++) {
+    let scaledValue: number;
+    
+    if (i === 0) {
+      scaledValue = customTrend[0];
+    } else if (i === customTrend.length - 1) {
+      scaledValue = targetValue;
+    } else {
+      scaledValue = firstValue + (customTrend[i] - firstValue) * scaleFactor;
+    }
+    
+    // Add Monte Carlo noise (scale noise relative to target value)
+    const noiseScale = targetValue * 0.05; // 5% of target value as base noise scale
+    const noise = normalRandom() * noiseScale * volatility;
+    let noisyValue = scaledValue + noise;
+    
+    // Only enforce minimum boundary (no maximum for forecasts)
+    noisyValue = Math.max(0, noisyValue);
+    data.push(noisyValue);
+  }
+  
+  // Ensure last value is exactly targetValue
+  data[data.length - 1] = targetValue;
+  
+  // Convert to DataPoint format
+  const dates = generateDates(startDate, endDate, timeHorizon);
+  const steps = Math.max(data.length - 1, 1);
+  const dataPoints: DataPoint[] = data.map((value, i) => {
+    const rawIndex = (i / steps) * (DATES_COUNT - 1);
+    const dateIndex = Math.min(Math.floor(rawIndex), DATES_COUNT - 1);
+    return {
+      time: dates[Math.min(dateIndex, dates.length - 1)],
+      value: Math.round(value * 10) / 10,
+    };
+  });
+  
+  return dataPoints;
+}
+
 function applyMonteCarloToCustomTrend(
   customTrend: number[],
   targetOdds: number,
@@ -142,6 +197,23 @@ function applyMonteCarloToCustomTrend(
   });
   
   return dataPoints;
+}
+
+export function generateForecastData(
+  targetValue: number,
+  volatility: number = 1.5,
+  customTrendData: number[] | null = null,
+  startDate: Date = new Date(new Date().setMonth(new Date().getMonth() - 3)),
+  endDate: Date = new Date(),
+  timeHorizon: TimeHorizon = 'ALL'
+): DataPoint[] {
+  // Always use custom trend (or default if none provided)
+  if (customTrendData && customTrendData.length > 0) {
+    return applyMonteCarloToForecastTrend(customTrendData, targetValue, volatility, startDate, endDate, timeHorizon);
+  }
+  
+  // If no custom data, return empty data (should not happen in normal flow)
+  return [];
 }
 
 export function generateMarketData(

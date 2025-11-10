@@ -5,7 +5,7 @@ import { ControlPanel } from '../components/ControlPanel';
 import { ChartPreview } from '../components/ChartPreview';
 import { ImageCropper } from '../components/ImageCropper';
 import { TrendDrawer } from '../components/TrendDrawer';
-import { generateMarketData, generateVolume, getDateRangeForTimeHorizon } from '../utils/dataGenerator';
+import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../utils/dataGenerator';
 import { decodeConfigFromUrl } from '../utils/urlEncoder';
 import { getOutcomeColor } from '../utils/colorGenerator';
 import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
@@ -40,6 +40,24 @@ function generateDefaultTrend(targetOdds: number): number[] {
   return defaultTrend;
 }
 
+function generateDefaultForecastTrend(targetValue: number): number[] {
+  const defaultTrend: number[] = [];
+  // Start from a value that's somewhat below the target
+  const startValue = targetValue * (0.7 + Math.random() * 0.2);
+  let currentValue = startValue;
+
+  for (let i = 0; i < 100; i++) {
+    const drift = ((targetValue - currentValue) / (100 - i)) * 0.2;
+    const randomStep = (Math.random() - 0.5) * (targetValue * 0.1); // Scale noise to target value
+    currentValue += drift + randomStep;
+    currentValue = Math.max(0, currentValue); // Only enforce minimum, no maximum
+    defaultTrend.push(currentValue);
+  }
+
+  defaultTrend[99] = targetValue;
+  return defaultTrend;
+}
+
 export default function ChartBuilder() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,6 +78,8 @@ export default function ChartBuilder() {
     endDate: new Date(),
     timeHorizon: 'ALL',
     showWatermark: true,
+    forecastValue: 128000,
+    forecastUnit: 'K',
   });
 
   const [data, setData] = useState<DataPoint[]>([]);
@@ -124,6 +144,16 @@ export default function ChartBuilder() {
         const newData = generateMarketData(current.currentOdds, current.volatility, current.customTrendData, startDate, endDate, current.timeHorizon);
         setData(newData);
       }
+    } else if (current.marketType === 'forecast') {
+      const targetValue = current.forecastValue ?? 128000;
+      if (!current.customTrendData) {
+        const defaultTrend = generateDefaultForecastTrend(targetValue);
+        const newData = generateForecastData(targetValue, current.volatility, defaultTrend, startDate, endDate, current.timeHorizon);
+        setData(newData);
+      } else {
+        const newData = generateForecastData(targetValue, current.volatility, current.customTrendData, startDate, endDate, current.timeHorizon);
+        setData(newData);
+      }
     } else {
       const baseData = generateMarketData(50, current.volatility, generateDefaultTrend(50), startDate, endDate, current.timeHorizon);
 
@@ -169,23 +199,43 @@ export default function ChartBuilder() {
   }
 
   function handleTrendDrawComplete(trendData: number[]) {
-    const finalOdds = Math.round(trendData[trendData.length - 1]);
+    if (config.marketType === 'forecast') {
+      const finalValue = trendData[trendData.length - 1];
 
-    updateConfig((prev) => {
-      const updated = {
-        ...prev,
-        customTrendData: trendData,
-        currentOdds: finalOdds,
-      };
+      updateConfig((prev) => {
+        const updated = {
+          ...prev,
+          customTrendData: trendData,
+          forecastValue: finalValue,
+        };
 
-      const { startDate, endDate } = updated.timeHorizon === 'ALL' 
-        ? { startDate: updated.startDate, endDate: updated.endDate }
-        : getDateRangeForTimeHorizon(updated.timeHorizon, updated.endDate);
-      const newData = generateMarketData(finalOdds, updated.volatility, trendData, startDate, endDate, updated.timeHorizon);
-      setData(newData);
+        const { startDate, endDate } = updated.timeHorizon === 'ALL' 
+          ? { startDate: updated.startDate, endDate: updated.endDate }
+          : getDateRangeForTimeHorizon(updated.timeHorizon, updated.endDate);
+        const newData = generateForecastData(finalValue, updated.volatility, trendData, startDate, endDate, updated.timeHorizon);
+        setData(newData);
 
-      return updated;
-    });
+        return updated;
+      });
+    } else {
+      const finalOdds = Math.round(trendData[trendData.length - 1]);
+
+      updateConfig((prev) => {
+        const updated = {
+          ...prev,
+          customTrendData: trendData,
+          currentOdds: finalOdds,
+        };
+
+        const { startDate, endDate } = updated.timeHorizon === 'ALL' 
+          ? { startDate: updated.startDate, endDate: updated.endDate }
+          : getDateRangeForTimeHorizon(updated.timeHorizon, updated.endDate);
+        const newData = generateMarketData(finalOdds, updated.volatility, trendData, startDate, endDate, updated.timeHorizon);
+        setData(newData);
+
+        return updated;
+      });
+    }
 
     setShowTrendDrawer(false);
   }

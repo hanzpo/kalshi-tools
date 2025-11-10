@@ -1,4 +1,4 @@
-export type MarketType = 'binary' | 'multi';
+export type MarketType = 'binary' | 'multi' | 'forecast';
 export type TradeSlipMode = 'single' | 'parlay';
 export type TimeHorizon = '6H' | '1D' | '1W' | '1M' | 'ALL';
 
@@ -23,6 +23,8 @@ export interface MarketConfig {
   endDate: Date;
   timeHorizon: TimeHorizon;
   showWatermark: boolean;
+  forecastValue?: number;
+  forecastUnit?: string;
 }
 
 export interface DataPoint {

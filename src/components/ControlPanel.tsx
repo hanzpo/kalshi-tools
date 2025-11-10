@@ -104,6 +104,13 @@ export function ControlPanel({
           { id: '2', name: 'Outcome 2', color: getOutcomeColor(1), currentOdds: 40, customTrendData: null },
         ],
       });
+    } else if (marketType === 'forecast') {
+      // Initialize forecast with default values if not set
+      onConfigChange({
+        marketType,
+        forecastValue: config.forecastValue ?? 128000,
+        forecastUnit: config.forecastUnit ?? 'K',
+      });
     } else {
       onConfigChange({ marketType });
     }
@@ -348,48 +355,34 @@ export function ControlPanel({
 
       <div className="control-group">
         <label htmlFor="market-type">Market Type</label>
-        <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
-          <button
-            onClick={() => handleMarketTypeChange('binary')}
-            className={config.marketType === 'binary' ? 'button-market-type-active' : 'button-market-type'}
-            style={{
-              flex: 1,
-              padding: '10px',
-              border: '2px solid',
-              borderColor: config.marketType === 'binary' ? '#09C285' : '#e5e7eb',
-              backgroundColor: config.marketType === 'binary' ? '#ecfdf5' : 'white',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: config.marketType === 'binary' ? '600' : '500',
-              color: config.marketType === 'binary' ? '#09C285' : '#6b7280',
-              transition: 'all 0.2s',
-            }}
-          >
-            Binary (Yes/No)
-          </button>
-          <button
-            onClick={() => handleMarketTypeChange('multi')}
-            className={config.marketType === 'multi' ? 'button-market-type-active' : 'button-market-type'}
-            style={{
-              flex: 1,
-              padding: '10px',
-              border: '2px solid',
-              borderColor: config.marketType === 'multi' ? '#09C285' : '#e5e7eb',
-              backgroundColor: config.marketType === 'multi' ? '#ecfdf5' : 'white',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: config.marketType === 'multi' ? '600' : '500',
-              color: config.marketType === 'multi' ? '#09C285' : '#6b7280',
-              transition: 'all 0.2s',
-            }}
-          >
-            Multi-Outcome
-          </button>
-        </div>
+        <select
+          id="market-type"
+          className="text-input"
+          value={config.marketType}
+          onChange={(e) => handleMarketTypeChange(e.target.value as MarketType)}
+          style={{
+            marginTop: '8px',
+            padding: '10px',
+            border: '2px solid #e5e7eb',
+            borderRadius: '8px',
+            backgroundColor: 'white',
+            fontSize: '14px',
+            color: '#374151',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            width: '100%',
+          }}
+        >
+          <option value="binary">Binary (Yes/No)</option>
+          <option value="multi">Multi-Outcome</option>
+          <option value="forecast">Forecast</option>
+        </select>
         <p className="help-text">
           {config.marketType === 'binary' 
             ? 'Single yes/no outcome market' 
-            : 'Multiple bracket/outcome market'}
+            : config.marketType === 'multi'
+            ? 'Multiple bracket/outcome market'
+            : 'Unbounded numerical forecast market'}
         </p>
       </div>
 
@@ -512,7 +505,7 @@ export function ControlPanel({
         </div>
       )}
 
-      {config.marketType === 'binary' && (
+      {(config.marketType === 'binary' || config.marketType === 'forecast') && (
         <>
           <div className="control-group">
             <label>Market Trend (Optional)</label>
@@ -530,32 +523,79 @@ export function ControlPanel({
             )}
           </div>
 
-          <div className="control-group">
-            <label htmlFor="current-odds">
-              Current Odds: {config.currentOdds}%
-            </label>
-            <input
-              id="current-odds"
-              type="range"
-              min="0"
-              max="100"
-              value={config.currentOdds}
-              onChange={(e) => {
-                onConfigChange({ currentOdds: parseInt(e.target.value), customTrendData: null });
-                onRegenerateData();
-              }}
-              className="slider-input"
-            />
-            <div className="slider-labels">
-              <span>0%</span>
-              <span>100%</span>
+          {config.marketType === 'binary' && (
+            <div className="control-group">
+              <label htmlFor="current-odds">
+                Current Odds: {config.currentOdds}%
+              </label>
+              <input
+                id="current-odds"
+                type="range"
+                min="0"
+                max="100"
+                value={config.currentOdds}
+                onChange={(e) => {
+                  onConfigChange({ currentOdds: parseInt(e.target.value), customTrendData: null });
+                  onRegenerateData();
+                }}
+                className="slider-input"
+              />
+              <div className="slider-labels">
+                <span>0%</span>
+                <span>100%</span>
+              </div>
+              {config.customTrendData && (
+                <p className="help-text" style={{ color: '#D91616', marginTop: '8px' }}>
+                  ⚠️ Adjusting odds will reset your custom trend
+                </p>
+              )}
             </div>
-            {config.customTrendData && (
-              <p className="help-text" style={{ color: '#D91616', marginTop: '8px' }}>
-                ⚠️ Adjusting odds will reset your custom trend
-              </p>
-            )}
-          </div>
+          )}
+
+          {config.marketType === 'forecast' && (
+            <>
+              <div className="control-group">
+                <label htmlFor="forecast-value">
+                  Forecast Value: {config.forecastValue ?? 128000}
+                </label>
+                <input
+                  id="forecast-value"
+                  type="number"
+                  className="text-input"
+                  placeholder="e.g., 128000"
+                  value={config.forecastValue ?? 128000}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value) || 0;
+                    onConfigChange({ forecastValue: value, customTrendData: null });
+                    onRegenerateData();
+                  }}
+                  min="0"
+                  step="1"
+                />
+                <p className="help-text">Enter the forecasted numerical value</p>
+                {config.customTrendData && (
+                  <p className="help-text" style={{ color: '#D91616', marginTop: '8px' }}>
+                    ⚠️ Adjusting value will reset your custom trend
+                  </p>
+                )}
+              </div>
+
+              <div className="control-group">
+                <label htmlFor="forecast-unit">Unit</label>
+                <input
+                  id="forecast-unit"
+                  type="text"
+                  className="text-input"
+                  placeholder="e.g., K"
+                  value={config.forecastUnit ?? 'K'}
+                  onChange={(e) => {
+                    onConfigChange({ forecastUnit: e.target.value });
+                  }}
+                />
+                <p className="help-text">Unit to display after the forecast value (e.g., K, $, etc.)</p>
+              </div>
+            </>
+          )}
         </>
       )}
 

@@ -46,6 +46,10 @@ async function loadProto() {
       new protobuf.Field('endDate', 10, 'int64')
     ).add(
       new protobuf.Field('showWatermark', 11, 'bool')
+    ).add(
+      new protobuf.Field('forecastValue', 12, 'double')
+    ).add(
+      new protobuf.Field('forecastUnit', 13, 'string')
     )
   );
   
@@ -75,7 +79,9 @@ export async function encodeConfigToUrl(config: MarketConfig): Promise<string> {
       })),
       startDate: config.startDate.getTime(),
       endDate: config.endDate.getTime(),
-      showWatermark: config.showWatermark
+      showWatermark: config.showWatermark,
+      forecastValue: config.forecastValue,
+      forecastUnit: config.forecastUnit || '',
     };
     
     const message = MarketConfigType.create(protoConfig);
@@ -131,7 +137,9 @@ export async function decodeConfigFromUrl(encoded: string): Promise<Partial<Mark
       })),
       startDate: new Date(Number(obj.startDate)),
       endDate: new Date(Number(obj.endDate)),
-      showWatermark: obj.showWatermark !== undefined ? obj.showWatermark : true
+      showWatermark: obj.showWatermark !== undefined ? obj.showWatermark : true,
+      forecastValue: obj.forecastValue,
+      forecastUnit: obj.forecastUnit || undefined,
     };
   } catch (error) {
     console.error('Failed to decode config:', error);
