@@ -25,6 +25,7 @@ export interface MarketConfig {
   showWatermark: boolean;
   forecastValue?: number;
   forecastUnit?: string;
+  mutuallyExclusive?: boolean; // For multi-outcome markets: true = odds sum to 100%, false = independent odds
 }
 
 export interface DataPoint {

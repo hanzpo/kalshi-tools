@@ -19,5 +19,9 @@ message MarketConfig {
   repeated Outcome outcomes = 8;
   int64 startDate = 9;
   int64 endDate = 10;
+  bool showWatermark = 11;
+  double forecastValue = 12;
+  string forecastUnit = 13;
+  bool mutuallyExclusive = 14;
 }
 

@@ -80,6 +80,7 @@ export default function ChartBuilder() {
     showWatermark: true,
     forecastValue: 128000,
     forecastUnit: 'K',
+    mutuallyExclusive: true,
   });
 
   const [data, setData] = useState<DataPoint[]>([]);

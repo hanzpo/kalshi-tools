@@ -50,6 +50,8 @@ async function loadProto() {
       new protobuf.Field('forecastValue', 12, 'double')
     ).add(
       new protobuf.Field('forecastUnit', 13, 'string')
+    ).add(
+      new protobuf.Field('mutuallyExclusive', 14, 'bool')
     )
   );
   
@@ -82,6 +84,7 @@ export async function encodeConfigToUrl(config: MarketConfig): Promise<string> {
       showWatermark: config.showWatermark,
       forecastValue: config.forecastValue,
       forecastUnit: config.forecastUnit || '',
+      mutuallyExclusive: config.mutuallyExclusive !== false, // Default to true
     };
     
     const message = MarketConfigType.create(protoConfig);
@@ -140,6 +143,7 @@ export async function decodeConfigFromUrl(encoded: string): Promise<Partial<Mark
       showWatermark: obj.showWatermark !== undefined ? obj.showWatermark : true,
       forecastValue: obj.forecastValue,
       forecastUnit: obj.forecastUnit || undefined,
+      mutuallyExclusive: obj.mutuallyExclusive !== undefined ? obj.mutuallyExclusive : true, // Default to true for backward compatibility
     };
   } catch (error) {
     console.error('Failed to decode config:', error);
