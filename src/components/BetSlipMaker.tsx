@@ -403,23 +403,42 @@ export function BetSlipMaker({
           <p className="help-text">Expected payout: ${payout.toLocaleString()}</p>
         </div>
       ) : (
-        <div className="control-group">
-          <label htmlFor="parlay-odds">American Odds</label>
-          <input
-            id="parlay-odds"
-            type="number"
-            className="text-input"
-            value={config.parlayOdds}
-            onChange={(e) =>
-              onConfigChange({ parlayOdds: Number(e.target.value) || 0 })
-            }
-            placeholder="+500"
-            step="10"
-          />
-          <p className="help-text">
-            Enter positive or negative odds (e.g., -110 or +250). Potential payout: ${payout.toLocaleString()}
-          </p>
-        </div>
+        <>
+          <div className="control-group">
+            <label htmlFor="parlay-odds">American Odds</label>
+            <input
+              id="parlay-odds"
+              type="number"
+              className="text-input"
+              value={config.parlayOdds}
+              onChange={(e) =>
+                onConfigChange({ parlayOdds: Number(e.target.value) || 0 })
+              }
+              placeholder="+500"
+              step="10"
+            />
+            <p className="help-text">
+              Enter positive or negative odds (e.g., -110 or +250). Potential payout: ${payout.toLocaleString()}
+            </p>
+          </div>
+          <div className="control-group">
+            <label htmlFor="parlay-cash-out">Cash Out Amount ($)</label>
+            <input
+              id="parlay-cash-out"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 947"
+              value={config.parlayCashOut || ''}
+              onChange={(e) => {
+                const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                onConfigChange({ parlayCashOut: value });
+              }}
+              min="0"
+              step="1"
+            />
+            <p className="help-text">Optional: Current cash out value</p>
+          </div>
+        </>
       )}
 
       <div className="control-group" style={{ marginBottom: 0 }}>

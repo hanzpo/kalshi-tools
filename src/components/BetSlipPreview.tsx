@@ -88,6 +88,14 @@ export function BetSlipPreview({ config }: BetSlipPreviewProps) {
                     {formatAmericanOdds(config.parlayOdds)}
                   </span>
                 </div>
+                {config.parlayCashOut !== undefined && (
+                  <div className="parlay-summary-row">
+                    <span className="parlay-summary-label">Cash out</span>
+                    <span className="parlay-summary-value">
+                      ${config.parlayCashOut.toLocaleString()}
+                    </span>
+                  </div>
+                )}
                 <div className="parlay-summary-row parlay-payout-row">
                   <span className="parlay-summary-label">Payout if right</span>
                   <span className="parlay-payout">

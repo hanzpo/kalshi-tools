@@ -357,7 +357,7 @@
 .parlay-summary {
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 2vw, 12px);
+  gap: clamp(10px, 2.5vw, 16px);
   border-top: 1px solid rgba(148, 163, 184, 0.35);
   padding-top: clamp(16px, 3vw, 22px);
 }
@@ -382,8 +382,9 @@
 }
 
 .parlay-payout-row {
-  margin-top: clamp(6px, 2vw, 10px);
-  padding-top: clamp(6px, 2vw, 10px);
+  margin-top: clamp(8px, 2vw, 12px);
+  padding-top: clamp(8px, 2vw, 12px);
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 .parlay-payout {

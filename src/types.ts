@@ -50,4 +50,5 @@ export interface BetSlipConfig {
   showWatermark: boolean;
   parlayOdds: number;
   parlayLegs: ParlayLeg[];
+  parlayCashOut?: number;
 }
