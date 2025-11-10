@@ -81,7 +81,7 @@ export default function SearchBuilder() {
     forecastValue: 128000,
     forecastUnit: 'K',
     mutuallyExclusive: true,
-    searchQuery: 'How high will Bitcoin get this year?',
+    searchQuery: '',
   });
 
   const [data, setData] = useState<DataPoint[]>([]);
