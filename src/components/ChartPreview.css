@@ -7,6 +7,103 @@
   border: 1px solid #f3f4f6;
 }
 
+.google-search-container {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.google-search-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  background-color: #ffffff;
+  border: 1px solid #dfe1e5;
+  border-radius: 24px;
+  box-shadow: 0 2px 5px 1px rgba(64, 60, 67, 0.16);
+  transition: box-shadow 0.2s;
+}
+
+.google-search-bar:hover {
+  box-shadow: 0 2px 8px 1px rgba(64, 60, 67, 0.24);
+}
+
+.google-logo {
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.google-search-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.google-search-text {
+  font-size: 16px;
+  color: #202124;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.google-search-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.google-search-icon {
+  width: 20px;
+  height: 20px;
+  color: #5f6368;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.google-search-icon:hover {
+  color: #202124;
+}
+
+.google-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-left: 0;
+  flex-wrap: wrap;
+}
+
+.google-nav-tab {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #5f6368;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.google-nav-tab:hover {
+  color: #202124;
+}
+
+.google-nav-tab.active {
+  color: #1a73e8;
+  border-bottom-color: #1a73e8;
+  font-weight: 500;
+}
+
 .chart-header {
   display: flex;
   justify-content: space-between;
@@ -205,5 +302,33 @@
   .timeframe-button {
     padding: 5px 10px;
     font-size: 12px;
+  }
+
+  .google-search-bar {
+    height: 40px;
+    padding: 0 12px;
+  }
+
+  .google-search-text {
+    font-size: 14px;
+  }
+
+  .google-search-icons {
+    gap: 8px;
+  }
+
+  .google-search-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .google-nav-tabs {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .google-nav-tab {
+    padding: 6px 10px;
+    font-size: 13px;
   }
 }

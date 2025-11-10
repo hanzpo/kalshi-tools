@@ -58,7 +58,7 @@ function generateDefaultForecastTrend(targetValue: number): number[] {
   return defaultTrend;
 }
 
-export default function ChartBuilder() {
+export default function SearchBuilder() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -81,6 +81,7 @@ export default function ChartBuilder() {
     forecastValue: 128000,
     forecastUnit: 'K',
     mutuallyExclusive: true,
+    searchQuery: 'How high will Bitcoin get this year?',
   });
 
   const [data, setData] = useState<DataPoint[]>([]);
@@ -291,7 +292,7 @@ export default function ChartBuilder() {
           onOpenTrendDrawer={handleOpenTrendDrawer}
           onCopyToClipboard={handleCopyToClipboard}
           onBack={() => navigate('/')}
-          mode="chart"
+          mode="search"
         />
         <div className="preview-section">
           <ChartPreview 

@@ -26,6 +26,7 @@ export interface MarketConfig {
   forecastValue?: number;
   forecastUnit?: string;
   mutuallyExclusive?: boolean; // For multi-outcome markets: true = odds sum to 100%, false = independent odds
+  searchQuery?: string; // For Google search result builder
 }
 
 export interface DataPoint {

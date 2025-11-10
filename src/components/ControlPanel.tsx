@@ -13,6 +13,7 @@ interface ControlPanelProps {
   onOpenTrendDrawer: () => void;
   onCopyToClipboard: () => void;
   onBack?: () => void;
+  mode?: 'chart' | 'search'; // 'chart' for ChartBuilder, 'search' for SearchBuilder
 }
 
 export function ControlPanel({
@@ -24,6 +25,7 @@ export function ControlPanel({
   onOpenTrendDrawer,
   onCopyToClipboard,
   onBack,
+  mode = 'chart',
 }: ControlPanelProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [colorPickerOpen, setColorPickerOpen] = useState<string | null>(null);
@@ -313,10 +315,27 @@ export function ControlPanel({
           Back
         </button>
       )}
-      <h1 className="panel-title">Chart Maker</h1>
+      <h1 className="panel-title">{mode === 'search' ? 'Search Result Builder' : 'Chart Maker'}</h1>
       <p className="panel-subtitle">
-        Realistic chart generator for Kalshi markets
+        {mode === 'search' 
+          ? 'Realistic Google search result generator for Kalshi markets'
+          : 'Realistic chart generator for Kalshi markets'}
       </p>
+
+      {mode === 'search' && (
+        <div className="control-group">
+          <label htmlFor="search-query">Search Query</label>
+          <input
+            id="search-query"
+            type="text"
+            className="text-input"
+            placeholder="e.g., How high will Bitcoin get this year?"
+            value={config.searchQuery || ''}
+            onChange={(e) => onConfigChange({ searchQuery: e.target.value })}
+          />
+          <p className="help-text">The search query displayed in the Google search bar</p>
+        </div>
+      )}
 
       <div className="control-group">
         <label htmlFor="market-title">Market Title</label>

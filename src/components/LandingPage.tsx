@@ -45,7 +45,6 @@ export function LandingPage() {
               <p className="option-description">
                 Create realistic Kalshi market charts with binary or multi-outcome options, custom trend drawing, volatility controls, volume data, and save as PNG.
               </p>
-              <span className="option-cta">Open builder &rarr;</span>
             </div>
           </Link>
 
@@ -68,7 +67,25 @@ export function LandingPage() {
               <p className="option-description">
                 Build realistic Kalshi trade slips with customizable questions, answers, wager amounts, odds, automatic payout calculations, and optional images.
               </p>
-              <span className="option-cta">Open builder &rarr;</span>
+            </div>
+          </Link>
+
+          <Link to="/search" className="landing-option landing-option--search">
+            <div className="option-body">
+              <div className="option-header">
+                <span className="option-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
+                  </svg>
+                </span>
+                <div className="option-title-group">
+                  <span className="option-subtitle">Create a</span>
+                  <span className="option-label">Search Result</span>
+                </div>
+              </div>
+              <p className="option-description">
+                Build realistic search engine results with customizable content and styling.
+              </p>
             </div>
           </Link>
         </div>
