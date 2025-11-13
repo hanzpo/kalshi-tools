@@ -38,14 +38,14 @@
 
 .prizepick-spray-paint {
   position: absolute;
-  top: -380%;
-  right: -40%;
-  width: 180%;
-  height: 600%;
+  top: -300%;
+  right: -30%;
+  width: 120%;
+  height: 450%;
   transform: rotate(12.9deg);
   pointer-events: none;
   z-index: 0;
-  opacity: 0.85;
+  opacity: 0.7;
   mix-blend-mode: screen;
 }
 
@@ -54,12 +54,12 @@
   height: 100%;
   object-fit: cover;
   mask-image: url('/spraypaintmask.svg');
-  mask-size: 70% auto;
-  mask-position: center 65%;
+  mask-size: 65% auto;
+  mask-position: 45% 65%;
   mask-repeat: no-repeat;
   -webkit-mask-image: url('/spraypaintmask.svg');
-  -webkit-mask-size: 70% auto;
-  -webkit-mask-position: center 65%;
+  -webkit-mask-size: 65% auto;
+  -webkit-mask-position: 45% 65%;
   -webkit-mask-repeat: no-repeat;
 }
 
