@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { TradeSlipConfig, TradeSlipMode, ParlayLeg } from '../types';
+import { TradeSlipConfig, TradeSlipMode, ParlayLeg, PrizePickPlayer } from '../types';
 import '../components/ControlPanel.css';
 
 interface TradeSlipMakerProps {
@@ -17,6 +17,24 @@ function createLeg(): ParlayLeg {
     question: '',
     answer: 'Yes',
     image: null,
+  };
+}
+
+function createPrizePickPlayer(): PrizePickPlayer {
+  return {
+    id: `player-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    playerName: '',
+    team: '',
+    position: '',
+    number: '',
+    opponent: '',
+    homeScore: '',
+    awayScore: '',
+    statType: 'Points',
+    statValue: 20,
+    image: null,
+    league: 'NBA',
+    gameStatus: 'Final',
   };
 }
 
@@ -48,15 +66,21 @@ export function TradeSlipMaker({
 }: TradeSlipMakerProps) {
   const [isDragging, setIsDragging] = useState(false);
   const isSingleMode = config.mode === 'single';
+  const isParlayMode = config.mode === 'parlay';
+  const isPrizePickMode = config.mode === 'prizepick';
   const payout = isSingleMode
     ? calculateSinglePayout(config.wager, config.odds)
-    : calculateAmericanPayout(config.wager, config.parlayOdds);
+    : isParlayMode
+    ? calculateAmericanPayout(config.wager, config.parlayOdds)
+    : config.prizePickPayout;
 
   function handleModeChange(mode: TradeSlipMode) {
     if (mode === config.mode) return;
 
     if (mode === 'parlay' && config.parlayLegs.length === 0) {
       onConfigChange({ mode, parlayLegs: [createLeg(), createLeg()] });
+    } else if (mode === 'prizepick' && config.prizePickPlayers.length === 0) {
+      onConfigChange({ mode, prizePickPlayers: [createPrizePickPlayer()] });
     } else {
       onConfigChange({ mode });
     }
@@ -133,6 +157,41 @@ export function TradeSlipMaker({
     });
   }
 
+  function handlePlayerChange(playerId: string, updates: Partial<PrizePickPlayer>) {
+    const updatedPlayers = config.prizePickPlayers.map((player) =>
+      player.id === playerId ? { ...player, ...updates } : player
+    );
+    onConfigChange({ prizePickPlayers: updatedPlayers });
+  }
+
+  function handlePlayerImageInput(
+    playerId: string,
+    event: ChangeEvent<HTMLInputElement>
+  ) {
+    const file = event.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result;
+      if (typeof result === 'string') {
+        handlePlayerChange(playerId, { image: result });
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleAddPlayer() {
+    onConfigChange({ prizePickPlayers: [...config.prizePickPlayers, createPrizePickPlayer()] });
+  }
+
+  function handleRemovePlayer(playerId: string) {
+    if (config.prizePickPlayers.length <= 1) return;
+    onConfigChange({
+      prizePickPlayers: config.prizePickPlayers.filter((player) => player.id !== playerId),
+    });
+  }
+
   return (
     <div className="control-panel">
       <button onClick={onBack} className="back-button-control-panel">
@@ -157,11 +216,19 @@ export function TradeSlipMaker({
           </button>
           <button
             type="button"
-            className={`segmented-option${config.mode === 'parlay' ? ' active' : ''}`}
+            className={`segmented-option${isParlayMode ? ' active' : ''}`}
             onClick={() => handleModeChange('parlay')}
-            aria-pressed={config.mode === 'parlay'}
+            aria-pressed={isParlayMode}
           >
             Parlay
+          </button>
+          <button
+            type="button"
+            className={`segmented-option${isPrizePickMode ? ' active' : ''}`}
+            onClick={() => handleModeChange('prizepick')}
+            aria-pressed={isPrizePickMode}
+          >
+            Prize Pick
           </button>
         </div>
       </div>
@@ -268,7 +335,7 @@ export function TradeSlipMaker({
             <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
           </div>
         </>
-      ) : (
+      ) : isParlayMode ? (
         <div className="control-group">
           <label htmlFor="bet-title">Slip Title</label>
           <input
@@ -280,9 +347,21 @@ export function TradeSlipMaker({
             onChange={(e) => onConfigChange({ title: e.target.value })}
           />
         </div>
+      ) : (
+        <div className="control-group">
+          <label htmlFor="prizepick-type">Power Play Type</label>
+          <input
+            id="prizepick-type"
+            type="text"
+            className="text-input"
+            placeholder="e.g., 6-Pick Power Play"
+            value={config.prizePickType}
+            onChange={(e) => onConfigChange({ prizePickType: e.target.value })}
+          />
+        </div>
       )}
 
-      {!isSingleMode && (
+      {isParlayMode && (
         <div className="control-group">
           <label aria-hidden="true">Parlay Legs</label>
           <div className="parlay-legs">
@@ -370,19 +449,202 @@ export function TradeSlipMaker({
         </div>
       )}
 
-      <div className="control-group">
-        <label htmlFor="bet-wager">Wager Amount ($)</label>
-        <input
-          id="bet-wager"
-          type="number"
-          className="text-input"
-          placeholder="e.g., 1000"
-          value={config.wager}
-          onChange={(e) => onConfigChange({ wager: parseFloat(e.target.value) || 0 })}
-          min="0"
-          step="100"
-        />
-      </div>
+      {isPrizePickMode && (
+        <div className="control-group">
+          <label aria-hidden="true">Player Picks</label>
+          <div className="parlay-legs">
+            {config.prizePickPlayers.map((player, index) => (
+              <div key={player.id} className="parlay-leg">
+                <div className="parlay-leg-header">
+                  <span className="parlay-leg-title">Pick {index + 1}</span>
+                  <button
+                    type="button"
+                    className="parlay-leg-remove"
+                    onClick={() => handleRemovePlayer(player.id)}
+                    disabled={config.prizePickPlayers.length <= 1}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div className="parlay-leg-body">
+                  <label className="parlay-leg-label" htmlFor={`player-name-${player.id}`}>
+                    Player Name
+                  </label>
+                  <input
+                    id={`player-name-${player.id}`}
+                    type="text"
+                    className="text-input"
+                    placeholder="e.g., Giannis Antetokounmpo"
+                    value={player.playerName}
+                    onChange={(e) => handlePlayerChange(player.id, { playerName: e.target.value })}
+                  />
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Team</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="MIL"
+                        value={player.team}
+                        onChange={(e) => handlePlayerChange(player.id, { team: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Position</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="PF"
+                        value={player.position}
+                        onChange={(e) => handlePlayerChange(player.id, { position: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Number</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="#34"
+                        value={player.number}
+                        onChange={(e) => handlePlayerChange(player.id, { number: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">League</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="NBA"
+                        value={player.league}
+                        onChange={(e) => handlePlayerChange(player.id, { league: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <label className="parlay-leg-label" htmlFor={`opponent-${player.id}`}>
+                    Opponent
+                  </label>
+                  <input
+                    id={`opponent-${player.id}`}
+                    type="text"
+                    className="text-input"
+                    placeholder="e.g., CHI"
+                    value={player.opponent}
+                    onChange={(e) => handlePlayerChange(player.id, { opponent: e.target.value })}
+                  />
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Home Score</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="111"
+                        value={player.homeScore}
+                        onChange={(e) => handlePlayerChange(player.id, { homeScore: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Away Score</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="113"
+                        value={player.awayScore}
+                        onChange={(e) => handlePlayerChange(player.id, { awayScore: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Stat Type</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="Points"
+                        value={player.statType}
+                        onChange={(e) => handlePlayerChange(player.id, { statType: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Stat Value</span>
+                      <input
+                        type="number"
+                        className="text-input"
+                        placeholder="20"
+                        value={player.statValue}
+                        onChange={(e) => handlePlayerChange(player.id, { statValue: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Game Status</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="Final"
+                        value={player.gameStatus}
+                        onChange={(e) => handlePlayerChange(player.id, { gameStatus: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Image</span>
+                      <div className="parlay-image-upload">
+                        {player.image ? (
+                          <>
+                            <img src={player.image} alt="" className="parlay-leg-image" />
+                            <button
+                              type="button"
+                              className="parlay-image-clear"
+                              onClick={() => handlePlayerChange(player.id, { image: null })}
+                            >
+                              Remove
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <label htmlFor={`player-image-${player.id}`} className="parlay-image-placeholder">
+                              Upload
+                            </label>
+                            <input
+                              id={`player-image-${player.id}`}
+                              type="file"
+                              accept="image/jpeg,image/png,image/jpg"
+                              onChange={(e) => handlePlayerImageInput(player.id, e)}
+                              className="file-input"
+                              style={{ display: 'none' }}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button type="button" className="parlay-leg-add" onClick={handleAddPlayer}>
+              + Add Player
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!isPrizePickMode && (
+        <div className="control-group">
+          <label htmlFor="bet-wager">Wager Amount ($)</label>
+          <input
+            id="bet-wager"
+            type="number"
+            className="text-input"
+            placeholder="e.g., 1000"
+            value={config.wager}
+            onChange={(e) => onConfigChange({ wager: parseFloat(e.target.value) || 0 })}
+            min="0"
+            step="100"
+          />
+        </div>
+      )}
 
       {isSingleMode ? (
         <div className="control-group">
@@ -402,7 +664,7 @@ export function TradeSlipMaker({
           </div>
           <p className="help-text">Expected payout: ${payout.toLocaleString()}</p>
         </div>
-      ) : (
+      ) : isParlayMode ? (
         <>
           <div className="control-group">
             <label htmlFor="parlay-odds">American Odds</label>
@@ -437,6 +699,36 @@ export function TradeSlipMaker({
               step="1"
             />
             <p className="help-text">Optional: Current cash out value</p>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="control-group">
+            <label htmlFor="prizepick-wager">Wager Amount ($)</label>
+            <input
+              id="prizepick-wager"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 1000"
+              value={config.prizePickWager}
+              onChange={(e) => onConfigChange({ prizePickWager: parseFloat(e.target.value) || 0 })}
+              min="0"
+              step="100"
+            />
+          </div>
+          <div className="control-group">
+            <label htmlFor="prizepick-payout">Payout Amount ($)</label>
+            <input
+              id="prizepick-payout"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 25000"
+              value={config.prizePickPayout}
+              onChange={(e) => onConfigChange({ prizePickPayout: parseFloat(e.target.value) || 0 })}
+              min="0"
+              step="1000"
+            />
+            <p className="help-text">Potential payout: ${payout.toLocaleString()}</p>
           </div>
         </>
       )}

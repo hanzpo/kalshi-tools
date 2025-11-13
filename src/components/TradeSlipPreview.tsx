@@ -1,4 +1,5 @@
 import { TradeSlipConfig } from '../types';
+import { PrizePickPreview } from './PrizePickPreview';
 import './TradeSlipPreview.css';
 
 interface TradeSlipPreviewProps {
@@ -25,6 +26,12 @@ function formatAmericanOdds(odds: number): string {
 
 export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isParlay = config.mode === 'parlay';
+  const isPrizePick = config.mode === 'prizepick';
+  
+  if (isPrizePick) {
+    return <PrizePickPreview config={config} />;
+  }
+
   const payout = isParlay
     ? calculateAmericanPayout(config.wager, config.parlayOdds)
     : calculateSinglePayout(config.wager, config.odds);

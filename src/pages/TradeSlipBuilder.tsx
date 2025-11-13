@@ -31,6 +31,10 @@ export default function TradeSlipBuilder() {
       { id: 'leg-1', question: '', answer: 'Yes', image: null },
       { id: 'leg-2', question: '', answer: 'Yes', image: null },
     ],
+    prizePickPlayers: [],
+    prizePickWager: 1000,
+    prizePickPayout: 25000,
+    prizePickType: '6-Pick Power Play',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);

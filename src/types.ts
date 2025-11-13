@@ -1,5 +1,5 @@
 export type MarketType = 'binary' | 'multi' | 'forecast';
-export type TradeSlipMode = 'single' | 'parlay';
+export type TradeSlipMode = 'single' | 'parlay' | 'prizepick';
 export type TimeHorizon = '6H' | '1D' | '1W' | '1M' | 'ALL';
 
 export interface Outcome {
@@ -42,6 +42,22 @@ export interface ParlayLeg {
   image: string | null;
 }
 
+export interface PrizePickPlayer {
+  id: string;
+  playerName: string;
+  team: string;
+  position: string;
+  number: string;
+  opponent: string;
+  homeScore: string;
+  awayScore: string;
+  statType: string;
+  statValue: number;
+  image: string | null;
+  league: string;
+  gameStatus: string;
+}
+
 export interface TradeSlipConfig {
   mode: TradeSlipMode;
   title: string;
@@ -55,4 +71,8 @@ export interface TradeSlipConfig {
   parlayOdds: number;
   parlayLegs: ParlayLeg[];
   parlayCashOut?: number;
+  prizePickPlayers: PrizePickPlayer[];
+  prizePickWager: number;
+  prizePickPayout: number;
+  prizePickType: string;
 }
