@@ -75,4 +75,8 @@ export interface TradeSlipConfig {
   prizePickWager: number;
   prizePickPayout: number;
   prizePickType: string;
+  prizePickShowTeam: boolean;
+  prizePickShowPosition: boolean;
+  prizePickShowNumber: boolean;
+  prizePickShowScore: boolean;
 }

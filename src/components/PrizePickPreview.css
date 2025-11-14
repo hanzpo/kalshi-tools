@@ -157,6 +157,7 @@
 .player-card-league {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .league-badge {
@@ -177,28 +178,41 @@
 }
 
 .player-card-score {
-  padding: 8px 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  border-bottom: 1px solid #1a1b26;
+  gap: 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #c9c7d2;
 }
 
 .score-item {
-  font-weight: 400;
+  font-weight: 600;
   color: #ffffff;
   line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
-.score-item:first-child {
-  color: #c9c7d2;
+.score-item--team {
+  color: #9d9ab3;
 }
 
 .score-vs {
-  color: #c9c7d2;
-  font-weight: 400;
-  font-size: 11px;
+  color: #7f7d92;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+.score-item:last-child {
+  color: #ffffff;
+}
+
+.player-card-score span {
+  display: flex;
+  align-items: center;
 }
 
 .player-card-body {
@@ -362,11 +376,17 @@
 .prizepick-footer-brand {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .prizepick-footer-logo {
   height: 15px;
   width: auto;
+}
+
+.prizepick-footer-logo--kalshi {
+  height: 12px;
+  opacity: 0.8;
 }
 
 .prizepick-footer-date {

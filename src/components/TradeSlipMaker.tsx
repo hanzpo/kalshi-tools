@@ -490,49 +490,16 @@ export function TradeSlipMaker({
                       />
                     </div>
                     <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">Position</span>
+                      <span className="parlay-leg-label">Opponent</span>
                       <input
                         type="text"
                         className="text-input"
-                        placeholder="PF"
-                        value={player.position}
-                        onChange={(e) => handlePlayerChange(player.id, { position: e.target.value })}
+                        placeholder="e.g., CHI"
+                        value={player.opponent}
+                        onChange={(e) => handlePlayerChange(player.id, { opponent: e.target.value })}
                       />
                     </div>
                   </div>
-                  <div className="parlay-leg-controls">
-                    <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">Number</span>
-                      <input
-                        type="text"
-                        className="text-input"
-                        placeholder="#34"
-                        value={player.number}
-                        onChange={(e) => handlePlayerChange(player.id, { number: e.target.value })}
-                      />
-                    </div>
-                    <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">League</span>
-                      <input
-                        type="text"
-                        className="text-input"
-                        placeholder="NBA"
-                        value={player.league}
-                        onChange={(e) => handlePlayerChange(player.id, { league: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                  <label className="parlay-leg-label" htmlFor={`opponent-${player.id}`}>
-                    Opponent
-                  </label>
-                  <input
-                    id={`opponent-${player.id}`}
-                    type="text"
-                    className="text-input"
-                    placeholder="e.g., CHI"
-                    value={player.opponent}
-                    onChange={(e) => handlePlayerChange(player.id, { opponent: e.target.value })}
-                  />
                   <div className="parlay-leg-controls">
                     <div className="parlay-leg-control">
                       <span className="parlay-leg-label">Home Score</span>
@@ -552,6 +519,50 @@ export function TradeSlipMaker({
                         placeholder="113"
                         value={player.awayScore}
                         onChange={(e) => handlePlayerChange(player.id, { awayScore: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">League</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="NBA"
+                        value={player.league}
+                        onChange={(e) => handlePlayerChange(player.id, { league: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Game Status</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="Final"
+                        value={player.gameStatus}
+                        onChange={(e) => handlePlayerChange(player.id, { gameStatus: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Position</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="PF"
+                        value={player.position}
+                        onChange={(e) => handlePlayerChange(player.id, { position: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Number</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="#34"
+                        value={player.number}
+                        onChange={(e) => handlePlayerChange(player.id, { number: e.target.value })}
                       />
                     </div>
                   </div>
@@ -578,16 +589,6 @@ export function TradeSlipMaker({
                     </div>
                   </div>
                   <div className="parlay-leg-controls">
-                    <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">Game Status</span>
-                      <input
-                        type="text"
-                        className="text-input"
-                        placeholder="Final"
-                        value={player.gameStatus}
-                        onChange={(e) => handlePlayerChange(player.id, { gameStatus: e.target.value })}
-                      />
-                    </div>
                     <div className="parlay-leg-control">
                       <span className="parlay-leg-label">Image</span>
                       <div className="parlay-image-upload">
@@ -627,6 +628,113 @@ export function TradeSlipMaker({
               + Add Player
             </button>
           </div>
+        </div>
+      )}
+
+      {isPrizePickMode && (
+        <div className="control-group">
+          <label>Player Display Options</label>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '12px',
+              }}
+            >
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={config.prizePickShowTeam}
+                  onChange={(e) => onConfigChange({ prizePickShowTeam: e.target.checked })}
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer',
+                    accentColor: BRAND_GREEN,
+                  }}
+                />
+                <span>Team chip</span>
+              </label>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={config.prizePickShowPosition}
+                  onChange={(e) => onConfigChange({ prizePickShowPosition: e.target.checked })}
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer',
+                    accentColor: BRAND_GREEN,
+                  }}
+                />
+                <span>Position chip</span>
+              </label>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={config.prizePickShowNumber}
+                  onChange={(e) => onConfigChange({ prizePickShowNumber: e.target.checked })}
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer',
+                    accentColor: BRAND_GREEN,
+                  }}
+                />
+                <span>Number chip</span>
+              </label>
+            </div>
+            <label
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={config.prizePickShowScore}
+                onChange={(e) => onConfigChange({ prizePickShowScore: e.target.checked })}
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  cursor: 'pointer',
+                  accentColor: BRAND_GREEN,
+                }}
+              />
+              <span>Show score line</span>
+            </label>
+          </div>
+          <p className="help-text">Choose which badges and score row appear on each pick.</p>
         </div>
       )}
 

@@ -35,6 +35,10 @@ export default function TradeSlipBuilder() {
     prizePickWager: 1000,
     prizePickPayout: 25000,
     prizePickType: '6-Pick Power Play',
+    prizePickShowTeam: true,
+    prizePickShowPosition: true,
+    prizePickShowNumber: true,
+    prizePickShowScore: true,
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);

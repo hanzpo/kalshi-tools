@@ -46,6 +46,12 @@ export function PrizePickPreview({ config }: PrizePickPreviewProps) {
               const statValue = player.statValue || 20;
               const league = player.league.trim() || 'NBA';
               const gameStatus = player.gameStatus.trim() || 'Final';
+              const metaItems = [
+                config.prizePickShowTeam ? team : '',
+                config.prizePickShowPosition ? position : '',
+                config.prizePickShowNumber ? number : '',
+              ].filter((item): item is string => Boolean(item && item.trim()));
+              const showScoreLine = config.prizePickShowScore;
               
               return (
                 <div key={player.id} className="prizepick-player-card">
@@ -53,15 +59,15 @@ export function PrizePickPreview({ config }: PrizePickPreviewProps) {
                   <div className="player-card-header">
                     <div className="player-card-league">
                       <span className="league-badge">{league}</span>
+                      {showScoreLine && (
+                        <div className="player-card-score">
+                          <span className="score-item score-item--team">{team} {homeScore}</span>
+                          <span className="score-vs">vs</span>
+                          <span className="score-item">{opponent} {awayScore}</span>
+                        </div>
+                      )}
                     </div>
                     <span className="player-card-status">{gameStatus}</span>
-                  </div>
-
-                  {/* Score */}
-                  <div className="player-card-score">
-                    <span className="score-item">{team} {homeScore}</span>
-                    <span className="score-vs">vs</span>
-                    <span className="score-item">{opponent} {awayScore}</span>
                   </div>
 
                   {/* Player Info */}
@@ -79,7 +85,9 @@ export function PrizePickPreview({ config }: PrizePickPreviewProps) {
                       </div>
                       <div className="player-details">
                         <h3 className="player-name">{playerName}</h3>
-                        <p className="player-meta">{team} • {position} • {number}</p>
+                        {metaItems.length > 0 && (
+                          <p className="player-meta">{metaItems.join(' • ')}</p>
+                        )}
                       </div>
                     </div>
 
@@ -106,6 +114,7 @@ export function PrizePickPreview({ config }: PrizePickPreviewProps) {
           <div className="prizepick-footer">
             <div className="prizepick-footer-brand">
               <img src="/prizepickslogowithtext.svg" alt="PrizePicks" className="prizepick-footer-logo" />
+              <img src="/kalshi-logo-grey.svg" alt="Kalshi" className="prizepick-footer-logo prizepick-footer-logo--kalshi" />
             </div>
             <span className="prizepick-footer-date">Oct 31, 2025 @ 2:00 PM</span>
           </div>
