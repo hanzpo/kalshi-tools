@@ -18,3 +18,5 @@ Automated tests are not yet configured. When introducing them, prefer Vitest wit
 
 ## Commit & Pull Request Guidelines
 Recent commits use short, imperative subjects (for example, `Replace external font link with npm package`). Follow the same style, keep scope focused, and update the lockfile in the same commit when dependencies change. Pull requests should link related issues, summarize behavior changes, attach UI screenshots for visual updates, and list the commands you ran (lint, build, preview) so reviewers can reproduce.
+
+Do not create markdown summary files
