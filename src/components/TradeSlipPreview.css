@@ -177,10 +177,10 @@
 
 .trade-slip-watermark {
   position: absolute;
-  bottom: clamp(25px, 5vw, 42px);
+  bottom: clamp(12px, 3vw, 18px);
   right: clamp(16px, 3vw, 24px);
   font-size: clamp(8px, 1.5vw, 10px);
-  color: rgba(0, 0, 0, 0.25);
+  color: rgba(0, 0, 0, 0.1);
   font-weight: 500;
   z-index: 10;
 }
@@ -259,8 +259,10 @@
 }
 
 .trade-slip-preview.parlay-mode {
-  /* Black background for parlay */
-  background: #000000;
+  /* Very dark grey background for parlay */
+  background: #141414;
+  padding: 0 0 clamp(2px, 0.5vw, 4px);
+  border-radius: clamp(8px, 2vw, 12px);
 }
 
 .parlay-card.trade-slip-content {
@@ -268,20 +270,23 @@
   display: flex;
   flex-direction: column;
   gap: clamp(16px, 3vw, 22px);
+  margin: 0;
+  border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
+  padding: clamp(24px, 4vw, 32px);
 }
 
 .parlay-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: clamp(12px, 2vw, 18px);
+  margin-bottom: clamp(8px, 2vw, 12px);
   min-height: clamp(15px, 3vw, 20px);
 }
 
 .parlay-label {
-  font-size: clamp(14px, 3vw, 16px);
+  font-size: clamp(16px, 3vw, 18px);
   font-weight: 500;
-  color: #6b7280;
+  color: #000000;
   line-height: 1.3;
 }
 
@@ -300,13 +305,13 @@
 .parlay-body {
   display: flex;
   flex-direction: column;
-  gap: clamp(16px, 3vw, 22px);
+  gap: clamp(20px, 3vw, 28px);
 }
 
 .parlay-legs-preview {
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 2vw, 16px);
+  gap: clamp(16px, 2vw, 20px);
 }
 
 .parlay-leg-preview {
@@ -316,8 +321,8 @@
 }
 
 .parlay-leg-preview-image {
-  width: clamp(60px, 12vw, 80px);
-  height: clamp(60px, 12vw, 80px);
+  width: clamp(60px, 10vw, 75px);
+  height: clamp(60px, 10vw, 75px);
   border-radius: clamp(8px, 2vw, 12px);
   overflow: hidden;
   flex-shrink: 0;
@@ -340,14 +345,14 @@
 }
 
 .parlay-leg-question {
-  font-size: clamp(14px, 3vw, 16px);
-  font-weight: 500;
-  line-height: 1.35;
-  color: #4b5563;
+  font-size: clamp(15px, 3vw, 18px);
+  font-weight: 400;
+  line-height: 1.4;
+  color: #6b7280;
 }
 
 .parlay-leg-answer {
-  font-size: clamp(16px, 3.5vw, 20px);
+  font-size: clamp(18px, 3.5vw, 22px);
   font-weight: 600;
   color: #111827;
   line-height: 1.3;
@@ -356,8 +361,8 @@
 .parlay-summary {
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 2vw, 18px);
-  margin-top: clamp(8px, 1.5vw, 12px);
+  gap: clamp(14px, 2vw, 20px);
+  margin-top: clamp(4px, 1vw, 8px);
 }
 
 .parlay-summary-row {
@@ -386,10 +391,10 @@
 }
 
 .parlay-payout {
-  font-size: clamp(24px, 6vw, 36px);
+  font-size: clamp(32px, 7vw, 48px);
   color: #00C688;
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1;
 }
 
 @media (max-width: 540px) {
