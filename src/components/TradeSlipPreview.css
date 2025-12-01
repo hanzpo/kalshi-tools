@@ -260,7 +260,7 @@
 
 .trade-slip-preview.parlay-mode {
   /* Very dark grey background for parlay */
-  background: #141414;
+  background:rgb(34, 34, 34);
   padding: 0 0 clamp(2px, 0.5vw, 4px);
   border-radius: clamp(8px, 2vw, 12px);
 }
