@@ -6,6 +6,7 @@ import './App.css';
 const ChartBuilder = lazy(() => import('./pages/ChartBuilder'));
 const TradeSlipBuilder = lazy(() => import('./pages/TradeSlipBuilder'));
 const SearchBuilder = lazy(() => import('./pages/SearchBuilder'));
+const LinkPreviewBuilder = lazy(() => import('./pages/LinkPreviewBuilder'));
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/chart" element={<ChartBuilder />} />
           <Route path="/trade-slip" element={<TradeSlipBuilder />} />
           <Route path="/search" element={<SearchBuilder />} />
+          <Route path="/link-preview" element={<LinkPreviewBuilder />} />
           <Route path="*" element={<LandingPage />} />
         </Routes>
       </Suspense>

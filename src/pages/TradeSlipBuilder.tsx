@@ -4,15 +4,13 @@ import { TradeSlipConfig } from '../types';
 import { TradeSlipMaker } from '../components/TradeSlipMaker';
 import { TradeSlipPreview } from '../components/TradeSlipPreview';
 import { ImageCropper } from '../components/ImageCropper';
+import { Toast } from '../components/ui/Toast';
 import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
+import { createFileName } from '../utils/chartHelpers';
+import { useToast } from '../hooks/useToast';
 import '../App.css';
 
 const TRADE_SLIP_PREVIEW_ID = 'trade-slip-preview';
-
-function createFileName(title: string): string {
-  const safeName = title.slice(0, 50).replace(/[^a-z0-9]/gi, '-') || 'kalshi-trade-slip';
-  return `${safeName}.png`;
-}
 
 export default function TradeSlipBuilder() {
   const navigate = useNavigate();
@@ -42,7 +40,7 @@ export default function TradeSlipBuilder() {
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { message: toastMessage, showToast } = useToast();
 
   function handleConfigChange(updates: Partial<TradeSlipConfig>) {
     setConfig((prev) => ({ ...prev, ...updates }));
@@ -64,13 +62,6 @@ export default function TradeSlipBuilder() {
 
   function handleCropCancel() {
     setCropperImage(null);
-  }
-
-  function showToast(message: string) {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2000);
   }
 
   useEffect(() => {
@@ -102,7 +93,7 @@ export default function TradeSlipBuilder() {
       const nameSource = config.mode === 'single'
         ? (outcomeName || marketName || titleName || 'trade-slip')
         : (titleName || 'trade-slip');
-      downloadDataUrl(dataUrl, createFileName(nameSource));
+      downloadDataUrl(dataUrl, createFileName(nameSource, 'kalshi-trade-slip'));
     } catch (error) {
       console.error('Error exporting image:', error);
       alert('Failed to export image. Please try again.');
@@ -156,8 +147,7 @@ export default function TradeSlipBuilder() {
         <ImageCropper imageSrc={cropperImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />
       )}
 
-      {toastMessage && <div className="toast">{toastMessage}</div>}
+      <Toast message={toastMessage} />
     </div>
   );
 }
-
