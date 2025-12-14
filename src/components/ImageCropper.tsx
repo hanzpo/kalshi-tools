@@ -13,9 +13,10 @@ interface ImageCropperProps {
   imageSrc: string;
   onCropComplete: (croppedImage: string) => void;
   onCancel: () => void;
+  aspectRatio?: number;
 }
 
-export function ImageCropper({ imageSrc, onCropComplete, onCancel }: ImageCropperProps) {
+export function ImageCropper({ imageSrc, onCropComplete, onCancel, aspectRatio = 1 }: ImageCropperProps) {
   const [crop, setCrop] = useState<Crop | undefined>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -28,7 +29,7 @@ export function ImageCropper({ imageSrc, onCropComplete, onCancel }: ImageCroppe
           unit: '%',
           width: 100,
         },
-        1,
+        aspectRatio,
         naturalWidth,
         naturalHeight
       ),
@@ -38,7 +39,7 @@ export function ImageCropper({ imageSrc, onCropComplete, onCancel }: ImageCroppe
 
     setCrop(initialCrop);
     setCompletedCrop(convertToPixelCrop(initialCrop, naturalWidth, naturalHeight));
-  }, []);
+  }, [aspectRatio]);
 
   const getCroppedImg = useCallback((): string | null => {
     const image = imgRef.current;
@@ -94,13 +95,13 @@ export function ImageCropper({ imageSrc, onCropComplete, onCancel }: ImageCroppe
   return (
     <div className="cropper-modal">
       <div className="cropper-content">
-        <h3>Crop Image (Square)</h3>
+        <h3>Crop Image{aspectRatio === 1 ? ' (Square)' : ''}</h3>
         <div className="cropper-container">
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
             onComplete={(pixelCrop) => setCompletedCrop(pixelCrop)}
-            aspect={1}
+            aspect={aspectRatio}
             circularCrop={false}
             ruleOfThirds
           >

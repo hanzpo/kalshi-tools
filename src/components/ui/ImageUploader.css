@@ -1,0 +1,43 @@
+.image-uploader {
+  border: 1.5px dashed #d1d5db;
+  border-radius: 6px;
+  padding: 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  background-color: #fafafa;
+  transition: border-color 0.15s, background-color 0.15s;
+  cursor: pointer;
+}
+
+.image-uploader:hover {
+  border-color: #09C285;
+  background-color: #f5f5f5;
+}
+
+.image-uploader--dragging {
+  border-color: #09C285;
+  background-color: #f0fdf4;
+}
+
+.image-uploader__input {
+  display: none;
+}
+
+.image-uploader__label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.image-uploader--dragging .image-uploader__label {
+  color: #09C285;
+}

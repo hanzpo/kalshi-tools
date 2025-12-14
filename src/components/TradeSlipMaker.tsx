@@ -1,5 +1,12 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
 import { TradeSlipConfig, TradeSlipMode, ParlayLeg, PrizePickPlayer } from '../types';
+import { 
+  ImageIcon, 
+  UploadIcon, 
+  DownloadIcon, 
+  CopyIcon,
+  ArrowLeftIcon
+} from './ui/Icons';
 import '../components/ControlPanel.css';
 
 interface TradeSlipMakerProps {
@@ -195,7 +202,7 @@ export function TradeSlipMaker({
   return (
     <div className="control-panel">
       <button onClick={onBack} className="back-button-control-panel">
-        <span aria-hidden="true">&larr;</span>
+        <ArrowLeftIcon size={14} />
         Back
       </button>
       <h1 className="panel-title">Trade Slip Maker</h1>
@@ -290,14 +297,17 @@ export function TradeSlipMaker({
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               style={{
-                border: `2px dashed ${isDragging ? BRAND_GREEN : '#d1d5db'}`,
-                borderRadius: '8px',
-                padding: '12px',
-                textAlign: 'center',
-                backgroundColor: isDragging ? '#ecfdf5' : '#f9fafb',
-                transition: 'all 0.2s',
+                border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#d1d5db'}`,
+                borderRadius: '5px',
+                padding: '16px 12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '48px',
+                backgroundColor: isDragging ? '#f0fdf4' : '#fafafa',
+                transition: 'border-color 0.15s, background-color 0.15s',
                 cursor: 'pointer',
-                marginBottom: '8px'
+                marginBottom: '4px'
               }}
             >
               <input
@@ -312,22 +322,26 @@ export function TradeSlipMaker({
                 htmlFor="bet-image"
                 style={{
                   cursor: 'pointer',
-                  display: 'block',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
                   color: isDragging ? BRAND_GREEN : '#6b7280',
-                  fontWeight: '500',
-                  fontSize: '14px',
-                  lineHeight: '1.5'
+                  fontWeight: 500,
+                  fontSize: '13px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.02em'
                 }}
               >
                 {isDragging ? (
                   <>
-                    <span style={{ verticalAlign: 'middle', marginRight: '6px' }}>📥</span>
-                    <span style={{ display: 'inline-block', verticalAlign: 'middle', transform: 'translateY(4px)' }}>Drop image here</span>
+                    <UploadIcon size={14} />
+                    <span>Drop image here</span>
                   </>
                 ) : (
                   <>
-                    <span style={{ verticalAlign: 'middle', marginRight: '6px' }}>📷</span>
-                    <span style={{ display: 'inline-block', verticalAlign: 'middle', transform: 'translateY(2px)' }}>Click to upload or drag & drop</span>
+                    <ImageIcon size={14} />
+                    <span>Click to upload or drag & drop</span>
                   </>
                 )}
               </label>
@@ -863,20 +877,22 @@ export function TradeSlipMaker({
         <p className="help-text">Display watermark on trade slip</p>
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', marginTop: '24px' }}>
+      <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
         <button
           onClick={onExport}
           className="button-export"
           style={{ flex: 1 }}
         >
-          📥 Export as PNG
+          <DownloadIcon size={16} />
+          Export as PNG
         </button>
         <button
           onClick={onCopyToClipboard}
           className="button-export"
           style={{ flex: 1 }}
         >
-          📋 Copy
+          <CopyIcon size={16} />
+          Copy
         </button>
       </div>
     </div>
