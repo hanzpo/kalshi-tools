@@ -88,6 +88,28 @@ export function LandingPage() {
               </p>
             </div>
           </Link>
+
+          <Link to="/link-preview" className="landing-option landing-option--linkpreview">
+            <div className="option-body">
+              <div className="option-header">
+                <span className="option-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <line x1="12" y1="3" x2="12" y2="21" />
+                    <path d="M3 9h9" />
+                    <path d="M12 15h9" />
+                  </svg>
+                </span>
+                <div className="option-title-group">
+                  <span className="option-subtitle">Create a</span>
+                  <span className="option-label">Link Preview</span>
+                </div>
+              </div>
+              <p className="option-description">
+                Generate Twitter/social media card previews with split-screen image and chart layout (1200×675).
+              </p>
+            </div>
+          </Link>
         </div>
 
         <footer className="landing-footer">

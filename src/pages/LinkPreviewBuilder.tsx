@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MarketConfig, DataPoint } from '../types';
 import { ControlPanel } from '../components/ControlPanel';
-import { ChartPreview } from '../components/ChartPreview';
+import { LinkPreviewPreview } from '../components/LinkPreviewPreview';
 import { ImageCropper } from '../components/ImageCropper';
 import { TrendDrawer } from '../components/TrendDrawer';
 import { Toast } from '../components/ui/Toast';
 import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../utils/dataGenerator';
-import { decodeConfigFromUrl } from '../utils/urlEncoder';
 import { getOutcomeColor } from '../utils/colorGenerator';
 import { 
   getDefaultStartDate, 
@@ -18,11 +17,10 @@ import { useToast } from '../hooks/useToast';
 import { useExport } from '../hooks/useExport';
 import '../App.css';
 
-const CHART_PREVIEW_ID = 'chart-preview';
+const PREVIEW_ID = 'link-preview';
 
-export default function SearchBuilder() {
+export default function LinkPreviewBuilder() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [config, setConfig] = useState<MarketConfig>({
     title: '',
@@ -39,21 +37,22 @@ export default function SearchBuilder() {
     startDate: getDefaultStartDate(),
     endDate: new Date(),
     timeHorizon: 'ALL',
-    showWatermark: true,
+    showWatermark: false,
     forecastValue: 128000,
     forecastUnit: 'K',
     mutuallyExclusive: true,
-    searchQuery: '',
   });
 
   const [data, setData] = useState<DataPoint[]>([]);
+  const [leftImage, setLeftImage] = useState<string | null>(null);
   const [cropperImage, setCropperImage] = useState<string | null>(null);
+  const [cropperTarget, setCropperTarget] = useState<'left' | 'chart'>('left');
   const [showTrendDrawer, setShowTrendDrawer] = useState(false);
   const configRef = useRef(config);
   
   const { message: toastMessage, showToast } = useToast();
   const { handleExport, handleCopyToClipboard } = useExport({
-    elementId: CHART_PREVIEW_ID,
+    elementId: PREVIEW_ID,
     onSuccess: showToast,
   });
 
@@ -64,21 +63,6 @@ export default function SearchBuilder() {
       return next;
     });
   }
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const sharedConfig = urlParams.get('c');
-
-    if (sharedConfig) {
-      decodeConfigFromUrl(sharedConfig)
-        .then((decodedConfig) => {
-          updateConfig((prev) => ({ ...prev, ...decodedConfig }));
-        })
-        .catch((error) => {
-          console.error('Failed to decode shared config:', error);
-        });
-    }
-  }, [location.search]);
 
   useEffect(() => {
     regenerateData();
@@ -96,7 +80,6 @@ export default function SearchBuilder() {
 
   function regenerateData(sourceConfig: MarketConfig = configRef.current) {
     const current = sourceConfig;
-    // Get date range based on time horizon
     const { startDate, endDate } = current.timeHorizon === 'ALL' 
       ? { startDate: current.startDate, endDate: current.endDate }
       : getDateRangeForTimeHorizon(current.timeHorizon, current.endDate);
@@ -142,17 +125,34 @@ export default function SearchBuilder() {
     updateConfig((prev) => ({ ...prev, ...updates }));
   }
 
-  function handleImageUpload(file: File) {
+  // Left image handling
+  function handleLeftImageUpload(file: File) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
       setCropperImage(result);
+      setCropperTarget('left');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Chart image handling
+  function handleChartImageUpload(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setCropperImage(result);
+      setCropperTarget('chart');
     };
     reader.readAsDataURL(file);
   }
 
   function handleCropComplete(croppedImage: string) {
-    updateConfig((prev) => ({ ...prev, image: croppedImage }));
+    if (cropperTarget === 'left') {
+      setLeftImage(croppedImage);
+    } else {
+      updateConfig((prev) => ({ ...prev, image: croppedImage }));
+    }
     setCropperImage(null);
   }
 
@@ -216,18 +216,21 @@ export default function SearchBuilder() {
         <ControlPanel
           config={config}
           onConfigChange={handleConfigChange}
-          onImageUpload={handleImageUpload}
-          onExport={() => handleExport(config.title, 'kalshi-search')}
+          onImageUpload={handleChartImageUpload}
+          onExport={() => handleExport(config.title, 'kalshi-link-preview')}
           onRegenerateData={regenerateData}
           onOpenTrendDrawer={handleOpenTrendDrawer}
-          onCopyToClipboard={() => handleCopyToClipboard('Search result copied to clipboard!')}
+          onCopyToClipboard={() => handleCopyToClipboard('Link preview copied to clipboard!')}
           onBack={() => navigate('/')}
-          mode="search"
+          mode="link-preview"
+          leftImage={leftImage}
+          onLeftImageUpload={handleLeftImageUpload}
         />
         <div className="preview-section">
-          <ChartPreview 
+          <LinkPreviewPreview 
             config={config} 
             data={data} 
+            leftImage={leftImage}
             onTimeHorizonChange={(timeHorizon) => {
               handleConfigChange({ timeHorizon: timeHorizon as any });
               regenerateData();
@@ -250,7 +253,12 @@ export default function SearchBuilder() {
       </div>
 
       {cropperImage && (
-        <ImageCropper imageSrc={cropperImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />
+        <ImageCropper 
+          imageSrc={cropperImage} 
+          onCropComplete={handleCropComplete} 
+          onCancel={handleCropCancel}
+          aspectRatio={cropperTarget === 'left' ? 600 / 675 : 1}
+        />
       )}
 
       {showTrendDrawer && <TrendDrawer onComplete={handleTrendDrawComplete} onCancel={handleTrendDrawCancel} />}
@@ -259,4 +267,3 @@ export default function SearchBuilder() {
     </div>
   );
 }
-

@@ -5,58 +5,20 @@ import { ControlPanel } from '../components/ControlPanel';
 import { ChartPreview } from '../components/ChartPreview';
 import { ImageCropper } from '../components/ImageCropper';
 import { TrendDrawer } from '../components/TrendDrawer';
+import { Toast } from '../components/ui/Toast';
 import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../utils/dataGenerator';
 import { decodeConfigFromUrl } from '../utils/urlEncoder';
 import { getOutcomeColor } from '../utils/colorGenerator';
-import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
+import { 
+  getDefaultStartDate, 
+  generateDefaultTrend, 
+  generateDefaultForecastTrend 
+} from '../utils/chartHelpers';
+import { useToast } from '../hooks/useToast';
+import { useExport } from '../hooks/useExport';
 import '../App.css';
 
 const CHART_PREVIEW_ID = 'chart-preview';
-
-function getDefaultStartDate(): Date {
-  const date = new Date();
-  date.setMonth(date.getMonth() - 3);
-  return date;
-}
-
-function createFileName(title: string): string {
-  const safeName = title.slice(0, 50).replace(/[^a-z0-9]/gi, '-') || 'kalshi-chart';
-  return `${safeName}.png`;
-}
-
-function generateDefaultTrend(targetOdds: number): number[] {
-  const defaultTrend: number[] = [];
-  let currentValue = 40 + Math.random() * 20;
-
-  for (let i = 0; i < 100; i++) {
-    const drift = ((targetOdds - currentValue) / (100 - i)) * 0.2;
-    const randomStep = (Math.random() - 0.5) * 8;
-    currentValue += drift + randomStep;
-    currentValue = Math.max(0, Math.min(100, currentValue));
-    defaultTrend.push(currentValue);
-  }
-
-  defaultTrend[99] = targetOdds;
-  return defaultTrend;
-}
-
-function generateDefaultForecastTrend(targetValue: number): number[] {
-  const defaultTrend: number[] = [];
-  // Start from a value that's somewhat below the target
-  const startValue = targetValue * (0.7 + Math.random() * 0.2);
-  let currentValue = startValue;
-
-  for (let i = 0; i < 100; i++) {
-    const drift = ((targetValue - currentValue) / (100 - i)) * 0.2;
-    const randomStep = (Math.random() - 0.5) * (targetValue * 0.1); // Scale noise to target value
-    currentValue += drift + randomStep;
-    currentValue = Math.max(0, currentValue); // Only enforce minimum, no maximum
-    defaultTrend.push(currentValue);
-  }
-
-  defaultTrend[99] = targetValue;
-  return defaultTrend;
-}
 
 export default function ChartBuilder() {
   const navigate = useNavigate();
@@ -86,8 +48,13 @@ export default function ChartBuilder() {
   const [data, setData] = useState<DataPoint[]>([]);
   const [cropperImage, setCropperImage] = useState<string | null>(null);
   const [showTrendDrawer, setShowTrendDrawer] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const configRef = useRef(config);
+  
+  const { message: toastMessage, showToast } = useToast();
+  const { handleExport, handleCopyToClipboard } = useExport({
+    elementId: CHART_PREVIEW_ID,
+    onSuccess: showToast,
+  });
 
   function updateConfig(updater: (prev: MarketConfig) => MarketConfig) {
     setConfig((prev) => {
@@ -114,20 +81,17 @@ export default function ChartBuilder() {
 
   useEffect(() => {
     regenerateData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     regenerateData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.marketType, config.timeHorizon, config.startDate, config.endDate]);
 
   useEffect(() => {
     if (config.marketType === 'multi') {
       regenerateData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.outcomes.length]);
+  }, [config.marketType, config.outcomes.length]);
 
   function regenerateData(sourceConfig: MarketConfig = configRef.current) {
     const current = sourceConfig;
@@ -245,40 +209,6 @@ export default function ChartBuilder() {
     setShowTrendDrawer(false);
   }
 
-  function showToast(message: string) {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2000);
-  }
-
-  async function handleExport() {
-    const element = document.getElementById(CHART_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      downloadDataUrl(dataUrl, createFileName(config.title));
-    } catch (error) {
-      console.error('Error exporting image:', error);
-      alert('Failed to export image. Please try again.');
-    }
-  }
-
-  async function handleCopyToClipboard() {
-    const element = document.getElementById(CHART_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      await copyDataUrlToClipboard(dataUrl);
-      showToast('Chart copied to clipboard!');
-    } catch (error) {
-      console.error('Error copying to clipboard:', error);
-      showToast('Failed to copy to clipboard');
-    }
-  }
-
   return (
     <div className="app">
       <div className="app-container">
@@ -286,10 +216,10 @@ export default function ChartBuilder() {
           config={config}
           onConfigChange={handleConfigChange}
           onImageUpload={handleImageUpload}
-          onExport={handleExport}
+          onExport={() => handleExport(config.title, 'kalshi-chart')}
           onRegenerateData={regenerateData}
           onOpenTrendDrawer={handleOpenTrendDrawer}
-          onCopyToClipboard={handleCopyToClipboard}
+          onCopyToClipboard={() => handleCopyToClipboard('Chart copied to clipboard!')}
           onBack={() => navigate('/')}
           mode="chart"
         />
@@ -324,7 +254,7 @@ export default function ChartBuilder() {
 
       {showTrendDrawer && <TrendDrawer onComplete={handleTrendDrawComplete} onCancel={handleTrendDrawCancel} />}
 
-      {toastMessage && <div className="toast">{toastMessage}</div>}
+      <Toast message={toastMessage} />
     </div>
   );
 }
