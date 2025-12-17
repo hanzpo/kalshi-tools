@@ -37,6 +37,10 @@ export default function TradeSlipBuilder() {
     prizePickShowPosition: true,
     prizePickShowNumber: true,
     prizePickShowScore: true,
+    coinbasePredictions: [],
+    coinbaseWager: 1000,
+    coinbasePayout: 25000,
+    coinbasePlayType: '',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);
@@ -90,9 +94,14 @@ export default function TradeSlipBuilder() {
       const outcomeName = config.outcome?.trim();
       const marketName = config.marketName?.trim();
       const titleName = config.title?.trim();
-      const nameSource = config.mode === 'single'
-        ? (outcomeName || marketName || titleName || 'trade-slip')
-        : (titleName || 'trade-slip');
+      let nameSource: string;
+      if (config.mode === 'single') {
+        nameSource = outcomeName || marketName || titleName || 'trade-slip';
+      } else if (config.mode === 'coinbase') {
+        nameSource = config.coinbasePlayType?.trim() || 'coinbase-slip';
+      } else {
+        nameSource = titleName || 'trade-slip';
+      }
       downloadDataUrl(dataUrl, createFileName(nameSource, 'kalshi-trade-slip'));
     } catch (error) {
       console.error('Error exporting image:', error);

@@ -1,5 +1,5 @@
 export type MarketType = 'binary' | 'multi' | 'forecast';
-export type TradeSlipMode = 'single' | 'parlay' | 'prizepick';
+export type TradeSlipMode = 'single' | 'parlay' | 'prizepick' | 'coinbase';
 export type TimeHorizon = '6H' | '1D' | '1W' | '1M' | 'ALL';
 
 export interface Outcome {
@@ -79,4 +79,29 @@ export interface TradeSlipConfig {
   prizePickShowPosition: boolean;
   prizePickShowNumber: boolean;
   prizePickShowScore: boolean;
+  coinbasePredictions: CoinbasePrediction[];
+  coinbaseWager: number;
+  coinbasePayout: number;
+  coinbasePlayType: string;
+}
+
+export interface CoinbasePrediction {
+  id: string;
+  assetName: string;
+  ticker: string;
+  predictionType: string;
+  targetValue: number;
+  currentValue: number;
+  timeframe: string;
+  status: string;
+  percentChange: number;
+  image: string | null;
+}
+
+export interface CoinbaseConfig {
+  coinbasePredictions: CoinbasePrediction[];
+  coinbaseWager: number;
+  coinbasePayout: number;
+  coinbasePlayType: string;
+  showWatermark: boolean;
 }

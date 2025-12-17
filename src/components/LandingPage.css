@@ -105,6 +105,15 @@
   color: #2563eb;
 }
 
+.landing-option--coinbase .option-icon {
+  background: #e6edff;
+  color: #0052FF;
+}
+
+.landing-option--coinbase .option-subtitle {
+  color: #0052FF;
+}
+
 .option-body {
   border: none;
   border-radius: 8px;

@@ -1,5 +1,6 @@
 import { TradeSlipConfig } from '../types';
 import { PrizePickPreview } from './PrizePickPreview';
+import { CoinbasePreview } from './CoinbasePreview';
 import './TradeSlipPreview.css';
 
 interface TradeSlipPreviewProps {
@@ -27,9 +28,20 @@ function formatAmericanOdds(odds: number): string {
 export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isParlay = config.mode === 'parlay';
   const isPrizePick = config.mode === 'prizepick';
+  const isCoinbase = config.mode === 'coinbase';
   
   if (isPrizePick) {
     return <PrizePickPreview config={config} />;
+  }
+  
+  if (isCoinbase) {
+    return <CoinbasePreview config={{
+      coinbasePredictions: config.coinbasePredictions,
+      coinbaseWager: config.coinbaseWager,
+      coinbasePayout: config.coinbasePayout,
+      coinbasePlayType: config.coinbasePlayType,
+      showWatermark: config.showWatermark,
+    }} />;
   }
 
   const payout = isParlay

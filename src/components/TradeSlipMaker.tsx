@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { TradeSlipConfig, TradeSlipMode, ParlayLeg, PrizePickPlayer } from '../types';
+import { TradeSlipConfig, TradeSlipMode, ParlayLeg, PrizePickPlayer, CoinbasePrediction } from '../types';
 import { 
   ImageIcon, 
   UploadIcon, 
@@ -45,6 +45,21 @@ function createPrizePickPlayer(): PrizePickPlayer {
   };
 }
 
+function createCoinbasePrediction(): CoinbasePrediction {
+  return {
+    id: `prediction-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    assetName: '',
+    ticker: 'BTC',
+    predictionType: 'Price Above',
+    targetValue: 100000,
+    currentValue: 105000,
+    timeframe: '24h',
+    status: 'Won',
+    percentChange: 5.2,
+    image: null,
+  };
+}
+
 function calculateSinglePayout(wager: number, odds: number): number {
   if (odds <= 0 || odds >= 100) return 0;
   return Math.round((wager / (odds / 100)) * 100) / 100;
@@ -75,11 +90,14 @@ export function TradeSlipMaker({
   const isSingleMode = config.mode === 'single';
   const isParlayMode = config.mode === 'parlay';
   const isPrizePickMode = config.mode === 'prizepick';
+  const isCoinbaseMode = config.mode === 'coinbase';
   const payout = isSingleMode
     ? calculateSinglePayout(config.wager, config.odds)
     : isParlayMode
     ? calculateAmericanPayout(config.wager, config.parlayOdds)
-    : config.prizePickPayout;
+    : isPrizePickMode
+    ? config.prizePickPayout
+    : config.coinbasePayout;
 
   function handleModeChange(mode: TradeSlipMode) {
     if (mode === config.mode) return;
@@ -88,6 +106,12 @@ export function TradeSlipMaker({
       onConfigChange({ mode, parlayLegs: [createLeg(), createLeg()] });
     } else if (mode === 'prizepick' && config.prizePickPlayers.length === 0) {
       onConfigChange({ mode, prizePickPlayers: [createPrizePickPlayer()] });
+    } else if (mode === 'coinbase' && config.coinbasePredictions.length === 0) {
+      onConfigChange({ 
+        mode, 
+        coinbasePredictions: [createCoinbasePrediction()],
+        coinbasePlayType: config.coinbasePlayType || '',
+      });
     } else {
       onConfigChange({ mode });
     }
@@ -199,6 +223,41 @@ export function TradeSlipMaker({
     });
   }
 
+  function handlePredictionChange(predictionId: string, updates: Partial<CoinbasePrediction>) {
+    const updatedPredictions = config.coinbasePredictions.map((p) =>
+      p.id === predictionId ? { ...p, ...updates } : p
+    );
+    onConfigChange({ coinbasePredictions: updatedPredictions });
+  }
+
+  function handlePredictionImageInput(
+    predictionId: string,
+    event: ChangeEvent<HTMLInputElement>
+  ) {
+    const file = event.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result;
+      if (typeof result === 'string') {
+        handlePredictionChange(predictionId, { image: result });
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleAddPrediction() {
+    onConfigChange({ coinbasePredictions: [...config.coinbasePredictions, createCoinbasePrediction()] });
+  }
+
+  function handleRemovePrediction(predictionId: string) {
+    if (config.coinbasePredictions.length <= 1) return;
+    onConfigChange({
+      coinbasePredictions: config.coinbasePredictions.filter((p) => p.id !== predictionId),
+    });
+  }
+
   return (
     <div className="control-panel">
       <button onClick={onBack} className="back-button-control-panel">
@@ -236,6 +295,14 @@ export function TradeSlipMaker({
             aria-pressed={isPrizePickMode}
           >
             Prize Pick
+          </button>
+          <button
+            type="button"
+            className={`segmented-option${isCoinbaseMode ? ' active' : ''}`}
+            onClick={() => handleModeChange('coinbase')}
+            aria-pressed={isCoinbaseMode}
+          >
+            Coinbase
           </button>
         </div>
       </div>
@@ -361,7 +428,7 @@ export function TradeSlipMaker({
             onChange={(e) => onConfigChange({ title: e.target.value })}
           />
         </div>
-      ) : (
+      ) : isPrizePickMode ? (
         <div className="control-group">
           <label htmlFor="prizepick-type">Power Play Type</label>
           <input
@@ -371,6 +438,18 @@ export function TradeSlipMaker({
             placeholder="e.g., 6-Pick Power Play"
             value={config.prizePickType}
             onChange={(e) => onConfigChange({ prizePickType: e.target.value })}
+          />
+        </div>
+      ) : (
+        <div className="control-group">
+          <label htmlFor="coinbase-type">Slip Type</label>
+          <input
+            id="coinbase-type"
+            type="text"
+            className="text-input"
+            placeholder="Title"
+            value={config.coinbasePlayType}
+            onChange={(e) => onConfigChange({ coinbasePlayType: e.target.value })}
           />
         </div>
       )}
@@ -752,7 +831,168 @@ export function TradeSlipMaker({
         </div>
       )}
 
-      {!isPrizePickMode && (
+      {isCoinbaseMode && (
+        <div className="control-group">
+          <label aria-hidden="true">Predictions</label>
+          <div className="parlay-legs">
+            {config.coinbasePredictions.map((prediction, index) => (
+              <div key={prediction.id} className="parlay-leg">
+                <div className="parlay-leg-header">
+                  <span className="parlay-leg-title">Prediction {index + 1}</span>
+                  <button
+                    type="button"
+                    className="parlay-leg-remove"
+                    onClick={() => handleRemovePrediction(prediction.id)}
+                    disabled={config.coinbasePredictions.length <= 1}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div className="parlay-leg-body">
+                  <label className="parlay-leg-label" htmlFor={`asset-name-${prediction.id}`}>
+                    Asset Name
+                  </label>
+                  <input
+                    id={`asset-name-${prediction.id}`}
+                    type="text"
+                    className="text-input"
+                    placeholder="e.g., Bitcoin"
+                    value={prediction.assetName}
+                    onChange={(e) => handlePredictionChange(prediction.id, { assetName: e.target.value })}
+                  />
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Ticker</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="BTC"
+                        value={prediction.ticker}
+                        onChange={(e) => handlePredictionChange(prediction.id, { ticker: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Timeframe</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="24h"
+                        value={prediction.timeframe}
+                        onChange={(e) => handlePredictionChange(prediction.id, { timeframe: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Prediction Type</span>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder="Price Above"
+                        value={prediction.predictionType}
+                        onChange={(e) => handlePredictionChange(prediction.id, { predictionType: e.target.value })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Status</span>
+                      <select
+                        className="text-input"
+                        value={prediction.status}
+                        onChange={(e) => handlePredictionChange(prediction.id, { status: e.target.value })}
+                        style={{
+                          padding: '8px 10px',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '5px',
+                          backgroundColor: 'white',
+                          fontSize: '14px',
+                          color: '#374151',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <option value="Won">Won</option>
+                        <option value="Lost">Lost</option>
+                        <option value="Pending">Pending</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Target Value ($)</span>
+                      <input
+                        type="number"
+                        className="text-input"
+                        placeholder="100000"
+                        value={prediction.targetValue}
+                        onChange={(e) => handlePredictionChange(prediction.id, { targetValue: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Current Value ($)</span>
+                      <input
+                        type="number"
+                        className="text-input"
+                        placeholder="105000"
+                        value={prediction.currentValue}
+                        onChange={(e) => handlePredictionChange(prediction.id, { currentValue: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                  </div>
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">% Change</span>
+                      <input
+                        type="number"
+                        className="text-input"
+                        placeholder="5.2"
+                        step="0.1"
+                        value={prediction.percentChange}
+                        onChange={(e) => handlePredictionChange(prediction.id, { percentChange: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Image</span>
+                      <div className="parlay-image-upload">
+                        {prediction.image ? (
+                          <>
+                            <img src={prediction.image} alt="" className="parlay-leg-image" />
+                            <button
+                              type="button"
+                              className="parlay-image-clear"
+                              onClick={() => handlePredictionChange(prediction.id, { image: null })}
+                            >
+                              Remove
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <label htmlFor={`prediction-image-${prediction.id}`} className="parlay-image-placeholder">
+                              <ImageIcon size={14} />
+                              Upload
+                            </label>
+                            <input
+                              id={`prediction-image-${prediction.id}`}
+                              type="file"
+                              accept="image/jpeg,image/png,image/jpg"
+                              onChange={(e) => handlePredictionImageInput(prediction.id, e)}
+                              className="file-input"
+                              style={{ display: 'none' }}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button type="button" className="parlay-leg-add" onClick={handleAddPrediction}>
+              + Add Prediction
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!isPrizePickMode && !isCoinbaseMode && (
         <div className="control-group">
           <label htmlFor="bet-wager">Wager Amount ($)</label>
           <input
@@ -823,7 +1063,7 @@ export function TradeSlipMaker({
             <p className="help-text">Optional: Current cash out value</p>
           </div>
         </>
-      ) : (
+      ) : isPrizePickMode ? (
         <>
           <div className="control-group">
             <label htmlFor="prizepick-wager">Wager Amount ($)</label>
@@ -847,6 +1087,36 @@ export function TradeSlipMaker({
               placeholder="e.g., 25000"
               value={config.prizePickPayout}
               onChange={(e) => onConfigChange({ prizePickPayout: parseFloat(e.target.value) || 0 })}
+              min="0"
+              step="1000"
+            />
+            <p className="help-text">Potential payout: ${payout.toLocaleString()}</p>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="control-group">
+            <label htmlFor="coinbase-wager">Wager Amount ($)</label>
+            <input
+              id="coinbase-wager"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 1000"
+              value={config.coinbaseWager}
+              onChange={(e) => onConfigChange({ coinbaseWager: parseFloat(e.target.value) || 0 })}
+              min="0"
+              step="100"
+            />
+          </div>
+          <div className="control-group">
+            <label htmlFor="coinbase-payout">Payout Amount ($)</label>
+            <input
+              id="coinbase-payout"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 25000"
+              value={config.coinbasePayout}
+              onChange={(e) => onConfigChange({ coinbasePayout: parseFloat(e.target.value) || 0 })}
               min="0"
               step="1000"
             />

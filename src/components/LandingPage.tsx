@@ -110,6 +110,7 @@ export function LandingPage() {
               </p>
             </div>
           </Link>
+
         </div>
 
         <footer className="landing-footer">
