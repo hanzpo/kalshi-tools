@@ -112,20 +112,6 @@ export function LandingPage() {
           </Link>
 
         </div>
-
-        <footer className="landing-footer">
-          <p>
-            Built by{' '}
-            <a href="https://x.com/hanznathanpo" target="_blank" rel="noopener noreferrer">
-              Hanz Po
-            </a>{' '}
-            &bull;{' '}
-            <a href="https://kalshi.com/?utm_source=kalshitools" target="_blank" rel="noopener noreferrer">
-              Visit Kalshi
-            </a>{' '}
-            &bull;{' '}&copy; 2025
-          </p>
-        </footer>
       </div>
     </div>
   );

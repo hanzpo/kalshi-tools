@@ -236,19 +236,6 @@ export default function LinkPreviewBuilder() {
               regenerateData();
             }}
           />
-          <div className="attribution">
-            <p>
-              Built by{' '}
-              <a href="https://x.com/hanznathanpo" target="_blank" rel="noopener noreferrer">
-                Hanz Po
-              </a>{' '}
-              &bull;{' '}
-              <a href="https://kalshi.com/?utm_source=kalshitools" target="_blank" rel="noopener noreferrer">
-                Visit Kalshi
-              </a>{' '}
-              &bull; © 2025
-            </p>
-          </div>
         </div>
       </div>
 
