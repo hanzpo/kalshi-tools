@@ -1,5 +1,5 @@
 .landing-page {
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   justify-content: center;
   padding: 64px 24px 80px;

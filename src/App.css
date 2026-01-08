@@ -1,5 +1,11 @@
-.app {
+.app-wrapper {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  flex: 1;
   padding: 48px 24px 80px;
   background-color: #f8f9fa;
   box-sizing: border-box;
@@ -107,7 +113,7 @@
 }
 
 .app-loading {
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
