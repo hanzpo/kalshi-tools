@@ -11,7 +11,7 @@ export function Footer() {
           <a href="https://kalshi.com/?utm_source=kalshitools" target="_blank" rel="noopener noreferrer">
             Visit Kalshi
           </a>{' '}
-          &bull; © 2025
+          &bull; © 2026
         </p>
         <p className="footer-disclosure">
           Restrictions and eligibility requirements apply. Event contract trading involves significant risk and is not appropriate for everyone. Please carefully consider if it's appropriate for you in light of your personal financial circumstances. See{' '}
