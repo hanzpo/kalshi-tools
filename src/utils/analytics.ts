@@ -200,15 +200,21 @@ export function startPerformanceTracking(): () => void {
 
   try {
     lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-  } catch {}
+  } catch (error) {
+    void error;
+  }
 
   try {
     clsObserver.observe({ type: 'layout-shift', buffered: true });
-  } catch {}
+  } catch (error) {
+    void error;
+  }
 
   try {
     inpObserver.observe({ type: 'event', buffered: true, durationThreshold: 40 } as EventTimingObserverInit);
-  } catch {}
+  } catch (error) {
+    void error;
+  }
 
   const reportVitals = () => {
     if (reported) return;

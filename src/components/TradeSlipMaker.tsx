@@ -898,7 +898,11 @@ export function TradeSlipMaker({
                       <div className="parlay-image-upload">
                         {player.image ? (
                           <>
-                            <img src={player.image} alt="" className="parlay-leg-image" />
+                            <img
+                              src={player.image}
+                              alt={player.playerName.trim() ? `${player.playerName.trim()} headshot` : 'Player headshot'}
+                              className="parlay-leg-image"
+                            />
                             <button
                               type="button"
                               className="parlay-image-clear"
@@ -1165,7 +1169,11 @@ export function TradeSlipMaker({
                       <div className="parlay-image-upload">
                         {prediction.image ? (
                           <>
-                            <img src={prediction.image} alt="" className="parlay-leg-image" />
+                            <img
+                              src={prediction.image}
+                              alt={prediction.assetName.trim() ? `${prediction.assetName.trim()} icon` : 'Asset icon'}
+                              className="parlay-leg-image"
+                            />
                             <button
                               type="button"
                               className="parlay-image-clear"

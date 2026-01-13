@@ -200,6 +200,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
 
   const marketName = (config.marketName?.trim() || config.title.trim())
     || 'Market name goes here';
+  const marketImageAlt = marketName ? `${marketName} market image` : 'Market image';
   const tradeColor = config.tradeSide === 'No' ? '#ff4d6a' : '#00C688';
   const outcomeText = config.outcome?.trim();
 
@@ -256,7 +257,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               <div className={`trade-slip-question${config.image ? ' has-image' : ''}`}>
                 {config.image && (
                   <div className="trade-slip-image-container">
-                    <img src={config.image} alt="" className="trade-slip-image" />
+                    <img src={config.image} alt={marketImageAlt} className="trade-slip-image" />
                   </div>
                 )}
                 <div className="trade-slip-question-copy">

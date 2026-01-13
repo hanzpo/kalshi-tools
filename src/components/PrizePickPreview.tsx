@@ -17,7 +17,7 @@ export function PrizePickPreview({ config }: PrizePickPreviewProps) {
           {/* Header */}
           <div className="prizepick-header">
             <div className="prizepick-spray-paint">
-              <img src="/spraypaint.png" alt="" className="spray-paint-image" />
+              <img src="/spraypaint.png" alt="Spray paint background" className="spray-paint-image" />
             </div>
             <div className="prizepick-header-left">
               <img src="/prizepickslogo.svg" alt="PrizePicks" className="prizepick-logo" />
@@ -81,7 +81,7 @@ export function PrizePickPreview({ config }: PrizePickPreviewProps) {
                             <span>{playerName.charAt(0)}</span>
                           </div>
                         )}
-                        <img src="/checkmark.svg" alt="" className="player-checkmark" />
+                        <img src="/checkmark.svg" alt="Pick selected" className="player-checkmark" />
                       </div>
                       <div className="player-details">
                         <h3 className="player-name">{playerName}</h3>
@@ -129,4 +129,3 @@ export function PrizePickPreview({ config }: PrizePickPreviewProps) {
     </div>
   );
 }
-

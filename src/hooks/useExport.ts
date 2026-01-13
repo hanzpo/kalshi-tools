@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
 import { createFileName } from '../utils/chartHelpers';
 import { trackEvent } from '../utils/analytics';
@@ -24,11 +24,11 @@ export function useExport({
   onError,
   analyticsContext,
 }: UseExportOptions): UseExportReturn {
-  const baseParams = {
+  const baseParams = useMemo(() => ({
     tool: analyticsContext?.tool,
     target: analyticsContext?.target,
     element_id: elementId,
-  };
+  }), [analyticsContext?.tool, analyticsContext?.target, elementId]);
 
   const handleExport = useCallback(async (title: string, fallbackName: string = 'export') => {
     const element = document.getElementById(elementId);
