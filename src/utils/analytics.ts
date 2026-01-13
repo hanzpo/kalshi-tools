@@ -20,10 +20,6 @@ declare global {
   }
 }
 
-function hasGtag(): boolean {
-  return typeof window !== 'undefined' && typeof window.gtag === 'function';
-}
-
 function sanitizeParams(params: AnalyticsParams): Record<string, string | number | boolean> {
   return Object.fromEntries(
     Object.entries(params).filter(([, value]) => value !== undefined && value !== null)
@@ -31,8 +27,10 @@ function sanitizeParams(params: AnalyticsParams): Record<string, string | number
 }
 
 export function trackEvent(name: string, params: AnalyticsParams = {}): void {
-  if (!hasGtag()) return;
-  window.gtag('event', name, sanitizeParams(params));
+  if (typeof window === 'undefined') return;
+  const gtag = window.gtag;
+  if (typeof gtag !== 'function') return;
+  gtag('event', name, sanitizeParams(params));
 }
 
 export function trackPageView(path: string, title?: string, referrer?: string): void {
