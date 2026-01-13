@@ -358,6 +358,18 @@ export function TradeSlipMaker({
           </div>
 
           <div className="control-group">
+            <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
+            <input
+              id="bet-timestamp"
+              type="datetime-local"
+              className="text-input"
+              value={config.timestamp ?? ''}
+              onChange={(e) => onConfigChange({ timestamp: e.target.value })}
+            />
+            <p className="help-text">Leave blank to use current date/time</p>
+          </div>
+
+          <div className="control-group">
             <label htmlFor="bet-image">Image (Optional)</label>
             <div
               onDragOver={handleDragOver}
@@ -1168,4 +1180,3 @@ export function TradeSlipMaker({
     </div>
   );
 }
-

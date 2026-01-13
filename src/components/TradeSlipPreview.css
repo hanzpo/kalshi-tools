@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;700&display=swap');
+
 .trade-slip-container {
   display: flex;
   justify-content: center;
@@ -11,13 +13,20 @@
   position: relative;
   width: clamp(320px, 90vw, 500px);
   max-width: 500px;
-  background: linear-gradient(180deg, #00D395 0%, #00C688 100%);
-  border-radius: clamp(16px, 3vw, 20px);
-  padding: clamp(18px, 3vw, 24px) 0 clamp(18px, 3vw, 28px);
+  background: linear-gradient(180deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 100%),
+              linear-gradient(90deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
+  border-radius: clamp(12px, 3vw, 16px);
+  padding: clamp(40px, 8vw, 60px) clamp(16px, 3vw, 24px);
+  padding-bottom: clamp(60px, 12vw, 80px);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   overflow: visible;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  --d: clamp(8px, 1.5vw, 10px);
+  --d: 7px;
+}
+
+.trade-slip-preview:not(.parlay-mode) {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .trade-slip-logo {
@@ -28,32 +37,27 @@
 
 .trade-slip-content {
   background: white;
-  border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
-  margin: 0 clamp(8px, 2vw, 16px);
+  border-radius: 8px 8px 0 0;
+  margin: 0;
   padding: clamp(16px, 3vw, 22px);
   position: relative;
-  /* Create scalloped transparent bottom edge by masking circles */
-  /* Base full mask then subtract circular notches along the bottom */
-  -webkit-mask:
-    linear-gradient(#000 0 0),
-    radial-gradient(circle var(--d) at var(--d) 100%,
-      #000 calc(var(--d) - 1px), transparent var(--d))
-      left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x;
-  mask:
-    linear-gradient(#000 0 0),
-    radial-gradient(circle var(--d) at var(--d) 100%,
-      #000 calc(var(--d) - 1px), transparent var(--d))
-      left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x;
-  /* Subtract circles from the solid mask */
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
+}
+
+/* Dark theme for single trade slip */
+.trade-slip-content.trade-slip-dark {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 8px 8px 0 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .trade-slip-question {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(8px, 1.5vw, 12px);
+  gap: 0;
   padding-right: 0;
 }
 
@@ -61,6 +65,23 @@
   flex: 1;
   min-width: 0;
   width: 100%;
+}
+
+/* Dark theme market name */
+.trade-slip-dark .trade-slip-market-name {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 24px;
+}
+
+/* Dark theme answer */
+.trade-slip-dark .trade-slip-answer {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  line-height: 26px;
 }
 
 .trade-slip-market-name {
@@ -108,6 +129,18 @@
   line-height: 1.3;
 }
 
+.trade-slip-answer-outcome {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.trade-slip-answer-outcome::before {
+  content: '\00b7';
+  margin: 0 6px;
+  color: inherit;
+  font-weight: 700;
+}
+
 .trade-slip-top-section {
   display: flex;
   justify-content: space-between;
@@ -135,16 +168,51 @@
   transform: translateY(-1px);
 }
 
+/* Kalshi Divider Styles */
+.kalshi-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.kalshi-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.kalshi-divider-logo {
+  color: rgba(255, 255, 255, 0.16);
+  flex-shrink: 0;
+}
+
 .trade-slip-details {
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 2vw, 18px);
+  gap: 8px;
 }
 
 .trade-slip-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+}
+
+/* Dark theme labels and values */
+.trade-slip-dark .trade-slip-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.trade-slip-dark .trade-slip-value {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  line-height: 24px;
 }
 
 .trade-slip-label {
@@ -161,16 +229,76 @@
   line-height: 1.3;
 }
 
+.trade-slip-payout-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0;
+}
+
 .trade-slip-payout-row {
   margin-top: 0;
   padding-top: 0;
+  align-items: center;
+  gap: 16px;
+}
+
+.trade-slip-payout-row .trade-slip-label {
+  flex: 1 0 0;
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Dark theme payout */
+.trade-slip-dark .trade-slip-payout {
+  color: var(--Text-10, rgba(255, 255, 255, 0.90));
+  text-align: right;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: 'case' on, 'ss05' on;
+  font-family: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
 }
 
 .trade-slip-payout {
   font-size: clamp(24px, 6vw, 36px);
   color: #00C688;
   font-weight: 700;
+  font-family: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   line-height: 1.1;
+}
+
+/* Timestamp */
+.trade-slip-timestamp {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 20px;
+}
+
+/* Divider between sections */
+.trade-slip-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Scalloped edge - creates semi-circle cutouts at the bottom of the card */
+.trade-slip-scalloped-edge {
+  display: block;
+  width: 100%;
+  height: 6px;
+  background-image: radial-gradient(
+    circle at 50% 100%,
+    transparent 5px,
+    rgba(0, 0, 0, 0.75) 5.5px
+  );
+  background-size: 14px 6px;
+  background-repeat: repeat-x;
+  background-position: 0 0;
 }
 
 /* Footer elements removed; scallops are punched out of the white card itself */
@@ -219,10 +347,11 @@
   .trade-slip-preview {
     width: 100%;
     max-width: 100%;
+    padding: 32px 12px 48px;
   }
 
   .trade-slip-content {
-    margin: 0 8px;
+    margin: 0;
     padding: 16px;
   }
 
@@ -247,8 +376,12 @@
     padding: 8px;
   }
 
+  .trade-slip-preview {
+    padding: 24px 8px 36px;
+  }
+
   .trade-slip-content {
-    margin: 0 6px;
+    margin: 0;
     padding: 12px;
   }
 
@@ -406,4 +539,3 @@
     gap: 6px;
   }
 }
-

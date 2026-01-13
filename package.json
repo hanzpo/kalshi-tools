@@ -26,11 +26,13 @@
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
     "@vitejs/plugin-react": "^4.2.1",
+    "baseline-browser-mapping": "^2.9.14",
     "eslint": "^9.38.0",
     "eslint-plugin-react-hooks": "^7.0.0",
     "eslint-plugin-react-refresh": "^0.4.24",
-    "typescript-eslint": "^8.46.1",
+    "playwright": "^1.57.0",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "typescript-eslint": "^8.46.1",
+    "vite": "^7.3.1"
   }
 }

@@ -68,6 +68,8 @@ export interface TradeSlipConfig {
   odds: number;
   tradeSide: 'Yes' | 'No';
   showWatermark: boolean;
+  // Single trade slip additional fields
+  timestamp?: string;
   parlayOdds: number;
   parlayLegs: ParlayLeg[];
   parlayCashOut?: number;
