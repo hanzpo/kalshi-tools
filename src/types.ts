@@ -42,6 +42,26 @@ export interface ParlayLeg {
   image: string | null;
 }
 
+export interface ComboMarket {
+  id: string;
+  text: string; // e.g., "Philadelphia" or "Total game point is 47 or more"
+  prefix?: string; // e.g., "No" or "Yes" - optional prefix shown before the text
+}
+
+export interface ComboEvent {
+  id: string;
+  name: string; // e.g., "Kansas City @ Philadelphia"
+  markets: ComboMarket[];
+  color1?: string; // First team/side color
+  color2?: string; // Second team/side color
+}
+
+export interface ComboCategory {
+  id: string;
+  name: string; // e.g., "Pro Football"
+  events: ComboEvent[];
+}
+
 export interface PrizePickPlayer {
   id: string;
   playerName: string;
@@ -73,6 +93,10 @@ export interface TradeSlipConfig {
   parlayOdds: number;
   parlayLegs: ParlayLeg[];
   parlayCashOut?: number;
+  // New combo slip structure
+  comboCategories: ComboCategory[];
+  comboPayout: number;
+  comboCost: number;
   prizePickPlayers: PrizePickPlayer[];
   prizePickWager: number;
   prizePickPayout: number;

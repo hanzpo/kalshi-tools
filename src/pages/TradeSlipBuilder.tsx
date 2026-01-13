@@ -29,6 +29,52 @@ export default function TradeSlipBuilder() {
       { id: 'leg-1', question: '', answer: 'Yes', image: null },
       { id: 'leg-2', question: '', answer: 'Yes', image: null },
     ],
+    comboCategories: [
+      {
+        id: 'category-1',
+        name: 'Pro Football',
+        events: [
+          {
+            id: 'event-1',
+            name: 'Kansas City @ Philadelphia',
+            color1: '#E31837', // Chiefs red
+            color2: '#004C54', // Eagles green
+            markets: [
+              { id: 'market-1', text: 'Philadelphia' },
+              { id: 'market-2', text: 'Total game point is 47 or more', prefix: 'No' },
+              { id: 'market-3', text: 'S. Barkley: 1st touchdown added' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'category-2',
+        name: 'Pro basketball',
+        events: [
+          {
+            id: 'event-2',
+            name: 'Miami @ Philadelphia',
+            color1: '#98002E', // Heat red
+            color2: '#006BB6', // 76ers blue
+            markets: [
+              { id: 'market-4', text: 'Philadelphia' },
+              { id: 'market-5', text: 'Total game point is 219.5 or more' },
+            ],
+          },
+          {
+            id: 'event-3',
+            name: 'Dallas @ Los Angeles C',
+            color1: '#00538C', // Mavs blue
+            color2: '#C8102E', // Clippers red
+            markets: [
+              { id: 'market-6', text: 'LAC wins by 8 or more' },
+            ],
+          },
+        ],
+      },
+    ],
+    comboPayout: 1920,
+    comboCost: 99.84,
     prizePickPlayers: [],
     prizePickWager: 1000,
     prizePickPayout: 25000,

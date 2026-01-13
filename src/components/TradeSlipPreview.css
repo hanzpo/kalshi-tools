@@ -14,11 +14,11 @@
   width: clamp(320px, 90vw, 500px);
   max-width: 500px;
   background: linear-gradient(180deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 100%),
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%),
               linear-gradient(90deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
   border-radius: clamp(12px, 3vw, 16px);
-  padding: clamp(40px, 8vw, 60px) clamp(16px, 3vw, 24px);
-  padding-bottom: clamp(60px, 12vw, 80px);
+  padding: 12px;
+  padding-bottom: 40px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   overflow: visible;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -61,10 +61,15 @@
   padding-right: 0;
 }
 
+.trade-slip-question.has-image {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
 .trade-slip-question-copy {
   flex: 1;
   min-width: 0;
-  width: 100%;
 }
 
 /* Dark theme market name */
@@ -109,14 +114,13 @@
 
 .trade-slip-image-container {
   flex-shrink: 0;
-  align-self: flex-start;
-  margin: 0 0 clamp(8px, 1.5vw, 12px) 0;
+  align-self: center;
 }
 
 .trade-slip-image {
-  width: clamp(60px, 12vw, 80px);
-  height: clamp(60px, 12vw, 80px);
-  border-radius: clamp(8px, 2vw, 12px);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   object-fit: cover;
   border: none;
 }
@@ -308,7 +312,7 @@
   bottom: clamp(12px, 3vw, 18px);
   right: clamp(16px, 3vw, 24px);
   font-size: clamp(8px, 1.5vw, 10px);
-  color: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.25);
   font-weight: 500;
   z-index: 10;
 }
@@ -391,11 +395,216 @@
   }
 }
 
+/* New Combo Slip Styles */
 .trade-slip-preview.parlay-mode {
-  /* Very dark grey background for parlay */
-  background:rgb(34, 34, 34);
-  padding: 0 0 clamp(2px, 0.5vw, 4px);
-  border-radius: clamp(8px, 2vw, 12px);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%),
+              linear-gradient(90deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
+  padding: 12px;
+  padding-bottom: 40px;
+  border-radius: 16px;
+}
+
+.combo-card {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 8px 8px 0 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.combo-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.combo-header-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 26px;
+}
+
+.combo-header-cost {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 24px;
+}
+
+/* Kalshi Combo Divider */
+.kalshi-combo-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.kalshi-combo-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.kalshi-combo-divider .kalshi-divider-logo {
+  color: rgba(255, 255, 255, 0.16);
+  flex-shrink: 0;
+}
+
+.kalshi-combo-text {
+  color: var(--Fill-40, rgba(255, 255, 255, 0.16));
+  font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: 'case' on;
+  font-family: "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 760;
+  line-height: 15px;
+}
+
+/* Combo Categories */
+.combo-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.combo-category {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.combo-category-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 18px;
+}
+
+.combo-category-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Combo Event */
+.combo-event {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.combo-event-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.combo-event-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.combo-event-icon-half {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.combo-event-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* Combo Event Markets */
+.combo-event-markets {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.combo-market-item {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  padding: 0;
+}
+
+.combo-market-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 16px;
+  min-height: 28px;
+}
+
+.combo-connector-line-top {
+  width: 1px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+}
+
+.combo-connector-line-bottom {
+  width: 1px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.combo-connector-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  opacity: 0.2;
+  flex-shrink: 0;
+}
+
+/* When dot is first child (no line-top above), add margin to align with text */
+.combo-connector-dot:first-child {
+  margin-top: 10px;
+}
+
+.combo-market-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 20px;
+  padding: 4px 0;
+  flex: 1;
+}
+
+.combo-market-prefix {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Combo Timestamp */
+.combo-timestamp {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 20px;
 }
 
 .parlay-card.trade-slip-content {

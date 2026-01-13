@@ -372,6 +372,139 @@
   color: #09C285;
 }
 
+/* Combo Input Styles */
+.combo-category-input {
+  background: #fafafa;
+}
+
+.combo-events-container {
+  margin-top: 12px;
+  padding-left: 12px;
+  border-left: 2px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.combo-event-input {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.combo-event-header-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.combo-event-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.combo-markets-container {
+  margin-top: 8px;
+  padding-left: 10px;
+  border-left: 2px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.combo-market-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.combo-market-header-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.combo-market-title {
+  font-size: 10px;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.combo-market-inputs {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.combo-add-market,
+.combo-add-event {
+  width: 100%;
+  border: 1px dashed #e5e7eb;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.combo-add-market:hover,
+.combo-add-event:hover {
+  border-color: #09C285;
+  color: #09C285;
+}
+
+.combo-color-pickers {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.combo-color-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.combo-color-picker label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0;
+}
+
+.color-input {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
+
+.color-input::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+.color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
 .slider-labels {
   display: flex;
   justify-content: space-between;

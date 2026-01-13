@@ -1,9 +1,9 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { TradeSlipConfig, TradeSlipMode, ParlayLeg, PrizePickPlayer, CoinbasePrediction } from '../types';
-import { 
-  ImageIcon, 
-  UploadIcon, 
-  DownloadIcon, 
+import { TradeSlipConfig, TradeSlipMode, PrizePickPlayer, CoinbasePrediction, ComboCategory, ComboEvent, ComboMarket } from '../types';
+import {
+  ImageIcon,
+  UploadIcon,
+  DownloadIcon,
   CopyIcon,
   ArrowLeftIcon
 } from './ui/Icons';
@@ -16,15 +16,6 @@ interface TradeSlipMakerProps {
   onExport: () => void;
   onCopyToClipboard: () => void;
   onBack: () => void;
-}
-
-function createLeg(): ParlayLeg {
-  return {
-    id: `leg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    question: '',
-    answer: 'Yes',
-    image: null,
-  };
 }
 
 function createPrizePickPlayer(): PrizePickPlayer {
@@ -57,6 +48,30 @@ function createCoinbasePrediction(): CoinbasePrediction {
     status: 'Won',
     percentChange: 5.2,
     image: null,
+  };
+}
+
+function createComboMarket(): ComboMarket {
+  return {
+    id: `market-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    text: '',
+    prefix: undefined,
+  };
+}
+
+function createComboEvent(): ComboEvent {
+  return {
+    id: `event-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    name: '',
+    markets: [createComboMarket()],
+  };
+}
+
+function createComboCategory(): ComboCategory {
+  return {
+    id: `category-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    name: '',
+    events: [createComboEvent()],
   };
 }
 
@@ -102,19 +117,135 @@ export function TradeSlipMaker({
   function handleModeChange(mode: TradeSlipMode) {
     if (mode === config.mode) return;
 
-    if (mode === 'parlay' && config.parlayLegs.length === 0) {
-      onConfigChange({ mode, parlayLegs: [createLeg(), createLeg()] });
+    if (mode === 'parlay' && (!config.comboCategories || config.comboCategories.length === 0)) {
+      onConfigChange({
+        mode,
+        comboCategories: [createComboCategory()],
+        comboPayout: config.comboPayout || 1920,
+        comboCost: config.comboCost || 99.84,
+      });
     } else if (mode === 'prizepick' && config.prizePickPlayers.length === 0) {
       onConfigChange({ mode, prizePickPlayers: [createPrizePickPlayer()] });
     } else if (mode === 'coinbase' && config.coinbasePredictions.length === 0) {
-      onConfigChange({ 
-        mode, 
+      onConfigChange({
+        mode,
         coinbasePredictions: [createCoinbasePrediction()],
         coinbasePlayType: config.coinbasePlayType || '',
       });
     } else {
       onConfigChange({ mode });
     }
+  }
+
+  // Combo category handlers
+  function handleCategoryChange(categoryId: string, updates: Partial<ComboCategory>) {
+    const updatedCategories = config.comboCategories.map((cat) =>
+      cat.id === categoryId ? { ...cat, ...updates } : cat
+    );
+    onConfigChange({ comboCategories: updatedCategories });
+  }
+
+  function handleAddCategory() {
+    onConfigChange({ comboCategories: [...config.comboCategories, createComboCategory()] });
+  }
+
+  function handleRemoveCategory(categoryId: string) {
+    if (config.comboCategories.length <= 1) return;
+    onConfigChange({
+      comboCategories: config.comboCategories.filter((cat) => cat.id !== categoryId),
+    });
+  }
+
+  // Combo event handlers
+  function handleEventChange(categoryId: string, eventId: string, updates: Partial<ComboEvent>) {
+    const updatedCategories = config.comboCategories.map((cat) => {
+      if (cat.id !== categoryId) return cat;
+      return {
+        ...cat,
+        events: cat.events.map((event) =>
+          event.id === eventId ? { ...event, ...updates } : event
+        ),
+      };
+    });
+    onConfigChange({ comboCategories: updatedCategories });
+  }
+
+  function handleAddEvent(categoryId: string) {
+    const updatedCategories = config.comboCategories.map((cat) => {
+      if (cat.id !== categoryId) return cat;
+      return {
+        ...cat,
+        events: [...cat.events, createComboEvent()],
+      };
+    });
+    onConfigChange({ comboCategories: updatedCategories });
+  }
+
+  function handleRemoveEvent(categoryId: string, eventId: string) {
+    const updatedCategories = config.comboCategories.map((cat) => {
+      if (cat.id !== categoryId) return cat;
+      if (cat.events.length <= 1) return cat;
+      return {
+        ...cat,
+        events: cat.events.filter((event) => event.id !== eventId),
+      };
+    });
+    onConfigChange({ comboCategories: updatedCategories });
+  }
+
+  // Combo market handlers
+  function handleMarketChange(categoryId: string, eventId: string, marketId: string, updates: Partial<ComboMarket>) {
+    const updatedCategories = config.comboCategories.map((cat) => {
+      if (cat.id !== categoryId) return cat;
+      return {
+        ...cat,
+        events: cat.events.map((event) => {
+          if (event.id !== eventId) return event;
+          return {
+            ...event,
+            markets: event.markets.map((market) =>
+              market.id === marketId ? { ...market, ...updates } : market
+            ),
+          };
+        }),
+      };
+    });
+    onConfigChange({ comboCategories: updatedCategories });
+  }
+
+  function handleAddMarket(categoryId: string, eventId: string) {
+    const updatedCategories = config.comboCategories.map((cat) => {
+      if (cat.id !== categoryId) return cat;
+      return {
+        ...cat,
+        events: cat.events.map((event) => {
+          if (event.id !== eventId) return event;
+          return {
+            ...event,
+            markets: [...event.markets, createComboMarket()],
+          };
+        }),
+      };
+    });
+    onConfigChange({ comboCategories: updatedCategories });
+  }
+
+  function handleRemoveMarket(categoryId: string, eventId: string, marketId: string) {
+    const updatedCategories = config.comboCategories.map((cat) => {
+      if (cat.id !== categoryId) return cat;
+      return {
+        ...cat,
+        events: cat.events.map((event) => {
+          if (event.id !== eventId) return event;
+          if (event.markets.length <= 1) return event;
+          return {
+            ...event,
+            markets: event.markets.filter((market) => market.id !== marketId),
+          };
+        }),
+      };
+    });
+    onConfigChange({ comboCategories: updatedCategories });
   }
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
@@ -151,41 +282,6 @@ export function TradeSlipMaker({
         onImageUpload(file);
       }
     }
-  }
-
-  function handleLegChange(legId: string, updates: Partial<ParlayLeg>) {
-    const updatedLegs = config.parlayLegs.map((leg) =>
-      leg.id === legId ? { ...leg, ...updates } : leg
-    );
-    onConfigChange({ parlayLegs: updatedLegs });
-  }
-
-  function handleLegImageInput(
-    legId: string,
-    event: ChangeEvent<HTMLInputElement>
-  ) {
-    const file = event.target.files?.[0];
-    if (!file || !file.type.startsWith('image/')) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result;
-      if (typeof result === 'string') {
-        handleLegChange(legId, { image: result });
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function handleAddLeg() {
-    onConfigChange({ parlayLegs: [...config.parlayLegs, createLeg()] });
-  }
-
-  function handleRemoveLeg(legId: string) {
-    if (config.parlayLegs.length <= 1) return;
-    onConfigChange({
-      parlayLegs: config.parlayLegs.filter((leg) => leg.id !== legId),
-    });
   }
 
   function handlePlayerChange(playerId: string, updates: Partial<PrizePickPlayer>) {
@@ -429,17 +525,45 @@ export function TradeSlipMaker({
           </div>
         </>
       ) : isParlayMode ? (
-        <div className="control-group">
-          <label htmlFor="bet-title">Slip Title</label>
-          <input
-            id="bet-title"
-            type="text"
-            className="text-input"
-            placeholder="e.g., Sunday Night Parlay"
-            value={config.title}
-            onChange={(e) => onConfigChange({ title: e.target.value })}
-          />
-        </div>
+        <>
+          <div className="control-group">
+            <label htmlFor="combo-payout">Payout Amount ($)</label>
+            <input
+              id="combo-payout"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 1920"
+              value={config.comboPayout || ''}
+              onChange={(e) => onConfigChange({ comboPayout: parseFloat(e.target.value) || 0 })}
+              min="0"
+              step="1"
+            />
+          </div>
+          <div className="control-group">
+            <label htmlFor="combo-cost">Cost ($)</label>
+            <input
+              id="combo-cost"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 99.84"
+              value={config.comboCost || ''}
+              onChange={(e) => onConfigChange({ comboCost: parseFloat(e.target.value) || 0 })}
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div className="control-group">
+            <label htmlFor="combo-timestamp">Purchase Date/Time (Optional)</label>
+            <input
+              id="combo-timestamp"
+              type="datetime-local"
+              className="text-input"
+              value={config.timestamp ?? ''}
+              onChange={(e) => onConfigChange({ timestamp: e.target.value })}
+            />
+            <p className="help-text">Leave blank to use current date/time</p>
+          </div>
+        </>
       ) : isPrizePickMode ? (
         <div className="control-group">
           <label htmlFor="prizepick-type">Power Play Type</label>
@@ -468,87 +592,137 @@ export function TradeSlipMaker({
 
       {isParlayMode && (
         <div className="control-group">
-          <label aria-hidden="true">Parlay Legs</label>
+          <label aria-hidden="true">Categories &amp; Markets</label>
           <div className="parlay-legs">
-            {config.parlayLegs.map((leg, index) => (
-              <div key={leg.id} className="parlay-leg">
+            {config.comboCategories?.map((category, catIndex) => (
+              <div key={category.id} className="parlay-leg combo-category-input">
                 <div className="parlay-leg-header">
-                  <span className="parlay-leg-title">Leg {index + 1}</span>
+                  <span className="parlay-leg-title">Category {catIndex + 1}</span>
                   <button
                     type="button"
                     className="parlay-leg-remove"
-                    onClick={() => handleRemoveLeg(leg.id)}
-                    disabled={config.parlayLegs.length <= 1}
+                    onClick={() => handleRemoveCategory(category.id)}
+                    disabled={config.comboCategories.length <= 1}
                   >
                     Remove
                   </button>
                 </div>
                 <div className="parlay-leg-body">
-                  <label className="parlay-leg-label" htmlFor={`parlay-question-${leg.id}`}>
-                    Question
+                  <label className="parlay-leg-label" htmlFor={`category-name-${category.id}`}>
+                    Category Name
                   </label>
                   <input
-                    id={`parlay-question-${leg.id}`}
+                    id={`category-name-${category.id}`}
                     type="text"
                     className="text-input"
-                    placeholder="e.g., New York Giants to win?"
-                    value={leg.question}
-                    onChange={(e) => handleLegChange(leg.id, { question: e.target.value })}
+                    placeholder="e.g., Pro Football"
+                    value={category.name}
+                    onChange={(e) => handleCategoryChange(category.id, { name: e.target.value })}
                   />
-                  <div className="parlay-leg-controls">
-                    <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">Answer</span>
-                      <div className="segmented-control parlay-answer-toggle">
-                        {(['Yes', 'No'] as ParlayLeg['answer'][]).map((answer) => (
+
+                  {/* Events within category */}
+                  <div className="combo-events-container">
+                    {category.events.map((event, eventIndex) => (
+                      <div key={event.id} className="combo-event-input">
+                        <div className="combo-event-header-input">
+                          <span className="combo-event-title">Event {eventIndex + 1}</span>
                           <button
-                            key={answer}
                             type="button"
-                            className={`segmented-option${leg.answer === answer ? ' active' : ''}`}
-                            onClick={() => handleLegChange(leg.id, { answer })}
-                            aria-pressed={leg.answer === answer}
+                            className="parlay-leg-remove"
+                            onClick={() => handleRemoveEvent(category.id, event.id)}
+                            disabled={category.events.length <= 1}
                           >
-                            {answer}
+                            Remove
                           </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">Image</span>
-                      <div className="parlay-image-upload">
-                        {leg.image ? (
-                          <>
-                            <img src={leg.image} alt="" className="parlay-leg-image" />
-                            <button
-                              type="button"
-                              className="parlay-image-clear"
-                              onClick={() => handleLegChange(leg.id, { image: null })}
-                            >
-                              Remove
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <label htmlFor={`parlay-image-${leg.id}`} className="parlay-image-placeholder">
-                              Upload
-                            </label>
+                        </div>
+                        <input
+                          type="text"
+                          className="text-input"
+                          placeholder="e.g., Kansas City @ Philadelphia"
+                          value={event.name}
+                          onChange={(e) => handleEventChange(category.id, event.id, { name: e.target.value })}
+                        />
+
+                        {/* Team colors */}
+                        <div className="combo-color-pickers">
+                          <div className="combo-color-picker">
+                            <label>Color 1</label>
                             <input
-                              id={`parlay-image-${leg.id}`}
-                              type="file"
-                              accept="image/jpeg,image/png,image/jpg"
-                              onChange={(e) => handleLegImageInput(leg.id, e)}
-                              className="file-input"
-                              style={{ display: 'none' }}
+                              type="color"
+                              value={event.color1 || '#E31837'}
+                              onChange={(e) => handleEventChange(category.id, event.id, { color1: e.target.value })}
+                              className="color-input"
                             />
-                          </>
-                        )}
+                          </div>
+                          <div className="combo-color-picker">
+                            <label>Color 2</label>
+                            <input
+                              type="color"
+                              value={event.color2 || '#004C54'}
+                              onChange={(e) => handleEventChange(category.id, event.id, { color2: e.target.value })}
+                              className="color-input"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Markets within event */}
+                        <div className="combo-markets-container">
+                          {event.markets.map((market, marketIndex) => (
+                            <div key={market.id} className="combo-market-input">
+                              <div className="combo-market-header-input">
+                                <span className="combo-market-title">Market {marketIndex + 1}</span>
+                                <button
+                                  type="button"
+                                  className="parlay-leg-remove"
+                                  onClick={() => handleRemoveMarket(category.id, event.id, market.id)}
+                                  disabled={event.markets.length <= 1}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                              <div className="combo-market-inputs">
+                                <input
+                                  type="text"
+                                  className="text-input combo-prefix-input"
+                                  placeholder="Prefix (e.g., No)"
+                                  value={market.prefix || ''}
+                                  onChange={(e) => handleMarketChange(category.id, event.id, market.id, { prefix: e.target.value || undefined })}
+                                  style={{ width: '80px', flexShrink: 0 }}
+                                />
+                                <input
+                                  type="text"
+                                  className="text-input"
+                                  placeholder="Market text (e.g., Philadelphia)"
+                                  value={market.text}
+                                  onChange={(e) => handleMarketChange(category.id, event.id, market.id, { text: e.target.value })}
+                                  style={{ flex: 1 }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            className="parlay-leg-add combo-add-market"
+                            onClick={() => handleAddMarket(category.id, event.id)}
+                          >
+                            + Add Market
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    ))}
+                    <button
+                      type="button"
+                      className="parlay-leg-add combo-add-event"
+                      onClick={() => handleAddEvent(category.id)}
+                    >
+                      + Add Event
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
-            <button type="button" className="parlay-leg-add" onClick={handleAddLeg}>
-              + Add Leg
+            <button type="button" className="parlay-leg-add" onClick={handleAddCategory}>
+              + Add Category
             </button>
           </div>
         </div>
@@ -1038,44 +1212,7 @@ export function TradeSlipMaker({
           </div>
           <p className="help-text">Expected payout: ${payout.toLocaleString()}</p>
         </div>
-      ) : isParlayMode ? (
-        <>
-          <div className="control-group">
-            <label htmlFor="parlay-odds">American Odds</label>
-            <input
-              id="parlay-odds"
-              type="number"
-              className="text-input"
-              value={config.parlayOdds}
-              onChange={(e) =>
-                onConfigChange({ parlayOdds: Number(e.target.value) || 0 })
-              }
-              placeholder="+500"
-              step="10"
-            />
-            <p className="help-text">
-              Enter positive or negative odds (e.g., -110 or +250). Potential payout: ${payout.toLocaleString()}
-            </p>
-          </div>
-          <div className="control-group">
-            <label htmlFor="parlay-cash-out">Cash Out Amount ($)</label>
-            <input
-              id="parlay-cash-out"
-              type="number"
-              className="text-input"
-              placeholder="e.g., 947"
-              value={config.parlayCashOut || ''}
-              onChange={(e) => {
-                const value = e.target.value ? parseFloat(e.target.value) : undefined;
-                onConfigChange({ parlayCashOut: value });
-              }}
-              min="0"
-              step="1"
-            />
-            <p className="help-text">Optional: Current cash out value</p>
-          </div>
-        </>
-      ) : isPrizePickMode ? (
+      ) : isParlayMode ? null : isPrizePickMode ? (
         <>
           <div className="control-group">
             <label htmlFor="prizepick-wager">Wager Amount ($)</label>
