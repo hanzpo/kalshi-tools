@@ -7,6 +7,7 @@ import {
   CopyIcon,
   ArrowLeftIcon
 } from './ui/Icons';
+import { trackEvent } from '../utils/analytics';
 import '../components/ControlPanel.css';
 
 interface TradeSlipMakerProps {
@@ -252,6 +253,12 @@ export function TradeSlipMaker({
     const file = e.target.files?.[0];
     if (file) {
       onImageUpload(file);
+      trackEvent('image_upload', {
+        tool: 'trade-slip',
+        mode: config.mode,
+        method: 'file_input',
+        target: 'main',
+      });
     }
   }
 
@@ -280,6 +287,12 @@ export function TradeSlipMaker({
       const file = files[0];
       if (file.type.startsWith('image/')) {
         onImageUpload(file);
+        trackEvent('image_upload', {
+          tool: 'trade-slip',
+          mode: config.mode,
+          method: 'drop',
+          target: 'main',
+        });
       }
     }
   }
@@ -297,6 +310,12 @@ export function TradeSlipMaker({
   ) {
     const file = event.target.files?.[0];
     if (!file || !file.type.startsWith('image/')) return;
+    trackEvent('image_upload', {
+      tool: 'trade-slip',
+      mode: config.mode,
+      method: 'file_input',
+      target: 'prizepick_player',
+    });
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -332,6 +351,12 @@ export function TradeSlipMaker({
   ) {
     const file = event.target.files?.[0];
     if (!file || !file.type.startsWith('image/')) return;
+    trackEvent('image_upload', {
+      tool: 'trade-slip',
+      mode: config.mode,
+      method: 'file_input',
+      target: 'coinbase_prediction',
+    });
 
     const reader = new FileReader();
     reader.onload = (e) => {

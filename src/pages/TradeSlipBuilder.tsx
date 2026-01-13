@@ -8,6 +8,7 @@ import { Toast } from '../components/ui/Toast';
 import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
 import { createFileName } from '../utils/chartHelpers';
 import { useToast } from '../hooks/useToast';
+import { trackEvent } from '../utils/analytics';
 import '../App.css';
 
 const TRADE_SLIP_PREVIEW_ID = 'trade-slip-preview';
@@ -125,11 +126,20 @@ export default function TradeSlipBuilder() {
 
       event.preventDefault();
       handleImageUpload(file);
+      trackEvent('image_paste', {
+        tool: 'trade-slip',
+        mode: config.mode,
+        target: 'main',
+      });
     }
 
     window.addEventListener('paste', handlePaste);
     return () => window.removeEventListener('paste', handlePaste);
-  }, [handleImageUpload]);
+  }, [handleImageUpload, config.mode]);
+
+  useEffect(() => {
+    trackEvent('trade_slip_mode_change', { tool: 'trade-slip', mode: config.mode });
+  }, [config.mode]);
 
   async function handleExport() {
     const element = document.getElementById(TRADE_SLIP_PREVIEW_ID);
@@ -149,8 +159,20 @@ export default function TradeSlipBuilder() {
         nameSource = titleName || 'trade-slip';
       }
       downloadDataUrl(dataUrl, createFileName(nameSource, 'kalshi-trade-slip'));
+      trackEvent('export_image', {
+        tool: 'trade-slip',
+        mode: config.mode,
+        method: 'download',
+        target: TRADE_SLIP_PREVIEW_ID,
+      });
     } catch (error) {
       console.error('Error exporting image:', error);
+      trackEvent('export_error', {
+        tool: 'trade-slip',
+        mode: config.mode,
+        method: 'download',
+        message: error instanceof Error ? error.message : 'unknown',
+      });
       alert('Failed to export image. Please try again.');
     }
   }
@@ -163,9 +185,21 @@ export default function TradeSlipBuilder() {
       const dataUrl = await captureElementAsPng(element);
       await copyDataUrlToClipboard(dataUrl);
       showToast('Trade slip copied to clipboard!');
+      trackEvent('copy_image', {
+        tool: 'trade-slip',
+        mode: config.mode,
+        method: 'clipboard',
+        target: TRADE_SLIP_PREVIEW_ID,
+      });
     } catch (error) {
       console.error('Error copying to clipboard:', error);
       showToast('Failed to copy to clipboard');
+      trackEvent('export_error', {
+        tool: 'trade-slip',
+        mode: config.mode,
+        method: 'clipboard',
+        message: error instanceof Error ? error.message : 'unknown',
+      });
     }
   }
 

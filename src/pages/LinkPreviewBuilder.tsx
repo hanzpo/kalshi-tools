@@ -15,6 +15,7 @@ import {
 } from '../utils/chartHelpers';
 import { useToast } from '../hooks/useToast';
 import { useExport } from '../hooks/useExport';
+import { trackEvent } from '../utils/analytics';
 import '../App.css';
 
 const PREVIEW_ID = 'link-preview';
@@ -54,6 +55,10 @@ export default function LinkPreviewBuilder() {
   const { handleExport, handleCopyToClipboard } = useExport({
     elementId: PREVIEW_ID,
     onSuccess: showToast,
+    analyticsContext: {
+      tool: 'link-preview',
+      target: 'link-preview',
+    },
   });
 
   function updateConfig(updater: (prev: MarketConfig) => MarketConfig) {
@@ -161,10 +166,12 @@ export default function LinkPreviewBuilder() {
   }
 
   function handleOpenTrendDrawer() {
+    trackEvent('trend_draw_open', { tool: 'link-preview', market_type: config.marketType });
     setShowTrendDrawer(true);
   }
 
   function handleTrendDrawComplete(trendData: number[]) {
+    trackEvent('trend_draw_complete', { tool: 'link-preview', market_type: config.marketType });
     if (config.marketType === 'forecast') {
       const finalValue = trendData[trendData.length - 1];
 
@@ -207,6 +214,7 @@ export default function LinkPreviewBuilder() {
   }
 
   function handleTrendDrawCancel() {
+    trackEvent('trend_draw_cancel', { tool: 'link-preview', market_type: config.marketType });
     setShowTrendDrawer(false);
   }
 
@@ -234,6 +242,7 @@ export default function LinkPreviewBuilder() {
             onTimeHorizonChange={(timeHorizon) => {
               handleConfigChange({ timeHorizon: timeHorizon as any });
               regenerateData();
+              trackEvent('time_horizon_change', { tool: 'link-preview', horizon: timeHorizon });
             }}
           />
         </div>

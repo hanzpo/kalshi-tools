@@ -16,6 +16,7 @@ import {
 } from '../utils/chartHelpers';
 import { useToast } from '../hooks/useToast';
 import { useExport } from '../hooks/useExport';
+import { trackEvent } from '../utils/analytics';
 import '../App.css';
 
 const CHART_PREVIEW_ID = 'chart-preview';
@@ -55,6 +56,10 @@ export default function SearchBuilder() {
   const { handleExport, handleCopyToClipboard } = useExport({
     elementId: CHART_PREVIEW_ID,
     onSuccess: showToast,
+    analyticsContext: {
+      tool: 'search',
+      target: 'chart-preview',
+    },
   });
 
   function updateConfig(updater: (prev: MarketConfig) => MarketConfig) {
@@ -161,10 +166,12 @@ export default function SearchBuilder() {
   }
 
   function handleOpenTrendDrawer() {
+    trackEvent('trend_draw_open', { tool: 'search', market_type: config.marketType });
     setShowTrendDrawer(true);
   }
 
   function handleTrendDrawComplete(trendData: number[]) {
+    trackEvent('trend_draw_complete', { tool: 'search', market_type: config.marketType });
     if (config.marketType === 'forecast') {
       const finalValue = trendData[trendData.length - 1];
 
@@ -207,6 +214,7 @@ export default function SearchBuilder() {
   }
 
   function handleTrendDrawCancel() {
+    trackEvent('trend_draw_cancel', { tool: 'search', market_type: config.marketType });
     setShowTrendDrawer(false);
   }
 
@@ -231,6 +239,7 @@ export default function SearchBuilder() {
             onTimeHorizonChange={(timeHorizon) => {
               handleConfigChange({ timeHorizon: timeHorizon as any });
               regenerateData();
+              trackEvent('time_horizon_change', { tool: 'search', horizon: timeHorizon });
             }}
           />
         </div>
@@ -246,4 +255,3 @@ export default function SearchBuilder() {
     </div>
   );
 }
-

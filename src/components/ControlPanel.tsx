@@ -15,6 +15,7 @@ import {
   WarningIcon,
   ArrowLeftIcon
 } from './ui/Icons';
+import { trackEvent } from '../utils/analytics';
 import './ControlPanel.css';
 
 interface ControlPanelProps {
@@ -69,6 +70,11 @@ export function ControlPanel({
     const file = e.target.files?.[0];
     if (file) {
       onImageUpload(file);
+      trackEvent('image_upload', {
+        tool: mode,
+        method: 'file_input',
+        target: 'chart',
+      });
     }
   }
 
@@ -94,6 +100,11 @@ export function ControlPanel({
       const file = files[0];
       if (file.type.startsWith('image/')) {
         onImageUpload(file);
+        trackEvent('image_upload', {
+          tool: mode,
+          method: 'drop',
+          target: 'chart',
+        });
       }
     }
   }
@@ -111,8 +122,16 @@ export function ControlPanel({
       // For link-preview mode, paste goes to left image
       if (mode === 'link-preview' && onLeftImageUpload) {
         onLeftImageUpload(file);
+        trackEvent('image_paste', {
+          tool: mode,
+          target: 'left',
+        });
       } else {
         onImageUpload(file);
+        trackEvent('image_paste', {
+          tool: mode,
+          target: 'chart',
+        });
       }
     }
 
@@ -143,6 +162,11 @@ export function ControlPanel({
       const file = files[0];
       if (file.type.startsWith('image/')) {
         onLeftImageUpload(file);
+        trackEvent('image_upload', {
+          tool: mode,
+          method: 'drop',
+          target: 'left',
+        });
       }
     }
   }
@@ -151,6 +175,11 @@ export function ControlPanel({
     const file = e.target.files?.[0];
     if (file && onLeftImageUpload) {
       onLeftImageUpload(file);
+      trackEvent('image_upload', {
+        tool: mode,
+        method: 'file_input',
+        target: 'left',
+      });
     }
   }
 
@@ -175,6 +204,7 @@ export function ControlPanel({
     } else {
       onConfigChange({ marketType });
     }
+    trackEvent('market_type_change', { tool: mode, market_type: marketType });
   }
 
   function handleAddOutcome() {
@@ -843,6 +873,7 @@ export function ControlPanel({
               onClick={() => {
                 onConfigChange({ timeHorizon: horizon });
                 onRegenerateData();
+                trackEvent('time_horizon_change', { tool: mode, horizon });
               }}
               style={{
                 padding: '6px 10px',
@@ -1014,5 +1045,3 @@ export function ControlPanel({
     </div>
   );
 }
-
-

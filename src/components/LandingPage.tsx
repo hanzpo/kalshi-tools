@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
+import { trackEvent } from '../utils/analytics';
 import './LandingPage.css';
 
 export function LandingPage() {
+  const handleToolClick = (tool: string) => {
+    trackEvent('tool_select', { tool });
+  };
+
   return (
     <div className="landing-page">
       <div className="landing-shell">
@@ -24,7 +29,11 @@ export function LandingPage() {
         </header>
 
         <div className="landing-grid">
-          <Link to="/chart" className="landing-option landing-option--chart">
+          <Link
+            to="/chart"
+            className="landing-option landing-option--chart"
+            onClick={() => handleToolClick('chart')}
+          >
             <div className="option-body">
               <div className="option-header">
                 <span className="option-icon" aria-hidden="true">
@@ -48,7 +57,11 @@ export function LandingPage() {
             </div>
           </Link>
 
-          <Link to="/trade-slip" className="landing-option landing-option--tradeslip">
+          <Link
+            to="/trade-slip"
+            className="landing-option landing-option--tradeslip"
+            onClick={() => handleToolClick('trade-slip')}
+          >
             <div className="option-body">
               <div className="option-header">
                 <span className="option-icon" aria-hidden="true">
@@ -70,7 +83,11 @@ export function LandingPage() {
             </div>
           </Link>
 
-          <Link to="/search" className="landing-option landing-option--search">
+          <Link
+            to="/search"
+            className="landing-option landing-option--search"
+            onClick={() => handleToolClick('search')}
+          >
             <div className="option-body">
               <div className="option-header">
                 <span className="option-icon" aria-hidden="true">
@@ -89,7 +106,11 @@ export function LandingPage() {
             </div>
           </Link>
 
-          <Link to="/link-preview" className="landing-option landing-option--linkpreview">
+          <Link
+            to="/link-preview"
+            className="landing-option landing-option--linkpreview"
+            onClick={() => handleToolClick('link-preview')}
+          >
             <div className="option-body">
               <div className="option-header">
                 <span className="option-icon" aria-hidden="true">
