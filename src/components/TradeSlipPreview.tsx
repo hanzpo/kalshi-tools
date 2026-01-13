@@ -51,7 +51,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const title = config.title.trim()
     ? config.title
     : isParlay
-      ? 'Parlay'
+      ? 'Combo'
       : 'Untitled Trade Slip';
 
   const marketName = (config.marketName?.trim() || config.title.trim())

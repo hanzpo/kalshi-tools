@@ -286,7 +286,7 @@ export function TradeSlipMaker({
             onClick={() => handleModeChange('parlay')}
             aria-pressed={isParlayMode}
           >
-            Parlay
+            Combo
           </button>
           <button
             type="button"
