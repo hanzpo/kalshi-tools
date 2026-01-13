@@ -223,7 +223,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                       ),
                       0
                     ) || 0;
-                    return `${totalMarkets} market${totalMarkets !== 1 ? 's' : ''} pay $${(config.comboPayout || 0).toLocaleString()}`;
+                    return `${totalMarkets} market${totalMarkets !== 1 ? 's' : ''} pay${totalMarkets !== 1 ? '' : 's'} $${(config.comboPayout || 0).toLocaleString()}`;
                   })()}
                 </div>
                 <div className="combo-header-cost">
