@@ -176,16 +176,31 @@ function calculateSinglePayout(wager: number, odds: number): number {
   return Math.round(wager / (odds / 100));
 }
 
+function calculateAmericanPayout(wager: number, odds: number): number {
+  if (!Number.isFinite(odds) || odds === 0) return 0;
+  const fractionalReturn = odds > 0 ? odds / 100 : 100 / Math.abs(odds);
+  return Math.round(wager * (1 + fractionalReturn));
+}
+
+function formatAmericanOdds(odds: number): string {
+  if (!Number.isFinite(odds) || odds === 0) {
+    return 'EVEN';
+  }
+  return odds > 0 ? `+${odds}` : `${odds}`;
+}
+
 
 export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isParlay = config.mode === 'parlay';
   const isPrizePick = config.mode === 'prizepick';
   const isCoinbase = config.mode === 'coinbase';
-  
+  const isSingleOld = config.mode === 'single-old';
+  const isParlayOld = config.mode === 'parlay-old';
+
   if (isPrizePick) {
     return <PrizePickPreview config={config} />;
   }
-  
+
   if (isCoinbase) {
     return <CoinbasePreview config={{
       coinbasePredictions: config.coinbasePredictions,
@@ -196,7 +211,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
     }} />;
   }
 
-  const payout = calculateSinglePayout(config.wager, config.odds);
+  const payout = isParlayOld
+    ? calculateAmericanPayout(config.wager, config.parlayOdds)
+    : calculateSinglePayout(config.wager, config.odds);
 
   const marketName = (config.marketName?.trim() || config.title.trim())
     || 'Market name goes here';
@@ -206,12 +223,23 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
 
   const bgColor = config.backgroundColor || '#28CC95';
 
+  // Old parlay title
+  const parlayOldTitle = config.title.trim()
+    ? config.title
+    : 'Combo';
+
+  // Old single trade color
+  const oldTradeColor = config.tradeSide === 'No' ? '#d91616' : '#00C688';
+
+  // For old modes, use the static CSS background; for new modes, use inline style
+  const useOldStyle = isSingleOld || isParlayOld;
+
   return (
     <div className="trade-slip-container">
       <div
         id="trade-slip-preview"
-        className={`trade-slip-preview${isParlay ? ' parlay-mode' : ''}`}
-        style={{
+        className={`trade-slip-preview${isParlay ? ' parlay-mode' : ''}${isParlayOld ? ' parlay-old-mode' : ''}${isSingleOld ? ' single-old-mode' : ''}`}
+        style={useOldStyle ? undefined : {
           background: `linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%), ${bgColor}`,
         }}
       >
@@ -255,6 +283,134 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
             {/* Scalloped edge */}
             <div className="trade-slip-scalloped-edge" />
           </>
+        ) : isParlayOld ? (
+          <div className="parlay-card trade-slip-content trade-slip-content-old">
+            <div className="parlay-header">
+              <span className="parlay-label">{parlayOldTitle}</span>
+              <div className="trade-slip-brand-container">
+                <a
+                  href="https://kalshi.com/?utm_source=kalshitools"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="parlay-brand"
+                >
+                  <KalshiLogo />
+                </a>
+              </div>
+            </div>
+
+            <div className="parlay-body">
+              <div className="parlay-legs-preview">
+                {config.parlayLegs.map((leg, index) => {
+                  const question = leg.question.trim()
+                    ? leg.question
+                    : `Leg ${index + 1} question`;
+                  return (
+                    <div className="parlay-leg-preview" key={leg.id}>
+                      {leg.image && (
+                        <img src={leg.image} alt="" className="parlay-leg-preview-image" />
+                      )}
+                      <div className="parlay-leg-preview-text">
+                        <span className="parlay-leg-question">{question}</span>
+                        <span className="parlay-leg-answer">{leg.answer}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="parlay-summary">
+                <div className="parlay-summary-row">
+                  <span className="parlay-summary-label">Cost</span>
+                  <span className="parlay-summary-value">
+                    ${config.wager.toLocaleString()}
+                  </span>
+                </div>
+                <div className="parlay-summary-row">
+                  <span className="parlay-summary-label">Odds</span>
+                  <span className="parlay-summary-value">
+                    {formatAmericanOdds(config.parlayOdds)}
+                  </span>
+                </div>
+                {config.parlayCashOut !== undefined && (
+                  <div className="parlay-summary-row">
+                    <span className="parlay-summary-label">Cash out</span>
+                    <span className="parlay-summary-value">
+                      ${config.parlayCashOut.toLocaleString()}
+                    </span>
+                  </div>
+                )}
+                <div className="parlay-summary-row parlay-payout-row">
+                  <span className="parlay-summary-label">Payout if right</span>
+                  <span className="parlay-payout">
+                    ${payout.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : isSingleOld ? (
+          <div className="trade-slip-content trade-slip-content-old">
+            <div className="trade-slip-top-section">
+              <div className="trade-slip-image-container">
+                {config.image && (
+                  <img
+                    src={config.image}
+                    alt="Trade slip"
+                    className="trade-slip-image trade-slip-image-old"
+                  />
+                )}
+              </div>
+              <div className="trade-slip-brand-container">
+                <a
+                  href="https://kalshi.com/?utm_source=kalshitools"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="trade-slip-brand"
+                >
+                  <KalshiLogo />
+                </a>
+              </div>
+            </div>
+
+            <div className="trade-slip-question">
+              <div className="trade-slip-question-copy">
+                <div
+                  className={`trade-slip-market-name trade-slip-market-name-old${!outcomeText ? ' trade-slip-market-name-large' : ''}`}
+                >
+                  {marketName}
+                </div>
+                {outcomeText && <div className="trade-slip-outcome">{outcomeText}</div>}
+                <div
+                  className="trade-slip-answer trade-slip-answer-old"
+                  style={{ color: oldTradeColor }}
+                >
+                  I traded {config.tradeSide}
+                </div>
+              </div>
+            </div>
+
+            <div className="trade-slip-details trade-slip-details-old">
+              <div className="trade-slip-row">
+                <span className="trade-slip-label">Cost</span>
+                <span className="trade-slip-value">
+                  ${config.wager.toLocaleString()}
+                </span>
+              </div>
+              <div className="trade-slip-row">
+                <span className="trade-slip-label">Odds</span>
+                <span className="trade-slip-value">
+                  {config.odds}% chance
+                </span>
+              </div>
+              <div className="trade-slip-row trade-slip-payout-row">
+                <span className="trade-slip-label">Payout if win</span>
+                <span className="trade-slip-payout trade-slip-payout-old">
+                  ${payout.toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </div>
         ) : (
           <>
             <div className="trade-slip-content trade-slip-dark">

@@ -752,3 +752,168 @@
     gap: 6px;
   }
 }
+
+/* ========================================
+   OLD SINGLE & PARLAY MODES (from 71b2de7)
+   ======================================== */
+
+/* Old single mode - green gradient background */
+.trade-slip-preview.single-old-mode {
+  width: clamp(320px, 90vw, 500px);
+  max-width: 500px;
+  background: linear-gradient(180deg, #00D395 0%, #00C688 100%);
+  border-radius: clamp(16px, 3vw, 20px);
+  padding: clamp(18px, 3vw, 24px) 0 clamp(18px, 3vw, 28px);
+  --d: clamp(8px, 1.5vw, 10px);
+}
+
+/* Old parlay mode - dark gray background */
+.trade-slip-preview.parlay-old-mode {
+  width: clamp(320px, 90vw, 500px);
+  max-width: 500px;
+  background: rgb(34, 34, 34);
+  border-radius: clamp(8px, 2vw, 12px);
+  padding: 0 0 clamp(2px, 0.5vw, 4px);
+  --d: clamp(8px, 1.5vw, 10px);
+}
+
+/* Old single content card - white background with scalloped bottom edge and horizontal margins */
+.single-old-mode .trade-slip-content-old {
+  background: white;
+  border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
+  margin: 0 clamp(8px, 2vw, 16px);
+  padding: clamp(16px, 3vw, 22px);
+  position: relative;
+  /* Scalloped bottom edge via CSS mask */
+  -webkit-mask:
+    linear-gradient(#000 0 0),
+    radial-gradient(circle var(--d) at var(--d) 100%,
+      #000 calc(var(--d) - 1px), transparent var(--d))
+      left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x;
+  mask:
+    linear-gradient(#000 0 0),
+    radial-gradient(circle var(--d) at var(--d) 100%,
+      #000 calc(var(--d) - 1px), transparent var(--d))
+      left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x;
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+}
+
+/* Old parlay content card - no horizontal margins, larger padding, scalloped bottom */
+.parlay-old-mode .trade-slip-content-old {
+  background: white;
+  border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
+  margin: 0;
+  padding: clamp(24px, 4vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 3vw, 22px);
+  position: relative;
+  /* Scalloped bottom edge via CSS mask */
+  -webkit-mask:
+    linear-gradient(#000 0 0),
+    radial-gradient(circle var(--d) at var(--d) 100%,
+      #000 calc(var(--d) - 1px), transparent var(--d))
+      left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x;
+  mask:
+    linear-gradient(#000 0 0),
+    radial-gradient(circle var(--d) at var(--d) 100%,
+      #000 calc(var(--d) - 1px), transparent var(--d))
+      left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x;
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+}
+
+/* Old parlay needs full width border radius at top */
+.parlay-old-mode .parlay-card.trade-slip-content-old {
+  border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
+}
+
+/* Old image styling - square with border radius */
+.trade-slip-image-old {
+  width: clamp(60px, 12vw, 80px) !important;
+  height: clamp(60px, 12vw, 80px) !important;
+  border-radius: clamp(8px, 2vw, 12px) !important;
+}
+
+/* Old image container */
+.single-old-mode .trade-slip-image-container {
+  margin: 0 0 clamp(8px, 1.5vw, 12px) 0;
+  align-self: flex-start;
+}
+
+/* Old top section */
+.single-old-mode .trade-slip-top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: clamp(12px, 2vw, 18px);
+  min-height: clamp(15px, 3vw, 20px);
+}
+
+/* Old market name styling */
+.single-old-mode .trade-slip-market-name-old {
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 500;
+  color: #4b5563;
+  margin: 0 0 clamp(4px, 1vw, 8px) 0;
+  line-height: 1.35;
+}
+
+/* Old market name large - when there's no outcome */
+.single-old-mode .trade-slip-market-name-old.trade-slip-market-name-large {
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 600;
+  margin: 0 0 clamp(8px, 2vw, 14px) 0;
+}
+
+/* Old outcome styling */
+.single-old-mode .trade-slip-outcome {
+  font-size: clamp(26px, 6vw, 38px);
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 clamp(8px, 2vw, 14px) 0;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+/* Old answer styling */
+.single-old-mode .trade-slip-answer-old {
+  font-size: clamp(16px, 3.5vw, 20px);
+  font-weight: 500;
+  margin: 0 0 clamp(16px, 3vw, 24px) 0;
+  line-height: 1.3;
+}
+
+/* Old details styling */
+.single-old-mode .trade-slip-details-old {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vw, 18px);
+}
+
+/* Old payout styling */
+.single-old-mode .trade-slip-payout-old {
+  font-size: clamp(24px, 6vw, 36px);
+  color: #00C688;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* Old question section */
+.single-old-mode .trade-slip-question {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(8px, 1.5vw, 12px);
+  padding-right: 0;
+}
+
+.single-old-mode .trade-slip-question-copy {
+  width: 100%;
+}
+
+/* Old parlay header - remove bottom margin since parent has gap */
+.parlay-old-mode .parlay-header {
+  margin-bottom: 0;
+}

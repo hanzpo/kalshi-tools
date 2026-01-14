@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { TradeSlipConfig, TradeSlipMode, ComboCategory, ComboEvent, ComboMarket } from '../../types';
+import { TradeSlipConfig, TradeSlipMode, ComboCategory, ComboEvent, ComboMarket, ParlayLeg } from '../../types';
 import {
   ImageIcon,
   UploadIcon,
@@ -43,6 +43,15 @@ function createComboCategory(): ComboCategory {
   };
 }
 
+function createLeg(): ParlayLeg {
+  return {
+    id: `leg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    question: '',
+    answer: 'Yes',
+    image: null,
+  };
+}
+
 function calculateSinglePayout(wager: number, odds: number): number {
   if (odds <= 0 || odds >= 100) return 0;
   return Math.round((wager / (odds / 100)) * 100) / 100;
@@ -72,7 +81,9 @@ export function TradeSlipMaker({
   const [isDragging, setIsDragging] = useState(false);
   const isSingleMode = config.mode === 'single';
   const isParlayMode = config.mode === 'parlay';
-  const payout = isSingleMode
+  const isSingleOldMode = config.mode === 'single-old';
+  const isParlayOldMode = config.mode === 'parlay-old';
+  const payout = isSingleMode || isSingleOldMode
     ? calculateSinglePayout(config.wager, config.odds)
     : calculateAmericanPayout(config.wager, config.parlayOdds);
 
@@ -86,9 +97,47 @@ export function TradeSlipMaker({
         comboPayout: config.comboPayout || 1920,
         comboCost: config.comboCost || 99.84,
       });
+    } else if (mode === 'parlay-old' && config.parlayLegs.length === 0) {
+      onConfigChange({ mode, parlayLegs: [createLeg(), createLeg()] });
     } else {
       onConfigChange({ mode });
     }
+  }
+
+  // Old parlay leg handlers
+  function handleLegChange(legId: string, updates: Partial<ParlayLeg>) {
+    const updatedLegs = config.parlayLegs.map((leg) =>
+      leg.id === legId ? { ...leg, ...updates } : leg
+    );
+    onConfigChange({ parlayLegs: updatedLegs });
+  }
+
+  function handleLegImageInput(
+    legId: string,
+    event: ChangeEvent<HTMLInputElement>
+  ) {
+    const file = event.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result;
+      if (typeof result === 'string') {
+        handleLegChange(legId, { image: result });
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleAddLeg() {
+    onConfigChange({ parlayLegs: [...config.parlayLegs, createLeg()] });
+  }
+
+  function handleRemoveLeg(legId: string) {
+    if (config.parlayLegs.length <= 1) return;
+    onConfigChange({
+      parlayLegs: config.parlayLegs.filter((leg) => leg.id !== legId),
+    });
   }
 
   // Combo category handlers
@@ -216,21 +265,21 @@ export function TradeSlipMaker({
   }
 
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode) return;
+    if (!isSingleMode && !isSingleOldMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   }
 
   function handleDragLeave(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode) return;
+    if (!isSingleMode && !isSingleOldMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   }
 
   function handleDrop(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode) return;
+    if (!isSingleMode && !isSingleOldMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -279,6 +328,22 @@ export function TradeSlipMaker({
             aria-pressed={isParlayMode}
           >
             Combo
+          </button>
+          <button
+            type="button"
+            className={`segmented-option${isSingleOldMode ? ' active' : ''}`}
+            onClick={() => handleModeChange('single-old')}
+            aria-pressed={isSingleOldMode}
+          >
+            Single (old)
+          </button>
+          <button
+            type="button"
+            className={`segmented-option${isParlayOldMode ? ' active' : ''}`}
+            onClick={() => handleModeChange('parlay-old')}
+            aria-pressed={isParlayOldMode}
+          >
+            Parlay (old)
           </button>
         </div>
       </div>
@@ -432,6 +497,127 @@ export function TradeSlipMaker({
             <p className="help-text">Leave blank to use current date/time</p>
           </div>
         </>
+      ) : isSingleOldMode ? (
+        <>
+          <div className="control-group">
+            <label htmlFor="bet-market-name-old">Market Name</label>
+            <input
+              id="bet-market-name-old"
+              type="text"
+              className="text-input"
+              placeholder="e.g., Bitcoin price today at 6pm EDT?"
+              value={config.marketName}
+              onChange={(e) => onConfigChange({ marketName: e.target.value })}
+            />
+          </div>
+
+          <div className="control-group">
+            <label htmlFor="bet-outcome-old">Outcome</label>
+            <input
+              id="bet-outcome-old"
+              type="text"
+              className="text-input"
+              placeholder="e.g., $111,000 or above"
+              value={config.outcome}
+              onChange={(e) => onConfigChange({ outcome: e.target.value })}
+            />
+          </div>
+
+          <div className="control-group">
+            <label>Trade Side</label>
+            <div className="segmented-control">
+              {(['Yes', 'No'] as const).map((side) => {
+                const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
+                return (
+                  <button
+                    key={side}
+                    type="button"
+                    className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                    onClick={() => onConfigChange({ tradeSide: side })}
+                    aria-pressed={config.tradeSide === side}
+                    style={{
+                      color: sideColor,
+                      fontWeight: config.tradeSide === side ? 600 : 500,
+                    }}
+                  >
+                    {side}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="control-group">
+            <label htmlFor="bet-image-old">Image (Optional)</label>
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              style={{
+                border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#d1d5db'}`,
+                borderRadius: '5px',
+                padding: '16px 12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '48px',
+                backgroundColor: isDragging ? '#f0fdf4' : '#fafafa',
+                transition: 'border-color 0.15s, background-color 0.15s',
+                cursor: 'pointer',
+                marginBottom: '4px'
+              }}
+            >
+              <input
+                id="bet-image-old"
+                type="file"
+                accept="image/jpeg,image/png,image/jpg"
+                onChange={handleImageChange}
+                className="file-input"
+                style={{ display: 'none' }}
+              />
+              <label
+                htmlFor="bet-image-old"
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  color: isDragging ? BRAND_GREEN : '#6b7280',
+                  fontWeight: 500,
+                  fontSize: '13px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.02em'
+                }}
+              >
+                {isDragging ? (
+                  <>
+                    <UploadIcon size={14} />
+                    <span>Drop image here</span>
+                  </>
+                ) : (
+                  <>
+                    <ImageIcon size={14} />
+                    <span>Click to upload or drag & drop</span>
+                  </>
+                )}
+              </label>
+            </div>
+            <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+          </div>
+        </>
+      ) : isParlayOldMode ? (
+        <div className="control-group">
+          <label htmlFor="bet-title-old">Slip Title</label>
+          <input
+            id="bet-title-old"
+            type="text"
+            className="text-input"
+            placeholder="e.g., Sunday Night Parlay"
+            value={config.title}
+            onChange={(e) => onConfigChange({ title: e.target.value })}
+          />
+        </div>
       ) : null}
 
       {isParlayMode && (
@@ -572,6 +758,94 @@ export function TradeSlipMaker({
         </div>
       )}
 
+      {isParlayOldMode && (
+        <div className="control-group">
+          <label aria-hidden="true">Parlay Legs</label>
+          <div className="parlay-legs">
+            {config.parlayLegs.map((leg, index) => (
+              <div key={leg.id} className="parlay-leg">
+                <div className="parlay-leg-header">
+                  <span className="parlay-leg-title">Leg {index + 1}</span>
+                  <button
+                    type="button"
+                    className="parlay-leg-remove"
+                    onClick={() => handleRemoveLeg(leg.id)}
+                    disabled={config.parlayLegs.length <= 1}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div className="parlay-leg-body">
+                  <label className="parlay-leg-label" htmlFor={`parlay-question-${leg.id}`}>
+                    Question
+                  </label>
+                  <input
+                    id={`parlay-question-${leg.id}`}
+                    type="text"
+                    className="text-input"
+                    placeholder="e.g., New York Giants to win?"
+                    value={leg.question}
+                    onChange={(e) => handleLegChange(leg.id, { question: e.target.value })}
+                  />
+                  <div className="parlay-leg-controls">
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Answer</span>
+                      <div className="segmented-control parlay-answer-toggle">
+                        {(['Yes', 'No'] as ParlayLeg['answer'][]).map((answer) => (
+                          <button
+                            key={answer}
+                            type="button"
+                            className={`segmented-option${leg.answer === answer ? ' active' : ''}`}
+                            onClick={() => handleLegChange(leg.id, { answer })}
+                            aria-pressed={leg.answer === answer}
+                          >
+                            {answer}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="parlay-leg-control">
+                      <span className="parlay-leg-label">Image</span>
+                      <div className="parlay-image-upload">
+                        {leg.image ? (
+                          <>
+                            <img src={leg.image} alt="" className="parlay-leg-image" />
+                            <button
+                              type="button"
+                              className="parlay-image-clear"
+                              onClick={() => handleLegChange(leg.id, { image: null })}
+                            >
+                              Remove
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <label htmlFor={`parlay-image-${leg.id}`} className="parlay-image-placeholder">
+                              Upload
+                            </label>
+                            <input
+                              id={`parlay-image-${leg.id}`}
+                              type="file"
+                              accept="image/jpeg,image/png,image/jpg"
+                              onChange={(e) => handleLegImageInput(leg.id, e)}
+                              className="file-input"
+                              style={{ display: 'none' }}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button type="button" className="parlay-leg-add" onClick={handleAddLeg}>
+              + Add Leg
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="control-group">
         <label htmlFor="bet-wager">Wager Amount ($)</label>
         <input
@@ -586,7 +860,7 @@ export function TradeSlipMaker({
         />
       </div>
 
-      {isSingleMode ? (
+      {isSingleMode || isSingleOldMode ? (
         <>
           <div className="control-group">
             <label htmlFor="bet-odds">Odds (%)</label>
@@ -606,41 +880,84 @@ export function TradeSlipMaker({
             <p className="help-text">Expected payout: ${payout.toLocaleString()}</p>
           </div>
 
+          {/* Timestamp only for new single mode */}
+          {isSingleMode && (
+            <div className="control-group">
+              <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
+              <input
+                id="bet-timestamp"
+                type="datetime-local"
+                className="text-input"
+                value={config.timestamp ?? ''}
+                onChange={(e) => onConfigChange({ timestamp: e.target.value })}
+              />
+              <p className="help-text">Leave blank to use current date/time</p>
+            </div>
+          )}
+        </>
+      ) : isParlayOldMode ? (
+        <>
           <div className="control-group">
-            <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
+            <label htmlFor="parlay-odds-old">American Odds</label>
             <input
-              id="bet-timestamp"
-              type="datetime-local"
+              id="parlay-odds-old"
+              type="number"
               className="text-input"
-              value={config.timestamp ?? ''}
-              onChange={(e) => onConfigChange({ timestamp: e.target.value })}
+              value={config.parlayOdds}
+              onChange={(e) =>
+                onConfigChange({ parlayOdds: Number(e.target.value) || 0 })
+              }
+              placeholder="+500"
+              step="10"
             />
-            <p className="help-text">Leave blank to use current date/time</p>
+            <p className="help-text">
+              Enter positive or negative odds (e.g., -110 or +250). Potential payout: ${payout.toLocaleString()}
+            </p>
+          </div>
+          <div className="control-group">
+            <label htmlFor="parlay-cash-out-old">Cash Out Amount ($)</label>
+            <input
+              id="parlay-cash-out-old"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 947"
+              value={config.parlayCashOut || ''}
+              onChange={(e) => {
+                const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                onConfigChange({ parlayCashOut: value });
+              }}
+              min="0"
+              step="1"
+            />
+            <p className="help-text">Optional: Current cash out value</p>
           </div>
         </>
       ) : null}
 
-      <div className="control-group">
-        <label htmlFor="background-color">Background Color</label>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <input
-            id="background-color"
-            type="color"
-            value={config.backgroundColor}
-            onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
-            className="color-input"
-            style={{ width: '48px', height: '36px', cursor: 'pointer' }}
-          />
-          <input
-            type="text"
-            className="text-input"
-            value={config.backgroundColor}
-            onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
-            placeholder="#28CC95"
-            style={{ flex: 1 }}
-          />
+      {/* Background color picker - only for new modes */}
+      {!isSingleOldMode && !isParlayOldMode && (
+        <div className="control-group">
+          <label htmlFor="background-color">Background Color</label>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input
+              id="background-color"
+              type="color"
+              value={config.backgroundColor}
+              onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
+              className="color-input"
+              style={{ width: '48px', height: '36px', cursor: 'pointer' }}
+            />
+            <input
+              type="text"
+              className="text-input"
+              value={config.backgroundColor}
+              onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
+              placeholder="#28CC95"
+              style={{ flex: 1 }}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="control-group" style={{ marginBottom: 0 }}>
         <label
