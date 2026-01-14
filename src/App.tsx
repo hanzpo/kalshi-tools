@@ -1,15 +1,15 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { LandingPage } from './components/LandingPage';
-import { Footer } from './components/Footer';
+import { LandingPage } from './components/layout/LandingPage';
+import { Footer } from './components/layout/Footer';
 import { useAnalytics } from './hooks/useAnalytics';
 import './App.css';
-import './components/Footer.css';
+import './components/layout/Footer.css';
 
-const ChartBuilder = lazy(() => import('./pages/ChartBuilder'));
-const TradeSlipBuilder = lazy(() => import('./pages/TradeSlipBuilder'));
-const SearchBuilder = lazy(() => import('./pages/SearchBuilder'));
-const LinkPreviewBuilder = lazy(() => import('./pages/LinkPreviewBuilder'));
+const ChartBuilder = lazy(() => import('./features/chart/ChartBuilder'));
+const TradeSlipBuilder = lazy(() => import('./features/trade-slip/TradeSlipBuilder'));
+const SearchBuilder = lazy(() => import('./features/search/SearchBuilder'));
+const LinkPreviewBuilder = lazy(() => import('./features/link-preview/LinkPreviewBuilder'));
 
 function AppContent() {
   useAnalytics();

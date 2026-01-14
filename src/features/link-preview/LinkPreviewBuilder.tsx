@@ -1,22 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MarketConfig, DataPoint } from '../types';
-import { ControlPanel } from '../components/ControlPanel';
-import { LinkPreviewPreview } from '../components/LinkPreviewPreview';
-import { ImageCropper } from '../components/ImageCropper';
-import { TrendDrawer } from '../components/TrendDrawer';
-import { Toast } from '../components/ui/Toast';
-import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../utils/dataGenerator';
-import { getOutcomeColor } from '../utils/colorGenerator';
-import { 
-  getDefaultStartDate, 
-  generateDefaultTrend, 
-  generateDefaultForecastTrend 
-} from '../utils/chartHelpers';
-import { useToast } from '../hooks/useToast';
-import { useExport } from '../hooks/useExport';
-import { trackEvent } from '../utils/analytics';
-import '../App.css';
+import { MarketConfig, DataPoint } from '../../types';
+import { ControlPanel } from '../chart/ControlPanel';
+import { LinkPreviewPreview } from './LinkPreviewPreview';
+import { ImageCropper } from '../../components/shared/ImageCropper';
+import { TrendDrawer } from '../../components/shared/TrendDrawer';
+import { Toast } from '../../components/ui/Toast';
+import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../../lib/dataGenerator';
+import { getOutcomeColor } from '../../lib/colorGenerator';
+import {
+  getDefaultStartDate,
+  generateDefaultTrend,
+  generateDefaultForecastTrend
+} from '../../lib/chartHelpers';
+import { useToast } from '../../hooks/useToast';
+import { useExport } from '../../hooks/useExport';
+import { trackEvent } from '../../lib/analytics';
+import '../../App.css';
 
 const PREVIEW_ID = 'link-preview';
 

@@ -1,27 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MarketConfig, DataPoint } from '../types';
-import { ControlPanel } from '../components/ControlPanel';
-import { ChartPreview } from '../components/ChartPreview';
-import { ImageCropper } from '../components/ImageCropper';
-import { TrendDrawer } from '../components/TrendDrawer';
-import { Toast } from '../components/ui/Toast';
-import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../utils/dataGenerator';
-import { decodeConfigFromUrl } from '../utils/urlEncoder';
-import { getOutcomeColor } from '../utils/colorGenerator';
-import { 
-  getDefaultStartDate, 
-  generateDefaultTrend, 
-  generateDefaultForecastTrend 
-} from '../utils/chartHelpers';
-import { useToast } from '../hooks/useToast';
-import { useExport } from '../hooks/useExport';
-import { trackEvent } from '../utils/analytics';
-import '../App.css';
+import { MarketConfig, DataPoint } from '../../types';
+import { ControlPanel } from '../chart/ControlPanel';
+import { ChartPreview } from '../chart/ChartPreview';
+import { ImageCropper } from '../../components/shared/ImageCropper';
+import { TrendDrawer } from '../../components/shared/TrendDrawer';
+import { Toast } from '../../components/ui/Toast';
+import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../../lib/dataGenerator';
+import { decodeConfigFromUrl } from '../../lib/urlEncoder';
+import { getOutcomeColor } from '../../lib/colorGenerator';
+import {
+  getDefaultStartDate,
+  generateDefaultTrend,
+  generateDefaultForecastTrend
+} from '../../lib/chartHelpers';
+import { useToast } from '../../hooks/useToast';
+import { useExport } from '../../hooks/useExport';
+import { trackEvent } from '../../lib/analytics';
+import '../../App.css';
 
 const CHART_PREVIEW_ID = 'chart-preview';
 
-export default function ChartBuilder() {
+export default function SearchBuilder() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,6 +44,7 @@ export default function ChartBuilder() {
     forecastValue: 128000,
     forecastUnit: 'K',
     mutuallyExclusive: true,
+    searchQuery: '',
   });
 
   const [data, setData] = useState<DataPoint[]>([]);
@@ -56,7 +57,7 @@ export default function ChartBuilder() {
     elementId: CHART_PREVIEW_ID,
     onSuccess: showToast,
     analyticsContext: {
-      tool: 'chart',
+      tool: 'search',
       target: 'chart-preview',
     },
   });
@@ -165,12 +166,12 @@ export default function ChartBuilder() {
   }
 
   function handleOpenTrendDrawer() {
-    trackEvent('trend_draw_open', { tool: 'chart', market_type: config.marketType });
+    trackEvent('trend_draw_open', { tool: 'search', market_type: config.marketType });
     setShowTrendDrawer(true);
   }
 
   function handleTrendDrawComplete(trendData: number[]) {
-    trackEvent('trend_draw_complete', { tool: 'chart', market_type: config.marketType });
+    trackEvent('trend_draw_complete', { tool: 'search', market_type: config.marketType });
     if (config.marketType === 'forecast') {
       const finalValue = trendData[trendData.length - 1];
 
@@ -213,7 +214,7 @@ export default function ChartBuilder() {
   }
 
   function handleTrendDrawCancel() {
-    trackEvent('trend_draw_cancel', { tool: 'chart', market_type: config.marketType });
+    trackEvent('trend_draw_cancel', { tool: 'search', market_type: config.marketType });
     setShowTrendDrawer(false);
   }
 
@@ -224,12 +225,12 @@ export default function ChartBuilder() {
           config={config}
           onConfigChange={handleConfigChange}
           onImageUpload={handleImageUpload}
-          onExport={() => handleExport(config.title, 'kalshi-chart')}
+          onExport={() => handleExport(config.title, 'kalshi-search')}
           onRegenerateData={regenerateData}
           onOpenTrendDrawer={handleOpenTrendDrawer}
-          onCopyToClipboard={() => handleCopyToClipboard('Chart copied to clipboard!')}
+          onCopyToClipboard={() => handleCopyToClipboard('Search result copied to clipboard!')}
           onBack={() => navigate('/')}
-          mode="chart"
+          mode="search"
         />
         <div className="preview-section">
           <ChartPreview 
@@ -238,7 +239,7 @@ export default function ChartBuilder() {
             onTimeHorizonChange={(timeHorizon) => {
               handleConfigChange({ timeHorizon: timeHorizon as any });
               regenerateData();
-              trackEvent('time_horizon_change', { tool: 'chart', horizon: timeHorizon });
+              trackEvent('time_horizon_change', { tool: 'search', horizon: timeHorizon });
             }}
           />
         </div>

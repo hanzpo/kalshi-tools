@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
-import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
-import { createFileName } from '../utils/chartHelpers';
-import { trackEvent } from '../utils/analytics';
+import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../lib/imageExport';
+import { createFileName } from '../lib/chartHelpers';
+import { trackEvent } from '../lib/analytics';
 
 interface UseExportOptions {
   elementId: string;
@@ -18,9 +18,9 @@ interface UseExportReturn {
   handleCopyToClipboard: (successMessage?: string) => Promise<void>;
 }
 
-export function useExport({ 
-  elementId, 
-  onSuccess, 
+export function useExport({
+  elementId,
+  onSuccess,
   onError,
   analyticsContext,
 }: UseExportOptions): UseExportReturn {

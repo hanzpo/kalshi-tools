@@ -1,27 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MarketConfig, DataPoint } from '../types';
-import { ControlPanel } from '../components/ControlPanel';
-import { ChartPreview } from '../components/ChartPreview';
-import { ImageCropper } from '../components/ImageCropper';
-import { TrendDrawer } from '../components/TrendDrawer';
-import { Toast } from '../components/ui/Toast';
-import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../utils/dataGenerator';
-import { decodeConfigFromUrl } from '../utils/urlEncoder';
-import { getOutcomeColor } from '../utils/colorGenerator';
-import { 
-  getDefaultStartDate, 
-  generateDefaultTrend, 
-  generateDefaultForecastTrend 
-} from '../utils/chartHelpers';
-import { useToast } from '../hooks/useToast';
-import { useExport } from '../hooks/useExport';
-import { trackEvent } from '../utils/analytics';
-import '../App.css';
+import { MarketConfig, DataPoint } from '../../types';
+import { ControlPanel } from './ControlPanel';
+import { ChartPreview } from './ChartPreview';
+import { ImageCropper } from '../../components/shared/ImageCropper';
+import { TrendDrawer } from '../../components/shared/TrendDrawer';
+import { Toast } from '../../components/ui/Toast';
+import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../../lib/dataGenerator';
+import { decodeConfigFromUrl } from '../../lib/urlEncoder';
+import { getOutcomeColor } from '../../lib/colorGenerator';
+import {
+  getDefaultStartDate,
+  generateDefaultTrend,
+  generateDefaultForecastTrend
+} from '../../lib/chartHelpers';
+import { useToast } from '../../hooks/useToast';
+import { useExport } from '../../hooks/useExport';
+import { trackEvent } from '../../lib/analytics';
+import '../../App.css';
 
 const CHART_PREVIEW_ID = 'chart-preview';
 
-export default function SearchBuilder() {
+export default function ChartBuilder() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,20 +44,19 @@ export default function SearchBuilder() {
     forecastValue: 128000,
     forecastUnit: 'K',
     mutuallyExclusive: true,
-    searchQuery: '',
   });
 
   const [data, setData] = useState<DataPoint[]>([]);
   const [cropperImage, setCropperImage] = useState<string | null>(null);
   const [showTrendDrawer, setShowTrendDrawer] = useState(false);
   const configRef = useRef(config);
-  
+
   const { message: toastMessage, showToast } = useToast();
   const { handleExport, handleCopyToClipboard } = useExport({
     elementId: CHART_PREVIEW_ID,
     onSuccess: showToast,
     analyticsContext: {
-      tool: 'search',
+      tool: 'chart',
       target: 'chart-preview',
     },
   });
@@ -102,7 +101,7 @@ export default function SearchBuilder() {
   function regenerateData(sourceConfig: MarketConfig = configRef.current) {
     const current = sourceConfig;
     // Get date range based on time horizon
-    const { startDate, endDate } = current.timeHorizon === 'ALL' 
+    const { startDate, endDate } = current.timeHorizon === 'ALL'
       ? { startDate: current.startDate, endDate: current.endDate }
       : getDateRangeForTimeHorizon(current.timeHorizon, current.endDate);
 
@@ -166,12 +165,12 @@ export default function SearchBuilder() {
   }
 
   function handleOpenTrendDrawer() {
-    trackEvent('trend_draw_open', { tool: 'search', market_type: config.marketType });
+    trackEvent('trend_draw_open', { tool: 'chart', market_type: config.marketType });
     setShowTrendDrawer(true);
   }
 
   function handleTrendDrawComplete(trendData: number[]) {
-    trackEvent('trend_draw_complete', { tool: 'search', market_type: config.marketType });
+    trackEvent('trend_draw_complete', { tool: 'chart', market_type: config.marketType });
     if (config.marketType === 'forecast') {
       const finalValue = trendData[trendData.length - 1];
 
@@ -182,7 +181,7 @@ export default function SearchBuilder() {
           forecastValue: finalValue,
         };
 
-        const { startDate, endDate } = updated.timeHorizon === 'ALL' 
+        const { startDate, endDate } = updated.timeHorizon === 'ALL'
           ? { startDate: updated.startDate, endDate: updated.endDate }
           : getDateRangeForTimeHorizon(updated.timeHorizon, updated.endDate);
         const newData = generateForecastData(finalValue, updated.volatility, trendData, startDate, endDate, updated.timeHorizon);
@@ -200,7 +199,7 @@ export default function SearchBuilder() {
           currentOdds: finalOdds,
         };
 
-        const { startDate, endDate } = updated.timeHorizon === 'ALL' 
+        const { startDate, endDate } = updated.timeHorizon === 'ALL'
           ? { startDate: updated.startDate, endDate: updated.endDate }
           : getDateRangeForTimeHorizon(updated.timeHorizon, updated.endDate);
         const newData = generateMarketData(finalOdds, updated.volatility, trendData, startDate, endDate, updated.timeHorizon);
@@ -214,7 +213,7 @@ export default function SearchBuilder() {
   }
 
   function handleTrendDrawCancel() {
-    trackEvent('trend_draw_cancel', { tool: 'search', market_type: config.marketType });
+    trackEvent('trend_draw_cancel', { tool: 'chart', market_type: config.marketType });
     setShowTrendDrawer(false);
   }
 
@@ -225,21 +224,21 @@ export default function SearchBuilder() {
           config={config}
           onConfigChange={handleConfigChange}
           onImageUpload={handleImageUpload}
-          onExport={() => handleExport(config.title, 'kalshi-search')}
+          onExport={() => handleExport(config.title, 'kalshi-chart')}
           onRegenerateData={regenerateData}
           onOpenTrendDrawer={handleOpenTrendDrawer}
-          onCopyToClipboard={() => handleCopyToClipboard('Search result copied to clipboard!')}
+          onCopyToClipboard={() => handleCopyToClipboard('Chart copied to clipboard!')}
           onBack={() => navigate('/')}
-          mode="search"
+          mode="chart"
         />
         <div className="preview-section">
-          <ChartPreview 
-            config={config} 
-            data={data} 
+          <ChartPreview
+            config={config}
+            data={data}
             onTimeHorizonChange={(timeHorizon) => {
               handleConfigChange({ timeHorizon: timeHorizon as any });
               regenerateData();
-              trackEvent('time_horizon_change', { tool: 'search', horizon: timeHorizon });
+              trackEvent('time_horizon_change', { tool: 'chart', horizon: timeHorizon });
             }}
           />
         </div>

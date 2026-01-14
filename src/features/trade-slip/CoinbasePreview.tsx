@@ -1,4 +1,4 @@
-import { CoinbaseConfig } from '../types';
+import { CoinbaseConfig } from '../../types';
 import './CoinbasePreview.css';
 
 interface CoinbasePreviewProps {

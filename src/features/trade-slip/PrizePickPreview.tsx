@@ -1,4 +1,4 @@
-import { TradeSlipConfig } from '../types';
+import { TradeSlipConfig } from '../../types';
 import './PrizePickPreview.css';
 
 interface PrizePickPreviewProps {

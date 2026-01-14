@@ -7,8 +7,8 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { MarketConfig, DataPoint } from '../types';
-import { generateChange, formatVolume, getDateRangeForTimeHorizon, generateDateLabels } from '../utils/dataGenerator';
+import { MarketConfig, DataPoint } from '../../types';
+import { generateChange, formatVolume, getDateRangeForTimeHorizon, generateDateLabels } from '../../lib/dataGenerator';
 import './ChartPreview.css';
 
 interface ChartPreviewProps {

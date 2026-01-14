@@ -11,8 +11,8 @@
 
 .trade-slip-preview {
   position: relative;
-  width: clamp(320px, 90vw, 500px);
-  max-width: 500px;
+  width: clamp(280px, 70vw, 320px);
+  max-width: 320px;
   background: linear-gradient(180deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
   background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%),
               linear-gradient(90deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
@@ -349,9 +349,10 @@
   }
 
   .trade-slip-preview {
-    width: 100%;
-    max-width: 100%;
-    padding: 32px 12px 48px;
+    width: clamp(280px, 90vw, 320px);
+    max-width: 320px;
+    padding: 12px;
+    padding-bottom: 40px;
   }
 
   .trade-slip-content {
@@ -381,7 +382,10 @@
   }
 
   .trade-slip-preview {
-    padding: 24px 8px 36px;
+    width: 280px;
+    max-width: 280px;
+    padding: 10px;
+    padding-bottom: 36px;
   }
 
   .trade-slip-content {
@@ -397,8 +401,6 @@
 
 /* New Combo Slip Styles */
 .trade-slip-preview.parlay-mode {
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%),
-              linear-gradient(90deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
   padding: 12px;
   padding-bottom: 40px;
   border-radius: 16px;

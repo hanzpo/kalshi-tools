@@ -46,6 +46,110 @@ export function trackException(description: string, fatal: boolean = false): voi
   trackEvent('exception', { description, fatal });
 }
 
+// Session tracking with UTM parameters
+export function trackSessionStart(): void {
+  if (typeof window === 'undefined') return;
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  trackEvent('session_start', {
+    referrer: document.referrer || undefined,
+    utm_source: urlParams.get('utm_source') || undefined,
+    utm_medium: urlParams.get('utm_medium') || undefined,
+    utm_campaign: urlParams.get('utm_campaign') || undefined,
+    utm_content: urlParams.get('utm_content') || undefined,
+    entry_page: window.location.pathname,
+  });
+}
+
+// Feature usage tracking
+export function trackFeatureUsed(tool: string, feature: string, value?: number | string): void {
+  trackEvent('feature_used', {
+    tool,
+    feature,
+    value,
+  });
+}
+
+// Export configuration tracking - track what settings were used on export
+export interface ExportConfig {
+  tool: string;
+  marketType?: string;
+  timeHorizon?: string;
+  hasCustomTrend?: boolean;
+  hasImage?: boolean;
+  outcomeCount?: number;
+  volatility?: number;
+  mode?: string;
+  legCount?: number;
+}
+
+export function trackExportConfig(config: ExportConfig): void {
+  trackEvent('export_config', {
+    tool: config.tool,
+    market_type: config.marketType,
+    time_horizon: config.timeHorizon,
+    has_custom_trend: config.hasCustomTrend,
+    has_image: config.hasImage,
+    outcome_count: config.outcomeCount,
+    volatility: config.volatility,
+    mode: config.mode,
+    leg_count: config.legCount,
+  });
+}
+
+// User engagement tracking - time spent and actions taken
+let sessionStartTime: number | null = null;
+let actionCount = 0;
+
+export function startEngagementTracking(): () => void {
+  if (typeof window === 'undefined') return () => {};
+
+  sessionStartTime = Date.now();
+  actionCount = 0;
+
+  const trackEngagement = () => {
+    if (sessionStartTime === null) return;
+
+    const durationSeconds = Math.round((Date.now() - sessionStartTime) / 1000);
+    const tool = window.location.pathname.replace('/', '') || 'home';
+
+    trackEvent('tool_engagement', {
+      tool,
+      duration_seconds: durationSeconds,
+      actions_count: actionCount,
+    });
+  };
+
+  // Track on page hide/close
+  const onVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      trackEngagement();
+    }
+  };
+
+  window.addEventListener('pagehide', trackEngagement, { once: true });
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
+  return () => {
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+  };
+}
+
+export function incrementActionCount(): void {
+  actionCount++;
+}
+
+// Conversion funnel tracking
+export type FunnelStep = 'config_started' | 'preview_ready' | 'export_attempted' | 'export_success';
+
+export function trackFunnelStep(tool: string, step: FunnelStep): void {
+  trackEvent('funnel_step', {
+    tool,
+    step,
+  });
+}
+
 export function startScrollTracking(): () => void {
   if (typeof window === 'undefined') return () => {};
 

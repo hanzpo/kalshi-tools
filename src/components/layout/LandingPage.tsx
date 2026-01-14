@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { trackEvent } from '../utils/analytics';
+import { trackEvent } from '../../lib/analytics';
 import './LandingPage.css';
 
 export function LandingPage() {

@@ -7,9 +7,9 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { MarketConfig, DataPoint } from '../types';
-import { generateChange, formatVolume, getDateRangeForTimeHorizon, generateDateLabels } from '../utils/dataGenerator';
-import { ImageIcon } from './ui/Icons';
+import { MarketConfig, DataPoint } from '../../types';
+import { generateChange, formatVolume, getDateRangeForTimeHorizon, generateDateLabels } from '../../lib/dataGenerator';
+import { ImageIcon } from '../../components/ui/Icons';
 import './LinkPreviewPreview.css';
 
 interface LinkPreviewPreviewProps {

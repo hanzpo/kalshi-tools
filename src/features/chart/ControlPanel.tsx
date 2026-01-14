@@ -1,21 +1,21 @@
 import { ChangeEvent, useState, DragEvent, useRef, useEffect } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { MarketConfig, MarketType, Outcome, TimeHorizon } from '../types';
-import { getOutcomeColor } from '../utils/colorGenerator';
-import { 
-  ImageIcon, 
-  UploadIcon, 
-  PencilIcon, 
-  RefreshIcon, 
-  DownloadIcon, 
-  CopyIcon, 
-  SettingsIcon, 
+import { MarketConfig, MarketType, Outcome, TimeHorizon } from '../../types';
+import { getOutcomeColor } from '../../lib/colorGenerator';
+import {
+  ImageIcon,
+  UploadIcon,
+  PencilIcon,
+  RefreshIcon,
+  DownloadIcon,
+  CopyIcon,
+  SettingsIcon,
   ChevronDownIcon,
   CheckIcon,
   WarningIcon,
   ArrowLeftIcon
-} from './ui/Icons';
-import { trackEvent } from '../utils/analytics';
+} from '../../components/ui/Icons';
+import { trackEvent } from '../../lib/analytics';
 import './ControlPanel.css';
 
 interface ControlPanelProps {

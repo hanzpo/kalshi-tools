@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TradeSlipConfig } from '../types';
-import { TradeSlipMaker } from '../components/TradeSlipMaker';
-import { TradeSlipPreview } from '../components/TradeSlipPreview';
-import { ImageCropper } from '../components/ImageCropper';
-import { Toast } from '../components/ui/Toast';
-import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../utils/imageExport';
-import { createFileName } from '../utils/chartHelpers';
-import { useToast } from '../hooks/useToast';
-import { trackEvent } from '../utils/analytics';
-import '../App.css';
+import { TradeSlipConfig } from '../../types';
+import { TradeSlipMaker } from './TradeSlipMaker';
+import { TradeSlipPreview } from './TradeSlipPreview';
+import { ImageCropper } from '../../components/shared/ImageCropper';
+import { Toast } from '../../components/ui/Toast';
+import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../../lib/imageExport';
+import { createFileName } from '../../lib/chartHelpers';
+import { useToast } from '../../hooks/useToast';
+import { trackEvent } from '../../lib/analytics';
+import '../../App.css';
 
 const TRADE_SLIP_PREVIEW_ID = 'trade-slip-preview';
 
@@ -25,6 +25,7 @@ export default function TradeSlipBuilder() {
     odds: 65,
     tradeSide: 'Yes',
     showWatermark: true,
+    backgroundColor: '#28CC95',
     parlayOdds: 400,
     parlayLegs: [
       { id: 'leg-1', question: '', answer: 'Yes', image: null },

@@ -1,4 +1,4 @@
-import { TradeSlipConfig, ComboCategory, ComboEvent, ComboMarket } from '../types';
+import { TradeSlipConfig, ComboCategory, ComboEvent, ComboMarket } from '../../types';
 import { PrizePickPreview } from './PrizePickPreview';
 import { CoinbasePreview } from './CoinbasePreview';
 import './TradeSlipPreview.css';
@@ -204,11 +204,16 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const tradeColor = config.tradeSide === 'No' ? '#ff4d6a' : '#00C688';
   const outcomeText = config.outcome?.trim();
 
+  const bgColor = config.backgroundColor || '#28CC95';
+
   return (
     <div className="trade-slip-container">
       <div
         id="trade-slip-preview"
         className={`trade-slip-preview${isParlay ? ' parlay-mode' : ''}`}
+        style={{
+          background: `linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%), ${bgColor}`,
+        }}
       >
         {isParlay ? (
           <>

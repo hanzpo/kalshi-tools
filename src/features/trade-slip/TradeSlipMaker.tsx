@@ -1,14 +1,14 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { TradeSlipConfig, TradeSlipMode, PrizePickPlayer, CoinbasePrediction, ComboCategory, ComboEvent, ComboMarket } from '../types';
+import { TradeSlipConfig, TradeSlipMode, PrizePickPlayer, CoinbasePrediction, ComboCategory, ComboEvent, ComboMarket } from '../../types';
 import {
   ImageIcon,
   UploadIcon,
   DownloadIcon,
   CopyIcon,
   ArrowLeftIcon
-} from './ui/Icons';
-import { trackEvent } from '../utils/analytics';
-import '../components/ControlPanel.css';
+} from '../../components/ui/Icons';
+import { trackEvent } from '../../lib/analytics';
+import '../chart/ControlPanel.css';
 
 interface TradeSlipMakerProps {
   config: TradeSlipConfig;
@@ -1306,6 +1306,28 @@ export function TradeSlipMaker({
           </div>
         </>
       )}
+
+      <div className="control-group">
+        <label htmlFor="background-color">Background Color</label>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <input
+            id="background-color"
+            type="color"
+            value={config.backgroundColor}
+            onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
+            className="color-input"
+            style={{ width: '48px', height: '36px', cursor: 'pointer' }}
+          />
+          <input
+            type="text"
+            className="text-input"
+            value={config.backgroundColor}
+            onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
+            placeholder="#28CC95"
+            style={{ flex: 1 }}
+          />
+        </div>
+      </div>
 
       <div className="control-group" style={{ marginBottom: 0 }}>
         <label

@@ -1,17 +1,24 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
+  startEngagementTracking,
   startErrorTracking,
   startOutboundLinkTracking,
   startPerformanceTracking,
   startScrollTracking,
   trackPageView,
-} from '../utils/analytics';
+  trackSessionStart,
+} from '../lib/analytics';
 
 export function useAnalytics(): void {
   const location = useLocation();
   const previousPathRef = useRef<string | null>(null);
   const hasTrackedInitialRef = useRef(false);
+
+  // Track session start on first load
+  useEffect(() => {
+    trackSessionStart();
+  }, []);
 
   useEffect(() => {
     const path = `${location.pathname}${location.search}${location.hash}`;
@@ -33,11 +40,13 @@ export function useAnalytics(): void {
     const stopOutbound = startOutboundLinkTracking();
     const stopErrors = startErrorTracking();
     const stopPerf = startPerformanceTracking();
+    const stopEngagement = startEngagementTracking();
 
     return () => {
       stopOutbound();
       stopErrors();
       stopPerf();
+      stopEngagement();
     };
   }, []);
 }
