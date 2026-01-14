@@ -495,18 +495,6 @@ export function ControlPanel({
       )}
 
       <div className="control-group">
-        <label htmlFor="market-title">Market Title</label>
-        <input
-          id="market-title"
-          type="text"
-          className="text-input"
-          placeholder="e.g., Will SpaceX land on Mars by 2030?"
-          value={config.title}
-          onChange={(e) => onConfigChange({ title: e.target.value })}
-        />
-      </div>
-
-      <div className="control-group">
         <label htmlFor="market-image">Market Image (Optional)</label>
         <div
           onDragOver={handleDragOver}
@@ -563,6 +551,18 @@ export function ControlPanel({
           </label>
         </div>
         <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+      </div>
+
+      <div className="control-group">
+        <label htmlFor="market-title">Market Title</label>
+        <input
+          id="market-title"
+          type="text"
+          className="text-input"
+          placeholder="e.g., Will SpaceX land on Mars by 2030?"
+          value={config.title}
+          onChange={(e) => onConfigChange({ title: e.target.value })}
+        />
       </div>
 
       <div className="control-group">
@@ -743,102 +743,100 @@ export function ControlPanel({
         </>
       )}
 
-      {(config.marketType === 'binary' || config.marketType === 'forecast') && (
+      {config.marketType === 'binary' && (
+        <div className="control-group">
+          <label htmlFor="current-odds">
+            Current Odds: {config.currentOdds}%
+          </label>
+          <input
+            id="current-odds"
+            type="range"
+            min="0"
+            max="100"
+            value={config.currentOdds}
+            onChange={(e) => {
+              onConfigChange({ currentOdds: parseInt(e.target.value), customTrendData: null });
+              onRegenerateData();
+            }}
+            className="slider-input"
+          />
+          <div className="slider-labels">
+            <span>0%</span>
+            <span>100%</span>
+          </div>
+          {config.customTrendData && (
+            <p className="help-text" style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <WarningIcon size={14} />
+              Adjusting odds will reset your custom trend
+            </p>
+          )}
+        </div>
+      )}
+
+      {config.marketType === 'forecast' && (
         <>
           <div className="control-group">
-            <label>Market Trend (Optional)</label>
-            <button onClick={onOpenTrendDrawer} className="button-draw">
-              <PencilIcon size={16} />
-              {config.customTrendData ? 'Redraw Trend' : 'Draw Custom Trend'}
-            </button>
-            {config.customTrendData ? (
-              <p className="help-text" style={{ color: '#09C285', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <CheckIcon size={14} />
-                Using your custom drawn trend
-              </p>
-            ) : (
-              <p className="help-text">
-                Using random walk default • Draw your own trend line
+            <label htmlFor="forecast-value">
+              Forecast Value: {config.forecastValue ?? 128000}
+            </label>
+            <input
+              id="forecast-value"
+              type="number"
+              className="text-input"
+              placeholder="e.g., 128000"
+              value={config.forecastValue ?? 128000}
+              onChange={(e) => {
+                const value = parseFloat(e.target.value) || 0;
+                onConfigChange({ forecastValue: value, customTrendData: null });
+                onRegenerateData();
+              }}
+              min="0"
+              step="1"
+            />
+            <p className="help-text">Enter the forecasted numerical value</p>
+            {config.customTrendData && (
+              <p className="help-text" style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <WarningIcon size={14} />
+                Adjusting value will reset your custom trend
               </p>
             )}
           </div>
 
-          {config.marketType === 'binary' && (
-            <div className="control-group">
-              <label htmlFor="current-odds">
-                Current Odds: {config.currentOdds}%
-              </label>
-              <input
-                id="current-odds"
-                type="range"
-                min="0"
-                max="100"
-                value={config.currentOdds}
-                onChange={(e) => {
-                  onConfigChange({ currentOdds: parseInt(e.target.value), customTrendData: null });
-                  onRegenerateData();
-                }}
-                className="slider-input"
-              />
-              <div className="slider-labels">
-                <span>0%</span>
-                <span>100%</span>
-              </div>
-              {config.customTrendData && (
-                <p className="help-text" style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <WarningIcon size={14} />
-                  Adjusting odds will reset your custom trend
-                </p>
-              )}
-            </div>
-          )}
-
-          {config.marketType === 'forecast' && (
-            <>
-              <div className="control-group">
-                <label htmlFor="forecast-value">
-                  Forecast Value: {config.forecastValue ?? 128000}
-                </label>
-                <input
-                  id="forecast-value"
-                  type="number"
-                  className="text-input"
-                  placeholder="e.g., 128000"
-                  value={config.forecastValue ?? 128000}
-                  onChange={(e) => {
-                    const value = parseFloat(e.target.value) || 0;
-                    onConfigChange({ forecastValue: value, customTrendData: null });
-                    onRegenerateData();
-                  }}
-                  min="0"
-                  step="1"
-                />
-                <p className="help-text">Enter the forecasted numerical value</p>
-                {config.customTrendData && (
-                  <p className="help-text" style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <WarningIcon size={14} />
-                    Adjusting value will reset your custom trend
-                  </p>
-                )}
-              </div>
-
-              <div className="control-group">
-                <label htmlFor="forecast-unit">Unit</label>
-                <input
-                  id="forecast-unit"
-                  type="text"
-                  className="text-input"
-                  placeholder="e.g., K"
-                  value={config.forecastUnit ?? 'K'}
-                  onChange={(e) => {
-                    onConfigChange({ forecastUnit: e.target.value });
-                  }}
-                />
-                <p className="help-text">Unit to display after the forecast value (e.g., K, $, etc.)</p>
-              </div>
-            </>
-          )}
+          <div className="control-group">
+            <label htmlFor="forecast-unit">Unit</label>
+            <input
+              id="forecast-unit"
+              type="text"
+              className="text-input"
+              placeholder="e.g., K"
+              value={config.forecastUnit ?? 'K'}
+              onChange={(e) => {
+                onConfigChange({ forecastUnit: e.target.value });
+              }}
+            />
+            <p className="help-text">Unit to display after the forecast value (e.g., K, $, etc.)</p>
+          </div>
         </>
+      )}
+
+      {(config.marketType === 'binary' || config.marketType === 'forecast') && (
+        <div className="control-group">
+          <label>Market Trend (Optional)</label>
+          <button onClick={onOpenTrendDrawer} className="button-draw">
+            <PencilIcon size={16} />
+            {config.customTrendData ? 'Redraw Trend' : 'Draw Custom Trend'}
+          </button>
+          {config.customTrendData ? (
+            <p className="help-text" style={{ color: '#09C285', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <CheckIcon size={14} />
+              Using your custom drawn trend
+            </p>
+          ) : (
+            <p className="help-text">
+              Using random walk default • Draw your own trend line
+            </p>
+          )}
+        </div>
       )}
 
       <div className="control-group">

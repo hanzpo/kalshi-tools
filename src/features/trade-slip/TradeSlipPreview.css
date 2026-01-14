@@ -401,6 +401,8 @@
 
 /* New Combo Slip Styles */
 .trade-slip-preview.parlay-mode {
+  width: clamp(300px, 80vw, 380px);
+  max-width: 380px;
   padding: 12px;
   padding-bottom: 40px;
   border-radius: 16px;

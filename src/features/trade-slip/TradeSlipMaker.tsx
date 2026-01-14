@@ -431,66 +431,6 @@ export function TradeSlipMaker({
       {isSingleMode ? (
         <>
           <div className="control-group">
-            <label htmlFor="bet-market-name">Market Name</label>
-            <input
-              id="bet-market-name"
-              type="text"
-              className="text-input"
-              placeholder="e.g., Bitcoin price today at 6pm EDT?"
-              value={config.marketName}
-              onChange={(e) => onConfigChange({ marketName: e.target.value })}
-            />
-          </div>
-
-          <div className="control-group">
-            <label htmlFor="bet-outcome">Outcome</label>
-            <input
-              id="bet-outcome"
-              type="text"
-              className="text-input"
-              placeholder="e.g., $111,000 or above"
-              value={config.outcome}
-              onChange={(e) => onConfigChange({ outcome: e.target.value })}
-            />
-          </div>
-
-          <div className="control-group">
-            <label>Trade Side</label>
-            <div className="segmented-control">
-              {(['Yes', 'No'] as const).map((side) => {
-                const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
-                return (
-                  <button
-                    key={side}
-                    type="button"
-                    className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
-                    onClick={() => onConfigChange({ tradeSide: side })}
-                    aria-pressed={config.tradeSide === side}
-                    style={{
-                      color: sideColor,
-                      fontWeight: config.tradeSide === side ? 600 : 500,
-                    }}
-                  >
-                    {side}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="control-group">
-            <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
-            <input
-              id="bet-timestamp"
-              type="datetime-local"
-              className="text-input"
-              value={config.timestamp ?? ''}
-              onChange={(e) => onConfigChange({ timestamp: e.target.value })}
-            />
-            <p className="help-text">Leave blank to use current date/time</p>
-          </div>
-
-          <div className="control-group">
             <label htmlFor="bet-image">Image (Optional)</label>
             <div
               onDragOver={handleDragOver}
@@ -547,6 +487,54 @@ export function TradeSlipMaker({
               </label>
             </div>
             <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+          </div>
+
+          <div className="control-group">
+            <label htmlFor="bet-market-name">Market Name</label>
+            <input
+              id="bet-market-name"
+              type="text"
+              className="text-input"
+              placeholder="e.g., Bitcoin price today at 6pm EDT?"
+              value={config.marketName}
+              onChange={(e) => onConfigChange({ marketName: e.target.value })}
+            />
+          </div>
+
+          <div className="control-group">
+            <label htmlFor="bet-outcome">Outcome</label>
+            <input
+              id="bet-outcome"
+              type="text"
+              className="text-input"
+              placeholder="e.g., $111,000 or above"
+              value={config.outcome}
+              onChange={(e) => onConfigChange({ outcome: e.target.value })}
+            />
+          </div>
+
+          <div className="control-group">
+            <label>Trade Side</label>
+            <div className="segmented-control">
+              {(['Yes', 'No'] as const).map((side) => {
+                const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
+                return (
+                  <button
+                    key={side}
+                    type="button"
+                    className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                    onClick={() => onConfigChange({ tradeSide: side })}
+                    aria-pressed={config.tradeSide === side}
+                    style={{
+                      color: sideColor,
+                      fontWeight: config.tradeSide === side ? 600 : 500,
+                    }}
+                  >
+                    {side}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </>
       ) : isParlayMode ? (
@@ -1228,23 +1216,37 @@ export function TradeSlipMaker({
       )}
 
       {isSingleMode ? (
-        <div className="control-group">
-          <label htmlFor="bet-odds">Odds (%)</label>
-          <div className="slider-wrapper">
-            <input
-              id="bet-odds"
-              type="range"
-              className="slider-input"
-              value={config.odds}
-              onChange={(e) => onConfigChange({ odds: Number(e.target.value) })}
-              min="1"
-              max="99"
-              step="1"
-            />
-            <div className="slider-value">{config.odds}% chance</div>
+        <>
+          <div className="control-group">
+            <label htmlFor="bet-odds">Odds (%)</label>
+            <div className="slider-wrapper">
+              <input
+                id="bet-odds"
+                type="range"
+                className="slider-input"
+                value={config.odds}
+                onChange={(e) => onConfigChange({ odds: Number(e.target.value) })}
+                min="1"
+                max="99"
+                step="1"
+              />
+              <div className="slider-value">{config.odds}% chance</div>
+            </div>
+            <p className="help-text">Expected payout: ${payout.toLocaleString()}</p>
           </div>
-          <p className="help-text">Expected payout: ${payout.toLocaleString()}</p>
-        </div>
+
+          <div className="control-group">
+            <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
+            <input
+              id="bet-timestamp"
+              type="datetime-local"
+              className="text-input"
+              value={config.timestamp ?? ''}
+              onChange={(e) => onConfigChange({ timestamp: e.target.value })}
+            />
+            <p className="help-text">Leave blank to use current date/time</p>
+          </div>
+        </>
       ) : isParlayMode ? null : isPrizePickMode ? (
         <>
           <div className="control-group">
