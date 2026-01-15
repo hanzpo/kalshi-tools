@@ -4,9 +4,12 @@ import { toPng } from 'html-to-image';
  * Convert a DOM element into a PNG data URL using html-to-image.
  */
 export async function captureElementAsPng(element: HTMLElement): Promise<string> {
+  // Use higher of device pixel ratio or 3 for crisp exports
+  const pixelRatio = Math.max(window.devicePixelRatio || 1, 3);
+
   return toPng(element, {
     quality: 1,
-    pixelRatio: 2,
+    pixelRatio,
   });
 }
 
