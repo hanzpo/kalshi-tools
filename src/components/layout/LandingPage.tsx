@@ -132,6 +132,32 @@ export function LandingPage() {
             </div>
           </Link>
 
+          <a
+            href="https://overlay.kalshi.tools/"
+            className="landing-option landing-option--overlay"
+            onClick={() => handleToolClick('overlay')}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className="option-body">
+              <div className="option-header">
+                <span className="option-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 3v18h18" />
+                    <path d="M7 16l4-8 4 4 6-10" />
+                  </svg>
+                </span>
+                <div className="option-title-group">
+                  <span className="option-subtitle">View the</span>
+                  <span className="option-label">Overlay</span>
+                </div>
+              </div>
+              <p className="option-description">
+                Display odds over time for Kalshi markets.
+              </p>
+            </div>
+          </a>
+
         </div>
       </div>
     </div>
