@@ -218,7 +218,14 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const marketName = (config.marketName?.trim() || config.title.trim())
     || 'Market name goes here';
   const marketImageAlt = marketName ? `${marketName} market image` : 'Market image';
-  const tradeColor = config.tradeSide === 'No' ? '#ff4d6a' : '#00C688';
+  const tradeColor = config.tradeSide === 'No'
+    ? '#ff4d6a'
+    : config.tradeSide === 'Custom'
+      ? (config.customSideColor || '#00C688')
+      : '#00C688';
+  const tradeSideText = config.tradeSide === 'Custom'
+    ? (config.customSideText || 'Custom')
+    : config.tradeSide;
   const outcomeText = config.outcome?.trim();
 
   const bgColor = config.backgroundColor || '#28CC95';
@@ -429,7 +436,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                     className="trade-slip-answer"
                     style={{ color: tradeColor }}
                   >
-                    <span className="trade-slip-answer-side">{config.tradeSide}</span>
+                    <span className="trade-slip-answer-side">{tradeSideText}</span>
                     {outcomeText && (
                       <span className="trade-slip-answer-outcome">
                         {outcomeText}

@@ -64,7 +64,9 @@ export interface TradeSlipConfig {
   image: string | null;
   wager: number;
   odds: number;
-  tradeSide: 'Yes' | 'No';
+  tradeSide: 'Yes' | 'No' | 'Custom';
+  customSideColor?: string;
+  customSideText?: string;
   showWatermark: boolean;
   backgroundColor: string;
   // Single trade slip additional fields

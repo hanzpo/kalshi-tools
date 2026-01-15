@@ -414,73 +414,137 @@ export function ControlPanel({
           : 'Realistic chart generator for Kalshi markets'}
       </p>
 
-      {mode === 'search' && (
-        <div className="control-group">
-          <label htmlFor="search-query">Search Query</label>
-          <input
-            id="search-query"
-            type="text"
-            className="text-input"
-            placeholder="e.g., How high will Bitcoin get this year?"
-            value={config.searchQuery || ''}
-            onChange={(e) => onConfigChange({ searchQuery: e.target.value })}
-          />
-          <p className="help-text">The search query displayed in the Google search bar</p>
-        </div>
-      )}
+      {/* Content Section */}
+      <div className="control-section">
+        <div className="control-section-title">Content</div>
 
-      {mode === 'link-preview' && onLeftImageUpload && (
+        {mode === 'search' && (
+          <div className="control-group">
+            <label htmlFor="search-query">Search Query</label>
+            <input
+              id="search-query"
+              type="text"
+              className="text-input"
+              placeholder="e.g., How high will Bitcoin get this year?"
+              value={config.searchQuery || ''}
+              onChange={(e) => onConfigChange({ searchQuery: e.target.value })}
+            />
+            <p className="help-text">The search query displayed in the Google search bar</p>
+          </div>
+        )}
+
+        {mode === 'link-preview' && onLeftImageUpload && (
+          <div className="control-group">
+            <label>Left Side Image</label>
+            <div
+              onDragOver={handleLeftDragOver}
+              onDragLeave={handleLeftDragLeave}
+              onDrop={handleLeftDrop}
+              style={{
+                border: `1.5px dashed ${isDraggingLeft ? '#09C285' : '#d1d5db'}`,
+                borderRadius: '5px',
+                padding: '16px 12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '48px',
+                backgroundColor: isDraggingLeft ? '#f0fdf4' : '#ffffff',
+                transition: 'border-color 0.15s, background-color 0.15s',
+                cursor: 'pointer',
+                marginBottom: '4px'
+              }}
+            >
+              <input
+                id="left-image"
+                type="file"
+                accept="image/jpeg,image/png,image/jpg"
+                onChange={handleLeftImageChange}
+                style={{ display: 'none' }}
+              />
+              <label
+                htmlFor="left-image"
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  color: isDraggingLeft ? '#09C285' : '#6b7280',
+                  fontWeight: 500,
+                  fontSize: '13px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.02em'
+                }}
+              >
+                {isDraggingLeft ? (
+                  <>
+                    <UploadIcon size={14} />
+                    <span>Drop image here</span>
+                  </>
+                ) : leftImage ? (
+                  <>
+                    <CheckIcon size={14} />
+                    <span>Image uploaded</span>
+                  </>
+                ) : (
+                  <>
+                    <ImageIcon size={14} />
+                    <span>Click to upload or drag & drop</span>
+                  </>
+                )}
+              </label>
+            </div>
+            <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+          </div>
+        )}
+
         <div className="control-group">
-          <label>Left Side Image</label>
+          <label htmlFor="market-image">Market Image (Optional)</label>
           <div
-            onDragOver={handleLeftDragOver}
-            onDragLeave={handleLeftDragLeave}
-            onDrop={handleLeftDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
             style={{
-              border: `1.5px dashed ${isDraggingLeft ? '#09C285' : '#d1d5db'}`,
+              border: `1.5px dashed ${isDragging ? '#09C285' : '#d1d5db'}`,
               borderRadius: '5px',
               padding: '16px 12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               minHeight: '48px',
-              backgroundColor: isDraggingLeft ? '#f0fdf4' : '#fafafa',
+              backgroundColor: isDragging ? '#f0fdf4' : '#ffffff',
               transition: 'border-color 0.15s, background-color 0.15s',
               cursor: 'pointer',
               marginBottom: '4px'
             }}
           >
             <input
-              id="left-image"
+              id="market-image"
               type="file"
               accept="image/jpeg,image/png,image/jpg"
-              onChange={handleLeftImageChange}
+              onChange={handleImageChange}
+              className="file-input"
               style={{ display: 'none' }}
             />
             <label
-              htmlFor="left-image"
+              htmlFor="market-image"
               style={{
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                color: isDraggingLeft ? '#09C285' : '#6b7280',
+                color: isDragging ? '#09C285' : '#6b7280',
                 fontWeight: 500,
                 fontSize: '13px',
                 textTransform: 'uppercase',
                 letterSpacing: '0.02em'
               }}
             >
-              {isDraggingLeft ? (
+              {isDragging ? (
                 <>
                   <UploadIcon size={14} />
                   <span>Drop image here</span>
-                </>
-              ) : leftImage ? (
-                <>
-                  <CheckIcon size={14} />
-                  <span>Image uploaded</span>
                 </>
               ) : (
                 <>
@@ -492,113 +556,58 @@ export function ControlPanel({
           </div>
           <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
         </div>
-      )}
 
-      <div className="control-group">
-        <label htmlFor="market-image">Market Image (Optional)</label>
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          style={{
-            border: `1.5px dashed ${isDragging ? '#09C285' : '#d1d5db'}`,
-            borderRadius: '5px',
-            padding: '16px 12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '48px',
-            backgroundColor: isDragging ? '#f0fdf4' : '#fafafa',
-            transition: 'border-color 0.15s, background-color 0.15s',
-            cursor: 'pointer',
-            marginBottom: '4px'
-          }}
-        >
+        <div className="control-group">
+          <label htmlFor="market-title">Market Title</label>
           <input
-            id="market-image"
-            type="file"
-            accept="image/jpeg,image/png,image/jpg"
-            onChange={handleImageChange}
-            className="file-input"
-            style={{ display: 'none' }}
+            id="market-title"
+            type="text"
+            className="text-input"
+            placeholder="e.g., Will SpaceX land on Mars by 2030?"
+            value={config.title}
+            onChange={(e) => onConfigChange({ title: e.target.value })}
           />
-          <label
-            htmlFor="market-image"
+        </div>
+      </div>
+
+      {/* Market Settings Section */}
+      <div className="control-section">
+        <div className="control-section-title">Market Settings</div>
+
+        <div className="control-group">
+          <label htmlFor="market-type">Market Type</label>
+          <select
+            id="market-type"
+            className="text-input"
+            value={config.marketType}
+            onChange={(e) => handleMarketTypeChange(e.target.value as MarketType)}
             style={{
+              marginTop: '0',
+              padding: '8px 10px',
+              border: '1px solid #e5e7eb',
+              borderRadius: '5px',
+              backgroundColor: 'white',
+              fontSize: '14px',
+              color: '#374151',
               cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              color: isDragging ? '#09C285' : '#6b7280',
-              fontWeight: 500,
-              fontSize: '13px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.02em'
+              transition: 'border-color 0.15s',
+              width: '100%',
             }}
           >
-            {isDragging ? (
-              <>
-                <UploadIcon size={14} />
-                <span>Drop image here</span>
-              </>
-            ) : (
-              <>
-                <ImageIcon size={14} />
-                <span>Click to upload or drag & drop</span>
-              </>
-            )}
-          </label>
+            <option value="binary">Binary (Yes/No)</option>
+            <option value="multi">Multi-Outcome</option>
+            <option value="forecast">Forecast</option>
+          </select>
+          <p className="help-text">
+            {config.marketType === 'binary'
+              ? 'Single yes/no outcome market'
+              : config.marketType === 'multi'
+              ? 'Multiple bracket/outcome market'
+              : 'Unbounded numerical forecast market'}
+          </p>
         </div>
-        <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
-      </div>
 
-      <div className="control-group">
-        <label htmlFor="market-title">Market Title</label>
-        <input
-          id="market-title"
-          type="text"
-          className="text-input"
-          placeholder="e.g., Will SpaceX land on Mars by 2030?"
-          value={config.title}
-          onChange={(e) => onConfigChange({ title: e.target.value })}
-        />
-      </div>
-
-      <div className="control-group">
-        <label htmlFor="market-type">Market Type</label>
-        <select
-          id="market-type"
-          className="text-input"
-          value={config.marketType}
-          onChange={(e) => handleMarketTypeChange(e.target.value as MarketType)}
-          style={{
-            marginTop: '0',
-            padding: '8px 10px',
-            border: '1px solid #e5e7eb',
-            borderRadius: '5px',
-            backgroundColor: 'white',
-            fontSize: '14px',
-            color: '#374151',
-            cursor: 'pointer',
-            transition: 'border-color 0.15s',
-            width: '100%',
-          }}
-        >
-          <option value="binary">Binary (Yes/No)</option>
-          <option value="multi">Multi-Outcome</option>
-          <option value="forecast">Forecast</option>
-        </select>
-        <p className="help-text">
-          {config.marketType === 'binary' 
-            ? 'Single yes/no outcome market' 
-            : config.marketType === 'multi'
-            ? 'Multiple bracket/outcome market'
-            : 'Unbounded numerical forecast market'}
-        </p>
-      </div>
-
-      {config.marketType === 'multi' && (
+        {config.marketType === 'multi' && (
         <>
           <div className="control-group">
             <label htmlFor="mutually-exclusive" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
@@ -838,64 +847,70 @@ export function ControlPanel({
           )}
         </div>
       )}
-
-      <div className="control-group">
-        <label htmlFor="volatility">
-          Volatility: {config.volatility}x
-        </label>
-        <input
-          id="volatility"
-          type="range"
-          min="0.2"
-          max="3"
-          step="0.2"
-          value={config.volatility}
-          onChange={(e) => {
-            onConfigChange({ volatility: parseFloat(e.target.value) });
-            onRegenerateData();
-          }}
-          className="slider-input"
-        />
-        <div className="slider-labels">
-          <span>Low</span>
-          <span>High</span>
-        </div>
       </div>
 
-      <div className="control-group">
-        <label>Time Horizon</label>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          {(['6H', '1D', '1W', '1M', 'ALL'] as TimeHorizon[]).map((horizon) => (
-            <button
-              key={horizon}
-              onClick={() => {
-                onConfigChange({ timeHorizon: horizon });
-                onRegenerateData();
-                trackEvent('time_horizon_change', { tool: mode, horizon });
-              }}
-              style={{
-                padding: '6px 10px',
-                border: '1px solid',
-                borderColor: config.timeHorizon === horizon ? '#09C285' : '#e5e7eb',
-                backgroundColor: config.timeHorizon === horizon ? '#f0fdf4' : 'white',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: 500,
-                color: config.timeHorizon === horizon ? '#09C285' : '#9ca3af',
-                transition: 'border-color 0.15s, background-color 0.15s, color 0.15s',
-                fontSize: '12px',
-                minWidth: '40px',
-              }}
-            >
-              {horizon}
-            </button>
-          ))}
+      {/* Chart Settings Section */}
+      <div className="control-section">
+        <div className="control-section-title">Chart Settings</div>
+
+        <div className="control-group">
+          <label htmlFor="volatility">
+            Volatility: {config.volatility}x
+          </label>
+          <input
+            id="volatility"
+            type="range"
+            min="0.2"
+            max="3"
+            step="0.2"
+            value={config.volatility}
+            onChange={(e) => {
+              onConfigChange({ volatility: parseFloat(e.target.value) });
+              onRegenerateData();
+            }}
+            className="slider-input"
+          />
+          <div className="slider-labels">
+            <span>Low</span>
+            <span>High</span>
+          </div>
         </div>
-        <p className="help-text">
-          {config.timeHorizon === 'ALL' 
-            ? 'Custom date range (use Advanced Settings)' 
-            : `Last ${config.timeHorizon === '6H' ? '6 hours' : config.timeHorizon === '1D' ? 'day' : config.timeHorizon === '1W' ? 'week' : 'month'}`}
-        </p>
+
+        <div className="control-group">
+          <label>Time Horizon</label>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {(['6H', '1D', '1W', '1M', 'ALL'] as TimeHorizon[]).map((horizon) => (
+              <button
+                key={horizon}
+                onClick={() => {
+                  onConfigChange({ timeHorizon: horizon });
+                  onRegenerateData();
+                  trackEvent('time_horizon_change', { tool: mode, horizon });
+                }}
+                style={{
+                  padding: '6px 10px',
+                  border: '1px solid',
+                  borderColor: config.timeHorizon === horizon ? '#09C285' : '#e5e7eb',
+                  backgroundColor: config.timeHorizon === horizon ? '#f0fdf4' : 'white',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: 500,
+                  color: config.timeHorizon === horizon ? '#09C285' : '#9ca3af',
+                  transition: 'border-color 0.15s, background-color 0.15s, color 0.15s',
+                  fontSize: '12px',
+                  minWidth: '40px',
+                }}
+              >
+                {horizon}
+              </button>
+            ))}
+          </div>
+          <p className="help-text">
+            {config.timeHorizon === 'ALL'
+              ? 'Custom date range (use Advanced Settings)'
+              : `Last ${config.timeHorizon === '6H' ? '6 hours' : config.timeHorizon === '1D' ? 'day' : config.timeHorizon === '1W' ? 'week' : 'month'}`}
+          </p>
+        </div>
       </div>
 
       <div className="control-group">
