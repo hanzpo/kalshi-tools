@@ -68,6 +68,7 @@ export interface TradeSlipConfig {
   customSideColor?: string;
   customSideText?: string;
   showWatermark: boolean;
+  showTimestamp: boolean;
   backgroundColor: string;
   // Single trade slip additional fields
   timestamp?: string;

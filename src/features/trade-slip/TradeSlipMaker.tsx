@@ -1023,7 +1023,7 @@ export function TradeSlipMaker({
           </div>
         )}
 
-        <div className="control-group" style={{ marginBottom: 0 }}>
+        <div className="control-group">
           <label
             htmlFor="show-watermark-bet"
             style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
@@ -1044,6 +1044,30 @@ export function TradeSlipMaker({
           </label>
           <p className="help-text">Display watermark on trade slip</p>
         </div>
+
+        {(isSingleMode || isParlayMode) && (
+          <div className="control-group" style={{ marginBottom: 0 }}>
+            <label
+              htmlFor="show-timestamp-bet"
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+            >
+              <input
+                id="show-timestamp-bet"
+                type="checkbox"
+                checked={config.showTimestamp}
+                onChange={(e) => onConfigChange({ showTimestamp: e.target.checked })}
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  cursor: 'pointer',
+                  accentColor: BRAND_GREEN,
+                }}
+              />
+              <span>Show Date/Time</span>
+            </label>
+            <p className="help-text">Display purchase date and time</p>
+          </div>
+        )}
       </div>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>

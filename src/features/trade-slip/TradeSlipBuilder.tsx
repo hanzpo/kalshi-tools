@@ -25,6 +25,7 @@ export default function TradeSlipBuilder() {
     odds: 65,
     tradeSide: 'Yes',
     showWatermark: true,
+    showTimestamp: true,
     backgroundColor: '#28CC95',
     parlayOdds: 400,
     parlayLegs: [
