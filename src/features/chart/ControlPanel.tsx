@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, DragEvent, useRef, useEffect } from 'react';
+import { ChangeEvent, useState, DragEvent, useRef, useEffect, useCallback } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import { MarketConfig, MarketType, Outcome, TimeHorizon } from '../../types';
 import { getOutcomeColor } from '../../lib/colorGenerator';
@@ -13,9 +13,11 @@ import {
   ChevronDownIcon,
   CheckIcon,
   WarningIcon,
-  ArrowLeftIcon
+  ArrowLeftIcon,
+  LinkIcon
 } from '../../components/ui/Icons';
 import { trackEvent } from '../../lib/analytics';
+import { isKalshiUrl, importKalshiMarket, KalshiImportResult } from '../../lib/kalshiApi';
 import './ControlPanel.css';
 
 interface ControlPanelProps {
@@ -31,6 +33,8 @@ interface ControlPanelProps {
   // Link preview specific props
   leftImage?: string | null;
   onLeftImageUpload?: (file: File) => void;
+  // Kalshi import callback
+  onImportKalshiMarket?: (result: KalshiImportResult) => void;
 }
 
 export function ControlPanel({
@@ -45,11 +49,16 @@ export function ControlPanel({
   mode = 'chart',
   leftImage,
   onLeftImageUpload,
+  onImportKalshiMarket,
 }: ControlPanelProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
+  const [isDraggingUrl, setIsDraggingUrl] = useState(false);
   const [colorPickerOpen, setColorPickerOpen] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
   const colorPickerRef = useRef<HTMLDivElement>(null);
 
   // Close color picker when clicking outside
@@ -65,6 +74,75 @@ export function ControlPanel({
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [colorPickerOpen]);
+
+  // Handle URL import
+  const handleUrlImport = useCallback(async (url: string) => {
+    if (!url.trim() || !onImportKalshiMarket) return;
+
+    if (!isKalshiUrl(url)) {
+      setImportError('Please enter a valid Kalshi URL');
+      return;
+    }
+
+    setIsImporting(true);
+    setImportError(null);
+
+    try {
+      const result = await importKalshiMarket(url);
+      onImportKalshiMarket(result);
+      setUrlInput('');
+      trackEvent('kalshi_import', {
+        tool: mode,
+        market_type: result.marketType,
+        method: 'url_input',
+      });
+    } catch (error) {
+      setImportError(error instanceof Error ? error.message : 'Failed to import market');
+    } finally {
+      setIsImporting(false);
+    }
+  }, [onImportKalshiMarket, mode]);
+
+  // Handle URL drop
+  function handleUrlDragOver(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingUrl(true);
+  }
+
+  function handleUrlDragLeave(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingUrl(false);
+  }
+
+  async function handleUrlDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingUrl(false);
+
+    // Check for URL in text data
+    const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('text/uri-list');
+    if (text && isKalshiUrl(text)) {
+      setUrlInput(text);
+      await handleUrlImport(text);
+      return;
+    }
+
+    // Check for URL in dropped files (link files)
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.name.endsWith('.url') || file.name.endsWith('.webloc')) {
+        const text = await file.text();
+        const urlMatch = text.match(/URL=(.+)/i) || text.match(/<string>(.+kalshi\.com.+)<\/string>/);
+        if (urlMatch && isKalshiUrl(urlMatch[1])) {
+          setUrlInput(urlMatch[1]);
+          await handleUrlImport(urlMatch[1]);
+        }
+      }
+    }
+  }
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -112,6 +190,25 @@ export function ControlPanel({
   useEffect(() => {
     function handlePaste(event: ClipboardEvent) {
       const items = Array.from(event.clipboardData?.items ?? []);
+
+      // Check for Kalshi URL in pasted text first
+      const textItem = items.find((item) => item.type === 'text/plain');
+      if (textItem && onImportKalshiMarket) {
+        textItem.getAsString(async (text) => {
+          if (isKalshiUrl(text)) {
+            setUrlInput(text);
+            await handleUrlImport(text);
+          }
+        });
+        // If we found text, check if it's a URL before blocking other paste handling
+        const clipboardText = event.clipboardData?.getData('text/plain');
+        if (clipboardText && isKalshiUrl(clipboardText)) {
+          event.preventDefault();
+          return;
+        }
+      }
+
+      // Check for image paste
       const imageItem = items.find((item) => item.type.startsWith('image/'));
       if (!imageItem) return;
 
@@ -137,7 +234,7 @@ export function ControlPanel({
 
     window.addEventListener('paste', handlePaste);
     return () => window.removeEventListener('paste', handlePaste);
-  }, [onImageUpload, onLeftImageUpload, mode]);
+  }, [onImageUpload, onLeftImageUpload, mode, onImportKalshiMarket, handleUrlImport]);
 
   // Left image handlers for link-preview mode
   function handleLeftDragOver(e: DragEvent<HTMLDivElement>) {
@@ -413,6 +510,90 @@ export function ControlPanel({
           ? 'Create Twitter/social media card previews (1200×675)'
           : 'Realistic chart generator for Kalshi markets'}
       </p>
+
+      {/* Import from Kalshi */}
+      {mode === 'chart' && onImportKalshiMarket && (
+        <div className="control-section">
+          <div className="control-section-title">Import from Kalshi</div>
+          <div className="control-group">
+            <label>Market URL</label>
+            <div
+              onDragOver={handleUrlDragOver}
+              onDragLeave={handleUrlDragLeave}
+              onDrop={handleUrlDrop}
+              style={{
+                border: `1.5px dashed ${isDraggingUrl ? '#09C285' : '#d1d5db'}`,
+                borderRadius: '5px',
+                padding: '12px',
+                backgroundColor: isDraggingUrl ? '#f0fdf4' : '#ffffff',
+                transition: 'border-color 0.15s, background-color 0.15s',
+                marginBottom: '4px'
+              }}
+            >
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input
+                  type="text"
+                  className="text-input"
+                  placeholder="Paste Kalshi URL or drag & drop"
+                  value={urlInput}
+                  onChange={(e) => {
+                    setUrlInput(e.target.value);
+                    setImportError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleUrlImport(urlInput);
+                    }
+                  }}
+                  disabled={isImporting}
+                  style={{ flex: 1, margin: 0 }}
+                />
+                <button
+                  onClick={() => handleUrlImport(urlInput)}
+                  disabled={isImporting || !urlInput.trim()}
+                  style={{
+                    padding: '8px 16px',
+                    border: 'none',
+                    backgroundColor: isImporting || !urlInput.trim() ? '#e5e7eb' : '#09C285',
+                    color: isImporting || !urlInput.trim() ? '#9ca3af' : 'white',
+                    borderRadius: '5px',
+                    cursor: isImporting || !urlInput.trim() ? 'not-allowed' : 'pointer',
+                    fontWeight: 500,
+                    fontSize: '13px',
+                    transition: 'background-color 0.15s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  {isImporting ? (
+                    <>
+                      <RefreshIcon size={14} />
+                      Importing...
+                    </>
+                  ) : (
+                    <>
+                      <LinkIcon size={14} />
+                      Import
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+            {importError && (
+              <p className="help-text" style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <WarningIcon size={14} />
+                {importError}
+              </p>
+            )}
+            {!importError && (
+              <p className="help-text">
+                Paste a link like kalshi.com/markets/TICKER or press Ctrl+V anywhere
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Content Section */}
       <div className="control-section">

@@ -17,6 +17,7 @@ import {
 import { useToast } from '../../hooks/useToast';
 import { useExport } from '../../hooks/useExport';
 import { trackEvent } from '../../lib/analytics';
+import { KalshiImportResult } from '../../lib/kalshiApi';
 import '../../App.css';
 
 const CHART_PREVIEW_ID = 'chart-preview';
@@ -217,6 +218,42 @@ export default function ChartBuilder() {
     setShowTrendDrawer(false);
   }
 
+  function handleImportKalshiMarket(result: KalshiImportResult) {
+    // Build config updates from import result
+    const updates: Partial<MarketConfig> = {
+      title: result.title,
+      marketType: result.marketType,
+      volume: result.volume,
+      customTrendData: null, // Reset custom trend on import
+    };
+
+    if (result.marketType === 'binary') {
+      updates.currentOdds = result.currentOdds;
+    } else if (result.marketType === 'forecast') {
+      updates.forecastValue = result.forecastValue ?? result.currentOdds;
+      updates.forecastUnit = result.forecastUnit ?? '';
+    } else if (result.marketType === 'multi' && result.outcomes) {
+      updates.mutuallyExclusive = result.mutuallyExclusive ?? true;
+      updates.outcomes = result.outcomes.map((outcome, index) => ({
+        id: String(index + 1),
+        name: outcome.name,
+        color: getOutcomeColor(index),
+        currentOdds: outcome.currentOdds,
+        customTrendData: null,
+      }));
+    }
+
+    // Apply updates and regenerate data
+    updateConfig((prev) => {
+      const next = { ...prev, ...updates };
+      // Regenerate data with new config
+      setTimeout(() => regenerateData(next), 0);
+      return next;
+    });
+
+    showToast('Market imported successfully!');
+  }
+
   return (
     <div className="app">
       <div className="app-container">
@@ -230,6 +267,7 @@ export default function ChartBuilder() {
           onCopyToClipboard={() => handleCopyToClipboard('Chart copied to clipboard!')}
           onBack={() => navigate('/')}
           mode="chart"
+          onImportKalshiMarket={handleImportKalshiMarket}
         />
         <div className="preview-section">
           <ChartPreview
