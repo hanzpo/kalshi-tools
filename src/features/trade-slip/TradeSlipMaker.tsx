@@ -79,6 +79,7 @@ export function TradeSlipMaker({
   onBack,
 }: TradeSlipMakerProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const [draggingLegId, setDraggingLegId] = useState<string | null>(null);
   const isSingleMode = config.mode === 'single';
   const isParlayMode = config.mode === 'parlay';
   const isSingleOldMode = config.mode === 'single-old';

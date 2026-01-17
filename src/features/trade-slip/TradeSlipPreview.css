@@ -923,3 +923,13 @@
 .parlay-old-mode .parlay-header {
   margin-bottom: 0;
 }
+
+/* Old parlay brand logo - make it visible on white background */
+.parlay-old-mode .parlay-brand .kalshi-divider-logo {
+  color: #09C285;
+}
+
+/* Old single brand logo - make it visible on white background */
+.single-old-mode .trade-slip-brand .kalshi-divider-logo {
+  color: #09C285;
+}
