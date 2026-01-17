@@ -315,7 +315,7 @@
   bottom: clamp(12px, 3vw, 18px);
   right: clamp(16px, 3vw, 24px);
   font-size: clamp(8px, 1.5vw, 10px);
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(128, 128, 128, 0.5);
   font-weight: 500;
   z-index: 10;
 }
