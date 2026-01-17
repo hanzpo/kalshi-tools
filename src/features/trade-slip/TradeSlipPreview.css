@@ -11,6 +11,8 @@
 
 .trade-slip-preview {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: clamp(300px, 75vw, 360px);
   max-width: 360px;
   background: linear-gradient(180deg, rgba(40, 204, 149, 1) 0%, rgba(40, 204, 149, 1) 100%);
@@ -318,6 +320,17 @@
   color: rgba(128, 128, 128, 0.5);
   font-weight: 500;
   z-index: 10;
+}
+
+.trade-slip-cashed-out-badge {
+  align-self: flex-start;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: clamp(8px, 1.5vw, 12px);
 }
 
 /* Responsive breakpoints for trade slip preview */

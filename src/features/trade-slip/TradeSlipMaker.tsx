@@ -1096,7 +1096,7 @@ export function TradeSlipMaker({
         </div>
 
         {(isSingleMode || isParlayMode) && (
-          <div className="control-group" style={{ marginBottom: 0 }}>
+          <div className="control-group">
             <label
               htmlFor="show-timestamp-bet"
               style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
@@ -1118,6 +1118,28 @@ export function TradeSlipMaker({
             <p className="help-text">Display purchase date and time</p>
           </div>
         )}
+
+        <div className="control-group" style={{ marginBottom: 0 }}>
+          <label
+            htmlFor="show-cashed-out"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+          >
+            <input
+              id="show-cashed-out"
+              type="checkbox"
+              checked={config.showCashedOut}
+              onChange={(e) => onConfigChange({ showCashedOut: e.target.checked })}
+              style={{
+                width: '18px',
+                height: '18px',
+                cursor: 'pointer',
+                accentColor: BRAND_GREEN,
+              }}
+            />
+            <span>Show "Cashed out" Badge</span>
+          </label>
+          <p className="help-text">Display cashed out badge in corner</p>
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>

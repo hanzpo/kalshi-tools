@@ -250,6 +250,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
           background: `linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%), ${bgColor}`,
         }}
       >
+        {config.showCashedOut && (
+          <div className="trade-slip-cashed-out-badge">Cashed out</div>
+        )}
         {isParlay ? (
           <>
             <div className="combo-card">

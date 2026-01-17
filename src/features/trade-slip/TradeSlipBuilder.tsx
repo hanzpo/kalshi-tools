@@ -26,6 +26,7 @@ export default function TradeSlipBuilder() {
     tradeSide: 'Yes',
     showWatermark: true,
     showTimestamp: true,
+    showCashedOut: false,
     backgroundColor: '#28CC95',
     parlayOdds: 400,
     parlayLegs: [
