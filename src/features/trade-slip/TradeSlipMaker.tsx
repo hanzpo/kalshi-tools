@@ -141,6 +141,45 @@ export function TradeSlipMaker({
     });
   }
 
+  function handleLegDragOver(legId: string, e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingLegId(legId);
+  }
+
+  function handleLegDragLeave(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingLegId(null);
+  }
+
+  function handleLegDrop(legId: string, e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingLegId(null);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const result = ev.target?.result;
+          if (typeof result === 'string') {
+            handleLegChange(legId, { image: result });
+            trackEvent('image_upload', {
+              tool: 'trade-slip',
+              mode: config.mode,
+              method: 'drop',
+              target: 'parlay-leg',
+            });
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
   // Combo category handlers
   function handleCategoryChange(categoryId: string, updates: Partial<ComboCategory>) {
     const updatedCategories = config.comboCategories.map((cat) =>
@@ -862,7 +901,17 @@ export function TradeSlipMaker({
                     </div>
                     <div className="parlay-leg-control">
                       <span className="parlay-leg-label">Image</span>
-                      <div className="parlay-image-upload">
+                      <div
+                        className="parlay-image-upload"
+                        onDragOver={(e) => handleLegDragOver(leg.id, e)}
+                        onDragLeave={handleLegDragLeave}
+                        onDrop={(e) => handleLegDrop(leg.id, e)}
+                        style={{
+                          border: `1.5px dashed ${draggingLegId === leg.id ? BRAND_GREEN : '#d1d5db'}`,
+                          borderRadius: '8px',
+                          transition: 'border-color 0.2s ease',
+                        }}
+                      >
                         {leg.image ? (
                           <>
                             <img src={leg.image} alt="" className="parlay-leg-image" />
@@ -877,7 +926,7 @@ export function TradeSlipMaker({
                         ) : (
                           <>
                             <label htmlFor={`parlay-image-${leg.id}`} className="parlay-image-placeholder">
-                              Upload
+                              {draggingLegId === leg.id ? 'Drop image' : 'Upload or drop'}
                             </label>
                             <input
                               id={`parlay-image-${leg.id}`}
