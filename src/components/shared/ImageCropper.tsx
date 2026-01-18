@@ -95,7 +95,7 @@ export function ImageCropper({ imageSrc, onCropComplete, onCancel, aspectRatio =
   return (
     <div className="cropper-modal">
       <div className="cropper-content">
-        <h3>Crop Image{aspectRatio === 1 ? ' (Square)' : ''}</h3>
+        <h3>Crop Image{aspectRatio === 1 ? ' (Square)' : aspectRatio === 16 / 9 ? ' (16:9)' : ''}</h3>
         <div className="cropper-container">
           <ReactCrop
             crop={crop}

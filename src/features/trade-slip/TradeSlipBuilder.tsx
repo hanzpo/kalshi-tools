@@ -223,7 +223,12 @@ export default function TradeSlipBuilder() {
       </div>
 
       {cropperImage && (
-        <ImageCropper imageSrc={cropperImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />
+        <ImageCropper
+          imageSrc={cropperImage}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+          aspectRatio={config.mode === 'horizontal' ? 16 / 9 : 1}
+        />
       )}
 
       <Toast message={toastMessage} />
