@@ -196,6 +196,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isCoinbase = config.mode === 'coinbase';
   const isSingleOld = config.mode === 'single-old';
   const isParlayOld = config.mode === 'parlay-old';
+  const isHorizontal = config.mode === 'horizontal';
 
   if (isPrizePick) {
     return <PrizePickPreview config={config} />;
@@ -209,6 +210,83 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
       coinbasePlayType: config.coinbasePlayType,
       showWatermark: config.showWatermark,
     }} />;
+  }
+
+  if (isHorizontal) {
+    const horizontalPayout = calculateSinglePayout(config.wager, config.odds);
+    const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';
+    const isYes = config.tradeSide === 'Yes';
+    const sideColor = isYes ? '#00C688' : '#ff4d6a';
+    const bgColor = config.backgroundColor || '#28CC95';
+
+    return (
+      <div className="trade-slip-container horizontal-container">
+        <div
+          id="trade-slip-preview"
+          className="trade-slip-preview horizontal-mode"
+          style={{
+            background: bgColor,
+          }}
+        >
+          {/* Left side - Image with overlay */}
+          <div className="horizontal-image-section">
+            {config.image ? (
+              <img src={config.image} alt={marketName} className="horizontal-bg-image" />
+            ) : (
+              <div className="horizontal-bg-placeholder" />
+            )}
+            <div className="horizontal-image-overlay">
+              <div className="horizontal-brand-badge">
+                <KalshiLogo />
+              </div>
+              <div className="horizontal-market-name">{marketName}</div>
+              <div className="horizontal-side-buttons">
+                <div
+                  className={`horizontal-side-btn horizontal-side-yes${isYes ? ' active' : ''}`}
+                >
+                  Yes
+                </div>
+                <div
+                  className={`horizontal-side-btn horizontal-side-no${!isYes ? ' active' : ''}`}
+                >
+                  No
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right side - Stats panel */}
+          <div className="horizontal-stats-section">
+            <div
+              className="horizontal-win-badge"
+              style={{ backgroundColor: sideColor }}
+            >
+              {isYes ? 'YES' : 'NO'}
+            </div>
+            <div className="horizontal-stat-row">
+              <span className="horizontal-stat-label">Cost</span>
+              <span className="horizontal-stat-value">${config.wager.toLocaleString()}</span>
+            </div>
+            <div className="horizontal-stat-row">
+              <span className="horizontal-stat-label">To win</span>
+              <span className="horizontal-stat-value horizontal-payout">${horizontalPayout.toLocaleString()}</span>
+            </div>
+            <div className="horizontal-cta">
+              <span className="horizontal-cta-text">Predict now on</span>
+              <div className="horizontal-cta-brand">
+                <KalshiLogo />
+              </div>
+            </div>
+          </div>
+
+          {config.showWatermark && (
+            <div className="trade-slip-watermark horizontal-watermark">
+              kalshi.tools
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   const payout = isParlayOld

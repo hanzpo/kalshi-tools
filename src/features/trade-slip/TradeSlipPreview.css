@@ -946,3 +946,287 @@
 .single-old-mode .trade-slip-brand .kalshi-divider-logo {
   color: #09C285;
 }
+
+/* ========================================
+   HORIZONTAL MODE STYLES
+   ======================================== */
+
+.horizontal-container {
+  padding: clamp(12px, 2vw, 20px);
+}
+
+.trade-slip-preview.horizontal-mode {
+  display: flex;
+  flex-direction: row;
+  width: clamp(480px, 90vw, 600px);
+  max-width: 600px;
+  height: auto;
+  min-height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Left side - Image section */
+.horizontal-image-section {
+  position: relative;
+  flex: 1.4;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.horizontal-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.horizontal-bg-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  z-index: 0;
+}
+
+.horizontal-image-overlay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.horizontal-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  padding: 6px 10px;
+  width: fit-content;
+}
+
+.horizontal-brand-badge .kalshi-divider-logo {
+  color: rgba(255, 255, 255, 0.9);
+  width: 50px;
+  height: auto;
+}
+
+.horizontal-market-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(18px, 3.5vw, 24px);
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  margin: 8px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+.horizontal-side-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.horizontal-side-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: default;
+  transition: transform 0.15s ease;
+}
+
+.horizontal-side-yes {
+  background: #00C688;
+  color: #ffffff;
+  opacity: 0.4;
+}
+
+.horizontal-side-yes.active {
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(0, 198, 136, 0.4);
+}
+
+.horizontal-side-no {
+  background: #d91616;
+  color: #ffffff;
+  opacity: 0.4;
+}
+
+.horizontal-side-no.active {
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(217, 22, 22, 0.4);
+}
+
+/* Right side - Stats section */
+.horizontal-stats-section {
+  flex: 0 0 auto;
+  width: clamp(140px, 25vw, 180px);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.85);
+  gap: 8px;
+}
+
+.horizontal-win-badge {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+
+.horizontal-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.horizontal-stat-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.horizontal-stat-value {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(16px, 3vw, 20px);
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.horizontal-payout {
+  color: #ffffff;
+}
+
+.horizontal-cta {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.horizontal-cta-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.horizontal-cta-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.horizontal-cta-brand .kalshi-divider-logo {
+  color: #09C285;
+  width: 60px;
+  height: auto;
+}
+
+.horizontal-watermark {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive for horizontal mode */
+@media (max-width: 600px) {
+  .trade-slip-preview.horizontal-mode {
+    width: clamp(320px, 95vw, 500px);
+    min-height: 160px;
+  }
+
+  .horizontal-image-overlay {
+    padding: 12px 14px;
+  }
+
+  .horizontal-market-name {
+    font-size: 16px;
+  }
+
+  .horizontal-side-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .horizontal-stats-section {
+    width: 120px;
+    padding: 12px;
+  }
+
+  .horizontal-win-badge {
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .trade-slip-preview.horizontal-mode {
+    flex-direction: column;
+    width: clamp(280px, 90vw, 340px);
+  }
+
+  .horizontal-image-section {
+    min-height: 140px;
+  }
+
+  .horizontal-stats-section {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .horizontal-win-badge {
+    flex: 0 0 auto;
+  }
+
+  .horizontal-stat-row {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  .horizontal-cta {
+    flex: 1 0 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+}

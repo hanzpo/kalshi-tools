@@ -1,0 +1,691 @@
+/* Kalshi Market Page - Exact Replica */
+.kalshi-market-page {
+  /* Kalshi CSS variables */
+  --kalshi-surface-x10: rgba(255, 255, 255, 1);
+  --kalshi-text-x10: rgba(0, 0, 0, 0.9);
+  --kalshi-text-x20: rgba(0, 0, 0, 0.5);
+  --kalshi-text-x30: rgba(0, 0, 0, 0.3);
+  --kalshi-fill-x10: rgba(0, 0, 0, 0.9);
+  --kalshi-fill-x30: rgba(0, 0, 0, 0.2);
+  --kalshi-fill-x40: rgba(0, 0, 0, 0.1);
+  --kalshi-fill-x50: rgba(0, 0, 0, 0.06);
+  --kalshi-fill-x60: rgba(0, 0, 0, 0.03);
+  --kalshi-brand-primary: #09C285;
+  --kalshi-green-x10: rgba(10, 194, 133, 1);
+  --kalshi-green-x20: rgba(10, 194, 133, 0.1);
+  --kalshi-yes-x10: rgba(38, 92, 255, 1);
+  --kalshi-yes-x20: rgba(38, 92, 255, 0.1);
+  --kalshi-no-x10: rgba(255, 90, 90, 1);
+  --kalshi-no-x20: rgba(255, 90, 90, 0.1);
+
+  /* Main container styles */
+  background: var(--kalshi-surface-x10);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: var(--kalshi-text-x10);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+/* Header Section */
+.kalshi-header {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  align-items: flex-start;
+}
+
+.kalshi-header-image {
+  width: 80px;
+  min-width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.kalshi-header-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kalshi-header-image-placeholder {
+  width: 40px;
+  height: 40px;
+  color: var(--kalshi-text-x30);
+}
+
+.kalshi-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.kalshi-header-meta {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 20px;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-header-meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kalshi-header-meta a:hover {
+  color: var(--kalshi-text-x20);
+}
+
+.kalshi-header-meta .separator {
+  color: var(--kalshi-text-x20);
+}
+
+.kalshi-header-meta .source {
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-header-title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+  color: var(--kalshi-text-x10);
+}
+
+/* Chart Section */
+.kalshi-chart-section {
+  padding: 0 12px;
+  background: var(--kalshi-surface-x10);
+}
+
+.kalshi-chart-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.kalshi-chart-status {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-chart-date {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x20);
+}
+
+.kalshi-logo-container {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+}
+
+.kalshi-chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 250px;
+  margin-bottom: 8px;
+}
+
+.kalshi-chart-svg {
+  width: 100%;
+  height: 250px;
+}
+
+.kalshi-chart-labels {
+  position: absolute;
+  right: 0;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.kalshi-chart-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.kalshi-chart-label-name {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+}
+
+.kalshi-chart-label-value {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+}
+
+.kalshi-chart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0 8px;
+}
+
+.kalshi-volume {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-time-selector {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.kalshi-time-btn {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x30);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.kalshi-time-btn:hover {
+  color: var(--kalshi-text-x20);
+}
+
+.kalshi-time-btn.active {
+  color: var(--kalshi-text-x10);
+}
+
+/* Divider */
+.kalshi-divider {
+  height: 1px;
+  background: var(--kalshi-fill-x50);
+  margin: 0 12px;
+}
+
+/* Markets Section */
+.kalshi-markets-section {
+  padding: 0 12px;
+}
+
+.kalshi-markets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 0;
+}
+
+.kalshi-markets-header-left {
+  flex: 1;
+}
+
+.kalshi-markets-header-center {
+  width: 104px;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x20);
+}
+
+.kalshi-markets-header-right {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.kalshi-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--kalshi-text-x10);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: background-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kalshi-icon-btn:hover {
+  background: var(--kalshi-fill-x50);
+}
+
+/* Market Tile */
+.kalshi-market-tile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 6px;
+  margin: 0 -6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.kalshi-market-tile:hover {
+  background: var(--kalshi-fill-x60);
+}
+
+.kalshi-market-tile:active {
+  background: var(--kalshi-fill-x50);
+}
+
+.kalshi-market-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kalshi-market-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.kalshi-market-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kalshi-market-name {
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-market-chance {
+  width: 104px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kalshi-market-chance-value {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-market-change {
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 500;
+  letter-spacing: 0.11px;
+}
+
+.kalshi-market-change.positive {
+  color: var(--kalshi-green-x10);
+}
+
+.kalshi-market-change.negative {
+  color: var(--kalshi-no-x10);
+}
+
+.kalshi-market-buttons {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+/* Yes/No Buttons */
+.kalshi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.13px;
+  transition: opacity 0.15s, transform 0.15s;
+  min-width: 136px;
+  max-width: 136px;
+  font-family: inherit;
+}
+
+.kalshi-btn:hover {
+  opacity: 0.8;
+}
+
+.kalshi-btn:active {
+  transform: scale(0.9);
+}
+
+.kalshi-btn-yes {
+  background: var(--kalshi-yes-x20);
+  color: var(--kalshi-yes-x10);
+}
+
+.kalshi-btn-yes.filled {
+  background: var(--kalshi-yes-x10);
+  color: white;
+}
+
+.kalshi-btn-no {
+  background: var(--kalshi-no-x20);
+  color: var(--kalshi-no-x10);
+}
+
+.kalshi-btn-no.filled {
+  background: var(--kalshi-no-x10);
+  color: white;
+}
+
+.kalshi-btn-label {
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+}
+
+.kalshi-btn-price {
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 500;
+  letter-spacing: 0.18px;
+  margin-left: 4px;
+}
+
+/* More Markets Link */
+.kalshi-more-link {
+  display: flex;
+  align-items: center;
+  padding: 8px 6px;
+  margin: 0 -6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-more-link:hover {
+  background: var(--kalshi-fill-x60);
+}
+
+/* Props Section */
+.kalshi-props-section {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kalshi-props-header {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.kalshi-props-title {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  letter-spacing: -0.09px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-props-dropdown {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  letter-spacing: -0.09px;
+  color: var(--kalshi-green-x10);
+}
+
+.kalshi-props-dropdown svg {
+  color: var(--kalshi-green-x10);
+}
+
+/* Filter Chips */
+.kalshi-filter-chips {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.kalshi-filter-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.kalshi-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 4px 10px;
+  border-radius: 50px;
+  border: 1px solid var(--kalshi-fill-x40);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x10);
+  transition: background-color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.kalshi-chip:hover {
+  background: var(--kalshi-fill-x60);
+}
+
+.kalshi-chip.active {
+  background: var(--kalshi-green-x20);
+  border-color: rgba(10, 194, 133, 0.3);
+  color: var(--kalshi-green-x10);
+}
+
+.kalshi-chip-icon {
+  width: 32px;
+  padding: 4px 10px;
+}
+
+/* Sub Question */
+.kalshi-sub-question {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-text-x10);
+  margin-bottom: 4px;
+}
+
+/* Rules Section */
+.kalshi-rules-section {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kalshi-rules-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.kalshi-rules-title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-rules-market {
+  display: flex;
+  align-items: center;
+  color: var(--kalshi-green-x10);
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+}
+
+.kalshi-rules-text {
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-rules-text .yes-highlight {
+  color: var(--kalshi-yes-x10);
+  font-weight: 500;
+}
+
+.kalshi-rules-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.kalshi-rules-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 6px;
+  min-width: 60px;
+  min-height: 40px;
+  border: 1px solid var(--kalshi-fill-x40);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.13px;
+  color: var(--kalshi-green-x10);
+  transition: background-color 0.15s;
+  font-family: inherit;
+}
+
+.kalshi-rules-btn:hover {
+  background: var(--kalshi-green-x20);
+}
+
+/* Related Markets */
+.kalshi-related-section {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kalshi-related-title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+  color: var(--kalshi-text-x10);
+}
+
+.kalshi-related-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  margin: 0 -6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.kalshi-related-item:hover {
+  background: var(--kalshi-fill-x60);
+}
+
+.kalshi-related-image {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.kalshi-related-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kalshi-related-name {
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+  color: var(--kalshi-text-x10);
+}
+
+/* Section spacing */
+.kalshi-section {
+  padding: 24px 0;
+}
+
+/* Watermark */
+.kalshi-watermark {
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(128, 128, 128, 0.5);
+}

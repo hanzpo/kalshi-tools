@@ -84,7 +84,8 @@ export function TradeSlipMaker({
   const isParlayMode = config.mode === 'parlay';
   const isSingleOldMode = config.mode === 'single-old';
   const isParlayOldMode = config.mode === 'parlay-old';
-  const payout = isSingleMode || isSingleOldMode
+  const isHorizontalMode = config.mode === 'horizontal';
+  const payout = isSingleMode || isSingleOldMode || isHorizontalMode
     ? calculateSinglePayout(config.wager, config.odds)
     : calculateAmericanPayout(config.wager, config.parlayOdds);
 
@@ -305,21 +306,21 @@ export function TradeSlipMaker({
   }
 
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   }
 
   function handleDragLeave(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   }
 
   function handleDrop(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -384,6 +385,14 @@ export function TradeSlipMaker({
             aria-pressed={isParlayOldMode}
           >
             Parlay (old)
+          </button>
+          <button
+            type="button"
+            className={`segmented-option${isHorizontalMode ? ' active' : ''}`}
+            onClick={() => handleModeChange('horizontal')}
+            aria-pressed={isHorizontalMode}
+          >
+            Horizontal
           </button>
         </div>
       </div>
@@ -713,6 +722,108 @@ export function TradeSlipMaker({
             />
           </div>
         </div>
+      ) : isHorizontalMode ? (
+        <>
+          {/* Content Section for Horizontal */}
+          <div className="control-section">
+            <div className="control-section-title">Content</div>
+
+            <div className="control-group">
+              <label htmlFor="bet-image-horizontal">Background Image</label>
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                style={{
+                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#d1d5db'}`,
+                  borderRadius: '5px',
+                  padding: '16px 12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '48px',
+                  backgroundColor: isDragging ? '#f0fdf4' : '#ffffff',
+                  transition: 'border-color 0.15s, background-color 0.15s',
+                  cursor: 'pointer',
+                  marginBottom: '4px'
+                }}
+              >
+                <input
+                  id="bet-image-horizontal"
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg"
+                  onChange={handleImageChange}
+                  className="file-input"
+                  style={{ display: 'none' }}
+                />
+                <label
+                  htmlFor="bet-image-horizontal"
+                  style={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    color: isDragging ? BRAND_GREEN : '#6b7280',
+                    fontWeight: 500,
+                    fontSize: '13px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.02em'
+                  }}
+                >
+                  {isDragging ? (
+                    <>
+                      <UploadIcon size={14} />
+                      <span>Drop image here</span>
+                    </>
+                  ) : (
+                    <>
+                      <ImageIcon size={14} />
+                      <span>Click to upload or drag & drop</span>
+                    </>
+                  )}
+                </label>
+              </div>
+              <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+            </div>
+
+            <div className="control-group">
+              <label htmlFor="bet-market-name-horizontal">Market Question</label>
+              <input
+                id="bet-market-name-horizontal"
+                type="text"
+                className="text-input"
+                placeholder="e.g., Will Donald Trump win the 2024 election?"
+                value={config.marketName}
+                onChange={(e) => onConfigChange({ marketName: e.target.value })}
+              />
+            </div>
+
+            <div className="control-group">
+              <label>Trade Side</label>
+              <div className="segmented-control">
+                {(['Yes', 'No'] as const).map((side) => {
+                  const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
+                  return (
+                    <button
+                      key={side}
+                      type="button"
+                      className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                      onClick={() => onConfigChange({ tradeSide: side })}
+                      aria-pressed={config.tradeSide === side}
+                      style={{
+                        color: sideColor,
+                        fontWeight: config.tradeSide === side ? 600 : 500,
+                      }}
+                    >
+                      {side}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </>
       ) : null}
 
       {isParlayMode && (
@@ -969,7 +1080,7 @@ export function TradeSlipMaker({
           />
         </div>
 
-        {isSingleMode || isSingleOldMode ? (
+        {isSingleMode || isSingleOldMode || isHorizontalMode ? (
           <>
             <div className="control-group">
               <label htmlFor="bet-odds">Odds (%)</label>

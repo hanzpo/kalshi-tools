@@ -1,4 +1,4 @@
-export type TradeSlipMode = 'single' | 'parlay' | 'single-old' | 'parlay-old' | 'prizepick' | 'coinbase';
+export type TradeSlipMode = 'single' | 'parlay' | 'single-old' | 'parlay-old' | 'prizepick' | 'coinbase' | 'horizontal';
 
 export interface ParlayLeg {
   id: string;
