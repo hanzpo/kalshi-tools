@@ -48,6 +48,7 @@ export function MarketPagePreview({
     timeline: false,
     about: false,
   });
+  const [amountInput, setAmountInput] = useState('');
 
   // Generate SVG path for chart
   const chartPaths = useMemo(() => {
@@ -569,62 +570,60 @@ export function MarketPagePreview({
                 <div className="kmp-sidebar-buttons">
                   <button
                     className={`kmp-sidebar-yes ${config.selectedSide === 'Yes' ? 'active' : ''}`}
-                    onClick={() => onSideSelect('Yes')}
+                    onClick={() => {
+                      onSideSelect('Yes');
+                      const outcome = config.outcomes.find(o => o.id === config.selectedOutcome);
+                      if (outcome) onLimitPriceChange(outcome.yesPrice);
+                    }}
                   >
-                    Yes {config.outcomes.find(o => o.id === config.selectedOutcome)?.yesPrice}¢
+                    <span className="kmp-btn-label">Yes</span>
+                    <span className="kmp-btn-price">{config.outcomes.find(o => o.id === config.selectedOutcome)?.yesPrice}¢</span>
                   </button>
                   <button
                     className={`kmp-sidebar-no ${config.selectedSide === 'No' ? 'active' : ''}`}
-                    onClick={() => onSideSelect('No')}
+                    onClick={() => {
+                      onSideSelect('No');
+                      const outcome = config.outcomes.find(o => o.id === config.selectedOutcome);
+                      if (outcome) onLimitPriceChange(outcome.noPrice);
+                    }}
                   >
-                    No {config.outcomes.find(o => o.id === config.selectedOutcome)?.noPrice}¢
+                    <span className="kmp-btn-label">No</span>
+                    <span className="kmp-btn-price">{config.outcomes.find(o => o.id === config.selectedOutcome)?.noPrice}¢</span>
                   </button>
                 </div>
                 <div className="kmp-sidebar-input-group">
-                  <label className="kmp-sidebar-input-label">Amount</label>
                   <div className="kmp-sidebar-input-wrapper">
-                    <span className="kmp-sidebar-input-prefix">$</span>
+                    <div className="kmp-sidebar-input-left">
+                      <label className="kmp-sidebar-input-label">Dollars</label>
+                      <span className="kmp-sidebar-input-sublabel">Earn 3.25% Interest</span>
+                    </div>
                     <input
-                      type="number"
+                      type="text"
                       className="kmp-sidebar-input"
-                      value={config.orderAmount}
-                      onChange={(e) => onAmountChange(Number(e.target.value))}
-                      min="1"
+                      placeholder="$0"
+                      value={amountInput ? `$${amountInput}` : ''}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9.]/g, '');
+                        setAmountInput(val);
+                        onAmountChange(Number(val) || 0);
+                      }}
                     />
-                  </div>
-                </div>
-                <div className="kmp-sidebar-input-group">
-                  <label className="kmp-sidebar-input-label">Limit price</label>
-                  <div className="kmp-sidebar-input-wrapper">
-                    <input
-                      type="number"
-                      className="kmp-sidebar-input"
-                      value={config.limitPrice}
-                      onChange={(e) => onLimitPriceChange(Number(e.target.value))}
-                      min="1"
-                      max="99"
-                    />
-                    <span className="kmp-sidebar-input-suffix">¢</span>
                   </div>
                 </div>
                 <div className="kmp-sidebar-summary">
                   <div className="kmp-sidebar-summary-row">
-                    <span>Contracts</span>
-                    <span>{Math.floor((config.orderAmount * 100) / config.limitPrice)}</span>
-                  </div>
-                  <div className="kmp-sidebar-summary-row">
-                    <span>Avg price</span>
-                    <span>{config.limitPrice}¢</span>
+                    <span>Odds</span>
+                    <span>{config.limitPrice}% chance</span>
                   </div>
                   <div className="kmp-sidebar-summary-row kmp-sidebar-summary-payout">
-                    <span>Est. payout</span>
+                    <span>Payout if {config.selectedSide}</span>
                     <span className="kmp-payout-value">
-                      ${((config.orderAmount * 100) / config.limitPrice).toFixed(2)}
+                      ${Math.floor((config.orderAmount * 100) / config.limitPrice)}
                     </span>
                   </div>
                 </div>
                 <button className="kmp-sidebar-btn" onClick={() => onSidebarStateChange('review')}>
-                  Submit order
+                  Review
                 </button>
               </>
             )}

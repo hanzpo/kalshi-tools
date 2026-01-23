@@ -214,33 +214,34 @@
 
 /* Sidebar */
 .kmp-sidebar {
-  width: 352px;
+  width: 328px;
   flex-shrink: 0;
+  margin-left: 32px;
 }
 
 .kmp-sidebar-content {
   position: sticky;
-  top: 80px;
-  background: var(--kmp-bg);
-  border-radius: 12px;
-  padding: 16px;
+  top: 89px;
+  background: var(--kmp-surface);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 2px, rgba(0, 0, 0, 0.1) 0px 2px 4px;
 }
 
 .kmp-sidebar-trade-header {
   display: flex;
   gap: 12px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--kmp-border);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .kmp-sidebar-trade-thumb {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
-  background: var(--kmp-surface);
+  background: transparent;
 }
 
 .kmp-sidebar-trade-thumb img {
@@ -258,33 +259,35 @@
 .kmp-sidebar-trade-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  padding-top: 2px;
   min-width: 0;
 }
 
 .kmp-sidebar-trade-title {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
   color: var(--kmp-text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  letter-spacing: 0.13px;
 }
 
 .kmp-sidebar-trade-action {
-  font-size: 13px;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 .kmp-sidebar-trade-action-text {
-  color: var(--kmp-brand);
-  font-weight: 500;
+  color: #265CFF;
+  font-weight: 600;
 }
 
 .kmp-sidebar-trade-sep {
-  color: var(--kmp-text-tertiary);
+  color: var(--kmp-text-primary);
 }
 
 .kmp-sidebar-trade-action span:last-child {
@@ -295,25 +298,36 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .kmp-sidebar-toggle {
-  padding: 6px 16px;
-  font-size: 14px;
+  padding: 4px 12px;
+  font-size: 13px;
+  line-height: 20px;
   font-weight: 500;
-  border-radius: 8px;
+  letter-spacing: 0.13px;
+  border-radius: 999px;
   border: 1px solid var(--kmp-border);
-  background: var(--kmp-surface);
-  color: var(--kmp-text-secondary);
+  background: transparent;
+  color: var(--kmp-text-primary);
   cursor: pointer;
   font-family: inherit;
+  transition: opacity 83ms, background-color 83ms, transform 83ms;
+}
+
+.kmp-sidebar-toggle:hover {
+  background: var(--kmp-bg);
+}
+
+.kmp-sidebar-toggle:active {
+  transform: scale(0.9);
 }
 
 .kmp-sidebar-toggle.active {
-  background: var(--kmp-surface);
-  color: var(--kmp-text-primary);
-  border-color: var(--kmp-text-primary);
+  background: rgba(10, 194, 133, 0.1);
+  color: #0AC285;
+  border-color: rgba(10, 194, 133, 0.2);
 }
 
 .kmp-sidebar-toggle-spacer {
@@ -323,13 +337,15 @@
 .kmp-sidebar-dropdown {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
-  font-size: 14px;
+  gap: 2px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 20px;
   font-weight: 500;
+  letter-spacing: 0.13px;
   border-radius: 8px;
-  border: 1px solid var(--kmp-border);
-  background: var(--kmp-surface);
+  border: none;
+  background: transparent;
   color: var(--kmp-text-primary);
   cursor: pointer;
   font-family: inherit;
@@ -337,39 +353,70 @@
 
 .kmp-sidebar-buttons {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 4px;
+  margin-bottom: 12px;
 }
 
 .kmp-sidebar-yes,
 .kmp-sidebar-no {
   flex: 1;
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 600;
+  padding: 6px 12px;
+  height: 40px;
+  font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
   font-family: inherit;
   border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: opacity 83ms, background-color 83ms, transform 83ms;
+}
+
+.kmp-sidebar-yes:hover,
+.kmp-sidebar-no:hover {
+  opacity: 0.8;
+}
+
+.kmp-sidebar-yes:active,
+.kmp-sidebar-no:active {
+  transform: scale(0.9);
+}
+
+.kmp-sidebar-yes .kmp-btn-label {
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.kmp-sidebar-yes .kmp-btn-price,
+.kmp-sidebar-no .kmp-btn-price {
+  font-size: 18px;
+  line-height: 30px;
+}
+
+.kmp-sidebar-no .kmp-btn-label {
+  font-size: 15px;
+  line-height: 24px;
 }
 
 .kmp-sidebar-yes {
-  background: var(--kmp-yes-bg);
-  color: var(--kmp-yes);
+  background: #EFF2FF;
+  color: #265CFF;
 }
 
 .kmp-sidebar-yes.active {
-  background: var(--kmp-yes);
+  background: #265CFF;
   color: white;
 }
 
 .kmp-sidebar-no {
-  background: var(--kmp-no-bg);
-  color: var(--kmp-no);
+  background: #F9EBFF;
+  color: #AA08FF;
 }
 
 .kmp-sidebar-no.active {
-  background: var(--kmp-no);
+  background: #AA08FF;
   color: white;
 }
 
@@ -416,43 +463,71 @@
 .kmp-sidebar-input-label {
   display: block;
   font-size: 13px;
+  line-height: 20px;
   font-weight: 500;
-  color: var(--kmp-text-secondary);
-  margin-bottom: 6px;
+  letter-spacing: 0.13px;
+  color: var(--kmp-text-primary);
+  margin-bottom: 4px;
+}
+
+.kmp-sidebar-input-sublabel {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0.13px;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 .kmp-sidebar-input-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background: var(--kmp-surface);
   border: 1px solid var(--kmp-border);
   border-radius: 8px;
-  overflow: hidden;
+  padding: 13px 8px;
+  transition: border-color 150ms;
+}
+
+.kmp-sidebar-input-wrapper:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.kmp-sidebar-input-wrapper:focus-within {
+  border-color: #0AC285;
+  outline: 1px solid #0AC285;
+}
+
+.kmp-sidebar-input-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .kmp-sidebar-input-prefix,
 .kmp-sidebar-input-suffix {
-  padding: 0 12px;
   font-size: 15px;
   font-weight: 500;
   color: var(--kmp-text-secondary);
-  background: var(--kmp-bg);
-  height: 44px;
-  display: flex;
-  align-items: center;
 }
 
 .kmp-sidebar-input {
-  flex: 1;
   border: none;
-  padding: 12px;
-  font-size: 16px;
+  padding: 0;
+  font-size: 30px;
   font-weight: 600;
+  letter-spacing: -0.6px;
   font-family: inherit;
   text-align: right;
   outline: none;
   background: transparent;
   color: var(--kmp-text-primary);
+  width: 145px;
+}
+
+.kmp-sidebar-input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
 }
 
 .kmp-sidebar-input::-webkit-outer-spin-button,
@@ -467,53 +542,67 @@
 
 /* Sidebar summary */
 .kmp-sidebar-summary {
-  background: var(--kmp-surface);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
 .kmp-sidebar-summary-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  color: var(--kmp-text-secondary);
-  padding: 4px 0;
+  align-items: baseline;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.13px;
+  color: rgba(0, 0, 0, 0.5);
+  padding: 6px 0;
 }
 
 .kmp-sidebar-summary-row span:last-child {
-  color: var(--kmp-text-primary);
+  font-size: 15px;
+  line-height: 24px;
   font-weight: 500;
+  letter-spacing: 0.15px;
+  color: var(--kmp-text-primary);
 }
 
 .kmp-sidebar-summary-payout {
-  border-top: 1px solid var(--kmp-border);
-  margin-top: 8px;
-  padding-top: 12px;
+  align-items: flex-start;
 }
 
 .kmp-payout-value {
-  font-size: 16px;
+  font-size: 30px;
+  line-height: 40px;
   font-weight: 600;
-  color: var(--kmp-brand) !important;
+  letter-spacing: -0.6px;
+  color: #0AC285 !important;
 }
 
 .kmp-sidebar-btn {
   width: 100%;
-  padding: 12px 24px;
-  background: var(--kmp-brand);
+  padding: 12px 8px;
+  min-height: 48px;
+  background: #0AC285;
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 15px;
-  font-weight: 600;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.15px;
   cursor: pointer;
   font-family: inherit;
+  transition: opacity 83ms, background-color 83ms, transform 83ms;
 }
 
 .kmp-sidebar-btn:hover {
-  background: #00b876;
+  opacity: 0.8;
+}
+
+.kmp-sidebar-btn:active {
+  transform: scale(0.9);
+  background: #089968;
 }
 
 /* Review Order State */
@@ -1171,22 +1260,22 @@
 }
 
 .kmp-btn-yes {
-  background: var(--kmp-yes-bg);
-  color: var(--kmp-yes);
+  background: #EFF2FF;
+  color: #265CFF;
 }
 
 .kmp-btn-yes.filled {
-  background: var(--kmp-yes);
+  background: #265CFF;
   color: white;
 }
 
 .kmp-btn-no {
-  background: var(--kmp-no-bg);
-  color: var(--kmp-no);
+  background: #F9EBFF;
+  color: #AA08FF;
 }
 
 .kmp-btn-no.filled {
-  background: var(--kmp-no);
+  background: #AA08FF;
   color: white;
 }
 
