@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MarketPageConfig, ChartDataPoint, SubmittedOrder } from '../../types/market-page';
+import confetti from 'canvas-confetti';
+import { MarketPageConfig, ChartDataPoint, SubmittedOrder, MarketOutcome } from '../../types/market-page';
 import { MarketPageMaker } from './MarketPageMaker';
 import { MarketPagePreview, MARKET_PAGE_PREVIEW_ID } from './MarketPagePreview';
 import { ImageCropper } from '../../components/shared/ImageCropper';
@@ -10,70 +11,268 @@ import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '..
 import { createFileName } from '../../lib/chartHelpers';
 import { useToast } from '../../hooks/useToast';
 import { trackEvent } from '../../lib/analytics';
-import '../../App.css';
+import './MarketPageBuilder.css';
 
-function generateDefaultChartData(): ChartDataPoint[] {
+const OUTCOME_COLORS = ['#09C285', '#265CFF', '#000000', '#FF5A5A', '#9333EA', '#F59E0B'];
+
+function generateChartDataForOutcomes(outcomes: MarketOutcome[]): ChartDataPoint[] {
+  return generateChartDataWithCustomTrends(outcomes);
+}
+
+function generateChartDataWithCustomTrends(outcomes: MarketOutcome[]): ChartDataPoint[] {
   const now = Date.now();
   const points: ChartDataPoint[] = [];
   const numPoints = 100;
 
-  // Generate a slightly realistic trend
-  let value = 50 + (Math.random() - 0.5) * 20;
+  // Initialize values for each outcome
+  const values: Record<string, number> = {};
+  outcomes.forEach((outcome) => {
+    if (outcome.customTrendData && outcome.customTrendData.length > 0) {
+      values[outcome.id] = outcome.customTrendData[0];
+    } else {
+      values[outcome.id] = outcome.yesPrice + (Math.random() - 0.5) * 20;
+    }
+  });
+
   for (let i = 0; i < numPoints; i++) {
-    // Add some volatility
-    value += (Math.random() - 0.5) * 5;
-    // Keep within bounds
-    value = Math.max(5, Math.min(95, value));
-    points.push({
-      time: now - (numPoints - i) * 60000, // 1 minute intervals
-      value: Math.round(value),
+    const point: ChartDataPoint = {
+      time: now - (numPoints - i) * 60000 * 1.5, // 1.5 minute intervals
+      value: 0,
+    };
+
+    const isLastPoint = i === numPoints - 1;
+
+    // Generate data for each outcome
+    outcomes.forEach((outcome) => {
+      if (isLastPoint) {
+        // Last point always uses the current yes price
+        point[`value_${outcome.id}`] = outcome.yesPrice;
+      } else if (outcome.customTrendData && outcome.customTrendData.length > 0) {
+        // Use custom trend data for all points except the last
+        const trendIndex = Math.floor((i / (numPoints - 1)) * (outcome.customTrendData.length - 1));
+        const clampedIndex = Math.min(trendIndex, outcome.customTrendData.length - 1);
+        point[`value_${outcome.id}`] = Math.round(outcome.customTrendData[clampedIndex]);
+      } else {
+        // Generate random data with trend toward yesPrice
+        const volatility = 3 + Math.random() * 2;
+        values[outcome.id] += (Math.random() - 0.5) * volatility;
+
+        // Gradually trend toward the final yesPrice
+        const progress = i / numPoints;
+        const trend = (outcome.yesPrice - values[outcome.id]) * 0.02 * progress;
+        values[outcome.id] += trend;
+
+        // Keep within bounds
+        values[outcome.id] = Math.max(5, Math.min(95, values[outcome.id]));
+
+        point[`value_${outcome.id}`] = Math.round(values[outcome.id]);
+      }
     });
+
+    // Set main value to first outcome's value
+    if (outcomes.length > 0) {
+      point.value = point[`value_${outcomes[0].id}`] as number;
+    }
+
+    points.push(point);
   }
 
   return points;
 }
 
+function createDefaultOutcomes(): MarketOutcome[] {
+  return [
+    {
+      id: 'outcome-1',
+      name: 'J.D. Vance',
+      subtitle: 'Republican',
+      image: null,
+      yesPrice: 28,
+      noPrice: 72,
+      volume: 2800000,
+      change: 3,
+      color: OUTCOME_COLORS[0],
+      customTrendData: null,
+    },
+    {
+      id: 'outcome-2',
+      name: 'Gavin Newsom',
+      subtitle: 'Democratic',
+      image: null,
+      yesPrice: 20,
+      noPrice: 80,
+      volume: 1900000,
+      change: -2,
+      color: OUTCOME_COLORS[1],
+      customTrendData: null,
+    },
+    {
+      id: 'outcome-3',
+      name: 'Marco Rubio',
+      subtitle: 'Republican',
+      image: null,
+      yesPrice: 11,
+      noPrice: 89,
+      volume: 1200000,
+      change: 1,
+      color: OUTCOME_COLORS[2],
+      customTrendData: null,
+    },
+  ];
+}
+
 export default function MarketPageBuilder() {
   const navigate = useNavigate();
+  const defaultOutcomes = createDefaultOutcomes();
+
   const [config, setConfig] = useState<MarketPageConfig>({
     category: 'Politics',
-    title: 'Will Bitcoin hit $100k in 2025?',
-    subtitle: 'This market will resolve to Yes if Bitcoin reaches $100,000 USD at any point in 2025.',
+    subcategory: 'US Elections',
+    title: 'Next US Presidential Election Winner?',
+    subtitle: '',
     image: null,
-    outcomes: [
-      { id: 'outcome-1', name: 'Yes', yesPrice: 65, noPrice: 35, volume: 125000 },
-    ],
-    chartData: generateDefaultChartData(),
-    chartTimeRange: '1D',
-    selectedOutcome: null,
+    profileImage: null,
+    portfolioBalance: '$1,250.00',
+    eventStatus: 'upcoming',
+    eventDate: 'Nov 5, 2028',
+    countdownText: '',
+    outcomes: defaultOutcomes,
+    chartData: generateChartDataForOutcomes(defaultOutcomes),
+    chartTimeRange: 'ALL',
+    volume: '$5.9M',
+    selectedOutcome: 'outcome-1',
     selectedSide: 'Yes',
     orderAmount: 100,
-    limitPrice: 65,
+    limitPrice: 28,
     showWatermark: true,
-    showRules: false,
-    rulesText: '',
+    showRules: true,
+    rulesText: 'This market will resolve to the name of the winner of the 2028 US Presidential Election. The winner is determined by the candidate who receives at least 270 Electoral College votes.',
+    showRelatedMarkets: true,
+    relatedMarkets: [
+      { id: 'related-1', title: '2028 Republican Presidential Nominee?', image: null },
+      { id: 'related-2', title: '2028 Democratic Presidential Nominee?', image: null },
+      { id: 'related-3', title: 'Who will win the 2026 Senate elections?', image: null },
+    ],
     submittedOrders: [],
+    payoutAmount: '',
+    sidebarState: 'trading',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);
+  const [cropperTarget, setCropperTarget] = useState<'market' | 'profile' | string>('market'); // 'market', 'profile', or outcome id
   const [showTrendDrawer, setShowTrendDrawer] = useState(false);
+  const [drawingOutcomeId, setDrawingOutcomeId] = useState<string | null>(null);
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const { message: toastMessage, showToast } = useToast();
 
+  // Dragging state
+  const [panelPosition, setPanelPosition] = useState({ x: 20, y: 20 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragOffset = useRef({ x: 0, y: 0 });
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Handle mouse down on drag handle
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (panelRef.current) {
+      const rect = panelRef.current.getBoundingClientRect();
+      dragOffset.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+      setIsDragging(true);
+    }
+  };
+
+  // Handle mouse move
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const newX = e.clientX - dragOffset.current.x;
+        const newY = e.clientY - dragOffset.current.y;
+
+        // Keep panel within viewport bounds
+        const maxX = window.innerWidth - (panelRef.current?.offsetWidth || 380);
+        const maxY = window.innerHeight - 100;
+
+        setPanelPosition({
+          x: Math.max(0, Math.min(newX, maxX)),
+          y: Math.max(0, Math.min(newY, maxY)),
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
   function handleConfigChange(updates: Partial<MarketPageConfig>) {
-    setConfig((prev) => ({ ...prev, ...updates }));
+    setConfig((prev) => {
+      const newConfig = { ...prev, ...updates };
+
+      // If outcomes changed, regenerate chart data
+      if (updates.outcomes && updates.outcomes !== prev.outcomes) {
+        newConfig.chartData = generateChartDataForOutcomes(updates.outcomes);
+      }
+
+      return newConfig;
+    });
   }
 
   const handleImageUpload = useCallback((file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
+      setCropperTarget('market');
+      setCropperImage(result);
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
+  const handleOutcomeImageUpload = useCallback((outcomeId: string, file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setCropperTarget(outcomeId);
+      setCropperImage(result);
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
+  const handleProfileImageUpload = useCallback((file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setCropperTarget('profile');
       setCropperImage(result);
     };
     reader.readAsDataURL(file);
   }, []);
 
   function handleCropComplete(croppedImage: string) {
-    setConfig((prev) => ({ ...prev, image: croppedImage }));
+    if (cropperTarget === 'market') {
+      setConfig((prev) => ({ ...prev, image: croppedImage }));
+    } else if (cropperTarget === 'profile') {
+      setConfig((prev) => ({ ...prev, profileImage: croppedImage }));
+    } else {
+      // It's an outcome ID
+      setConfig((prev) => ({
+        ...prev,
+        outcomes: prev.outcomes.map((o) =>
+          o.id === cropperTarget ? { ...o, image: croppedImage } : o
+        ),
+      }));
+    }
     setCropperImage(null);
   }
 
@@ -103,6 +302,37 @@ export default function MarketPageBuilder() {
     }
   }
 
+  function fireFireworks() {
+    const duration = 1500;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+      });
+    }, 250);
+  }
+
   function handleSubmitOrder() {
     if (!config.selectedOutcome) return;
 
@@ -124,6 +354,8 @@ export default function MarketPageBuilder() {
       submittedOrders: [...prev.submittedOrders, newOrder],
     }));
 
+    fireFireworks();
+
     showToast(`Order submitted: ${config.selectedSide} ${outcome.name} @ ${config.limitPrice}¢`);
     trackEvent('fake_order_submit', {
       tool: 'market-page',
@@ -133,25 +365,46 @@ export default function MarketPageBuilder() {
     });
   }
 
-  function handleDrawChart() {
-    trackEvent('trend_draw_open', { tool: 'market-page' });
+  function handleDrawOutcomeTrend(outcomeId: string) {
+    trackEvent('trend_draw_open', { tool: 'market-page', outcomeId });
+    setDrawingOutcomeId(outcomeId);
     setShowTrendDrawer(true);
   }
 
   function handleTrendDrawComplete(trendData: number[]) {
-    trackEvent('trend_draw_complete', { tool: 'market-page' });
-    const now = Date.now();
-    const chartData: ChartDataPoint[] = trendData.map((value, i) => ({
-      time: now - (trendData.length - i) * 60000,
-      value: Math.round(value),
-    }));
-    setConfig((prev) => ({ ...prev, chartData }));
+    trackEvent('trend_draw_complete', { tool: 'market-page', outcomeId: drawingOutcomeId });
+
+    if (drawingOutcomeId) {
+      // Update the specific outcome's customTrendData
+      setConfig((prev) => {
+        const updatedOutcomes = prev.outcomes.map((o) =>
+          o.id === drawingOutcomeId ? { ...o, customTrendData: trendData } : o
+        );
+
+        // Regenerate chart data using the custom trend data
+        const chartData = generateChartDataWithCustomTrends(updatedOutcomes);
+
+        return { ...prev, outcomes: updatedOutcomes, chartData };
+      });
+    }
+
     setShowTrendDrawer(false);
+    setDrawingOutcomeId(null);
   }
 
   function handleTrendDrawCancel() {
     trackEvent('trend_draw_cancel', { tool: 'market-page' });
     setShowTrendDrawer(false);
+    setDrawingOutcomeId(null);
+  }
+
+  function handleRegenerateData() {
+    trackEvent('regenerate_data', { tool: 'market-page' });
+    setConfig((prev) => ({
+      ...prev,
+      chartData: generateChartDataForOutcomes(prev.outcomes),
+    }));
+    showToast('Chart data regenerated');
   }
 
   useEffect(() => {
@@ -224,27 +477,80 @@ export default function MarketPageBuilder() {
   }
 
   return (
-    <div className="app">
-      <div className="app-container">
-        <MarketPageMaker
+    <div className="market-page-builder">
+      {/* Full-page preview */}
+      <div className="market-page-fullscreen-preview">
+        <MarketPagePreview
           config={config}
-          onConfigChange={handleConfigChange}
-          onImageUpload={handleImageUpload}
-          onExport={handleExport}
-          onCopyToClipboard={handleCopyToClipboard}
-          onBack={() => navigate('/')}
-          onDrawChart={handleDrawChart}
+          onOutcomeSelect={handleOutcomeSelect}
+          onSideSelect={handleSideSelect}
+          onSubmitOrder={handleSubmitOrder}
+          onAmountChange={(amount) => handleConfigChange({ orderAmount: amount })}
+          onLimitPriceChange={(price) => handleConfigChange({ limitPrice: price })}
+          onSidebarStateChange={(state) => handleConfigChange({ sidebarState: state })}
+          onLogoClick={() => navigate('/')}
         />
-        <div className="preview-section">
-          <MarketPagePreview
-            config={config}
-            onOutcomeSelect={handleOutcomeSelect}
-            onSideSelect={handleSideSelect}
-            onSubmitOrder={handleSubmitOrder}
-            onAmountChange={(amount) => handleConfigChange({ orderAmount: amount })}
-            onLimitPriceChange={(price) => handleConfigChange({ limitPrice: price })}
-          />
+      </div>
+
+      {/* Floating control panel */}
+      <div
+        ref={panelRef}
+        className={`market-page-floating-panel ${isPanelCollapsed ? 'collapsed' : ''}`}
+        style={{
+          left: panelPosition.x,
+          top: panelPosition.y,
+          cursor: isDragging ? 'grabbing' : 'default',
+        }}
+      >
+        <div
+          className="floating-panel-header"
+          onMouseDown={handleMouseDown}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
+          <div className="floating-panel-drag-handle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="8" cy="6" r="2" />
+              <circle cx="16" cy="6" r="2" />
+              <circle cx="8" cy="12" r="2" />
+              <circle cx="16" cy="12" r="2" />
+              <circle cx="8" cy="18" r="2" />
+              <circle cx="16" cy="18" r="2" />
+            </svg>
+          </div>
+          <span className="floating-panel-title">Controls</span>
+          <button
+            className="floating-panel-toggle"
+            onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              style={{ transform: isPanelCollapsed ? 'rotate(180deg)' : 'none' }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
         </div>
+        {!isPanelCollapsed && (
+          <div className="floating-panel-content">
+            <MarketPageMaker
+              config={config}
+              onConfigChange={handleConfigChange}
+              onImageUpload={handleImageUpload}
+              onOutcomeImageUpload={handleOutcomeImageUpload}
+              onProfileImageUpload={handleProfileImageUpload}
+              onExport={handleExport}
+              onCopyToClipboard={handleCopyToClipboard}
+              onBack={() => navigate('/')}
+              onDrawOutcomeTrend={handleDrawOutcomeTrend}
+              onRegenerateData={handleRegenerateData}
+            />
+          </div>
+        )}
       </div>
 
       {cropperImage && (

@@ -132,6 +132,33 @@ export function LandingPage() {
             </div>
           </Link>
 
+          <Link
+            to="/market-page"
+            className="landing-option landing-option--marketpage"
+            onClick={() => handleToolClick('market-page')}
+          >
+            <div className="option-body">
+              <div className="option-header">
+                <span className="option-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M3 9h18" />
+                    <path d="M9 21V9" />
+                    <path d="M13 13h4" />
+                    <path d="M13 17h4" />
+                  </svg>
+                </span>
+                <div className="option-title-group">
+                  <span className="option-subtitle">Create a</span>
+                  <span className="option-label">Market Page</span>
+                </div>
+              </div>
+              <p className="option-description">
+                Generate pixel-perfect Kalshi market pages with multi-outcome charts, Yes/No buttons, and rules sections.
+              </p>
+            </div>
+          </Link>
+
           <a
             href="https://overlay.kalshi.tools/"
             className="landing-option landing-option--overlay"

@@ -1,0 +1,155 @@
+/* Market Page Builder - Full Page Layout */
+.market-page-builder {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+/* Full-screen preview container */
+.market-page-fullscreen-preview {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.market-page-fullscreen-preview .kmp {
+  min-height: 100%;
+}
+
+/* Floating control panel */
+.market-page-floating-panel {
+  position: fixed;
+  width: 380px;
+  max-height: calc(100vh - 40px);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.market-page-floating-panel:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.market-page-floating-panel.collapsed {
+  max-height: none;
+  height: auto;
+  width: 180px;
+}
+
+/* Floating panel header */
+.floating-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e5e7eb;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.floating-panel-drag-handle {
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-panel-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.floating-panel-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.floating-panel-toggle:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.floating-panel-toggle svg {
+  transition: transform 0.2s;
+}
+
+/* Floating panel content */
+.floating-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Override control panel styles for floating panel */
+.floating-panel-content .control-panel {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: none;
+  height: auto;
+}
+
+.floating-panel-content .back-button-control-panel {
+  margin-bottom: 12px;
+}
+
+.floating-panel-content .panel-title {
+  font-size: 18px;
+}
+
+.floating-panel-content .panel-subtitle {
+  font-size: 13px;
+}
+
+.floating-panel-content .control-section {
+  padding: 16px;
+}
+
+.floating-panel-content .control-section-title {
+  font-size: 12px;
+}
+
+.floating-panel-content .panel-footer {
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8f9fa;
+  position: sticky;
+  bottom: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .market-page-floating-panel {
+    width: calc(100% - 40px);
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 480px) {
+  .market-page-floating-panel {
+    width: calc(100% - 20px);
+    left: 10px !important;
+    right: 10px;
+  }
+}

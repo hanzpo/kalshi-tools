@@ -10,6 +10,7 @@ const ChartBuilder = lazy(() => import('./features/chart/ChartBuilder'));
 const TradeSlipBuilder = lazy(() => import('./features/trade-slip/TradeSlipBuilder'));
 const SearchBuilder = lazy(() => import('./features/search/SearchBuilder'));
 const LinkPreviewBuilder = lazy(() => import('./features/link-preview/LinkPreviewBuilder'));
+const MarketPageBuilder = lazy(() => import('./features/market-page/MarketPageBuilder'));
 
 function AppContent() {
   useAnalytics();
@@ -22,6 +23,7 @@ function AppContent() {
           <Route path="/trade-slip" element={<TradeSlipBuilder />} />
           <Route path="/search" element={<SearchBuilder />} />
           <Route path="/link-preview" element={<LinkPreviewBuilder />} />
+          <Route path="/market-page" element={<MarketPageBuilder />} />
           <Route path="*" element={<LandingPage />} />
         </Routes>
       </Suspense>

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { MarketPageConfig } from '../../types/market-page';
 import './MarketPagePreview.css';
 
@@ -9,14 +9,16 @@ interface MarketPagePreviewProps {
   onSubmitOrder: () => void;
   onAmountChange: (amount: number) => void;
   onLimitPriceChange: (price: number) => void;
+  onSidebarStateChange: (state: 'trading' | 'review' | 'confirmation') => void;
+  onLogoClick?: () => void;
 }
 
 const MARKET_PAGE_PREVIEW_ID = 'market-page-preview';
 
 // Kalshi logo SVG
-function KalshiLogo() {
+function KalshiLogo({ className }: { className?: string }) {
   return (
-    <svg width="63" height="16" viewBox="0 0 78 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: 'var(--kalshi-brand-primary)' }}>
+    <svg className={className} width="63" height="16" viewBox="0 0 78 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M40.1043 0H36.0332V19.9986H40.1043V0Z" fill="currentColor" fillOpacity="0.9" />
       <path d="M0.416887 0.0221237H4.73849V8.99348L12.818 0.0221237H18.0582L10.6468 8.24586L18.5384 20H13.3608L7.59868 11.5686L4.73849 14.7459V20H0.416887V0.0221237Z" fill="currentColor" />
       <path fillRule="evenodd" clipRule="evenodd" d="M34.4675 19.8117H32.4007C30.5426 19.8117 29.624 19.0017 29.6658 17.4027C29.1229 18.2334 28.4549 18.8771 27.6824 19.3132C26.8891 19.7494 25.9496 19.9778 24.8222 19.9778C23.1729 19.9778 21.8368 19.604 20.8138 18.8564C19.8117 18.088 19.3106 17.0289 19.3106 15.6582C19.3106 14.1007 19.8952 12.8962 21.0434 12.0656C22.2126 11.2141 23.9036 10.778 26.1166 10.778H29.0603V10.0719C29.0603 9.40737 28.8098 8.8882 28.3087 8.49362C27.8077 8.09905 27.1396 7.89138 26.2836 7.89138C25.532 7.89138 24.9266 8.05752 24.4464 8.36902C23.9662 8.70129 23.674 9.1374 23.5905 9.67734H19.6446C19.7699 8.18212 20.4589 7.01916 21.6697 6.18848C22.8806 5.3578 24.4882 4.92169 26.4924 4.92169C28.5801 4.92169 30.2086 5.37857 31.3359 6.29232C32.4842 7.20607 33.0688 8.53516 33.0688 10.2588V15.4298C33.0688 15.7828 33.1523 16.0321 33.2984 16.1774C33.4445 16.302 33.6951 16.3851 34.0291 16.3851H34.4675V19.8117ZM26.0749 13.4569C25.2398 13.4569 24.5717 13.6231 24.0915 13.9761C23.6322 14.3084 23.4026 14.7653 23.4026 15.3675C23.4026 15.8867 23.5905 16.2813 23.9871 16.5928C24.3838 16.9043 24.9266 17.0496 25.5947 17.0496C26.6594 17.0496 27.4945 16.7589 28.1 16.1567C28.7054 15.5544 29.0394 14.7445 29.0603 13.7269V13.4569H26.0749Z" fill="currentColor" />
@@ -28,257 +30,741 @@ function KalshiLogo() {
   );
 }
 
+// Default outcome colors matching Kalshi
+const OUTCOME_COLORS = ['#09C285', '#265CFF', '#000000', '#FF5A5A', '#9333EA', '#F59E0B'];
+
 export function MarketPagePreview({
   config,
   onOutcomeSelect,
   onSideSelect,
+  onSubmitOrder,
+  onAmountChange,
+  onLimitPriceChange,
+  onSidebarStateChange,
+  onLogoClick,
 }: MarketPagePreviewProps) {
-  const chartPath = useMemo(() => {
-    if (config.chartData.length === 0) return '';
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    rules: true,
+    timeline: false,
+    about: false,
+  });
 
-    const width = 808;
-    const height = 200;
-    const padding = { left: 24, right: 48, top: 16, bottom: 0 };
+  // Generate SVG path for chart
+  const chartPaths = useMemo(() => {
+    if (config.chartData.length === 0) return [];
 
-    const minVal = Math.min(...config.chartData.map((d) => d.value));
-    const maxVal = Math.max(...config.chartData.map((d) => d.value));
-    const range = maxVal - minVal || 1;
+    const width = 600;
+    const height = 140;
+    const padding = { left: 0, right: 50, top: 10, bottom: 20 };
 
-    const points = config.chartData.map((d, i) => {
-      const x = padding.left + (i / (config.chartData.length - 1)) * (width - padding.left - padding.right);
-      const y = padding.top + (1 - (d.value - minVal) / range) * (height - padding.top - padding.bottom);
-      return `${x},${y}`;
+    const allValues: number[] = [];
+    config.outcomes.forEach((outcome) => {
+      config.chartData.forEach((d) => {
+        const key = `value_${outcome.id}`;
+        if (d[key] !== undefined) {
+          allValues.push(d[key]);
+        }
+      });
     });
 
-    return `M${points.join(' L')}`;
-  }, [config.chartData]);
+    if (allValues.length === 0) {
+      config.chartData.forEach((d) => allValues.push(d.value));
+    }
+
+    const minVal = Math.min(...allValues);
+    const maxVal = Math.max(...allValues);
+    const range = maxVal - minVal || 1;
+    const paddedMin = Math.max(0, minVal - range * 0.1);
+    const paddedMax = Math.min(100, maxVal + range * 0.1);
+    const paddedRange = paddedMax - paddedMin || 1;
+
+    return config.outcomes.map((outcome) => {
+      const points = config.chartData.map((d, i) => {
+        const x = padding.left + (i / (config.chartData.length - 1)) * (width - padding.left - padding.right);
+        const val = d[`value_${outcome.id}`] ?? d.value;
+        const y = padding.top + (1 - (val - paddedMin) / paddedRange) * (height - padding.top - padding.bottom);
+        return { x, y };
+      });
+
+      const path = `M${points.map((p) => `${p.x},${p.y}`).join(' L')}`;
+
+      return {
+        id: outcome.id,
+        path,
+        color: outcome.color,
+      };
+    });
+  }, [config.chartData, config.outcomes]);
 
   const volume = useMemo(() => {
-    return config.outcomes.reduce((sum, o) => sum + o.volume, 0);
+    if (config.volume) return config.volume;
+    const total = config.outcomes.reduce((sum, o) => sum + o.volume, 0);
+    if (total >= 1000000) return `$${(total / 1000000).toFixed(1)}M`;
+    if (total >= 1000) return `$${Math.round(total / 1000).toLocaleString()},${String(total % 1000).padStart(3, '0')}`;
+    return `$${total.toLocaleString()}`;
+  }, [config.volume, config.outcomes]);
+
+  const toggleSection = (section: string) => {
+    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  // Get top 3 outcomes for legend
+  const topOutcomes = useMemo(() => {
+    return [...config.outcomes]
+      .sort((a, b) => b.yesPrice - a.yesPrice)
+      .slice(0, 3);
   }, [config.outcomes]);
 
   return (
-    <div id={MARKET_PAGE_PREVIEW_ID} className="kalshi-market-page">
-      {/* Header */}
-      <div className="kalshi-header">
-        <div className="kalshi-header-image">
-          {config.image ? (
-            <img src={config.image} alt={config.title} />
-          ) : (
-            <svg className="kalshi-header-image-placeholder" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          )}
-        </div>
-        <div className="kalshi-header-content">
-          <div className="kalshi-header-meta">
-            <a href="#">{config.category || 'Market'}</a>
-            {config.subtitle && (
-              <>
-                <span className="separator"> · </span>
-                <span className="source">{config.subtitle}</span>
-              </>
-            )}
+    <div id={MARKET_PAGE_PREVIEW_ID} className="kmp">
+      {/* Navigation Bar */}
+      <nav className="kmp-nav">
+        <div className="kmp-nav-inner">
+          <div className="kmp-nav-left">
+            <button className="kmp-nav-logo-btn" onClick={onLogoClick}>
+              <KalshiLogo className="kmp-nav-logo" />
+            </button>
+            <div className="kmp-nav-links">
+              <a className="kmp-nav-link">Markets</a>
+              <a className="kmp-nav-link kmp-nav-link-live">Live</a>
+              <a className="kmp-nav-link">Ideas</a>
+              <a className="kmp-nav-link">API</a>
+            </div>
           </div>
-          <h1 className="kalshi-header-title">{config.title || 'Market Title'}</h1>
-        </div>
-      </div>
-
-      {/* Chart Section */}
-      <section className="kalshi-chart-section">
-        <div className="kalshi-chart-info">
-          <span className="kalshi-chart-status">Starting soon</span>
-          <span className="kalshi-chart-date">Jan 17, 4:30pm EST</span>
-          <div className="kalshi-logo-container">
-            <KalshiLogo />
+          <div className="kmp-nav-right">
+            <div className="kmp-nav-search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <span>Search markets or profiles</span>
+            </div>
+            <button className="kmp-nav-icon-btn" title="Notifications">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+            </button>
+            <div className="kmp-nav-balance">
+              <span className="kmp-balance-label">Portfolio</span>
+              <span className="kmp-balance-value">{config.portfolioBalance || '$1,250.00'}</span>
+            </div>
+            <button className="kmp-nav-btn kmp-nav-btn-primary">Deposit</button>
+            <div className="kmp-nav-avatar">
+              {config.profileImage ? (
+                <img src={config.profileImage} alt="Profile" className="kmp-nav-avatar-img" />
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+              )}
+            </div>
           </div>
         </div>
+      </nav>
 
-        <div className="kalshi-chart-container">
-          <svg className="kalshi-chart-svg" viewBox="0 0 856 250">
-            <g transform="translate(0, 16)">
-              <g transform="translate(24, 0)">
-                {/* Grid lines */}
-                <g>
-                  {[200, 152, 104, 56, 8].map((y, i) => (
-                    <line
-                      key={i}
-                      x1="0"
-                      y1={y}
-                      x2="808"
-                      y2={y}
-                      fill="transparent"
-                      stroke="var(--kalshi-fill-x30)"
-                      strokeWidth="1"
-                      strokeDasharray="1,4"
-                    />
-                  ))}
-                </g>
-              </g>
+      {/* Main Layout */}
+      <div className="kmp-layout">
+        {/* Main Content */}
+        <div className="kmp-content">
+          {/* Breadcrumb */}
+          <div className="kmp-breadcrumb">
+            <span className="kmp-breadcrumb-item">{config.category || 'Entertainment'}</span>
+            <span className="kmp-breadcrumb-sep">·</span>
+            <span className="kmp-breadcrumb-item">{config.subcategory || 'Movies'}</span>
+          </div>
 
-              {/* X-axis labels */}
-              <g transform="translate(0, 200)">
-                {['4:30pm', '5:05pm', '5:40pm', '6:15pm', '6:50pm'].map((time, i) => (
-                  <text
+          {/* Market Header */}
+          <header className="kmp-header">
+            <div className="kmp-header-left">
+              <div className="kmp-header-image">
+                {config.image ? (
+                  <img src={config.image} alt={config.title} />
+                ) : (
+                  <div className="kmp-header-image-placeholder" />
+                )}
+              </div>
+              <div className="kmp-header-text">
+                <h1 className="kmp-title">{config.title || 'Market Title'}</h1>
+                <div className="kmp-subtitle">
+                  {config.eventStatus === 'closed' ? (
+                    <span>Closed · {config.eventDate || 'Resolved'}</span>
+                  ) : config.eventStatus === 'live' ? (
+                    <>
+                      <span className="kmp-subtitle-live">
+                        <span className="kmp-live-dot-small" />
+                        Live
+                      </span>
+                      <span className="kmp-subtitle-sep">·</span>
+                      <span>{config.eventDate || 'Mar 15, 7:00pm EDT'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Begins in {config.countdownText || '53 days'}</span>
+                      <span className="kmp-subtitle-sep">·</span>
+                      <span>{config.eventDate || 'Mar 15, 7:00pm EDT'}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="kmp-header-actions">
+              <button className="kmp-action-btn" title="Calendar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </button>
+              <button className="kmp-action-btn" title="Save">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </button>
+              <button className="kmp-action-btn" title="Share">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                  <polyline points="16 6 12 2 8 6" />
+                  <line x1="12" y1="2" x2="12" y2="15" />
+                </svg>
+              </button>
+              <button className="kmp-action-btn" title="Download">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </button>
+            </div>
+          </header>
+
+          {/* Chart Legend */}
+          <div className="kmp-legend-row">
+            <div className="kmp-chart-legend">
+              {topOutcomes.map((outcome, index) => (
+                <div key={outcome.id} className="kmp-legend-item">
+                  <span
+                    className="kmp-legend-dot"
+                    style={{ backgroundColor: outcome.color || OUTCOME_COLORS[index % OUTCOME_COLORS.length] }}
+                  />
+                  <span className="kmp-legend-name">{outcome.name}</span>
+                  <span className="kmp-legend-value">{outcome.yesPrice}%</span>
+                </div>
+              ))}
+            </div>
+            <KalshiLogo className="kmp-legend-logo" />
+          </div>
+
+          {/* Chart */}
+          <div className="kmp-chart-container">
+            <svg className="kmp-chart-svg" viewBox="0 0 650 180" preserveAspectRatio="xMidYMid meet">
+              {/* Grid lines */}
+              <g className="kmp-grid">
+                {[0, 1, 2, 3].map((i) => (
+                  <line
                     key={i}
-                    x={24 + i * 160}
-                    y="28"
-                    fill="var(--kalshi-text-x30)"
-                    fontSize="11"
-                    textAnchor="middle"
-                  >
-                    {time}
-                  </text>
+                    x1="0"
+                    y1={10 + i * 40}
+                    x2="600"
+                    y2={10 + i * 40}
+                    stroke="rgba(0,0,0,0.06)"
+                    strokeWidth="1"
+                    strokeDasharray="4 4"
+                  />
                 ))}
               </g>
 
               {/* Y-axis labels */}
-              <g transform="translate(784, 0)">
-                {['100%', '97.5%', '95%', '92.5%', '90%'].map((val, i) => (
-                  <text
-                    key={i}
-                    x="24"
-                    y={8 + i * 48}
-                    fill="var(--kalshi-text-x30)"
-                    fontSize="11"
-                    textAnchor="start"
-                    dominantBaseline="middle"
-                  >
-                    {val}
+              <g className="kmp-y-labels">
+                {['100%', '75%', '50%', '25%'].map((label, i) => (
+                  <text key={i} x="615" y={15 + i * 40} className="kmp-axis-label">
+                    {label}
                   </text>
                 ))}
               </g>
 
-              {/* Chart line */}
-              {chartPath && (
+              {/* Chart lines */}
+              {chartPaths.map((chartPath) => (
                 <path
-                  d={chartPath}
-                  stroke="var(--kalshi-brand-primary)"
+                  key={chartPath.id}
+                  d={chartPath.path}
+                  stroke={chartPath.color}
                   strokeWidth="2"
                   fill="none"
                 />
-              )}
+              ))}
 
-              {/* Outcome labels on chart */}
-              {config.outcomes.slice(0, 3).map((outcome, i) => {
-                const colors = ['var(--kalshi-brand-primary)', '#265CFF', '#000'];
-                return (
-                  <text
-                    key={outcome.id}
-                    x="620"
-                    y={30 + i * 50}
-                    fill={colors[i]}
-                    fontSize="13"
-                    fontWeight="500"
-                  >
-                    {outcome.name}
+              {/* X-axis time labels */}
+              <g className="kmp-x-labels">
+                {['8:00am', '8:45am', '9:32am', '10:19am', '11:05am'].map((label, i) => (
+                  <text key={i} x={i * 140} y="175" className="kmp-axis-label">
+                    {label}
                   </text>
-                );
-              })}
-            </g>
-          </svg>
-        </div>
-
-        <div className="kalshi-chart-footer">
-          <span className="kalshi-volume">${volume.toLocaleString()} Vol.</span>
-          <div className="kalshi-time-selector">
-            {['LIVE', '1D', '1W', '1M', 'ALL'].map((range) => (
-              <button
-                key={range}
-                className={`kalshi-time-btn ${config.chartTimeRange === range ? 'active' : ''}`}
-              >
-                {range}
-              </button>
-            ))}
+                ))}
+              </g>
+            </svg>
           </div>
-        </div>
-      </section>
 
-      <div className="kalshi-divider" />
+          {/* Chart Footer */}
+          <div className="kmp-chart-footer">
+            <span className="kmp-volume">{volume} vol</span>
+            <div className="kmp-time-selector">
+              {['1D', '1W', '1M', 'ALL'].map((range) => (
+                <button
+                  key={range}
+                  className={`kmp-time-btn ${config.chartTimeRange === range ? 'active' : ''}`}
+                >
+                  {range}
+                </button>
+              ))}
+              <button className="kmp-time-btn kmp-settings-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="4" y1="21" x2="4" y2="14" />
+                  <line x1="4" y1="10" x2="4" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12" y2="3" />
+                  <line x1="20" y1="21" x2="20" y2="16" />
+                  <line x1="20" y1="12" x2="20" y2="3" />
+                  <line x1="1" y1="14" x2="7" y2="14" />
+                  <line x1="9" y1="8" x2="15" y2="8" />
+                  <line x1="17" y1="16" x2="23" y2="16" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-      {/* Markets Section */}
-      <section className="kalshi-markets-section kalshi-section">
-        <div className="kalshi-markets-header">
-          <div className="kalshi-markets-header-left" />
-          <div className="kalshi-markets-header-center">Chance</div>
-          <div className="kalshi-markets-header-right">
-            <button className="kalshi-icon-btn" title="Expand">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4 4h6v2H6v4H4V4zm16 0v6h-2V6h-4V4h6zM4 14v6h6v-2H6v-4H4zm16 6h-6v-2h4v-4h2v6z" />
+          {/* Markets Header */}
+          <div className="kmp-markets-header">
+            <div className="kmp-markets-header-left" />
+            <div className="kmp-markets-header-center">Chance</div>
+            <div className="kmp-markets-header-right">
+              <button className="kmp-sort-btn" title="Sort">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Markets List */}
+          <div className="kmp-markets-list">
+            {config.outcomes.map((outcome, index) => (
+              <div
+                key={outcome.id}
+                className={`kmp-market-row ${config.selectedOutcome === outcome.id ? 'selected' : ''}`}
+                onClick={() => onOutcomeSelect(outcome.id)}
+              >
+                <div className="kmp-market-thumb">
+                  {outcome.image ? (
+                    <img src={outcome.image} alt={outcome.name} />
+                  ) : (
+                    <div className="kmp-market-thumb-placeholder" />
+                  )}
+                </div>
+                <div className="kmp-market-info">
+                  <span className="kmp-market-name">{outcome.name}</span>
+                </div>
+                <div className="kmp-market-chance">
+                  <span className="kmp-chance-value">{outcome.yesPrice}%</span>
+                  {outcome.change !== 0 && (
+                    <span className={`kmp-chance-change ${outcome.change > 0 ? 'positive' : 'negative'}`}>
+                      {outcome.change > 0 ? '▲' : '▼'}{Math.abs(outcome.change)}
+                    </span>
+                  )}
+                </div>
+                <div className="kmp-market-buttons">
+                  <button
+                    className={`kmp-btn kmp-btn-yes ${index === 0 ? 'filled' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOutcomeSelect(outcome.id);
+                      onSideSelect('Yes');
+                    }}
+                  >
+                    Yes {outcome.yesPrice}¢
+                  </button>
+                  <button
+                    className="kmp-btn kmp-btn-no"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOutcomeSelect(outcome.id);
+                      onSideSelect('No');
+                    }}
+                  >
+                    No {outcome.noPrice}¢
+                  </button>
+                </div>
+              </div>
+            ))}
+            {config.outcomes.length > 3 && (
+              <button className="kmp-more-link">
+                More markets
+              </button>
+            )}
+          </div>
+
+          {/* Rules Summary Section */}
+          {config.showRules && (
+            <section className="kmp-section">
+              <button
+                className="kmp-section-header"
+                onClick={() => toggleSection('rules')}
+              >
+                <h2 className="kmp-section-title">Rules summary</h2>
+                <svg
+                  className={`kmp-chevron ${expandedSections.rules ? 'expanded' : ''}`}
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {expandedSections.rules && (
+                <div className="kmp-section-content">
+                  {config.selectedOutcome && (
+                    <div className="kmp-rules-selector">
+                      <span className="kmp-selected-market">
+                        {config.outcomes.find((o) => o.id === config.selectedOutcome)?.name}
+                      </span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7 10l5 5 5-5z" />
+                      </svg>
+                    </div>
+                  )}
+                  <p className="kmp-rules-text">
+                    {config.rulesText || 'This market will resolve to "Yes" if the specified outcome occurs.'}
+                  </p>
+                  <a className="kmp-rules-link">View full rules</a>
+                  <span className="kmp-rules-sep">·</span>
+                  <a className="kmp-rules-link">Help center</a>
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Timeline and payout Section */}
+          <section className="kmp-section">
+            <button
+              className="kmp-section-header"
+              onClick={() => toggleSection('timeline')}
+            >
+              <div className="kmp-section-title-row">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <h2 className="kmp-section-title">Timeline and payout</h2>
+              </div>
+              <svg
+                className={`kmp-chevron ${expandedSections.timeline ? 'expanded' : ''}`}
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
+            {expandedSections.timeline && (
+              <div className="kmp-section-content">
+                <p className="kmp-rules-text">Contracts pay out $1.00 if the outcome is correct.</p>
+              </div>
+            )}
+          </section>
+
+          {/* About Section */}
+          <section className="kmp-section">
+            <button
+              className="kmp-section-header"
+              onClick={() => toggleSection('about')}
+            >
+              <h2 className="kmp-section-title">About</h2>
+              <svg
+                className={`kmp-chevron ${expandedSections.about ? 'expanded' : ''}`}
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            {expandedSections.about && (
+              <div className="kmp-section-content">
+                <p className="kmp-rules-text">
+                  This market tracks the outcome of the event described in the title. Trade based on your predictions.
+                </p>
+              </div>
+            )}
+          </section>
+
+          {/* Related Markets */}
+          {config.showRelatedMarkets && config.relatedMarkets.length > 0 && (
+            <section className="kmp-section kmp-related-section">
+              <h2 className="kmp-section-title">People are also buying</h2>
+              <div className="kmp-related-list">
+                {config.relatedMarkets.map((market) => (
+                  <div key={market.id} className="kmp-related-item">
+                    <div className="kmp-related-image">
+                      {market.image ? (
+                        <img src={market.image} alt={market.title} />
+                      ) : (
+                        <div className="kmp-related-image-placeholder" />
+                      )}
+                    </div>
+                    <span className="kmp-related-name">{market.title}</span>
+                  </div>
+                ))}
+              </div>
+              <button className="kmp-show-more">Show more</button>
+            </section>
+          )}
+
+          {/* Watermark */}
+          {config.showWatermark && <div className="kmp-watermark">kalshi.tools</div>}
+        </div>
+
+        {/* Sidebar */}
+        <div className="kmp-sidebar">
+          <div className="kmp-sidebar-content">
+            {config.sidebarState === 'trading' && (
+              <>
+                <div className="kmp-sidebar-trade-header">
+                  <div className="kmp-sidebar-trade-thumb">
+                    {config.outcomes.find(o => o.id === config.selectedOutcome)?.image ? (
+                      <img src={config.outcomes.find(o => o.id === config.selectedOutcome)?.image || ''} alt="" />
+                    ) : (
+                      <div className="kmp-sidebar-trade-thumb-placeholder" />
+                    )}
+                  </div>
+                  <div className="kmp-sidebar-trade-info">
+                    <span className="kmp-sidebar-trade-title">{config.title}</span>
+                    <span className="kmp-sidebar-trade-action">
+                      <span className="kmp-sidebar-trade-action-text">Buy {config.selectedSide}</span>
+                      <span className="kmp-sidebar-trade-sep">·</span>
+                      <span>{config.outcomes.find(o => o.id === config.selectedOutcome)?.name}</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="kmp-sidebar-toggle-row">
+                  <button className="kmp-sidebar-toggle active">Buy</button>
+                  <button className="kmp-sidebar-toggle">Sell</button>
+                  <div className="kmp-sidebar-toggle-spacer" />
+                  <button className="kmp-sidebar-dropdown">
+                    Dollars
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="kmp-sidebar-buttons">
+                  <button
+                    className={`kmp-sidebar-yes ${config.selectedSide === 'Yes' ? 'active' : ''}`}
+                    onClick={() => onSideSelect('Yes')}
+                  >
+                    Yes {config.outcomes.find(o => o.id === config.selectedOutcome)?.yesPrice}¢
+                  </button>
+                  <button
+                    className={`kmp-sidebar-no ${config.selectedSide === 'No' ? 'active' : ''}`}
+                    onClick={() => onSideSelect('No')}
+                  >
+                    No {config.outcomes.find(o => o.id === config.selectedOutcome)?.noPrice}¢
+                  </button>
+                </div>
+                <div className="kmp-sidebar-input-group">
+                  <label className="kmp-sidebar-input-label">Amount</label>
+                  <div className="kmp-sidebar-input-wrapper">
+                    <span className="kmp-sidebar-input-prefix">$</span>
+                    <input
+                      type="number"
+                      className="kmp-sidebar-input"
+                      value={config.orderAmount}
+                      onChange={(e) => onAmountChange(Number(e.target.value))}
+                      min="1"
+                    />
+                  </div>
+                </div>
+                <div className="kmp-sidebar-input-group">
+                  <label className="kmp-sidebar-input-label">Limit price</label>
+                  <div className="kmp-sidebar-input-wrapper">
+                    <input
+                      type="number"
+                      className="kmp-sidebar-input"
+                      value={config.limitPrice}
+                      onChange={(e) => onLimitPriceChange(Number(e.target.value))}
+                      min="1"
+                      max="99"
+                    />
+                    <span className="kmp-sidebar-input-suffix">¢</span>
+                  </div>
+                </div>
+                <div className="kmp-sidebar-summary">
+                  <div className="kmp-sidebar-summary-row">
+                    <span>Contracts</span>
+                    <span>{Math.floor((config.orderAmount * 100) / config.limitPrice)}</span>
+                  </div>
+                  <div className="kmp-sidebar-summary-row">
+                    <span>Avg price</span>
+                    <span>{config.limitPrice}¢</span>
+                  </div>
+                  <div className="kmp-sidebar-summary-row kmp-sidebar-summary-payout">
+                    <span>Est. payout</span>
+                    <span className="kmp-payout-value">
+                      ${((config.orderAmount * 100) / config.limitPrice).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+                <button className="kmp-sidebar-btn" onClick={() => onSidebarStateChange('review')}>
+                  Submit order
+                </button>
+              </>
+            )}
+
+            {config.sidebarState === 'review' && (
+              <>
+                <div className="kmp-sidebar-trade-header">
+                  <div className="kmp-sidebar-trade-thumb">
+                    {config.outcomes.find(o => o.id === config.selectedOutcome)?.image ? (
+                      <img src={config.outcomes.find(o => o.id === config.selectedOutcome)?.image || ''} alt="" />
+                    ) : (
+                      <div className="kmp-sidebar-trade-thumb-placeholder" />
+                    )}
+                  </div>
+                  <div className="kmp-sidebar-trade-info">
+                    <span className="kmp-sidebar-trade-title">{config.title}</span>
+                    <span className="kmp-sidebar-trade-action">
+                      <span className="kmp-sidebar-trade-action-text">Buy {config.selectedSide}</span>
+                      <span className="kmp-sidebar-trade-sep">·</span>
+                      <span>{config.outcomes.find(o => o.id === config.selectedOutcome)?.name}</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="kmp-review-header">
+                  <span className="kmp-review-title">Review order</span>
+                  <KalshiLogo className="kmp-review-logo" />
+                </div>
+                <div className="kmp-review-rows">
+                  <div className="kmp-review-row">
+                    <span className="kmp-review-label">
+                      Estimated cost
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4M12 8h.01" />
+                      </svg>
+                    </span>
+                    <span className="kmp-review-value">${config.orderAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="kmp-review-row">
+                    <span className="kmp-review-label">Odds</span>
+                    <span className="kmp-review-value kmp-review-odds">{config.limitPrice}% chance</span>
+                  </div>
+                  <div className="kmp-review-row kmp-review-payout-row">
+                    <span className="kmp-review-label">
+                      Payout if {config.selectedSide}
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4M12 8h.01" />
+                      </svg>
+                    </span>
+                    <span className="kmp-review-payout">${((config.orderAmount * 100) / config.limitPrice).toFixed(0)}</span>
+                  </div>
+                </div>
+                <div className="kmp-review-actions">
+                  <button className="kmp-review-back" onClick={() => onSidebarStateChange('trading')}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button className="kmp-sidebar-btn" onClick={() => { onSubmitOrder(); onSidebarStateChange('confirmation'); }}>
+                    Submit
+                  </button>
+                </div>
+              </>
+            )}
+
+            {config.sidebarState === 'confirmation' && (
+              <div className="kmp-confirmation">
+                <div className="kmp-confirmation-header">
+                  <div className="kmp-confirmation-thumb">
+                    {config.outcomes.find(o => o.id === config.selectedOutcome)?.image ? (
+                      <img src={config.outcomes.find(o => o.id === config.selectedOutcome)?.image || ''} alt="" />
+                    ) : (
+                      <div className="kmp-confirmation-thumb-placeholder" />
+                    )}
+                  </div>
+                  <KalshiLogo className="kmp-confirmation-logo" />
+                </div>
+                <div className="kmp-confirmation-market">{config.title}</div>
+                <div className="kmp-confirmation-outcome">{config.outcomes.find(o => o.id === config.selectedOutcome)?.name}</div>
+                <div className="kmp-confirmation-rows">
+                  <div className="kmp-confirmation-row">
+                    <span className="kmp-confirmation-label">
+                      Cost
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                      </svg>
+                    </span>
+                    <span className="kmp-confirmation-value">${config.orderAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="kmp-confirmation-row">
+                    <span className="kmp-confirmation-label">Odds</span>
+                    <span className="kmp-confirmation-value kmp-confirmation-odds">{config.limitPrice}% chance</span>
+                  </div>
+                  <div className="kmp-confirmation-row">
+                    <span className="kmp-confirmation-label">Payout if {config.selectedSide}</span>
+                    <span className="kmp-confirmation-payout">${((config.orderAmount * 100) / config.limitPrice).toFixed(0)}</span>
+                  </div>
+                  <div className="kmp-confirmation-date">{config.eventDate}</div>
+                </div>
+                <button className="kmp-sidebar-btn" onClick={() => onSidebarStateChange('trading')}>
+                  Done
+                </button>
+              </div>
+            )}
           </div>
         </div>
+      </div>
 
-        <div className="kalshi-markets-list">
-          {config.outcomes.map((outcome) => (
-            <div
-              key={outcome.id}
-              className={`kalshi-market-tile ${config.selectedOutcome === outcome.id ? 'selected' : ''}`}
-              onClick={() => onOutcomeSelect(outcome.id)}
-            >
-              <div className="kalshi-market-info">
-                <span className="kalshi-market-name">{outcome.name}</span>
-              </div>
-              <div className="kalshi-market-chance">
-                <span className="kalshi-market-chance-value">{outcome.yesPrice}%</span>
-              </div>
-              <div className="kalshi-market-buttons">
-                <button
-                  className={`kalshi-btn kalshi-btn-yes ${config.selectedOutcome === outcome.id && config.selectedSide === 'Yes' ? 'filled' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOutcomeSelect(outcome.id);
-                    onSideSelect('Yes');
-                  }}
-                >
-                  <span className="kalshi-btn-label">Yes</span>
-                  <span className="kalshi-btn-price">{outcome.yesPrice}¢</span>
-                </button>
-                <button
-                  className={`kalshi-btn kalshi-btn-no ${config.selectedOutcome === outcome.id && config.selectedSide === 'No' ? 'filled' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOutcomeSelect(outcome.id);
-                    onSideSelect('No');
-                  }}
-                >
-                  <span className="kalshi-btn-label">No</span>
-                  <span className="kalshi-btn-price">{outcome.noPrice}¢</span>
-                </button>
-              </div>
-            </div>
-          ))}
+      {/* Footer */}
+      <footer className="kmp-footer">
+        <div className="kmp-footer-inner">
+          <div className="kmp-footer-col">
+            <h3 className="kmp-footer-title">Hot markets</h3>
+            <a className="kmp-footer-link">Presidential Election</a>
+            <a className="kmp-footer-link">Fed Rate Decisions</a>
+            <a className="kmp-footer-link">Stock Markets</a>
+          </div>
+          <div className="kmp-footer-col">
+            <h3 className="kmp-footer-title">Watchlist markets</h3>
+            <a className="kmp-footer-link">My Watchlist</a>
+          </div>
+          <div className="kmp-footer-col">
+            <h3 className="kmp-footer-title">Product</h3>
+            <a className="kmp-footer-link">Mobile App</a>
+            <a className="kmp-footer-link">API</a>
+            <a className="kmp-footer-link">Help Center</a>
+          </div>
+          <div className="kmp-footer-col">
+            <h3 className="kmp-footer-title">Related topics</h3>
+            <a className="kmp-footer-link">Elections</a>
+            <a className="kmp-footer-link">Economy</a>
+            <a className="kmp-footer-link">Finance</a>
+          </div>
         </div>
-      </section>
-
-      <div className="kalshi-divider" />
-
-      {/* Rules Section */}
-      {config.showRules && config.rulesText && (
-        <>
-          <section className="kalshi-rules-section kalshi-section">
-            <div className="kalshi-rules-header">
-              <h2 className="kalshi-rules-title">Rules</h2>
-              {config.selectedOutcome && (
-                <span className="kalshi-rules-market">
-                  {config.outcomes.find(o => o.id === config.selectedOutcome)?.name}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M7 10l5 5 5-5z" />
-                  </svg>
-                </span>
-              )}
-            </div>
-            <p className="kalshi-rules-text">{config.rulesText}</p>
-          </section>
-          <div className="kalshi-divider" />
-        </>
-      )}
-
-      {/* Watermark */}
-      {config.showWatermark && (
-        <div className="kalshi-watermark">kalshi.tools</div>
-      )}
+        <div className="kmp-footer-bottom">
+          <KalshiLogo className="kmp-footer-logo" />
+          <span className="kmp-footer-copy">© 2025 Kalshi Inc.</span>
+        </div>
+      </footer>
     </div>
   );
 }

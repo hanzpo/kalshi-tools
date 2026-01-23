@@ -105,6 +105,15 @@
   color: #2563eb;
 }
 
+.landing-option--marketpage .option-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.landing-option--marketpage .option-subtitle {
+  color: #d97706;
+}
+
 .landing-option--coinbase .option-icon {
   background: #e6edff;
   color: #0052FF;
