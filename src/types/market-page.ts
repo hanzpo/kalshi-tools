@@ -54,6 +54,7 @@ export interface MarketPageConfig {
   showRules: boolean;
   rulesText: string;
   showRelatedMarkets: boolean;
+  showReviewPage: boolean;
 
   // Related markets
   relatedMarkets: RelatedMarket[];

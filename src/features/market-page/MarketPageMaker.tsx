@@ -588,6 +588,17 @@ export function MarketPageMaker({
             Show "People are also buying" section
           </label>
         </div>
+
+        <div className="control-group">
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
+            <input
+              type="checkbox"
+              checked={config.showReviewPage}
+              onChange={(e) => onConfigChange({ showReviewPage: e.target.checked })}
+            />
+            Show review step before submit
+          </label>
+        </div>
       </div>
 
       {/* Export Buttons */}

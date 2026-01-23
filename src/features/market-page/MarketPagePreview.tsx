@@ -105,6 +105,12 @@ export function MarketPagePreview({
     return `$${total.toLocaleString()}`;
   }, [config.volume, config.outcomes]);
 
+  const sidebarState = config.showReviewPage
+    ? config.sidebarState
+    : config.sidebarState === 'review'
+      ? 'trading'
+      : config.sidebarState;
+
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
@@ -537,7 +543,7 @@ export function MarketPagePreview({
         {/* Sidebar */}
         <div className="kmp-sidebar">
           <div className="kmp-sidebar-content">
-            {config.sidebarState === 'trading' && (
+            {sidebarState === 'trading' && (
               <>
                 <div className="kmp-sidebar-trade-header">
                   <div className="kmp-sidebar-trade-thumb">
@@ -622,13 +628,23 @@ export function MarketPagePreview({
                     </span>
                   </div>
                 </div>
-                <button className="kmp-sidebar-btn" onClick={() => onSidebarStateChange('review')}>
-                  Review
+                <button
+                  className="kmp-sidebar-btn"
+                  onClick={() => {
+                    if (config.showReviewPage) {
+                      onSidebarStateChange('review');
+                      return;
+                    }
+                    onSubmitOrder();
+                    onSidebarStateChange('confirmation');
+                  }}
+                >
+                  {config.showReviewPage ? 'Review' : 'Submit order'}
                 </button>
               </>
             )}
 
-            {config.sidebarState === 'review' && (
+            {sidebarState === 'review' && (
               <>
                 <div className="kmp-sidebar-trade-header">
                   <div className="kmp-sidebar-trade-thumb">
@@ -690,7 +706,7 @@ export function MarketPagePreview({
               </>
             )}
 
-            {config.sidebarState === 'confirmation' && (
+            {sidebarState === 'confirmation' && (
               <div className="kmp-confirmation">
                 <div className="kmp-confirmation-header">
                   <div className="kmp-confirmation-thumb">

@@ -148,6 +148,7 @@ export default function MarketPageBuilder() {
     showRules: true,
     rulesText: 'This market will resolve to the name of the winner of the 2028 US Presidential Election. The winner is determined by the candidate who receives at least 270 Electoral College votes.',
     showRelatedMarkets: true,
+    showReviewPage: true,
     relatedMarkets: [
       { id: 'related-1', title: '2028 Republican Presidential Nominee?', image: null },
       { id: 'related-2', title: '2028 Democratic Presidential Nominee?', image: null },
@@ -223,6 +224,10 @@ export default function MarketPageBuilder() {
       // If outcomes changed, regenerate chart data
       if (updates.outcomes && updates.outcomes !== prev.outcomes) {
         newConfig.chartData = generateChartDataForOutcomes(updates.outcomes);
+      }
+
+      if (!newConfig.showReviewPage && newConfig.sidebarState === 'review') {
+        newConfig.sidebarState = 'trading';
       }
 
       return newConfig;
