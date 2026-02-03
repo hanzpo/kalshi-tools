@@ -1035,6 +1035,24 @@ export function ControlPanel({
         <div className="control-section-title">Chart Settings</div>
 
         <div className="control-group">
+          <label htmlFor="dark-mode" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+            <input
+              id="dark-mode"
+              type="checkbox"
+              checked={config.darkMode === true}
+              onChange={(e) => onConfigChange({ darkMode: e.target.checked })}
+              style={{
+                width: '16px',
+                height: '16px',
+                cursor: 'pointer',
+                accentColor: '#09C285',
+              }}
+            />
+            <span>Dark Mode</span>
+          </label>
+        </div>
+
+        <div className="control-group">
           <label htmlFor="volatility">
             Volatility: {config.volatility}x
           </label>

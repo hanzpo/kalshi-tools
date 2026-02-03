@@ -26,6 +26,7 @@ export interface MarketConfig {
   forecastUnit?: string;
   mutuallyExclusive?: boolean; // For multi-outcome markets: true = odds sum to 100%, false = independent odds
   searchQuery?: string; // For Google search result builder
+  darkMode?: boolean; // Enable dark mode for the chart
 }
 
 export interface DataPoint {

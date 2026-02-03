@@ -27,18 +27,27 @@ function formatNumberForDisplay(value: number, unit: string): string {
   return `${value.toFixed(0)}${unit}`;
 }
 
+// Get outcome color, swapping black for white in dark mode
+function getOutcomeColor(color: string, isDarkMode: boolean): string {
+  if (isDarkMode && color === '#000000') {
+    return '#ffffff';
+  }
+  return color;
+}
+
 export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreviewProps) {
   const previewRef = useRef<HTMLDivElement>(null);
-  
+
   const change = generateChange(data);
   const changeValue = parseFloat(change);
   const isPositive = changeValue >= 0;
-  
+
+  const isDark = config.darkMode === true;
   const chartColor = isPositive ? '#09C285' : '#D91616';
-  const bgColor = '#ffffff';
-  const textColor = '#000000';
-  const secondaryTextColor = '#6b7280';
-  const gridColor = '#e5e7eb';
+  const bgColor = isDark ? '#141414' : '#ffffff';
+  const textColor = isDark ? '#ffffff' : '#000000';
+  const secondaryTextColor = isDark ? '#9ca3af' : '#6b7280';
+  const gridColor = isDark ? '#2a2a2a' : '#e5e7eb';
   
   const { startDate: axisStart, endDate: axisEnd } = config.timeHorizon === 'ALL'
     ? { startDate: config.startDate, endDate: config.endDate }
@@ -96,7 +105,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
     <div
       ref={previewRef}
       id="chart-preview"
-      className="chart-preview"
+      className={`chart-preview ${isDark ? 'dark-mode' : ''}`}
       style={{
         backgroundColor: bgColor,
         color: textColor,
@@ -262,7 +271,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
                       width: '12px',
                       height: '12px',
                       borderRadius: '50%',
-                      backgroundColor: outcome.color,
+                      backgroundColor: getOutcomeColor(outcome.color, isDark),
                       flexShrink: 0,
                     }}
                   />
@@ -352,33 +361,36 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
               />
             ) : (
               <>
-                {config.outcomes.map((outcome) => (
-                  <Line
-                    key={outcome.id}
-                    type="linear"
-                    dataKey={`value_${outcome.id}`}
-                    name={outcome.name}
-                    stroke={outcome.color}
-                    strokeWidth={2.5}
-                    dot={(props: any) => {
-                      // Only show dot on the last point
-                      const isLast = props.index === data.length - 1;
-                      if (!isLast) return <circle r={0} />;
-                      return (
-                        <circle
-                          cx={props.cx}
-                          cy={props.cy}
-                          r={5}
-                          fill={outcome.color}
-                          stroke={outcome.color}
-                          strokeWidth={3}
-                        />
-                      );
-                    }}
-                    activeDot={{ r: 5, fill: outcome.color }}
-                    animationDuration={300}
-                  />
-                ))}
+                {config.outcomes.map((outcome) => {
+                  const color = getOutcomeColor(outcome.color, isDark);
+                  return (
+                    <Line
+                      key={outcome.id}
+                      type="linear"
+                      dataKey={`value_${outcome.id}`}
+                      name={outcome.name}
+                      stroke={color}
+                      strokeWidth={2.5}
+                      dot={(props: any) => {
+                        // Only show dot on the last point
+                        const isLast = props.index === data.length - 1;
+                        if (!isLast) return <circle r={0} />;
+                        return (
+                          <circle
+                            cx={props.cx}
+                            cy={props.cy}
+                            r={5}
+                            fill={color}
+                            stroke={color}
+                            strokeWidth={3}
+                          />
+                        );
+                      }}
+                      activeDot={{ r: 5, fill: color }}
+                      animationDuration={300}
+                    />
+                  );
+                })}
               </>
             )}
           </LineChart>
@@ -398,7 +410,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
               onClick={() => onTimeHorizonChange?.(tf)}
               style={{
                 color: config.timeHorizon === tf ? textColor : secondaryTextColor,
-                backgroundColor: config.timeHorizon === tf ? '#f3f4f6' : 'transparent',
+                backgroundColor: config.timeHorizon === tf ? (isDark ? '#1a1a1a' : '#f3f4f6') : 'transparent',
                 fontWeight: config.timeHorizon === tf ? '600' : '500',
               }}
             >
@@ -410,12 +422,12 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
 
       {/* Watermark */}
       {config.showWatermark && (
-        <div 
+        <div
           style={{
             textAlign: 'center',
             padding: '8px 0 12px 0',
             fontSize: '11px',
-            color: '#9ca3af',
+            color: isDark ? 'rgba(156, 163, 175, 0.4)' : '#9ca3af',
             fontWeight: '400',
             letterSpacing: '0.025em',
           }}

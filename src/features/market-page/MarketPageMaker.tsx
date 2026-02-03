@@ -546,6 +546,17 @@ export function MarketPageMaker({
           <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
             <input
               type="checkbox"
+              checked={config.darkMode === true}
+              onChange={(e) => onConfigChange({ darkMode: e.target.checked })}
+            />
+            Dark mode
+          </label>
+        </div>
+
+        <div className="control-group">
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
+            <input
+              type="checkbox"
               checked={config.showWatermark}
               onChange={(e) => onConfigChange({ showWatermark: e.target.checked })}
             />

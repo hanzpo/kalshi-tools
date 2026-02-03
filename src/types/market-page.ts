@@ -64,6 +64,9 @@ export interface MarketPageConfig {
 
   // Payout indicator
   payoutAmount: string; // e.g., "+$5"
+
+  // Theme
+  darkMode?: boolean; // Enable dark mode for the market page
 }
 
 export interface RelatedMarket {
