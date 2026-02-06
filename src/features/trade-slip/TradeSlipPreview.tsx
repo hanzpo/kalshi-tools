@@ -197,6 +197,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isSingleOld = config.mode === 'single-old';
   const isComboOld = config.mode === 'combo-old';
   const isHorizontal = config.mode === 'horizontal';
+  const isBigGame = config.mode === 'biggame';
 
   if (isPrizePick) {
     return <PrizePickPreview config={config} />;
@@ -210,6 +211,101 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
       coinbasePlayType: config.coinbasePlayType,
       showWatermark: config.showWatermark,
     }} />;
+  }
+
+  if (isBigGame) {
+    const bigGamePayout = calculateSinglePayout(config.wager, config.odds);
+    const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';
+    const tradeColor = config.tradeSide === 'No'
+      ? '#ff4d6a'
+      : config.tradeSide === 'Custom'
+        ? (config.customSideColor || '#00C688')
+        : '#00C688';
+    const tradeSideText = config.tradeSide === 'Custom'
+      ? (config.customSideText || 'Custom')
+      : config.tradeSide;
+    const outcomeText = config.outcome?.trim();
+    const team1Color = config.bigGameColor1 || '#408FFF';
+    const team2Color = config.bigGameColor2 || '#FF4D6A';
+    const headerImage = '/biggame-header.png';
+
+    return (
+      <div className="trade-slip-container">
+        <div
+          id="trade-slip-preview"
+          className="trade-slip-preview biggame-mode"
+          style={{
+            background: `
+              radial-gradient(ellipse at 0% 0%, ${team1Color}99 0%, transparent 55%),
+              radial-gradient(ellipse at 100% 0%, ${team2Color}82 0%, transparent 55%),
+              radial-gradient(ellipse at 50% 10%, transparent 0%, rgb(17, 19, 22) 70%),
+              rgb(17, 19, 21)
+            `,
+          }}
+        >
+          {/* Header image (contains team names + title) */}
+          <div className="biggame-header-image">
+            <img src={headerImage} alt="" className="biggame-header-img" />
+          </div>
+
+          {/* Trade slip card */}
+          <div className="biggame-card">
+            <div className="trade-slip-content trade-slip-dark">
+              {/* Question and Answer Section */}
+              <div className="trade-slip-question">
+                <div className="trade-slip-question-copy">
+                  <div className="trade-slip-market-name">{marketName}</div>
+                  <div className="trade-slip-answer" style={{ color: tradeColor }}>
+                    <span className="trade-slip-answer-side">{tradeSideText}</span>
+                    {outcomeText && (
+                      <span className="trade-slip-answer-outcome">{outcomeText}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Kalshi Divider */}
+              <KalshiDivider />
+
+              {/* Details Section */}
+              <div className="trade-slip-details">
+                <div className="trade-slip-row">
+                  <span className="trade-slip-label">Odds</span>
+                  <span className="trade-slip-value">{config.odds}% chance</span>
+                </div>
+                <div className="trade-slip-row">
+                  <span className="trade-slip-label">Cost</span>
+                  <span className="trade-slip-value">
+                    ${config.wager.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="trade-slip-payout-section">
+                  <div className="trade-slip-row trade-slip-payout-row">
+                    <span className="trade-slip-label">Max payout</span>
+                    <span className="trade-slip-payout biggame-payout">
+                      ${bigGamePayout.toLocaleString()}
+                    </span>
+                  </div>
+                  {config.showTimestamp && (
+                    <div className="trade-slip-timestamp">
+                      {formatTimestamp(config.timestamp)}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Scalloped edge */}
+            <div className="trade-slip-scalloped-edge" />
+          </div>
+
+          {config.showWatermark && (
+            <div className="trade-slip-watermark biggame-watermark">
+              kalshi.tools
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   if (isHorizontal) {

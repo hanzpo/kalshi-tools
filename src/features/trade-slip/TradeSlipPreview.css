@@ -1230,3 +1230,150 @@
     margin-top: 4px;
   }
 }
+
+/* ========================================
+   BIG GAME MODE STYLES
+   ======================================== */
+
+.trade-slip-preview.biggame-mode {
+  width: clamp(300px, 75vw, 361px);
+  max-width: 361px;
+  border-radius: 16px;
+  padding: 0 16px 16px;
+  overflow: hidden;
+  border: 1px solid #0069ff;
+  position: relative;
+}
+
+/* Background dot grid - behind header/helmets area */
+.trade-slip-preview.biggame-mode::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.22) 1.25px, transparent 1.25px);
+  background-size: 9px 9px;
+  -webkit-mask-image: radial-gradient(ellipse 45% 22% at 50% 0%, rgba(0,0,0,1) 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 45% 22% at 50% 0%, rgba(0,0,0,1) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Header image */
+.biggame-header-image {
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  margin-top: 0;
+  height: auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.biggame-header-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Trade slip card within biggame */
+.biggame-card {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.biggame-card .trade-slip-content.trade-slip-dark {
+  border-radius: 8px 8px 0 0;
+  padding: 16px;
+  gap: 12px;
+  position: relative;
+}
+
+/* Card dot grid - on the dark content area */
+.biggame-card .trade-slip-content.trade-slip-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px 8px 0 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1.25px, transparent 1.25px);
+  background-size: 9px 9px;
+  -webkit-mask-image: radial-gradient(ellipse 55% 28% at 50% 0%, rgba(0,0,0,1) 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 55% 28% at 50% 0%, rgba(0,0,0,1) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.biggame-card .trade-slip-market-name {
+  font-size: 15px;
+  line-height: 24px;
+  padding-bottom: 0;
+}
+
+.biggame-card .trade-slip-answer {
+  font-family: 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 28px;
+  margin: 0;
+}
+
+.biggame-card .trade-slip-answer-outcome {
+  font-family: 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.biggame-card .trade-slip-label {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.biggame-card .trade-slip-value {
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.biggame-payout {
+  font-family: 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 30px !important;
+  font-weight: 500;
+  line-height: 36px;
+}
+
+.biggame-card .trade-slip-timestamp {
+  font-size: 11px;
+  line-height: 18px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.biggame-card .kalshi-divider-logo {
+  color: #09C285;
+}
+
+.biggame-card .kalshi-divider-line {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.biggame-watermark {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+/* Responsive for biggame */
+@media (max-width: 480px) {
+  .trade-slip-preview.biggame-mode {
+    width: clamp(280px, 90vw, 320px);
+    max-width: 320px;
+    padding: 0 12px 12px;
+  }
+
+  .biggame-header-image {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+  }
+
+  .biggame-card .trade-slip-content.trade-slip-dark {
+    padding: 14px;
+  }
+}
