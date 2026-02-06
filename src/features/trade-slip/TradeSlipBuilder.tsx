@@ -28,8 +28,8 @@ export default function TradeSlipBuilder() {
     showTimestamp: true,
     showCashedOut: false,
     backgroundColor: '#28CC95',
-    parlayOdds: 400,
-    parlayLegs: [
+    comboOdds: 400,
+    comboLegs: [
       { id: 'leg-1', question: '', answer: 'Yes', image: null },
       { id: 'leg-2', question: '', answer: 'Yes', image: null },
     ],

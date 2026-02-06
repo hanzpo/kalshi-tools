@@ -1,6 +1,6 @@
-export type TradeSlipMode = 'single' | 'parlay' | 'single-old' | 'parlay-old' | 'prizepick' | 'coinbase' | 'horizontal';
+export type TradeSlipMode = 'single' | 'combo' | 'single-old' | 'combo-old' | 'prizepick' | 'coinbase' | 'horizontal';
 
-export interface ParlayLeg {
+export interface ComboLeg {
   id: string;
   question: string;
   answer: 'Yes' | 'No';
@@ -73,9 +73,9 @@ export interface TradeSlipConfig {
   backgroundColor: string;
   // Single trade slip additional fields
   timestamp?: string;
-  parlayOdds: number;
-  parlayLegs: ParlayLeg[];
-  parlayCashOut?: number;
+  comboOdds: number;
+  comboLegs: ComboLeg[];
+  comboCashOut?: number;
   // New combo slip structure
   comboCategories: ComboCategory[];
   comboPayout: number;

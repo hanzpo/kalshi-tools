@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { TradeSlipConfig, TradeSlipMode, ComboCategory, ComboEvent, ComboMarket, ParlayLeg } from '../../types';
+import { TradeSlipConfig, TradeSlipMode, ComboCategory, ComboEvent, ComboMarket, ComboLeg } from '../../types';
 import {
   ImageIcon,
   UploadIcon,
@@ -43,7 +43,7 @@ function createComboCategory(): ComboCategory {
   };
 }
 
-function createLeg(): ParlayLeg {
+function createLeg(): ComboLeg {
   return {
     id: `leg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     question: '',
@@ -81,37 +81,37 @@ export function TradeSlipMaker({
   const [isDragging, setIsDragging] = useState(false);
   const [draggingLegId, setDraggingLegId] = useState<string | null>(null);
   const isSingleMode = config.mode === 'single';
-  const isParlayMode = config.mode === 'parlay';
+  const isComboMode = config.mode === 'combo';
   const isSingleOldMode = config.mode === 'single-old';
-  const isParlayOldMode = config.mode === 'parlay-old';
+  const isComboOldMode = config.mode === 'combo-old';
   const isHorizontalMode = config.mode === 'horizontal';
   const payout = isSingleMode || isSingleOldMode || isHorizontalMode
     ? calculateSinglePayout(config.wager, config.odds)
-    : calculateAmericanPayout(config.wager, config.parlayOdds);
+    : calculateAmericanPayout(config.wager, config.comboOdds);
 
   function handleModeChange(mode: TradeSlipMode) {
     if (mode === config.mode) return;
 
-    if (mode === 'parlay' && (!config.comboCategories || config.comboCategories.length === 0)) {
+    if (mode === 'combo' && (!config.comboCategories || config.comboCategories.length === 0)) {
       onConfigChange({
         mode,
         comboCategories: [createComboCategory()],
         comboPayout: config.comboPayout || 1920,
         comboCost: config.comboCost || 99.84,
       });
-    } else if (mode === 'parlay-old' && config.parlayLegs.length === 0) {
-      onConfigChange({ mode, parlayLegs: [createLeg(), createLeg()] });
+    } else if (mode === 'combo-old' && config.comboLegs.length === 0) {
+      onConfigChange({ mode, comboLegs: [createLeg(), createLeg()] });
     } else {
       onConfigChange({ mode });
     }
   }
 
-  // Old parlay leg handlers
-  function handleLegChange(legId: string, updates: Partial<ParlayLeg>) {
-    const updatedLegs = config.parlayLegs.map((leg) =>
+  // Old combo leg handlers
+  function handleLegChange(legId: string, updates: Partial<ComboLeg>) {
+    const updatedLegs = config.comboLegs.map((leg) =>
       leg.id === legId ? { ...leg, ...updates } : leg
     );
-    onConfigChange({ parlayLegs: updatedLegs });
+    onConfigChange({ comboLegs: updatedLegs });
   }
 
   function handleLegImageInput(
@@ -132,13 +132,13 @@ export function TradeSlipMaker({
   }
 
   function handleAddLeg() {
-    onConfigChange({ parlayLegs: [...config.parlayLegs, createLeg()] });
+    onConfigChange({ comboLegs: [...config.comboLegs, createLeg()] });
   }
 
   function handleRemoveLeg(legId: string) {
-    if (config.parlayLegs.length <= 1) return;
+    if (config.comboLegs.length <= 1) return;
     onConfigChange({
-      parlayLegs: config.parlayLegs.filter((leg) => leg.id !== legId),
+      comboLegs: config.comboLegs.filter((leg) => leg.id !== legId),
     });
   }
 
@@ -172,7 +172,7 @@ export function TradeSlipMaker({
               tool: 'trade-slip',
               mode: config.mode,
               method: 'drop',
-              target: 'parlay-leg',
+              target: 'combo-leg',
             });
           }
         };
@@ -364,9 +364,9 @@ export function TradeSlipMaker({
           </button>
           <button
             type="button"
-            className={`segmented-option${isParlayMode ? ' active' : ''}`}
-            onClick={() => handleModeChange('parlay')}
-            aria-pressed={isParlayMode}
+            className={`segmented-option${isComboMode ? ' active' : ''}`}
+            onClick={() => handleModeChange('combo')}
+            aria-pressed={isComboMode}
           >
             Combo
           </button>
@@ -380,11 +380,11 @@ export function TradeSlipMaker({
           </button>
           <button
             type="button"
-            className={`segmented-option${isParlayOldMode ? ' active' : ''}`}
-            onClick={() => handleModeChange('parlay-old')}
-            aria-pressed={isParlayOldMode}
+            className={`segmented-option${isComboOldMode ? ' active' : ''}`}
+            onClick={() => handleModeChange('combo-old')}
+            aria-pressed={isComboOldMode}
           >
-            Parlay (old)
+            Combo (old)
           </button>
           <button
             type="button"
@@ -548,7 +548,7 @@ export function TradeSlipMaker({
             )}
           </div>
         </>
-      ) : isParlayMode ? (
+      ) : isComboMode ? (
         <>
           {/* Financials Section */}
           <div className="control-section">
@@ -707,7 +707,7 @@ export function TradeSlipMaker({
             </div>
           </div>
         </>
-      ) : isParlayOldMode ? (
+      ) : isComboOldMode ? (
         <div className="control-section">
           <div className="control-section-title">Content</div>
           <div className="control-group">
@@ -716,7 +716,7 @@ export function TradeSlipMaker({
               id="bet-title-old"
               type="text"
               className="text-input"
-              placeholder="e.g., Sunday Night Parlay"
+              placeholder="e.g., Sunday Night Combo"
               value={config.title}
               onChange={(e) => onConfigChange({ title: e.target.value })}
             />
@@ -826,25 +826,25 @@ export function TradeSlipMaker({
         </>
       ) : null}
 
-      {isParlayMode && (
+      {isComboMode && (
         <div className="control-group">
           <label aria-hidden="true">Categories &amp; Markets</label>
-          <div className="parlay-legs">
+          <div className="combo-legs">
             {config.comboCategories?.map((category, catIndex) => (
-              <div key={category.id} className="parlay-leg combo-category-input">
-                <div className="parlay-leg-header">
-                  <span className="parlay-leg-title">Category {catIndex + 1}</span>
+              <div key={category.id} className="combo-leg combo-category-input">
+                <div className="combo-leg-header">
+                  <span className="combo-leg-title">Category {catIndex + 1}</span>
                   <button
                     type="button"
-                    className="parlay-leg-remove"
+                    className="combo-leg-remove"
                     onClick={() => handleRemoveCategory(category.id)}
                     disabled={config.comboCategories.length <= 1}
                   >
                     Remove
                   </button>
                 </div>
-                <div className="parlay-leg-body">
-                  <label className="parlay-leg-label" htmlFor={`category-name-${category.id}`}>
+                <div className="combo-leg-body">
+                  <label className="combo-leg-label" htmlFor={`category-name-${category.id}`}>
                     Category Name
                   </label>
                   <input
@@ -864,7 +864,7 @@ export function TradeSlipMaker({
                           <span className="combo-event-title">Event {eventIndex + 1}</span>
                           <button
                             type="button"
-                            className="parlay-leg-remove"
+                            className="combo-leg-remove"
                             onClick={() => handleRemoveEvent(category.id, event.id)}
                             disabled={category.events.length <= 1}
                           >
@@ -909,7 +909,7 @@ export function TradeSlipMaker({
                                 <span className="combo-market-title">Market {marketIndex + 1}</span>
                                 <button
                                   type="button"
-                                  className="parlay-leg-remove"
+                                  className="combo-leg-remove"
                                   onClick={() => handleRemoveMarket(category.id, event.id, market.id)}
                                   disabled={event.markets.length <= 1}
                                 >
@@ -938,7 +938,7 @@ export function TradeSlipMaker({
                           ))}
                           <button
                             type="button"
-                            className="parlay-leg-add combo-add-market"
+                            className="combo-leg-add combo-add-market"
                             onClick={() => handleAddMarket(category.id, event.id)}
                           >
                             + Add Market
@@ -948,7 +948,7 @@ export function TradeSlipMaker({
                     ))}
                     <button
                       type="button"
-                      className="parlay-leg-add combo-add-event"
+                      className="combo-leg-add combo-add-event"
                       onClick={() => handleAddEvent(category.id)}
                     >
                       + Add Event
@@ -957,47 +957,47 @@ export function TradeSlipMaker({
                 </div>
               </div>
             ))}
-            <button type="button" className="parlay-leg-add" onClick={handleAddCategory}>
+            <button type="button" className="combo-leg-add" onClick={handleAddCategory}>
               + Add Category
             </button>
           </div>
         </div>
       )}
 
-      {isParlayOldMode && (
+      {isComboOldMode && (
         <div className="control-group">
-          <label aria-hidden="true">Parlay Legs</label>
-          <div className="parlay-legs">
-            {config.parlayLegs.map((leg, index) => (
-              <div key={leg.id} className="parlay-leg">
-                <div className="parlay-leg-header">
-                  <span className="parlay-leg-title">Leg {index + 1}</span>
+          <label aria-hidden="true">Combo Legs</label>
+          <div className="combo-legs">
+            {config.comboLegs.map((leg, index) => (
+              <div key={leg.id} className="combo-leg">
+                <div className="combo-leg-header">
+                  <span className="combo-leg-title">Leg {index + 1}</span>
                   <button
                     type="button"
-                    className="parlay-leg-remove"
+                    className="combo-leg-remove"
                     onClick={() => handleRemoveLeg(leg.id)}
-                    disabled={config.parlayLegs.length <= 1}
+                    disabled={config.comboLegs.length <= 1}
                   >
                     Remove
                   </button>
                 </div>
-                <div className="parlay-leg-body">
-                  <label className="parlay-leg-label" htmlFor={`parlay-question-${leg.id}`}>
+                <div className="combo-leg-body">
+                  <label className="combo-leg-label" htmlFor={`combo-question-${leg.id}`}>
                     Question
                   </label>
                   <input
-                    id={`parlay-question-${leg.id}`}
+                    id={`combo-question-${leg.id}`}
                     type="text"
                     className="text-input"
                     placeholder="e.g., New York Giants to win?"
                     value={leg.question}
                     onChange={(e) => handleLegChange(leg.id, { question: e.target.value })}
                   />
-                  <div className="parlay-leg-controls">
-                    <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">Answer</span>
-                      <div className="segmented-control parlay-answer-toggle">
-                        {(['Yes', 'No'] as ParlayLeg['answer'][]).map((answer) => (
+                  <div className="combo-leg-controls">
+                    <div className="combo-leg-control">
+                      <span className="combo-leg-label">Answer</span>
+                      <div className="segmented-control combo-answer-toggle">
+                        {(['Yes', 'No'] as ComboLeg['answer'][]).map((answer) => (
                           <button
                             key={answer}
                             type="button"
@@ -1010,10 +1010,10 @@ export function TradeSlipMaker({
                         ))}
                       </div>
                     </div>
-                    <div className="parlay-leg-control">
-                      <span className="parlay-leg-label">Image</span>
+                    <div className="combo-leg-control">
+                      <span className="combo-leg-label">Image</span>
                       <div
-                        className="parlay-image-upload"
+                        className="combo-image-upload"
                         onDragOver={(e) => handleLegDragOver(leg.id, e)}
                         onDragLeave={handleLegDragLeave}
                         onDrop={(e) => handleLegDrop(leg.id, e)}
@@ -1025,10 +1025,10 @@ export function TradeSlipMaker({
                       >
                         {leg.image ? (
                           <>
-                            <img src={leg.image} alt="" className="parlay-leg-image" />
+                            <img src={leg.image} alt="" className="combo-leg-image" />
                             <button
                               type="button"
-                              className="parlay-image-clear"
+                              className="combo-image-clear"
                               onClick={() => handleLegChange(leg.id, { image: null })}
                             >
                               Remove
@@ -1036,11 +1036,11 @@ export function TradeSlipMaker({
                           </>
                         ) : (
                           <>
-                            <label htmlFor={`parlay-image-${leg.id}`} className="parlay-image-placeholder">
+                            <label htmlFor={`combo-image-${leg.id}`} className="combo-image-placeholder">
                               {draggingLegId === leg.id ? 'Drop image' : 'Upload or drop'}
                             </label>
                             <input
-                              id={`parlay-image-${leg.id}`}
+                              id={`combo-image-${leg.id}`}
                               type="file"
                               accept="image/jpeg,image/png,image/jpg"
                               onChange={(e) => handleLegImageInput(leg.id, e)}
@@ -1055,7 +1055,7 @@ export function TradeSlipMaker({
                 </div>
               </div>
             ))}
-            <button type="button" className="parlay-leg-add" onClick={handleAddLeg}>
+            <button type="button" className="combo-leg-add" onClick={handleAddLeg}>
               + Add Leg
             </button>
           </div>
@@ -1115,17 +1115,17 @@ export function TradeSlipMaker({
               </div>
             )}
           </>
-        ) : isParlayOldMode ? (
+        ) : isComboOldMode ? (
           <>
             <div className="control-group">
-              <label htmlFor="parlay-odds-old">American Odds</label>
+              <label htmlFor="combo-odds-old">American Odds</label>
               <input
-                id="parlay-odds-old"
+                id="combo-odds-old"
                 type="number"
                 className="text-input"
-                value={config.parlayOdds}
+                value={config.comboOdds}
                 onChange={(e) =>
-                  onConfigChange({ parlayOdds: Number(e.target.value) || 0 })
+                  onConfigChange({ comboOdds: Number(e.target.value) || 0 })
                 }
                 placeholder="+500"
                 step="10"
@@ -1135,16 +1135,16 @@ export function TradeSlipMaker({
               </p>
             </div>
             <div className="control-group">
-              <label htmlFor="parlay-cash-out-old">Cash Out Amount ($)</label>
+              <label htmlFor="combo-cash-out-old">Cash Out Amount ($)</label>
               <input
-                id="parlay-cash-out-old"
+                id="combo-cash-out-old"
                 type="number"
                 className="text-input"
                 placeholder="e.g., 947"
-                value={config.parlayCashOut || ''}
+                value={config.comboCashOut || ''}
                 onChange={(e) => {
                   const value = e.target.value ? parseFloat(e.target.value) : undefined;
-                  onConfigChange({ parlayCashOut: value });
+                  onConfigChange({ comboCashOut: value });
                 }}
                 min="0"
                 step="1"
@@ -1160,7 +1160,7 @@ export function TradeSlipMaker({
         <div className="control-section-title">Display Options</div>
 
         {/* Background color picker - only for new modes */}
-        {!isSingleOldMode && !isParlayOldMode && (
+        {!isSingleOldMode && !isComboOldMode && (
           <div className="control-group">
             <label htmlFor="background-color">Background Color</label>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -1206,7 +1206,7 @@ export function TradeSlipMaker({
           <p className="help-text">Display watermark on trade slip</p>
         </div>
 
-        {(isSingleMode || isParlayMode) && (
+        {(isSingleMode || isComboMode) && (
           <div className="control-group">
             <label
               htmlFor="show-timestamp-bet"

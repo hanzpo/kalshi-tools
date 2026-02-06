@@ -4,7 +4,7 @@ export type { MarketType, TimeHorizon, Outcome, MarketConfig, DataPoint } from '
 // Trade slip types
 export type {
   TradeSlipMode,
-  ParlayLeg,
+  ComboLeg,
   ComboMarket,
   ComboEvent,
   ComboCategory,

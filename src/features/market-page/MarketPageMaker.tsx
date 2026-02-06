@@ -170,7 +170,7 @@ export function MarketPageMaker({
         <div className="control-group">
           <label>Image</label>
           <div
-            className={`parlay-image-placeholder ${isDragging ? 'dragging' : ''}`}
+            className={`combo-image-placeholder ${isDragging ? 'dragging' : ''}`}
             style={{
               borderColor: isDragging ? '#09C285' : undefined,
               width: '100%',
@@ -193,7 +193,7 @@ export function MarketPageMaker({
                   style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }}
                 />
                 <button
-                  className="parlay-image-clear"
+                  className="combo-image-clear"
                   onClick={(e) => {
                     e.stopPropagation();
                     onConfigChange({ image: null });
@@ -276,10 +276,10 @@ export function MarketPageMaker({
       <div className="control-section">
         <div className="control-section-title">Outcomes</div>
 
-        <div className="parlay-legs">
+        <div className="combo-legs">
           {config.outcomes.map((outcome, index) => (
-            <div key={outcome.id} className="parlay-leg">
-              <div className="parlay-leg-header">
+            <div key={outcome.id} className="combo-leg">
+              <div className="combo-leg-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <input
                     type="color"
@@ -287,19 +287,19 @@ export function MarketPageMaker({
                     onChange={(e) => handleOutcomeChange(outcome.id, { color: e.target.value })}
                     style={{ width: '24px', height: '24px', padding: 0, border: 'none', cursor: 'pointer' }}
                   />
-                  <span className="parlay-leg-title">Outcome {index + 1}</span>
+                  <span className="combo-leg-title">Outcome {index + 1}</span>
                 </div>
                 <button
-                  className="parlay-leg-remove"
+                  className="combo-leg-remove"
                   onClick={() => handleRemoveOutcome(outcome.id)}
                   disabled={config.outcomes.length <= 1}
                 >
                   Remove
                 </button>
               </div>
-              <div className="parlay-leg-body">
-                <div className="parlay-leg-control" style={{ flex: '1 1 100%' }}>
-                  <label className="parlay-leg-label">Name</label>
+              <div className="combo-leg-body">
+                <div className="combo-leg-control" style={{ flex: '1 1 100%' }}>
+                  <label className="combo-leg-label">Name</label>
                   <input
                     type="text"
                     className="text-input"
@@ -308,8 +308,8 @@ export function MarketPageMaker({
                     onChange={(e) => handleOutcomeChange(outcome.id, { name: e.target.value })}
                   />
                 </div>
-                <div className="parlay-leg-control" style={{ flex: '1 1 100%' }}>
-                  <label className="parlay-leg-label">Subtitle (optional)</label>
+                <div className="combo-leg-control" style={{ flex: '1 1 100%' }}>
+                  <label className="combo-leg-label">Subtitle (optional)</label>
                   <input
                     type="text"
                     className="text-input"
@@ -318,8 +318,8 @@ export function MarketPageMaker({
                     onChange={(e) => handleOutcomeChange(outcome.id, { subtitle: e.target.value })}
                   />
                 </div>
-                <div className="parlay-leg-control" style={{ flex: '1 1 100%' }}>
-                  <label className="parlay-leg-label">Image</label>
+                <div className="combo-leg-control" style={{ flex: '1 1 100%' }}>
+                  <label className="combo-leg-label">Image</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {outcome.image ? (
                       <>
@@ -329,7 +329,7 @@ export function MarketPageMaker({
                           style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '8px' }}
                         />
                         <button
-                          className="parlay-image-clear"
+                          className="combo-image-clear"
                           onClick={() => handleOutcomeChange(outcome.id, { image: null })}
                           style={{ padding: '4px 8px', fontSize: '12px' }}
                         >
@@ -365,9 +365,9 @@ export function MarketPageMaker({
                     )}
                   </div>
                 </div>
-                <div className="parlay-leg-controls">
-                  <div className="parlay-leg-control">
-                    <label className="parlay-leg-label">Yes Price (¢)</label>
+                <div className="combo-leg-controls">
+                  <div className="combo-leg-control">
+                    <label className="combo-leg-label">Yes Price (¢)</label>
                     <input
                       type="number"
                       className="text-input"
@@ -377,8 +377,8 @@ export function MarketPageMaker({
                       onChange={(e) => handleYesPriceChange(outcome.id, Number(e.target.value))}
                     />
                   </div>
-                  <div className="parlay-leg-control">
-                    <label className="parlay-leg-label">No Price (¢)</label>
+                  <div className="combo-leg-control">
+                    <label className="combo-leg-label">No Price (¢)</label>
                     <input
                       type="number"
                       className="text-input"
@@ -388,9 +388,9 @@ export function MarketPageMaker({
                     />
                   </div>
                 </div>
-                <div className="parlay-leg-controls">
-                  <div className="parlay-leg-control">
-                    <label className="parlay-leg-label">Change</label>
+                <div className="combo-leg-controls">
+                  <div className="combo-leg-control">
+                    <label className="combo-leg-label">Change</label>
                     <input
                       type="number"
                       className="text-input"
@@ -398,8 +398,8 @@ export function MarketPageMaker({
                       onChange={(e) => handleOutcomeChange(outcome.id, { change: Number(e.target.value) })}
                     />
                   </div>
-                  <div className="parlay-leg-control">
-                    <label className="parlay-leg-label">Volume ($)</label>
+                  <div className="combo-leg-control">
+                    <label className="combo-leg-label">Volume ($)</label>
                     <input
                       type="number"
                       className="text-input"
@@ -425,7 +425,7 @@ export function MarketPageMaker({
             </div>
           ))}
 
-          <button className="parlay-leg-add" onClick={handleAddOutcome}>
+          <button className="combo-leg-add" onClick={handleAddOutcome}>
             + Add Outcome
           </button>
         </div>
@@ -489,7 +489,7 @@ export function MarketPageMaker({
                   style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }}
                 />
                 <button
-                  className="parlay-image-clear"
+                  className="combo-image-clear"
                   onClick={() => onConfigChange({ profileImage: null })}
                   style={{ padding: '4px 8px', fontSize: '12px' }}
                 >

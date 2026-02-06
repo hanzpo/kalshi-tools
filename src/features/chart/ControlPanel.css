@@ -255,33 +255,33 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.parlay-legs {
+.combo-legs {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.parlay-leg {
+.combo-leg {
   border: 1px solid #e5e7eb;
   border-radius: 5px;
   padding: 12px;
   background: #fafafa;
 }
 
-.parlay-leg-header {
+.combo-leg-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.parlay-leg-title {
+.combo-leg-title {
   font-size: 12px;
   font-weight: 600;
   color: #374151;
 }
 
-.parlay-leg-remove {
+.combo-leg-remove {
   background: transparent;
   border: none;
   color: #dc2626;
@@ -293,22 +293,22 @@
   transition: background-color 0.15s;
 }
 
-.parlay-leg-remove:hover:not(:disabled) {
+.combo-leg-remove:hover:not(:disabled) {
   background: #fee2e2;
 }
 
-.parlay-leg-remove:disabled {
+.combo-leg-remove:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.parlay-leg-body {
+.combo-leg-body {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.parlay-leg-label {
+.combo-leg-label {
   font-size: 10px;
   font-weight: 600;
   color: #9ca3af;
@@ -316,30 +316,30 @@
   letter-spacing: 0.04em;
 }
 
-.parlay-leg-controls {
+.combo-leg-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.parlay-leg-control {
+.combo-leg-control {
   flex: 1 1 140px;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.parlay-answer-toggle {
+.combo-answer-toggle {
   padding: 2px;
 }
 
-.parlay-image-upload {
+.combo-image-upload {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.parlay-leg-image {
+.combo-leg-image {
   width: 36px;
   height: 36px;
   border-radius: 5px;
@@ -347,7 +347,7 @@
   border: 1px solid #e5e7eb;
 }
 
-.parlay-image-clear {
+.combo-image-clear {
   background: transparent;
   border: 1px solid #fecaca;
   color: #dc2626;
@@ -359,11 +359,11 @@
   transition: background-color 0.15s;
 }
 
-.parlay-image-clear:hover {
+.combo-image-clear:hover {
   background: #fee2e2;
 }
 
-.parlay-image-placeholder {
+.combo-image-placeholder {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -377,12 +377,12 @@
   transition: border-color 0.15s, color 0.15s;
 }
 
-.parlay-image-placeholder:hover {
+.combo-image-placeholder:hover {
   border-color: #09C285;
   color: #09C285;
 }
 
-.parlay-leg-add {
+.combo-leg-add {
   width: 100%;
   border: 1.5px dashed #d1d5db;
   background: transparent;
@@ -395,7 +395,7 @@
   transition: border-color 0.15s, color 0.15s;
 }
 
-.parlay-leg-add:hover {
+.combo-leg-add:hover {
   border-color: #09C285;
   color: #09C285;
 }

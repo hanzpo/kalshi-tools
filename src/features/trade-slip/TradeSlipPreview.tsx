@@ -191,11 +191,11 @@ function formatAmericanOdds(odds: number): string {
 
 
 export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
-  const isParlay = config.mode === 'parlay';
+  const isCombo = config.mode === 'combo';
   const isPrizePick = config.mode === 'prizepick';
   const isCoinbase = config.mode === 'coinbase';
   const isSingleOld = config.mode === 'single-old';
-  const isParlayOld = config.mode === 'parlay-old';
+  const isComboOld = config.mode === 'combo-old';
   const isHorizontal = config.mode === 'horizontal';
 
   if (isPrizePick) {
@@ -289,8 +289,8 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
     );
   }
 
-  const payout = isParlayOld
-    ? calculateAmericanPayout(config.wager, config.parlayOdds)
+  const payout = isComboOld
+    ? calculateAmericanPayout(config.wager, config.comboOdds)
     : calculateSinglePayout(config.wager, config.odds);
 
   const marketName = (config.marketName?.trim() || config.title.trim())
@@ -308,8 +308,8 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
 
   const bgColor = config.backgroundColor || '#28CC95';
 
-  // Old parlay title
-  const parlayOldTitle = config.title.trim()
+  // Old combo title
+  const comboOldTitle = config.title.trim()
     ? config.title
     : 'Combo';
 
@@ -317,13 +317,13 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const oldTradeColor = config.tradeSide === 'No' ? '#d91616' : '#00C688';
 
   // For old modes, use the static CSS background; for new modes, use inline style
-  const useOldStyle = isSingleOld || isParlayOld;
+  const useOldStyle = isSingleOld || isComboOld;
 
   return (
     <div className="trade-slip-container">
       <div
         id="trade-slip-preview"
-        className={`trade-slip-preview${isParlay ? ' parlay-mode' : ''}${isParlayOld ? ' parlay-old-mode' : ''}${isSingleOld ? ' single-old-mode' : ''}`}
+        className={`trade-slip-preview${isCombo ? ' combo-mode' : ''}${isComboOld ? ' combo-old-mode' : ''}${isSingleOld ? ' single-old-mode' : ''}`}
         style={useOldStyle ? undefined : {
           background: `linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%), ${bgColor}`,
         }}
@@ -331,7 +331,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
         {config.showCashedOut && (
           <div className="trade-slip-cashed-out-badge">Cashed out</div>
         )}
-        {isParlay ? (
+        {isCombo ? (
           <>
             <div className="combo-card">
               {/* Header with payout and cost */}
@@ -373,66 +373,66 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
             {/* Scalloped edge */}
             <div className="trade-slip-scalloped-edge" />
           </>
-        ) : isParlayOld ? (
-          <div className="parlay-card trade-slip-content trade-slip-content-old">
-            <div className="parlay-header">
-              <span className="parlay-label">{parlayOldTitle}</span>
+        ) : isComboOld ? (
+          <div className="combo-card trade-slip-content trade-slip-content-old">
+            <div className="combo-header">
+              <span className="combo-label">{comboOldTitle}</span>
               <div className="trade-slip-brand-container">
                 <a
                   href="https://kalshi.com/?utm_source=kalshitools"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="parlay-brand"
+                  className="combo-brand"
                 >
                   <KalshiLogo />
                 </a>
               </div>
             </div>
 
-            <div className="parlay-body">
-              <div className="parlay-legs-preview">
-                {config.parlayLegs.map((leg, index) => {
+            <div className="combo-body">
+              <div className="combo-legs-preview">
+                {config.comboLegs.map((leg, index) => {
                   const question = leg.question.trim()
                     ? leg.question
                     : `Leg ${index + 1} question`;
                   return (
-                    <div className="parlay-leg-preview" key={leg.id}>
+                    <div className="combo-leg-preview" key={leg.id}>
                       {leg.image && (
-                        <img src={leg.image} alt="" className="parlay-leg-preview-image" />
+                        <img src={leg.image} alt="" className="combo-leg-preview-image" />
                       )}
-                      <div className="parlay-leg-preview-text">
-                        <span className="parlay-leg-question">{question}</span>
-                        <span className="parlay-leg-answer">{leg.answer}</span>
+                      <div className="combo-leg-preview-text">
+                        <span className="combo-leg-question">{question}</span>
+                        <span className="combo-leg-answer">{leg.answer}</span>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="parlay-summary">
-                <div className="parlay-summary-row">
-                  <span className="parlay-summary-label">Cost</span>
-                  <span className="parlay-summary-value">
+              <div className="combo-summary">
+                <div className="combo-summary-row">
+                  <span className="combo-summary-label">Cost</span>
+                  <span className="combo-summary-value">
                     ${config.wager.toLocaleString()}
                   </span>
                 </div>
-                <div className="parlay-summary-row">
-                  <span className="parlay-summary-label">Odds</span>
-                  <span className="parlay-summary-value">
-                    {formatAmericanOdds(config.parlayOdds)}
+                <div className="combo-summary-row">
+                  <span className="combo-summary-label">Odds</span>
+                  <span className="combo-summary-value">
+                    {formatAmericanOdds(config.comboOdds)}
                   </span>
                 </div>
-                {config.parlayCashOut !== undefined && (
-                  <div className="parlay-summary-row">
-                    <span className="parlay-summary-label">Cash out</span>
-                    <span className="parlay-summary-value">
-                      ${config.parlayCashOut.toLocaleString()}
+                {config.comboCashOut !== undefined && (
+                  <div className="combo-summary-row">
+                    <span className="combo-summary-label">Cash out</span>
+                    <span className="combo-summary-value">
+                      ${config.comboCashOut.toLocaleString()}
                     </span>
                   </div>
                 )}
-                <div className="parlay-summary-row parlay-payout-row">
-                  <span className="parlay-summary-label">Payout if right</span>
-                  <span className="parlay-payout">
+                <div className="combo-summary-row combo-payout-row">
+                  <span className="combo-summary-label">Payout if right</span>
+                  <span className="combo-payout">
                     ${payout.toLocaleString()}
                   </span>
                 </div>
