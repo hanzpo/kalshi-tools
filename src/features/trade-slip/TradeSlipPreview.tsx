@@ -276,7 +276,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                 <div className="trade-slip-row">
                   <span className="trade-slip-label">Cost</span>
                   <span className="trade-slip-value">
-                    ${config.wager.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${config.wager.toLocaleString()}
                   </span>
                 </div>
                 <div className="trade-slip-payout-section">
