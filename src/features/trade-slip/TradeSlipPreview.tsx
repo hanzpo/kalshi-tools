@@ -280,11 +280,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               </div>
 
               {/* Timestamp */}
-              {config.showTimestamp && (
-                <div className="combo-timestamp">
-                  {formatTimestamp(config.timestamp)}
-                </div>
-              )}
+              <div className="combo-timestamp">
+                {formatTimestamp(config.timestamp)}
+              </div>
             </div>
             {/* Scalloped edge */}
             <div className="trade-slip-scalloped-edge" />
@@ -373,11 +371,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                       ${bigGamePayout.toLocaleString()}
                     </span>
                   </div>
-                  {config.showTimestamp && (
-                    <div className="trade-slip-timestamp">
-                      {formatTimestamp(config.timestamp)}
-                    </div>
-                  )}
+                  <div className="trade-slip-timestamp">
+                    {formatTimestamp(config.timestamp)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -558,11 +554,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               </div>
 
               {/* Timestamp */}
-              {config.showTimestamp && (
-                <div className="combo-timestamp">
-                  {formatTimestamp(config.timestamp)}
-                </div>
-              )}
+              <div className="combo-timestamp">
+                {formatTimestamp(config.timestamp)}
+              </div>
             </div>
             {/* Scalloped edge */}
             <div className="trade-slip-scalloped-edge" />
@@ -747,11 +741,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                       ${payout.toLocaleString()}
                     </span>
                   </div>
-                  {config.showTimestamp && (
-                    <div className="trade-slip-timestamp">
-                      {formatTimestamp(config.timestamp)}
-                    </div>
-                  )}
+                  <div className="trade-slip-timestamp">
+                    {formatTimestamp(config.timestamp)}
+                  </div>
                 </div>
               </div>
             </div>

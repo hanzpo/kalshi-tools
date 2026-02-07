@@ -1432,29 +1432,6 @@ export function TradeSlipMaker({
           <p className="help-text">Display watermark on trade slip</p>
         </div>
 
-        {(isSingleMode || isComboMode || isBigGameMode || isBigGameComboMode) && (
-          <div className="control-group">
-            <label
-              htmlFor="show-timestamp-bet"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-            >
-              <input
-                id="show-timestamp-bet"
-                type="checkbox"
-                checked={config.showTimestamp}
-                onChange={(e) => onConfigChange({ showTimestamp: e.target.checked })}
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  cursor: 'pointer',
-                  accentColor: BRAND_GREEN,
-                }}
-              />
-              <span>Show Date/Time</span>
-            </label>
-            <p className="help-text">Display purchase date and time</p>
-          </div>
-        )}
 
         {!isBigGameMode && !isBigGameComboMode && (
           <div className="control-group" style={{ marginBottom: 0 }}>
