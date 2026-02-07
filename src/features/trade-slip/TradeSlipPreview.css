@@ -1,5 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;700&display=swap');
 
+@font-face {
+  font-family: 'Graphik Condensed App';
+  src: url('/GraphikCondensed-Regular-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Condensed App';
+  src: url('/GraphikCondensed-Medium-Trial.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 .trade-slip-container {
   display: flex;
   justify-content: center;
@@ -1322,8 +1338,8 @@
   line-height: 24px;
 }
 
-.biggame-payout {
-  font-family: 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+.biggame-payout.biggame-payout {
+  font-family: 'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 30px !important;
   font-weight: 500;
   line-height: 36px;
@@ -1420,6 +1436,7 @@
 }
 
 .biggame-combo-title-payout {
+  font-family: 'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: #28CC95;
 }
 
