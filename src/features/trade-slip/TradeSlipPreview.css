@@ -932,8 +932,9 @@
   width: 100%;
 }
 
-/* Old combo header - remove bottom margin since parent has gap */
+/* Old combo header - horizontal layout with logo on the right */
 .combo-old-mode .combo-header {
+  flex-direction: row;
   margin-bottom: 0;
 }
 
