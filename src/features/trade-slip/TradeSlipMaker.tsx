@@ -86,6 +86,7 @@ export function TradeSlipMaker({
   const isComboOldMode = config.mode === 'combo-old';
   const isHorizontalMode = config.mode === 'horizontal';
   const isBigGameMode = config.mode === 'biggame';
+  const isBigGameComboMode = config.mode === 'biggame-combo';
   const payout = isSingleMode || isSingleOldMode || isHorizontalMode || isBigGameMode
     ? calculateSinglePayout(config.wager, config.odds)
     : calculateAmericanPayout(config.wager, config.comboOdds);
@@ -93,7 +94,7 @@ export function TradeSlipMaker({
   function handleModeChange(mode: TradeSlipMode) {
     if (mode === config.mode) return;
 
-    if (mode === 'combo' && (!config.comboCategories || config.comboCategories.length === 0)) {
+    if ((mode === 'combo' || mode === 'biggame-combo') && (!config.comboCategories || config.comboCategories.length === 0)) {
       onConfigChange({
         mode,
         comboCategories: [createComboCategory()],
@@ -366,6 +367,7 @@ export function TradeSlipMaker({
           <option value="combo-old">Combo (old)</option>
           <option value="horizontal">Horizontal</option>
           <option value="biggame">Big game</option>
+          <option value="biggame-combo">Big game combo</option>
         </select>
       </div>
 
@@ -939,9 +941,105 @@ export function TradeSlipMaker({
             )}
           </div>
         </>
+      ) : isBigGameComboMode ? (
+        <>
+          {/* Header Section for Big Game Combo */}
+          <div className="control-section">
+            <div className="control-section-title">Header</div>
+
+            <div className="control-group">
+              <label>Background Glow Colors</label>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ flex: 1 }}>
+                  <label htmlFor="biggame-combo-color1" style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px', display: 'block' }}>Left</label>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input
+                      id="biggame-combo-color1"
+                      type="color"
+                      value={config.bigGameColor1}
+                      onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
+                      className="color-input"
+                      style={{ width: '36px', height: '36px', cursor: 'pointer' }}
+                    />
+                    <input
+                      type="text"
+                      className="text-input"
+                      value={config.bigGameColor1}
+                      onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
+                      style={{ flex: 1 }}
+                    />
+                  </div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label htmlFor="biggame-combo-color2" style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px', display: 'block' }}>Right</label>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input
+                      id="biggame-combo-color2"
+                      type="color"
+                      value={config.bigGameColor2}
+                      onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
+                      className="color-input"
+                      style={{ width: '36px', height: '36px', cursor: 'pointer' }}
+                    />
+                    <input
+                      type="text"
+                      className="text-input"
+                      value={config.bigGameColor2}
+                      onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
+                      style={{ flex: 1 }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Financials Section for Big Game Combo */}
+          <div className="control-section">
+            <div className="control-section-title">Financials</div>
+
+            <div className="control-group">
+              <label htmlFor="biggame-combo-payout">Payout Amount ($)</label>
+              <input
+                id="biggame-combo-payout"
+                type="number"
+                className="text-input"
+                placeholder="e.g., 1920"
+                value={config.comboPayout || ''}
+                onChange={(e) => onConfigChange({ comboPayout: parseFloat(e.target.value) || 0 })}
+                min="0"
+                step="1"
+              />
+            </div>
+            <div className="control-group">
+              <label htmlFor="biggame-combo-cost">Cost ($)</label>
+              <input
+                id="biggame-combo-cost"
+                type="number"
+                className="text-input"
+                placeholder="e.g., 99.84"
+                value={config.comboCost || ''}
+                onChange={(e) => onConfigChange({ comboCost: parseFloat(e.target.value) || 0 })}
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div className="control-group">
+              <label htmlFor="biggame-combo-timestamp">Purchase Date/Time (Optional)</label>
+              <input
+                id="biggame-combo-timestamp"
+                type="datetime-local"
+                className="text-input"
+                value={config.timestamp ?? ''}
+                onChange={(e) => onConfigChange({ timestamp: e.target.value })}
+              />
+              <p className="help-text">Leave blank to use current date/time</p>
+            </div>
+          </div>
+        </>
       ) : null}
 
-      {isComboMode && (
+      {(isComboMode || isBigGameComboMode) && (
         <div className="control-group">
           <label aria-hidden="true">Categories &amp; Markets</label>
           <div className="combo-legs">
@@ -1048,6 +1146,17 @@ export function TradeSlipMaker({
                                   onChange={(e) => handleMarketChange(category.id, event.id, market.id, { text: e.target.value })}
                                   style={{ flex: 1 }}
                                 />
+                                <label
+                                  title="Resolved"
+                                  style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0 }}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={market.resolved || false}
+                                    onChange={(e) => handleMarketChange(category.id, event.id, market.id, { resolved: e.target.checked })}
+                                    style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: '#09C285' }}
+                                  />
+                                </label>
                               </div>
                             </div>
                           ))}
@@ -1177,7 +1286,8 @@ export function TradeSlipMaker({
         </div>
       )}
 
-      {/* Financials Section */}
+      {/* Financials Section - hidden for combo and biggame-combo which have their own */}
+      {!isComboMode && !isBigGameComboMode && (
       <div className="control-section">
         <div className="control-section-title">Financials</div>
 
@@ -1269,13 +1379,14 @@ export function TradeSlipMaker({
           </>
         ) : null}
       </div>
+      )}
 
       {/* Display Options Section */}
       <div className="control-section">
         <div className="control-section-title">Display Options</div>
 
         {/* Background color picker - only for new modes (not biggame which uses team colors) */}
-        {!isSingleOldMode && !isComboOldMode && !isBigGameMode && (
+        {!isSingleOldMode && !isComboOldMode && !isBigGameMode && !isBigGameComboMode && (
           <div className="control-group">
             <label htmlFor="background-color">Background Color</label>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -1321,7 +1432,7 @@ export function TradeSlipMaker({
           <p className="help-text">Display watermark on trade slip</p>
         </div>
 
-        {(isSingleMode || isComboMode || isBigGameMode) && (
+        {(isSingleMode || isComboMode || isBigGameMode || isBigGameComboMode) && (
           <div className="control-group">
             <label
               htmlFor="show-timestamp-bet"
@@ -1345,7 +1456,7 @@ export function TradeSlipMaker({
           </div>
         )}
 
-        {!isBigGameMode && (
+        {!isBigGameMode && !isBigGameComboMode && (
           <div className="control-group" style={{ marginBottom: 0 }}>
             <label
               htmlFor="show-cashed-out"

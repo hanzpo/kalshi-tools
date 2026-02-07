@@ -1367,3 +1367,182 @@
     padding: 14px;
   }
 }
+
+/* ========================================
+   BIG GAME COMBO MODE STYLES
+   ======================================== */
+
+.biggame-combo-card {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 8px 8px 0 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.biggame-combo-header-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.biggame-combo-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.biggame-combo-badge svg {
+  width: 24px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.biggame-combo-badge-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.88px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 18px;
+}
+
+.biggame-combo-title {
+  font-family: 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 28px;
+}
+
+.biggame-combo-title-payout {
+  color: #28CC95;
+}
+
+.biggame-combo-cost {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 24px;
+}
+
+.biggame-combo-card .kalshi-divider-logo {
+  color: #09C285;
+}
+
+.biggame-combo-card .kalshi-divider-line {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Big game combo events */
+.biggame-combo-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.biggame-combo-event {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.biggame-combo-event-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.biggame-combo-event-semicircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.biggame-combo-event-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* Big game combo market items */
+.biggame-combo-event-markets {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.biggame-combo-market-item {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  padding: 0;
+}
+
+.biggame-combo-market-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.biggame-combo-market-connector svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.biggame-combo-market-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+  margin: 6px 0;
+}
+
+.biggame-combo-connector-line {
+  width: 1px;
+  flex: 1;
+  min-height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.biggame-combo-connector-line.invisible {
+  background: transparent;
+}
+
+.biggame-combo-market-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 20px;
+  padding: 4px 0;
+  flex: 1;
+}
+
+.biggame-combo-market-prefix {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Responsive for biggame-combo */
+@media (max-width: 480px) {
+  .biggame-combo-card {
+    padding: 14px;
+  }
+}

@@ -1,4 +1,4 @@
-import { TradeSlipConfig, ComboCategory, ComboEvent, ComboMarket } from '../../types';
+import { TradeSlipConfig, ComboEvent, ComboMarket } from '../../types';
 import { PrizePickPreview } from './PrizePickPreview';
 import { CoinbasePreview } from './CoinbasePreview';
 import './TradeSlipPreview.css';
@@ -61,97 +61,98 @@ const KalshiDivider = () => (
   </div>
 );
 
-// Kalshi combo divider with logo and COMBO text
-const KalshiComboDivider = () => (
-  <div className="kalshi-combo-divider">
-    <div className="kalshi-combo-divider-line" />
-    <KalshiLogo />
-    <span className="kalshi-combo-text">COMBO</span>
-    <div className="kalshi-combo-divider-line" />
-  </div>
+// Combo stroke icon for COMBO badge (from Figma custom_combo_stroke)
+const ComboStrokeIcon = () => (
+  <svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="combo-stroke-icon">
+    <path d="M9 0C9.26667 0 9.52539 0.0503906 9.77539 0.150391C10.0251 0.250339 10.2416 0.39989 10.4248 0.599609L9 2L2.72865 8.29418C2.33984 8.68441 2.33984 9.31559 2.72865 9.70582L9 16L10.4248 17.4248C10.2416 17.608 10.0252 17.7496 9.77539 17.8496C9.52539 17.9496 9.26667 18 9 18C8.73333 18 8.47897 17.954 8.2373 17.8623C7.99574 17.7706 7.78288 17.6247 7.59961 17.4248L0.625 10.4248C0.441732 10.2249 0.291445 10.0043 0.174805 9.7627C0.058138 9.52103 0 9.26667 0 9C0 8.73333 0.058138 8.47897 0.174805 8.2373C0.291466 7.99567 0.441687 7.78292 0.625 7.59961L7.59961 0.599609C7.79957 0.39965 8.01672 0.250391 8.25 0.150391C8.48333 0.0503906 8.73333 0 9 0Z" fill="url(#paint0_combo)"/>
+    <path d="M16 6V8H18V10H16V12H14V10H12V8H14V6H16Z" fill="url(#paint1_combo)"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M15 0C15.2667 0 15.5254 0.0503906 15.7754 0.150391C16.0251 0.250339 16.2416 0.39989 16.4248 0.599609L23.375 7.59961C23.5583 7.79961 23.7085 8.01667 23.8252 8.25C23.9418 8.48331 24 8.73336 24 9C24 9.26667 23.9462 9.52103 23.8379 9.7627C23.7296 10.0043 23.5749 10.2248 23.375 10.4248L16.4248 17.4248C16.2416 17.608 16.0252 17.7496 15.7754 17.8496C15.5254 17.9496 15.2667 18 15 18C14.7333 18 14.479 17.954 14.2373 17.8623C13.9957 17.7706 13.7829 17.6247 13.5996 17.4248L6.625 10.4248C6.44173 10.2249 6.29145 10.0043 6.1748 9.7627C6.05814 9.52103 6 9.26667 6 9C6 8.73333 6.05814 8.47897 6.1748 8.2373C6.29147 7.99567 6.44169 7.78292 6.625 7.59961L13.5996 0.599609C13.7996 0.39965 14.0167 0.250391 14.25 0.150391C14.4833 0.0503906 14.7333 0 15 0ZM8.02539 9L15 16L21.9746 9L15 2L8.02539 9Z" fill="url(#paint2_combo)"/>
+    <defs>
+      <linearGradient id="paint0_combo" x1="0" y1="0" x2="17.28" y2="23.04" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#82D9D9"/><stop offset="0.1" stopColor="#8D8DD9"/><stop offset="0.2" stopColor="#D998D9"/><stop offset="0.4" stopColor="#D9D9B8"/><stop offset="0.5" stopColor="#98D9D9"/><stop offset="0.6" stopColor="#7C82BF"/><stop offset="0.75" stopColor="#8D8DD9"/><stop offset="0.9" stopColor="#D9D9B8"/><stop offset="1" stopColor="#82D982"/>
+      </linearGradient>
+      <linearGradient id="paint1_combo" x1="0" y1="0" x2="17.28" y2="23.04" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#82D9D9"/><stop offset="0.1" stopColor="#8D8DD9"/><stop offset="0.2" stopColor="#D998D9"/><stop offset="0.4" stopColor="#D9D9B8"/><stop offset="0.5" stopColor="#98D9D9"/><stop offset="0.6" stopColor="#7C82BF"/><stop offset="0.75" stopColor="#8D8DD9"/><stop offset="0.9" stopColor="#D9D9B8"/><stop offset="1" stopColor="#82D982"/>
+      </linearGradient>
+      <linearGradient id="paint2_combo" x1="0" y1="0" x2="17.28" y2="23.04" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#82D9D9"/><stop offset="0.1" stopColor="#8D8DD9"/><stop offset="0.2" stopColor="#D998D9"/><stop offset="0.4" stopColor="#D9D9B8"/><stop offset="0.5" stopColor="#98D9D9"/><stop offset="0.6" stopColor="#7C82BF"/><stop offset="0.75" stopColor="#8D8DD9"/><stop offset="0.9" stopColor="#D9D9B8"/><stop offset="1" stopColor="#82D982"/>
+      </linearGradient>
+    </defs>
+  </svg>
 );
 
-// Combo market item with connecting line
-interface ComboMarketItemProps {
+// Green check circle icon for big game combo market items (from Figma check_circle)
+const CheckCircleIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="check-circle-icon">
+    <path d="M8.6 14.6L15.65 7.55L14.25 6.15L8.6 11.8L5.75 8.95L4.35 10.35L8.6 14.6ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM10 18C12.2333 18 14.125 17.225 15.675 15.675C17.225 14.125 18 12.2333 18 10C18 7.76667 17.225 5.875 15.675 4.325C14.125 2.775 12.2333 2 10 2C7.76667 2 5.875 2.775 4.325 4.325C2.775 5.875 2 7.76667 2 10C2 12.2333 2.775 14.125 4.325 15.675C5.875 17.225 7.76667 18 10 18Z" fill="#28CC95"/>
+  </svg>
+);
+
+// Big game combo market item with check circle connector
+interface BigGameComboMarketItemProps {
   market: ComboMarket;
   position: 'first' | 'middle' | 'last' | 'only';
 }
 
-const ComboMarketItem = ({ market, position }: ComboMarketItemProps) => (
-  <div className="combo-market-item">
-    <div className="combo-market-connector">
-      {position !== 'only' && position !== 'first' && (
-        <div className="combo-connector-line-top" />
+const BigGameComboMarketItem = ({ market, position }: BigGameComboMarketItemProps) => (
+  <div className="biggame-combo-market-item">
+    <div className="biggame-combo-market-connector">
+      <div className={`biggame-combo-connector-line ${position === 'first' || position === 'only' ? 'invisible' : ''}`} />
+      {market.resolved ? (
+        <CheckCircleIcon />
+      ) : (
+        <div className="biggame-combo-market-dot" />
       )}
-      <div className="combo-connector-dot" />
-      {position !== 'only' && position !== 'last' && (
-        <div className="combo-connector-line-bottom" />
-      )}
+      <div className={`biggame-combo-connector-line ${position === 'last' || position === 'only' ? 'invisible' : ''}`} />
     </div>
-    <div className="combo-market-text">
+    <div className="biggame-combo-market-text">
       {market.prefix && (
-        <span className="combo-market-prefix">{market.prefix} · </span>
+        <span className="biggame-combo-market-prefix">{market.prefix} · </span>
       )}
       <span>{market.text}</span>
     </div>
   </div>
 );
 
-// Combo event with its markets
-interface ComboEventItemProps {
+// Big game combo event item
+interface BigGameComboEventItemProps {
   event: ComboEvent;
 }
 
-const ComboEventItem = ({ event }: ComboEventItemProps) => {
-  const color1 = event.color1 || '#E31837'; // Default red
-  const color2 = event.color2 || '#004C54'; // Default teal
+const BigGameComboEventItem = ({ event }: BigGameComboEventItemProps) => {
+  const color1 = event.color1 || '#E31837';
+  const color2 = event.color2 || '#004C54';
 
   return (
-    <div className="combo-event">
-      <div className="combo-event-header">
-        <div className="combo-event-icon" aria-hidden="true">
-          <span className="combo-event-icon-half" style={{ backgroundColor: color1 }} />
-          <span className="combo-event-icon-half" style={{ backgroundColor: color2 }} />
-        </div>
-        <span className="combo-event-name">{event.name}</span>
+    <div className="biggame-combo-event">
+      <div className="biggame-combo-event-header">
+        <div
+          className="biggame-combo-event-semicircle"
+          style={{ background: `linear-gradient(to right, ${color1} 50%, ${color2} 50%)` }}
+        />
+        <span className="biggame-combo-event-name">{event.name}</span>
       </div>
-    <div className="combo-event-markets">
-      {event.markets.map((market, index) => {
-        const position = event.markets.length === 1
-          ? 'only'
-          : index === 0
-            ? 'first'
-            : index === event.markets.length - 1
-              ? 'last'
-              : 'middle';
-        return (
-          <ComboMarketItem
-            key={market.id}
-            market={market}
-            position={position}
-          />
-        );
-      })}
+      <div className="biggame-combo-event-markets">
+        {event.markets.map((market, index) => {
+          const position = event.markets.length === 1
+            ? 'only'
+            : index === 0
+              ? 'first'
+              : index === event.markets.length - 1
+                ? 'last'
+                : 'middle';
+          return (
+            <BigGameComboMarketItem
+              key={market.id}
+              market={market}
+              position={position}
+            />
+          );
+        })}
+      </div>
     </div>
-  </div>
   );
 };
-
-// Combo category section
-interface ComboCategoryItemProps {
-  category: ComboCategory;
-}
-
-const ComboCategoryItem = ({ category }: ComboCategoryItemProps) => (
-  <div className="combo-category">
-    <div className="combo-category-title">{category.name}</div>
-    <div className="combo-category-events">
-      {category.events.map((event) => (
-        <ComboEventItem key={event.id} event={event} />
-      ))}
-    </div>
-  </div>
-);
 
 // Format timestamp for display
 function formatTimestamp(customTimestamp?: string): string {
@@ -198,6 +199,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isComboOld = config.mode === 'combo-old';
   const isHorizontal = config.mode === 'horizontal';
   const isBigGame = config.mode === 'biggame';
+  const isBigGameCombo = config.mode === 'biggame-combo';
 
   if (isPrizePick) {
     return <PrizePickPreview config={config} />;
@@ -211,6 +213,91 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
       coinbasePlayType: config.coinbasePlayType,
       showWatermark: config.showWatermark,
     }} />;
+  }
+
+  if (isBigGameCombo) {
+    const team1Color = config.bigGameColor1 || '#408FFF';
+    const team2Color = config.bigGameColor2 || '#FF4D6A';
+    const headerImage = '/biggame-header.png';
+    const totalMarkets = config.comboCategories?.reduce(
+      (sum, cat) => sum + cat.events.reduce(
+        (eventSum, event) => eventSum + event.markets.length,
+        0
+      ),
+      0
+    ) || 0;
+    const payout = config.comboPayout || 0;
+    const cost = config.comboCost || 0;
+    const allEvents = config.comboCategories?.flatMap(cat => cat.events) || [];
+
+    return (
+      <div className="trade-slip-container">
+        <div
+          id="trade-slip-preview"
+          className="trade-slip-preview biggame-mode biggame-combo-mode"
+          style={{
+            background: `
+              radial-gradient(ellipse at 0% 0%, ${team1Color}99 0%, transparent 55%),
+              radial-gradient(ellipse at 100% 0%, ${team2Color}82 0%, transparent 55%),
+              radial-gradient(ellipse at 50% 10%, transparent 0%, rgb(17, 19, 22) 70%),
+              rgb(17, 19, 21)
+            `,
+          }}
+        >
+          {/* Header image (contains team names + title) */}
+          <div className="biggame-header-image">
+            <img src={headerImage} alt="" className="biggame-header-img" />
+          </div>
+
+          {/* Combo trade slip card */}
+          <div className="biggame-card">
+            <div className="biggame-combo-card">
+              {/* Combo badge and header info */}
+              <div className="biggame-combo-header-section">
+                <div className="biggame-combo-badge">
+                  <ComboStrokeIcon />
+                  <span className="biggame-combo-badge-text">COMBO</span>
+                </div>
+                <div className="biggame-combo-title">
+                  {totalMarkets} market{totalMarkets !== 1 ? 's' : ''} pay{' '}
+                  <span className="biggame-combo-title-payout">
+                    ${payout.toLocaleString()}
+                  </span>
+                </div>
+                <div className="biggame-combo-cost">
+                  Cost: ${cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
+              </div>
+
+              {/* Kalshi Divider */}
+              <KalshiDivider />
+
+              {/* Events and markets */}
+              <div className="biggame-combo-events">
+                {allEvents.map((event) => (
+                  <BigGameComboEventItem key={event.id} event={event} />
+                ))}
+              </div>
+
+              {/* Timestamp */}
+              {config.showTimestamp && (
+                <div className="combo-timestamp">
+                  {formatTimestamp(config.timestamp)}
+                </div>
+              )}
+            </div>
+            {/* Scalloped edge */}
+            <div className="trade-slip-scalloped-edge" />
+          </div>
+
+          {config.showWatermark && (
+            <div className="trade-slip-watermark biggame-watermark">
+              kalshi.tools
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   if (isBigGame) {
@@ -429,10 +516,14 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
         )}
         {isCombo ? (
           <>
-            <div className="combo-card">
-              {/* Header with payout and cost */}
-              <div className="combo-header">
-                <div className="combo-header-title">
+            <div className="biggame-combo-card">
+              {/* Combo badge and header info */}
+              <div className="biggame-combo-header-section">
+                <div className="biggame-combo-badge">
+                  <ComboStrokeIcon />
+                  <span className="biggame-combo-badge-text">COMBO</span>
+                </div>
+                <div className="biggame-combo-title">
                   {(() => {
                     const totalMarkets = config.comboCategories?.reduce(
                       (sum, cat) => sum + cat.events.reduce(
@@ -441,21 +532,28 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                       ),
                       0
                     ) || 0;
-                    return `${totalMarkets} market${totalMarkets !== 1 ? 's' : ''} pay${totalMarkets !== 1 ? '' : 's'} $${(config.comboPayout || 0).toLocaleString()}`;
+                    return (
+                      <>
+                        {totalMarkets} market{totalMarkets !== 1 ? 's' : ''} pay{' '}
+                        <span className="biggame-combo-title-payout">
+                          ${(config.comboPayout || 0).toLocaleString()}
+                        </span>
+                      </>
+                    );
                   })()}
                 </div>
-                <div className="combo-header-cost">
+                <div className="biggame-combo-cost">
                   Cost: ${(config.comboCost || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
               </div>
 
-              {/* Kalshi Combo Divider */}
-              <KalshiComboDivider />
+              {/* Kalshi Divider */}
+              <KalshiDivider />
 
-              {/* Categories and Markets */}
-              <div className="combo-categories">
-                {config.comboCategories?.map((category) => (
-                  <ComboCategoryItem key={category.id} category={category} />
+              {/* Events and markets */}
+              <div className="biggame-combo-events">
+                {config.comboCategories?.flatMap(cat => cat.events).map((event) => (
+                  <BigGameComboEventItem key={event.id} event={event} />
                 ))}
               </div>
 

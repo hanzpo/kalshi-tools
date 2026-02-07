@@ -1,4 +1,4 @@
-export type TradeSlipMode = 'single' | 'combo' | 'single-old' | 'combo-old' | 'prizepick' | 'coinbase' | 'horizontal' | 'biggame';
+export type TradeSlipMode = 'single' | 'combo' | 'single-old' | 'combo-old' | 'prizepick' | 'coinbase' | 'horizontal' | 'biggame' | 'biggame-combo';
 
 export interface ComboLeg {
   id: string;
@@ -11,6 +11,7 @@ export interface ComboMarket {
   id: string;
   text: string; // e.g., "Philadelphia" or "Total game point is 47 or more"
   prefix?: string; // e.g., "No" or "Yes" - optional prefix shown before the text
+  resolved?: boolean; // Whether this market has been resolved (shows green check vs grey circle)
 }
 
 export interface ComboEvent {
