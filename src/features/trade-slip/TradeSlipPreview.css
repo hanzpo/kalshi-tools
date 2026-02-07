@@ -1289,19 +1289,7 @@
   position: relative;
 }
 
-/* Card dot grid - on the dark content area */
-.biggame-card .trade-slip-content.trade-slip-dark::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 8px 8px 0 0;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1.25px, transparent 1.25px);
-  background-size: 9px 9px;
-  -webkit-mask-image: radial-gradient(ellipse 55% 28% at 50% 0%, rgba(0,0,0,1) 0%, transparent 100%);
-  mask-image: radial-gradient(ellipse 55% 28% at 50% 0%, rgba(0,0,0,1) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 0;
-}
+/* Card dot grid removed */
 
 .biggame-card .trade-slip-market-name {
   font-size: 15px;
@@ -1338,6 +1326,7 @@
   font-size: 30px !important;
   font-weight: 500;
   line-height: 36px;
+  color: #00C688 !important;
 }
 
 .biggame-card .trade-slip-timestamp {
