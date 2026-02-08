@@ -185,6 +185,34 @@ export function LandingPage() {
             </div>
           </a>
 
+          <a
+            href="https://sbadddd-production.up.railway.app/"
+            className="landing-option landing-option--livedisplay"
+            onClick={() => handleToolClick('live-display')}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className="option-body">
+              <div className="option-header">
+                <span className="option-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8" />
+                    <path d="M12 17v4" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </span>
+                <div className="option-title-group">
+                  <span className="option-subtitle">View the</span>
+                  <span className="option-label">Live Display</span>
+                </div>
+              </div>
+              <p className="option-description">
+                Football championship live display.
+              </p>
+            </div>
+          </a>
+
         </div>
       </div>
     </div>
