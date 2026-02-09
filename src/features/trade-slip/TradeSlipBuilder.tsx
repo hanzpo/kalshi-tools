@@ -27,6 +27,7 @@ export default function TradeSlipBuilder() {
     showWatermark: true,
     showTimestamp: true,
     showCashedOut: false,
+    isPaidOut: false,
     backgroundColor: '#28CC95',
     comboOdds: 400,
     comboLegs: [

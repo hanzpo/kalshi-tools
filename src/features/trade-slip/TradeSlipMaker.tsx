@@ -1456,6 +1456,28 @@ export function TradeSlipMaker({
             <p className="help-text">Display cashed out badge in corner</p>
           </div>
         )}
+
+        <div className="control-group" style={{ marginBottom: 0 }}>
+          <label
+            htmlFor="is-paid-out"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+          >
+            <input
+              id="is-paid-out"
+              type="checkbox"
+              checked={config.isPaidOut}
+              onChange={(e) => onConfigChange({ isPaidOut: e.target.checked })}
+              style={{
+                width: '18px',
+                height: '18px',
+                cursor: 'pointer',
+                accentColor: BRAND_GREEN,
+              }}
+            />
+            <span>Paid Out</span>
+          </label>
+          <p className="help-text">Show as a paid out trade slip</p>
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>

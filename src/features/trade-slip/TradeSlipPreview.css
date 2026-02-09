@@ -1263,8 +1263,26 @@
   border-radius: 16px;
   padding: 0 16px 16px;
   overflow: hidden;
-  border: 1px solid #0069ff;
   position: relative;
+}
+
+.trade-slip-preview.biggame-mode::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(to right, var(--team1-color), #0A0C0F 50%, var(--team2-color));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
 }
 
 /* Background dot grid - behind header/helmets area */
@@ -1355,6 +1373,7 @@
   font-size: 11px;
   line-height: 18px;
   color: rgba(255, 255, 255, 0.5);
+  padding-bottom: 8px;
 }
 
 .biggame-card .kalshi-divider-logo {

@@ -99,6 +99,7 @@ export interface TradeSlipConfig {
   bigGameTitle: string;
   bigGameColor1: string;
   bigGameColor2: string;
+  isPaidOut: boolean;
 }
 
 export interface CoinbaseConfig {

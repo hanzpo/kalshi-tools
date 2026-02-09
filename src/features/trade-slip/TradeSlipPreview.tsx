@@ -236,13 +236,15 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
           id="trade-slip-preview"
           className="trade-slip-preview biggame-mode biggame-combo-mode"
           style={{
+            '--team1-color': team1Color,
+            '--team2-color': team2Color,
             background: `
               radial-gradient(ellipse at 0% 0%, ${team1Color}99 0%, transparent 55%),
               radial-gradient(ellipse at 100% 0%, ${team2Color}82 0%, transparent 55%),
               radial-gradient(ellipse at 50% 10%, transparent 0%, rgb(17, 19, 22) 70%),
               rgb(17, 19, 21)
             `,
-          }}
+          } as React.CSSProperties}
         >
           {/* Header image (contains team names + title) */}
           <div className="biggame-header-image">
@@ -265,7 +267,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   </span>
                 </div>
                 <div className="biggame-combo-cost">
-                  Cost: ${cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {config.isPaidOut ? 'Original cost' : 'Cost'}: ${cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
               </div>
 
@@ -320,13 +322,15 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
           id="trade-slip-preview"
           className="trade-slip-preview biggame-mode"
           style={{
+            '--team1-color': team1Color,
+            '--team2-color': team2Color,
             background: `
               radial-gradient(ellipse at 0% 0%, ${team1Color}99 0%, transparent 55%),
               radial-gradient(ellipse at 100% 0%, ${team2Color}82 0%, transparent 55%),
               radial-gradient(ellipse at 50% 10%, transparent 0%, rgb(17, 19, 22) 70%),
               rgb(17, 19, 21)
             `,
-          }}
+          } as React.CSSProperties}
         >
           {/* Header image (contains team names + title) */}
           <div className="biggame-header-image">
@@ -359,14 +363,14 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   <span className="trade-slip-value">{config.odds}% chance</span>
                 </div>
                 <div className="trade-slip-row">
-                  <span className="trade-slip-label">Cost</span>
+                  <span className="trade-slip-label">{config.isPaidOut ? 'Original cost' : 'Cost'}</span>
                   <span className="trade-slip-value">
                     ${config.wager.toLocaleString()}
                   </span>
                 </div>
                 <div className="trade-slip-payout-section">
                   <div className="trade-slip-row trade-slip-payout-row">
-                    <span className="trade-slip-label">Max payout</span>
+                    <span className="trade-slip-label">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
                     <span className="trade-slip-payout biggame-payout">
                       ${bigGamePayout.toLocaleString()}
                     </span>
@@ -443,11 +447,11 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               {isYes ? 'YES' : 'NO'}
             </div>
             <div className="horizontal-stat-row">
-              <span className="horizontal-stat-label">Cost</span>
+              <span className="horizontal-stat-label">{config.isPaidOut ? 'Original cost' : 'Cost'}</span>
               <span className="horizontal-stat-value">${config.wager.toLocaleString()}</span>
             </div>
             <div className="horizontal-stat-row">
-              <span className="horizontal-stat-label">To win</span>
+              <span className="horizontal-stat-label">{config.isPaidOut ? 'Paid out' : 'To win'}</span>
               <span className="horizontal-stat-value horizontal-payout">${horizontalPayout.toLocaleString()}</span>
             </div>
             <div className="horizontal-cta">
@@ -539,7 +543,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   })()}
                 </div>
                 <div className="biggame-combo-cost">
-                  Cost: ${(config.comboCost || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {config.isPaidOut ? 'Original cost' : 'Cost'}: ${(config.comboCost || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
               </div>
 
@@ -599,7 +603,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
 
               <div className="combo-summary">
                 <div className="combo-summary-row">
-                  <span className="combo-summary-label">Cost</span>
+                  <span className="combo-summary-label">{config.isPaidOut ? 'Original cost' : 'Cost'}</span>
                   <span className="combo-summary-value">
                     ${config.wager.toLocaleString()}
                   </span>
@@ -619,7 +623,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   </div>
                 )}
                 <div className="combo-summary-row combo-payout-row">
-                  <span className="combo-summary-label">Payout if right</span>
+                  <span className="combo-summary-label">{config.isPaidOut ? 'Paid out' : 'Payout if right'}</span>
                   <span className="combo-payout">
                     ${payout.toLocaleString()}
                   </span>
@@ -670,7 +674,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
 
             <div className="trade-slip-details trade-slip-details-old">
               <div className="trade-slip-row">
-                <span className="trade-slip-label">Cost</span>
+                <span className="trade-slip-label">{config.isPaidOut ? 'Original cost' : 'Cost'}</span>
                 <span className="trade-slip-value">
                   ${config.wager.toLocaleString()}
                 </span>
@@ -682,7 +686,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                 </span>
               </div>
               <div className="trade-slip-row trade-slip-payout-row">
-                <span className="trade-slip-label">Payout if win</span>
+                <span className="trade-slip-label">{config.isPaidOut ? 'Paid out' : 'Payout if win'}</span>
                 <span className="trade-slip-payout trade-slip-payout-old">
                   ${payout.toLocaleString()}
                 </span>
@@ -729,14 +733,14 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   </span>
                 </div>
                 <div className="trade-slip-row">
-                  <span className="trade-slip-label">Cost</span>
+                  <span className="trade-slip-label">{config.isPaidOut ? 'Original cost' : 'Cost'}</span>
                   <span className="trade-slip-value">
                     ${config.wager.toLocaleString()}
                   </span>
                 </div>
                 <div className="trade-slip-payout-section">
                   <div className="trade-slip-row trade-slip-payout-row">
-                    <span className="trade-slip-label">Max payout</span>
+                    <span className="trade-slip-label">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
                     <span className="trade-slip-payout">
                       ${payout.toLocaleString()}
                     </span>
