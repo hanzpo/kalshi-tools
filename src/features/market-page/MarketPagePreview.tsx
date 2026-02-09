@@ -1,4 +1,8 @@
 import { useMemo, useState } from 'react';
+import { scaleLinear } from '@visx/scale';
+import { LinePath } from '@visx/shape';
+import { GridRows } from '@visx/grid';
+import { curveLinear } from '@visx/curve';
 import { MarketPageConfig } from '../../types/market-page';
 import './MarketPagePreview.css';
 
@@ -58,9 +62,9 @@ export function MarketPagePreview({
   });
   const [amountInput, setAmountInput] = useState('');
 
-  // Generate SVG path for chart
-  const chartPaths = useMemo(() => {
-    if (config.chartData.length === 0) return [];
+  // Chart scales for visx
+  const chartScales = useMemo(() => {
+    if (config.chartData.length === 0) return null;
 
     const width = 600;
     const height = 140;
@@ -85,24 +89,18 @@ export function MarketPagePreview({
     const range = maxVal - minVal || 1;
     const paddedMin = Math.max(0, minVal - range * 0.1);
     const paddedMax = Math.min(100, maxVal + range * 0.1);
-    const paddedRange = paddedMax - paddedMin || 1;
 
-    return config.outcomes.map((outcome) => {
-      const points = config.chartData.map((d, i) => {
-        const x = padding.left + (i / (config.chartData.length - 1)) * (width - padding.left - padding.right);
-        const val = d[`value_${outcome.id}`] ?? d.value;
-        const y = padding.top + (1 - (val - paddedMin) / paddedRange) * (height - padding.top - padding.bottom);
-        return { x, y };
-      });
-
-      const path = `M${points.map((p) => `${p.x},${p.y}`).join(' L')}`;
-
-      return {
-        id: outcome.id,
-        path,
-        color: outcome.color,
-      };
+    const xScale = scaleLinear<number>({
+      domain: [0, config.chartData.length - 1],
+      range: [padding.left, width - padding.right],
     });
+
+    const yScale = scaleLinear<number>({
+      domain: [paddedMin, paddedMax],
+      range: [height - padding.bottom, padding.top],
+    });
+
+    return { xScale, yScale, width, padding };
   }, [config.chartData, config.outcomes]);
 
   const volume = useMemo(() => {
@@ -275,20 +273,17 @@ export function MarketPagePreview({
           <div className="kmp-chart-container">
             <svg className="kmp-chart-svg" viewBox="0 0 650 180" preserveAspectRatio="xMidYMid meet">
               {/* Grid lines */}
-              <g className="kmp-grid">
-                {[0, 1, 2, 3].map((i) => (
-                  <line
-                    key={i}
-                    x1="0"
-                    y1={10 + i * 40}
-                    x2="600"
-                    y2={10 + i * 40}
-                    stroke={config.darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}
-                    strokeWidth="1"
-                    strokeDasharray="4 4"
-                  />
-                ))}
-              </g>
+              {chartScales && (
+                <GridRows
+                  scale={chartScales.yScale}
+                  width={chartScales.width - chartScales.padding.right}
+                  left={chartScales.padding.left}
+                  stroke={config.darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}
+                  strokeDasharray="4 4"
+                  strokeWidth={1}
+                  tickValues={[25, 50, 75, 100]}
+                />
+              )}
 
               {/* Y-axis labels */}
               <g className="kmp-y-labels">
@@ -300,13 +295,15 @@ export function MarketPagePreview({
               </g>
 
               {/* Chart lines */}
-              {chartPaths.map((chartPath) => (
-                <path
-                  key={chartPath.id}
-                  d={chartPath.path}
-                  stroke={getOutcomeColor(chartPath.color, config.darkMode === true)}
-                  strokeWidth="2"
-                  fill="none"
+              {chartScales && config.outcomes.map((outcome) => (
+                <LinePath
+                  key={outcome.id}
+                  data={config.chartData}
+                  x={(_d, i) => chartScales.xScale(i) ?? 0}
+                  y={(d) => chartScales.yScale(d[`value_${outcome.id}`] ?? d.value) ?? 0}
+                  stroke={getOutcomeColor(outcome.color, config.darkMode === true)}
+                  strokeWidth={2}
+                  curve={curveLinear}
                 />
               ))}
 

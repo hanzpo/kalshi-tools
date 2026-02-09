@@ -1,12 +1,10 @@
 import { useRef } from 'react';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  CartesianGrid,
-} from 'recharts';
+import { ParentSize } from '@visx/responsive';
+import { scaleLinear } from '@visx/scale';
+import { LinePath } from '@visx/shape';
+import { AxisBottom, AxisRight } from '@visx/axis';
+import { GridRows } from '@visx/grid';
+import { curveLinear } from '@visx/curve';
 import { MarketConfig, DataPoint } from '../../types';
 import { generateChange, formatVolume, getDateRangeForTimeHorizon, generateDateLabels } from '../../lib/dataGenerator';
 import { ImageIcon } from '../../components/ui/Icons';
@@ -46,7 +44,6 @@ export function LinkPreviewPreview({ config, data, leftImage, onTimeHorizonChang
 
   const generatedLabels = generateDateLabels(axisStart, axisEnd, config.timeHorizon);
   const xAxisTicks = generatedLabels.filter((label, index) => generatedLabels.indexOf(label) === index);
-  const axisKey = `${config.timeHorizon}-${axisStart.toISOString()}-${axisEnd.toISOString()}-${xAxisTicks.join('|')}`;
 
   // Calculate Y-axis domain for forecast type
   const isForecast = config.marketType === 'forecast';
@@ -82,10 +79,6 @@ export function LinkPreviewPreview({ config, data, leftImage, onTimeHorizonChang
   } else if (isForecast) {
     yAxisTicks = [0, 20, 40, 60, 80, 100];
   }
-  
-  const yAxisKey = isForecast && data.length > 0
-    ? `forecast-${yAxisDomain[0]}-${yAxisDomain[1]}-${yAxisTicks.join('|')}-${config.forecastUnit || 'K'}`
-    : `default-${config.marketType}`;
   
   return (
     <div
@@ -237,95 +230,124 @@ export function LinkPreviewPreview({ config, data, leftImage, onTimeHorizonChang
 
         {/* Chart */}
         <div className="link-preview-chart-container">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 5, right: 8, left: 15, bottom: 5 }}>
-              <CartesianGrid
-                strokeDasharray="1 4"
-                stroke={gridColor}
-                horizontal={true}
-                vertical={false}
-                strokeWidth={1}
-              />
-              <XAxis
-                key={axisKey}
-                dataKey="time"
-                stroke="transparent"
-                tick={{ fill: secondaryTextColor, fontSize: 10, dx: 15 }}
-                axisLine={false}
-                tickLine={false}
-                tickMargin={5}
-                ticks={xAxisTicks}
-                interval={0}
-              />
-              <YAxis
-                key={yAxisKey}
-                orientation="right"
-                stroke="transparent"
-                tick={{ fill: secondaryTextColor, fontSize: 10 }}
-                axisLine={false}
-                tickLine={false}
-                domain={yAxisDomain}
-                ticks={yAxisTicks}
-                tickFormatter={yAxisFormatter}
-                tickMargin={8}
-              />
-              {(config.marketType === 'binary' || config.marketType === 'forecast') ? (
-                <Line
-                  type="linear"
-                  dataKey="value"
-                  stroke={chartColor}
-                  strokeWidth={2}
-                  dot={(props: any) => {
-                    const isLast = props.index === data.length - 1;
-                    if (!isLast) return <circle key={`dot-${props.index}`} r={0} />;
-                    return (
-                      <circle
-                        key={`dot-${props.index}`}
-                        cx={props.cx}
-                        cy={props.cy}
-                        r={4}
-                        fill={chartColor}
+          <ParentSize>
+            {({ width, height }) => {
+              if (width === 0 || height === 0) return null;
+
+              const margin = { top: 5, right: 40, left: 10, bottom: 22 };
+
+              const xScale = scaleLinear<number>({
+                domain: [0, data.length - 1],
+                range: [margin.left, width - margin.right],
+              });
+
+              const yScale = scaleLinear<number>({
+                domain: yAxisDomain,
+                range: [height - margin.bottom, margin.top],
+              });
+
+              const innerWidth = width - margin.left - margin.right;
+
+              const xTickIndices = xAxisTicks
+                .map(tick => data.findIndex(d => d.time === tick))
+                .filter(idx => idx >= 0);
+
+              return (
+                <svg width={width} height={height} style={{ overflow: 'visible' }}>
+                  <GridRows
+                    scale={yScale}
+                    width={innerWidth}
+                    left={margin.left}
+                    stroke={gridColor}
+                    strokeDasharray="1 4"
+                    strokeWidth={1}
+                    tickValues={yAxisTicks}
+                  />
+                  <AxisBottom
+                    scale={xScale}
+                    top={height - margin.bottom}
+                    hideAxisLine
+                    hideTicks
+                    tickValues={xTickIndices}
+                    tickFormat={(idx) => data[idx as number]?.time ?? ''}
+                    tickLabelProps={() => ({
+                      fill: secondaryTextColor,
+                      fontSize: 10,
+                      textAnchor: 'middle' as const,
+                    })}
+                  />
+                  <AxisRight
+                    scale={yScale}
+                    left={width - margin.right}
+                    hideAxisLine
+                    hideTicks
+                    tickValues={yAxisTicks}
+                    tickFormat={(v) => yAxisFormatter(v as number)}
+                    tickLabelProps={() => ({
+                      fill: secondaryTextColor,
+                      fontSize: 10,
+                      textAnchor: 'start' as const,
+                      dx: 6,
+                      dy: 4,
+                    })}
+                  />
+                  {(config.marketType === 'binary' || config.marketType === 'forecast') ? (
+                    <>
+                      <LinePath
+                        data={data}
+                        x={(_d, i) => xScale(i) ?? 0}
+                        y={d => yScale(d.value) ?? 0}
                         stroke={chartColor}
                         strokeWidth={2}
+                        curve={curveLinear}
                       />
-                    );
-                  }}
-                  activeDot={{ r: 4, fill: chartColor }}
-                  animationDuration={300}
-                />
-              ) : (
-                <>
-                  {config.outcomes.map((outcome) => (
-                    <Line
-                      key={outcome.id}
-                      type="linear"
-                      dataKey={`value_${outcome.id}`}
-                      name={outcome.name}
-                      stroke={outcome.color}
-                      strokeWidth={2}
-                      dot={(props: any) => {
-                        const isLast = props.index === data.length - 1;
-                        if (!isLast) return <circle key={`dot-${outcome.id}-${props.index}`} r={0} />;
+                      {data.length > 0 && (() => {
+                        const lastIdx = data.length - 1;
                         return (
                           <circle
-                            key={`dot-${outcome.id}-${props.index}`}
-                            cx={props.cx}
-                            cy={props.cy}
+                            cx={xScale(lastIdx) ?? 0}
+                            cy={yScale(data[lastIdx].value) ?? 0}
                             r={4}
-                            fill={outcome.color}
-                            stroke={outcome.color}
+                            fill={chartColor}
+                            stroke={chartColor}
                             strokeWidth={2}
                           />
                         );
-                      }}
-                      activeDot={{ r: 4, fill: outcome.color }}
-                      animationDuration={300}
-                    />
-                  ))}
-                </>
-              )}
-            </LineChart>
-          </ResponsiveContainer>
+                      })()}
+                    </>
+                  ) : (
+                    <>
+                      {config.outcomes.map((outcome) => (
+                        <g key={outcome.id}>
+                          <LinePath
+                            data={data}
+                            x={(_d, i) => xScale(i) ?? 0}
+                            y={d => yScale(d[`value_${outcome.id}`] as number) ?? 0}
+                            stroke={outcome.color}
+                            strokeWidth={2}
+                            curve={curveLinear}
+                          />
+                          {data.length > 0 && (() => {
+                            const lastIdx = data.length - 1;
+                            return (
+                              <circle
+                                cx={xScale(lastIdx) ?? 0}
+                                cy={yScale(data[lastIdx][`value_${outcome.id}`] as number) ?? 0}
+                                r={4}
+                                fill={outcome.color}
+                                stroke={outcome.color}
+                                strokeWidth={2}
+                              />
+                            );
+                          })()}
+                        </g>
+                      ))}
+                    </>
+                  )}
+                </svg>
+              );
+            }}
+          </ParentSize>
         </div>
 
         {/* Footer */}
