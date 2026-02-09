@@ -84,55 +84,6 @@ export function LandingPage() {
           </Link>
 
           <Link
-            to="/search"
-            className="landing-option landing-option--search"
-            onClick={() => handleToolClick('search')}
-          >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
-                  </svg>
-                </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">Create a</span>
-                  <span className="option-label">Search Result</span>
-                </div>
-              </div>
-              <p className="option-description">
-                Build realistic search engine results with customizable content and styling.
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            to="/link-preview"
-            className="landing-option landing-option--linkpreview"
-            onClick={() => handleToolClick('link-preview')}
-          >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <line x1="12" y1="3" x2="12" y2="21" />
-                    <path d="M3 9h9" />
-                    <path d="M12 15h9" />
-                  </svg>
-                </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">Create a</span>
-                  <span className="option-label">Link Preview</span>
-                </div>
-              </div>
-              <p className="option-description">
-                Generate Twitter/social media card previews with split-screen image and chart layout (1200×675).
-              </p>
-            </div>
-          </Link>
-
-          <Link
             to="/market-page"
             className="landing-option landing-option--marketpage"
             onClick={() => handleToolClick('market-page')}
@@ -185,33 +136,6 @@ export function LandingPage() {
             </div>
           </a>
 
-          <a
-            href="https://sbadddd-production.up.railway.app/"
-            className="landing-option landing-option--livedisplay"
-            onClick={() => handleToolClick('live-display')}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <path d="M8 21h8" />
-                    <path d="M12 17v4" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">View the</span>
-                  <span className="option-label">Live Display</span>
-                </div>
-              </div>
-              <p className="option-description">
-                Football championship live display.
-              </p>
-            </div>
-          </a>
 
         </div>
       </div>

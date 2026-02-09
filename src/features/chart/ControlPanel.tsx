@@ -522,10 +522,10 @@ export function ControlPanel({
               onDragLeave={handleUrlDragLeave}
               onDrop={handleUrlDrop}
               style={{
-                border: `1.5px dashed ${isDraggingUrl ? '#09C285' : '#d1d5db'}`,
+                border: `1.5px dashed ${isDraggingUrl ? '#09C285' : '#444'}`,
                 borderRadius: '5px',
                 padding: '12px',
-                backgroundColor: isDraggingUrl ? '#f0fdf4' : '#ffffff',
+                backgroundColor: isDraggingUrl ? '#0d2e1f' : '#1e1e1e',
                 transition: 'border-color 0.15s, background-color 0.15s',
                 marginBottom: '4px'
               }}
@@ -554,7 +554,7 @@ export function ControlPanel({
                   style={{
                     padding: '8px 16px',
                     border: 'none',
-                    backgroundColor: isImporting || !urlInput.trim() ? '#e5e7eb' : '#09C285',
+                    backgroundColor: isImporting || !urlInput.trim() ? '#333' : '#09C285',
                     color: isImporting || !urlInput.trim() ? '#9ca3af' : 'white',
                     borderRadius: '5px',
                     cursor: isImporting || !urlInput.trim() ? 'not-allowed' : 'pointer',
@@ -622,14 +622,14 @@ export function ControlPanel({
               onDragLeave={handleLeftDragLeave}
               onDrop={handleLeftDrop}
               style={{
-                border: `1.5px dashed ${isDraggingLeft ? '#09C285' : '#d1d5db'}`,
+                border: `1.5px dashed ${isDraggingLeft ? '#09C285' : '#444'}`,
                 borderRadius: '5px',
                 padding: '16px 12px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '48px',
-                backgroundColor: isDraggingLeft ? '#f0fdf4' : '#ffffff',
+                backgroundColor: isDraggingLeft ? '#0d2e1f' : '#1e1e1e',
                 transition: 'border-color 0.15s, background-color 0.15s',
                 cursor: 'pointer',
                 marginBottom: '4px'
@@ -650,7 +650,7 @@ export function ControlPanel({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  color: isDraggingLeft ? '#09C285' : '#6b7280',
+                  color: isDraggingLeft ? '#09C285' : '#9ca3af',
                   fontWeight: 500,
                   fontSize: '13px',
                   textTransform: 'uppercase',
@@ -686,14 +686,14 @@ export function ControlPanel({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             style={{
-              border: `1.5px dashed ${isDragging ? '#09C285' : '#d1d5db'}`,
+              border: `1.5px dashed ${isDragging ? '#09C285' : '#444'}`,
               borderRadius: '5px',
               padding: '16px 12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               minHeight: '48px',
-              backgroundColor: isDragging ? '#f0fdf4' : '#ffffff',
+              backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
               transition: 'border-color 0.15s, background-color 0.15s',
               cursor: 'pointer',
               marginBottom: '4px'
@@ -715,7 +715,7 @@ export function ControlPanel({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                color: isDragging ? '#09C285' : '#6b7280',
+                color: isDragging ? '#09C285' : '#9ca3af',
                 fontWeight: 500,
                 fontSize: '13px',
                 textTransform: 'uppercase',
@@ -765,11 +765,11 @@ export function ControlPanel({
             style={{
               marginTop: '0',
               padding: '8px 10px',
-              border: '1px solid #e5e7eb',
+              border: '1px solid #333',
               borderRadius: '5px',
-              backgroundColor: 'white',
+              backgroundColor: '#141414',
               fontSize: '14px',
-              color: '#374151',
+              color: '#e5e7eb',
               cursor: 'pointer',
               transition: 'border-color 0.15s',
               width: '100%',
@@ -819,10 +819,10 @@ export function ControlPanel({
                 <div
                   key={outcome.id}
                   style={{
-                    border: '1px solid #e5e7eb',
+                    border: '1px solid #2a2a2a',
                     borderRadius: '6px',
                     padding: '12px',
-                    backgroundColor: '#fafafa',
+                    backgroundColor: '#252525',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
@@ -834,7 +834,7 @@ export function ControlPanel({
                           width: '28px',
                           height: '28px',
                           backgroundColor: outcome.color,
-                          border: '1px solid #e5e7eb',
+                          border: '1px solid #333',
                           borderRadius: '4px',
                           cursor: 'pointer',
                           flexShrink: 0,
@@ -850,11 +850,11 @@ export function ControlPanel({
                             top: '36px',
                             left: 0,
                             zIndex: 1000,
-                            backgroundColor: 'white',
+                            backgroundColor: '#1e1e1e',
                             borderRadius: '6px',
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
                             padding: '12px',
-                            border: '1px solid #e5e7eb',
+                            border: '1px solid #333',
                           }}
                         >
                           <HexColorPicker
@@ -1089,8 +1089,8 @@ export function ControlPanel({
                 style={{
                   padding: '6px 10px',
                   border: '1px solid',
-                  borderColor: config.timeHorizon === horizon ? '#09C285' : '#e5e7eb',
-                  backgroundColor: config.timeHorizon === horizon ? '#f0fdf4' : 'white',
+                  borderColor: config.timeHorizon === horizon ? '#09C285' : '#333',
+                  backgroundColor: config.timeHorizon === horizon ? '#0d2e1f' : '#1e1e1e',
                   borderRadius: '4px',
                   cursor: 'pointer',
                   fontWeight: 500,
@@ -1118,13 +1118,13 @@ export function ControlPanel({
           style={{
             width: '100%',
             padding: '10px',
-            border: '1px solid #e5e7eb',
-            backgroundColor: 'white',
+            border: '1px solid #333',
+            backgroundColor: '#1e1e1e',
             borderRadius: '5px',
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: '#374151',
+            color: '#d1d5db',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -1146,10 +1146,10 @@ export function ControlPanel({
 
       {showAdvanced && (
         <div style={{
-          border: '1px solid #e5e7eb',
+          border: '1px solid #2a2a2a',
           borderRadius: '6px',
           padding: '16px',
-          backgroundColor: '#fafafa',
+          backgroundColor: '#252525',
           marginTop: '-4px',
         }}>
           <div className="control-group">

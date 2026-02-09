@@ -1,19 +1,19 @@
 .control-panel {
-  background: #ffffff;
+  background: #1e1e1e;
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2a2a2a;
   height: fit-content;
   position: sticky;
   top: 24px;
-  color: #1a1a1a;
+  color: #e5e7eb;
 }
 
 .back-button-control-panel {
   background: transparent;
   border: none;
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -27,13 +27,13 @@
 }
 
 .back-button-control-panel:hover {
-  color: #374151;
+  color: #d1d5db;
 }
 
 .panel-title {
   font-size: 22px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #f3f4f6;
   margin-bottom: 4px;
   letter-spacing: -0.02em;
 }
@@ -47,8 +47,8 @@
 
 /* Control Section Grouping */
 .control-section {
-  background: #f9fafb;
-  border: 1px solid #f3f4f6;
+  background: #252525;
+  border: 1px solid #2a2a2a;
   border-radius: 8px;
   padding: 14px;
   margin-bottom: 16px;
@@ -70,7 +70,7 @@
   letter-spacing: 0.06em;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #333;
 }
 
 .control-group {
@@ -91,17 +91,17 @@
 .select-input {
   width: 100%;
   padding: 8px 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #333;
   border-radius: 5px;
   font-size: 14px;
   transition: border-color 0.15s;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: #141414;
+  color: #e5e7eb;
 }
 
 .text-input:hover,
 .select-input:hover {
-  border-color: #d1d5db;
+  border-color: #444;
 }
 
 .text-input:focus,
@@ -111,22 +111,23 @@
 }
 
 .text-input::placeholder {
-  color: #9ca3af;
+  color: #555;
 }
 
 .file-input {
   width: 100%;
   padding: 8px;
   font-size: 13px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #333;
   border-radius: 5px;
   cursor: pointer;
-  background: #ffffff;
+  background: #141414;
+  color: #e5e7eb;
 }
 
 .help-text {
   font-size: 11px;
-  color: #9ca3af;
+  color: #6b7280;
   margin-top: 4px;
   line-height: 1.4;
 }
@@ -135,7 +136,7 @@
   width: 100%;
   height: 4px;
   border-radius: 2px;
-  background: #e5e7eb;
+  background: #333;
   outline: none;
   -webkit-appearance: none;
 }
@@ -176,23 +177,23 @@
   justify-content: center;
   gap: 6px;
   padding: 8px 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #333;
   border-radius: 5px;
-  background: #ffffff;
+  background: #1e1e1e;
   font-size: 13px;
   font-weight: 500;
-  color: #6b7280;
+  color: #9ca3af;
   cursor: pointer;
   transition: border-color 0.15s, background-color 0.15s, color 0.15s;
 }
 
 .color-option:hover {
-  border-color: #d1d5db;
+  border-color: #444;
 }
 
 .color-option.active {
   border-color: #09C285;
-  background-color: #f0fdf4;
+  background-color: #0d2e1f;
   color: #09C285;
 }
 
@@ -220,13 +221,13 @@
 .slider-value {
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: #d1d5db;
   text-align: right;
 }
 
 .segmented-control {
   display: flex;
-  background: #f3f4f6;
+  background: #252525;
   border-radius: 5px;
   padding: 2px;
   gap: 2px;
@@ -236,7 +237,7 @@
   flex: 1;
   border: none;
   background: transparent;
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 13px;
   font-weight: 500;
   padding: 6px 10px;
@@ -246,13 +247,13 @@
 }
 
 .segmented-option:hover {
-  color: #374151;
+  color: #d1d5db;
 }
 
 .segmented-option.active {
-  background: #ffffff;
+  background: #1e1e1e;
   color: #09C285;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .combo-legs {
@@ -262,10 +263,10 @@
 }
 
 .combo-leg {
-  border: 1px solid #e5e7eb;
+  border: 1px solid #333;
   border-radius: 5px;
   padding: 12px;
-  background: #fafafa;
+  background: #252525;
 }
 
 .combo-leg-header {
@@ -278,7 +279,7 @@
 .combo-leg-title {
   font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: #d1d5db;
 }
 
 .combo-leg-remove {
@@ -294,7 +295,7 @@
 }
 
 .combo-leg-remove:hover:not(:disabled) {
-  background: #fee2e2;
+  background: #3d1c1c;
 }
 
 .combo-leg-remove:disabled {
@@ -344,12 +345,12 @@
   height: 36px;
   border-radius: 5px;
   object-fit: cover;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #333;
 }
 
 .combo-image-clear {
   background: transparent;
-  border: 1px solid #fecaca;
+  border: 1px solid #5c2020;
   color: #dc2626;
   font-size: 11px;
   font-weight: 500;
@@ -360,7 +361,7 @@
 }
 
 .combo-image-clear:hover {
-  background: #fee2e2;
+  background: #3d1c1c;
 }
 
 .combo-image-placeholder {
@@ -369,10 +370,10 @@
   justify-content: center;
   padding: 6px 12px;
   border-radius: 4px;
-  border: 1.5px dashed #d1d5db;
+  border: 1.5px dashed #444;
   font-size: 11px;
   font-weight: 500;
-  color: #9ca3af;
+  color: #6b7280;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
 }
@@ -384,9 +385,9 @@
 
 .combo-leg-add {
   width: 100%;
-  border: 1.5px dashed #d1d5db;
+  border: 1.5px dashed #444;
   background: transparent;
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 12px;
   font-weight: 500;
   padding: 8px;
@@ -402,21 +403,21 @@
 
 /* Combo Input Styles */
 .combo-category-input {
-  background: #fafafa;
+  background: #252525;
 }
 
 .combo-events-container {
   margin-top: 12px;
   padding-left: 12px;
-  border-left: 2px solid #e5e7eb;
+  border-left: 2px solid #333;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 .combo-event-input {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #1e1e1e;
+  border: 1px solid #333;
   border-radius: 6px;
   padding: 10px;
   display: flex;
@@ -433,7 +434,7 @@
 .combo-event-title {
   font-size: 11px;
   font-weight: 600;
-  color: #6b7280;
+  color: #9ca3af;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -441,7 +442,7 @@
 .combo-markets-container {
   margin-top: 8px;
   padding-left: 10px;
-  border-left: 2px solid #f3f4f6;
+  border-left: 2px solid #2a2a2a;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -476,9 +477,9 @@
 .combo-add-market,
 .combo-add-event {
   width: 100%;
-  border: 1px dashed #e5e7eb;
+  border: 1px dashed #333;
   background: transparent;
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 11px;
   font-weight: 500;
   padding: 6px;
@@ -508,7 +509,7 @@
 .combo-color-picker label {
   font-size: 10px;
   font-weight: 500;
-  color: #6b7280;
+  color: #9ca3af;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 0;
@@ -518,7 +519,7 @@
   width: 32px;
   height: 32px;
   padding: 0;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #333;
   border-radius: 4px;
   cursor: pointer;
   background: none;
@@ -560,14 +561,14 @@
 }
 
 .button-regenerate {
-  background: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #e5e7eb;
+  background: #252525;
+  color: #9ca3af;
+  border: 1px solid #333;
 }
 
 .button-regenerate:hover {
-  background: #e5e7eb;
-  color: #374151;
+  background: #333;
+  color: #d1d5db;
 }
 
 .button-export {
@@ -591,7 +592,7 @@
 .panel-footer {
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #333;
 }
 
 .panel-footer p {
@@ -644,16 +645,16 @@
   .control-panel {
     padding: 16px;
   }
-  
+
   .panel-title {
     font-size: 20px;
   }
-  
+
   .panel-subtitle {
     font-size: 12px;
     margin-bottom: 16px;
   }
-  
+
   .control-group {
     margin-bottom: 14px;
   }
@@ -663,7 +664,7 @@
   .control-panel {
     padding: 14px;
   }
-  
+
   .panel-title {
     font-size: 18px;
   }

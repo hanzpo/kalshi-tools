@@ -384,14 +384,14 @@ export function TradeSlipMaker({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 style={{
-                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#d1d5db'}`,
+                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
                   borderRadius: '5px',
                   padding: '16px 12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   minHeight: '48px',
-                  backgroundColor: isDragging ? '#f0fdf4' : '#ffffff',
+                  backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
                   transition: 'border-color 0.15s, background-color 0.15s',
                   cursor: 'pointer',
                   marginBottom: '4px'
@@ -628,14 +628,14 @@ export function TradeSlipMaker({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 style={{
-                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#d1d5db'}`,
+                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
                   borderRadius: '5px',
                   padding: '16px 12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   minHeight: '48px',
-                  backgroundColor: isDragging ? '#f0fdf4' : '#ffffff',
+                  backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
                   transition: 'border-color 0.15s, background-color 0.15s',
                   cursor: 'pointer',
                   marginBottom: '4px'
@@ -709,14 +709,14 @@ export function TradeSlipMaker({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 style={{
-                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#d1d5db'}`,
+                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
                   borderRadius: '5px',
                   padding: '16px 12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   minHeight: '48px',
-                  backgroundColor: isDragging ? '#f0fdf4' : '#ffffff',
+                  backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
                   transition: 'border-color 0.15s, background-color 0.15s',
                   cursor: 'pointer',
                   marginBottom: '4px'
@@ -1242,7 +1242,7 @@ export function TradeSlipMaker({
                         onDragLeave={handleLegDragLeave}
                         onDrop={(e) => handleLegDrop(leg.id, e)}
                         style={{
-                          border: `1.5px dashed ${draggingLegId === leg.id ? BRAND_GREEN : '#d1d5db'}`,
+                          border: `1.5px dashed ${draggingLegId === leg.id ? BRAND_GREEN : '#444'}`,
                           borderRadius: '8px',
                           transition: 'border-color 0.2s ease',
                         }}

@@ -343,7 +343,7 @@ export function MarketPageMaker({
                           alignItems: 'center',
                           gap: '6px',
                           padding: '8px 12px',
-                          background: '#f3f4f6',
+                          background: '#252525',
                           borderRadius: '6px',
                           cursor: 'pointer',
                           fontSize: '13px',
@@ -384,7 +384,7 @@ export function MarketPageMaker({
                       className="text-input"
                       value={outcome.noPrice}
                       disabled
-                      style={{ backgroundColor: '#f3f4f6' }}
+                      style={{ backgroundColor: '#252525' }}
                     />
                   </div>
                 </div>
@@ -503,7 +503,7 @@ export function MarketPageMaker({
                   alignItems: 'center',
                   gap: '6px',
                   padding: '8px 12px',
-                  background: '#f3f4f6',
+                  background: '#252525',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   fontSize: '13px',
@@ -543,7 +543,7 @@ export function MarketPageMaker({
         <div className="control-section-title">Display Options</div>
 
         <div className="control-group">
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
             <input
               type="checkbox"
               checked={config.darkMode === true}
@@ -554,7 +554,7 @@ export function MarketPageMaker({
         </div>
 
         <div className="control-group">
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
             <input
               type="checkbox"
               checked={config.showWatermark}
@@ -565,7 +565,7 @@ export function MarketPageMaker({
         </div>
 
         <div className="control-group">
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
             <input
               type="checkbox"
               checked={config.showRules}
@@ -590,7 +590,7 @@ export function MarketPageMaker({
         )}
 
         <div className="control-group">
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
             <input
               type="checkbox"
               checked={config.showRelatedMarkets}
@@ -601,7 +601,7 @@ export function MarketPageMaker({
         </div>
 
         <div className="control-group">
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#374151' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
             <input
               type="checkbox"
               checked={config.showReviewPage}

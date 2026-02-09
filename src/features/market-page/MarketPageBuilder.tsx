@@ -157,6 +157,7 @@ export default function MarketPageBuilder() {
     submittedOrders: [],
     payoutAmount: '',
     sidebarState: 'trading',
+    darkMode: true,
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);

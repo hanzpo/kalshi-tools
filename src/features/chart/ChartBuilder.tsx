@@ -45,6 +45,7 @@ export default function ChartBuilder() {
     forecastValue: 128000,
     forecastUnit: 'K',
     mutuallyExclusive: true,
+    darkMode: true,
   });
 
   const [data, setData] = useState<DataPoint[]>([]);

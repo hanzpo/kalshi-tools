@@ -16,13 +16,23 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #fafafa;
+  background: #141414;
 }
 
 input,
 button,
 select {
   font-family: inherit;
+  color-scheme: dark;
+}
+
+input[type="checkbox"] {
+  accent-color: #09C285;
+}
+
+select {
+  background-color: #141414;
+  color: #e5e7eb;
 }
 
 button {

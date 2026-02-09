@@ -1,24 +1,24 @@
 .image-uploader {
-  border: 1.5px dashed #d1d5db;
+  border: 1.5px dashed #444;
   border-radius: 6px;
   padding: 16px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  background-color: #fafafa;
+  background-color: #1e1e1e;
   transition: border-color 0.15s, background-color 0.15s;
   cursor: pointer;
 }
 
 .image-uploader:hover {
   border-color: #09C285;
-  background-color: #f5f5f5;
+  background-color: #252525;
 }
 
 .image-uploader--dragging {
   border-color: #09C285;
-  background-color: #f0fdf4;
+  background-color: #0d2e1f;
 }
 
 .image-uploader__input {
@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #6b7280;
+  color: #9ca3af;
   font-weight: 500;
   font-size: 13px;
   text-transform: uppercase;
