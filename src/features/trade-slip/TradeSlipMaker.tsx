@@ -366,8 +366,8 @@ export function TradeSlipMaker({
           <option value="single-old">Single (old)</option>
           <option value="combo-old">Combo (old)</option>
           <option value="horizontal">Horizontal</option>
-          <option value="biggame">Big game</option>
-          <option value="biggame-combo">Big game combo</option>
+          {/* <option value="biggame">Big game</option>
+          <option value="biggame-combo">Big game combo</option> */}
         </select>
       </div>
 
