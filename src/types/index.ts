@@ -1,6 +1,9 @@
 // Market types
 export type { MarketType, TimeHorizon, Outcome, MarketConfig, DataPoint } from './market';
 
+// Banner types
+export type { BannerConfig } from './banner';
+
 // Trade slip types
 export type {
   TradeSlipMode,
