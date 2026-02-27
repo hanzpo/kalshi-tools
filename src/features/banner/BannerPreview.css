@@ -86,28 +86,28 @@
   line-height: 1;
 }
 
-.banner-rank-badge {
+.banner-change-badge {
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-.banner-rank-arrow {
+.banner-change-arrow {
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
 }
 
-.banner-rank-arrow--up {
+.banner-change-arrow--up {
   border-bottom: 12px solid #09C285;
 }
 
-.banner-rank-arrow--down {
+.banner-change-arrow--down {
   border-top: 12px solid #ef4444;
 }
 
-.banner-rank-number {
+.banner-change-number {
   font-size: 18px;
   font-weight: 600;
   color: #6b7280;

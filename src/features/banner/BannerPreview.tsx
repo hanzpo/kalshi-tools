@@ -53,10 +53,10 @@ export function BannerPreview({ config }: BannerPreviewProps) {
 
         <div className="banner-price-section">
           <span className="banner-price-change">{config.odds}%</span>
-          {config.rank && (
-            <div className="banner-rank-badge">
-              <div className={`banner-rank-arrow banner-rank-arrow--${config.trendDirection}`} />
-              <span className="banner-rank-number">{config.rank}</span>
+          {config.change && (
+            <div className="banner-change-badge">
+              <div className={`banner-change-arrow banner-change-arrow--${config.trendDirection}`} />
+              <span className="banner-change-number">{config.change}</span>
             </div>
           )}
         </div>

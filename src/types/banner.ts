@@ -5,5 +5,5 @@ export interface BannerConfig {
   tradeSide: 'Yes' | 'No';
   odds: number;
   trendDirection: 'up' | 'down';
-  rank: string;
+  change: string;
 }

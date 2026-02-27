@@ -20,7 +20,7 @@ export default function BannerBuilder() {
     tradeSide: 'Yes',
     odds: 65,
     trendDirection: 'up',
-    rank: '',
+    change: '',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);

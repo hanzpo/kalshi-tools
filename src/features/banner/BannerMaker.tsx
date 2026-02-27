@@ -236,14 +236,14 @@ export function BannerMaker({
         </div>
 
         <div className="control-group">
-          <label htmlFor="banner-rank">Rank</label>
+          <label htmlFor="banner-change">Change</label>
           <input
-            id="banner-rank"
+            id="banner-change"
             type="text"
             className="text-input"
             placeholder="e.g., 1"
-            value={config.rank}
-            onChange={(e) => onConfigChange({ rank: e.target.value })}
+            value={config.change}
+            onChange={(e) => onConfigChange({ change: e.target.value })}
           />
         </div>
       </div>
