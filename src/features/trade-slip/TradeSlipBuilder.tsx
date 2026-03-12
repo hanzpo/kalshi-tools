@@ -9,7 +9,7 @@ import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '..
 import { createFileName } from '../../lib/chartHelpers';
 import { useToast } from '../../hooks/useToast';
 import { trackEvent } from '../../lib/analytics';
-import '../../App.css';
+import { layout } from '../../styles/layout';
 
 const TRADE_SLIP_PREVIEW_ID = 'trade-slip-preview';
 
@@ -92,11 +92,6 @@ export default function TradeSlipBuilder() {
     coinbaseWager: 1000,
     coinbasePayout: 25000,
     coinbasePlayType: '',
-    bigGameTeam1: 'SEA',
-    bigGameTeam2: 'NE',
-    bigGameTitle: 'PRO FOOTBALL CHAMPIONSHIP',
-    bigGameColor1: '#408FFF',
-    bigGameColor2: '#FF4D6A',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);
@@ -160,7 +155,7 @@ export default function TradeSlipBuilder() {
       const marketName = config.marketName?.trim();
       const titleName = config.title?.trim();
       let nameSource: string;
-      if (config.mode === 'single' || config.mode === 'biggame') {
+      if (config.mode === 'single') {
         nameSource = outcomeName || marketName || titleName || 'trade-slip';
       } else if (config.mode === 'coinbase') {
         nameSource = config.coinbasePlayType?.trim() || 'coinbase-slip';
@@ -213,8 +208,8 @@ export default function TradeSlipBuilder() {
   }
 
   return (
-    <div className="app">
-      <div className="app-container">
+    <div className={layout.app}>
+      <div className={layout.appContainer}>
         <TradeSlipMaker
           config={config}
           onConfigChange={handleConfigChange}
@@ -223,7 +218,7 @@ export default function TradeSlipBuilder() {
           onCopyToClipboard={handleCopyToClipboard}
           onBack={() => navigate('/')}
         />
-        <div className="preview-section">
+        <div className={layout.previewSection}>
           <TradeSlipPreview config={config} />
         </div>
       </div>

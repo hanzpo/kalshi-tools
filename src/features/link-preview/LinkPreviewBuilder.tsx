@@ -16,7 +16,7 @@ import {
 import { useToast } from '../../hooks/useToast';
 import { useExport } from '../../hooks/useExport';
 import { trackEvent } from '../../lib/analytics';
-import '../../App.css';
+import { layout } from '../../styles/layout';
 
 const PREVIEW_ID = 'link-preview';
 
@@ -219,8 +219,8 @@ export default function LinkPreviewBuilder() {
   }
 
   return (
-    <div className="app">
-      <div className="app-container">
+    <div className={layout.app}>
+      <div className={layout.appContainer}>
         <ControlPanel
           config={config}
           onConfigChange={handleConfigChange}
@@ -234,7 +234,7 @@ export default function LinkPreviewBuilder() {
           leftImage={leftImage}
           onLeftImageUpload={handleLeftImageUpload}
         />
-        <div className="preview-section">
+        <div className={layout.previewSection}>
           <LinkPreviewPreview 
             config={config} 
             data={data} 

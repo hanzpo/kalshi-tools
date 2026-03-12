@@ -1,40 +1,294 @@
-html,
-body,
-#root {
-  height: 100%;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-barlow: 'Barlow Condensed', sans-serif;
+  --font-graphik: 'GraphikCondensed', sans-serif;
+
+  --color-dark: #141414;
+  --color-dark-card: #1a1a1a;
+  --color-dark-surface: #1e1e1e;
+  --color-dark-elevated: #252525;
+  --color-dark-hover: #1f1f1f;
+  --color-dark-border: #2a2a2a;
+  --color-dark-border-light: #333;
+
+  --color-brand: #09C285;
+  --color-brand-light: #00C688;
+  --color-brand-alt: #28CC95;
+
+  --color-yes: #00D084;
+  --color-no: #E8396E;
+
+  --color-text-primary: #e5e7eb;
+  --color-text-secondary: #9ca3af;
+  --color-text-muted: #6b7280;
+  --color-text-white: rgba(255, 255, 255, 0.9);
+
+  --color-surface-light: #ffffff;
+  --color-border-light: #e5e7eb;
+
+  --animate-toast-up: toast-up 0.25s ease-out;
 }
 
-* {
+@keyframes toast-up {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #141414;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  input,
+  button,
+  select {
+    font-family: inherit;
+    color-scheme: dark;
+  }
+
+  input[type="checkbox"] {
+    accent-color: #09C285;
+  }
+
+  select {
+    background-color: #141414;
+    color: #e5e7eb;
+  }
+
+  button {
+    user-select: none;
+  }
+}
+
+/* Trade feed animations (used by overlay elements with inline style references) */
+@keyframes tradeFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Slider thumb pseudo-element styles (not possible in Tailwind) */
+.slider-input {
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: #333;
+  outline: none;
+}
+.slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #09C285;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.slider-input::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+.slider-input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #09C285;
+  cursor: pointer;
+  border: none;
+}
+
+/* react-colorful overrides */
+.react-colorful {
+  width: 160px;
+  height: 160px;
+}
+.react-colorful__saturation {
+  border-radius: 4px 4px 0 0;
+}
+.react-colorful__hue {
+  height: 12px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+.react-colorful__pointer {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Market Page Preview (kmp) ── */
+/* CSS custom properties for light/dark theming */
+.kmp {
+  --kmp-surface: #ffffff;
+  --kmp-bg: #f7f7f8;
+  --kmp-text-primary: #1a1a1a;
+  --kmp-text-secondary: #6b7280;
+  --kmp-text-tertiary: #9ca3af;
+  --kmp-border: #e5e7eb;
+  --kmp-border-light: rgba(0, 0, 0, 0.06);
+  --kmp-brand: #00D084;
+  --kmp-yes: #00D084;
+  --kmp-yes-bg: rgba(0, 208, 132, 0.08);
+  --kmp-no: #E8396E;
+  --kmp-no-bg: rgba(232, 57, 110, 0.08);
+}
+
+.kmp.kmp-dark {
+  --kmp-surface: #141414;
+  --kmp-bg: #1f1f1f;
+  --kmp-text-primary: #ffffff;
+  --kmp-text-secondary: #9ca3af;
+  --kmp-text-tertiary: #6b7280;
+  --kmp-border: #2a2a2a;
+  --kmp-border-light: rgba(255, 255, 255, 0.06);
+  --kmp-brand: #00D084;
+  --kmp-yes: #00D084;
+  --kmp-yes-bg: rgba(0, 208, 132, 0.12);
+  --kmp-no: #E8396E;
+  --kmp-no-bg: rgba(232, 57, 110, 0.12);
+}
+
+@keyframes kmp-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Dark mode button overrides that depend on nested .active state */
+.kmp.kmp-dark .kmp-sidebar-yes { background: rgba(38, 92, 255, 0.15); color: #5b8aff; }
+.kmp.kmp-dark .kmp-sidebar-yes.active { background: #265CFF; color: white; }
+.kmp.kmp-dark .kmp-sidebar-no { background: rgba(170, 8, 255, 0.15); color: #c55dff; }
+.kmp.kmp-dark .kmp-sidebar-no.active { background: #AA08FF; color: white; }
+.kmp.kmp-dark .kmp-btn-yes { background: rgba(38, 92, 255, 0.15); color: #5b8aff; }
+.kmp.kmp-dark .kmp-btn-yes.filled { background: #265CFF; color: white; }
+.kmp.kmp-dark .kmp-btn-no { background: rgba(170, 8, 255, 0.15); color: #c55dff; }
+.kmp.kmp-dark .kmp-btn-no.filled { background: #AA08FF; color: white; }
+
+/* Dark mode input overrides */
+.kmp.kmp-dark .kmp-sidebar-input-wrapper {
+  background: #292929;
+  border-color: #4B4B4B;
+}
+.kmp.kmp-dark .kmp-sidebar-input-wrapper:hover { border-color: #5a5a5a; }
+.kmp.kmp-dark .kmp-sidebar-input-wrapper:focus-within {
+  border-color: #0AC285;
+  outline: 1px solid #0AC285;
+}
+.kmp.kmp-dark .kmp-sidebar-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+.kmp.kmp-dark .kmp-sidebar-input-sublabel { color: #0AC285; }
+
+/* Dark mode sidebar content */
+.kmp.kmp-dark .kmp-sidebar-content {
+  background: #292929;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 2px, rgba(0, 0, 0, 0.3) 0px 2px 4px;
+}
+
+/* Dark mode sidebar toggles */
+.kmp.kmp-dark .kmp-sidebar-toggle { border-color: #4B4B4B; }
+.kmp.kmp-dark .kmp-sidebar-toggle:hover { background: var(--kmp-bg); }
+.kmp.kmp-dark .kmp-sidebar-toggle.active {
+  background: rgba(10, 194, 133, 0.15);
+  color: #0AC285;
+  border-color: #0AC285;
+}
+.kmp.kmp-dark .kmp-sidebar-btn { border: 1px solid #4B4B4B; }
+.kmp.kmp-dark .kmp-sidebar-summary-row { color: rgba(255, 255, 255, 0.5); }
+
+/* Dark mode placeholders */
+.kmp.kmp-dark .kmp-header-image-placeholder,
+.kmp.kmp-dark .kmp-market-thumb-placeholder,
+.kmp.kmp-dark .kmp-sidebar-trade-thumb-placeholder,
+.kmp.kmp-dark .kmp-confirmation-thumb-placeholder,
+.kmp.kmp-dark .kmp-related-image-placeholder { background: #1f1f1f; }
+
+/* Dark mode hover overrides */
+.kmp.kmp-dark .kmp-nav-btn-primary:hover { background: #08b077; }
+.kmp.kmp-dark .kmp-market-row:hover { background: rgba(255, 255, 255, 0.02); }
+.kmp.kmp-dark .kmp-market-row.selected { background: rgba(255, 255, 255, 0.04); }
+.kmp.kmp-dark .kmp-related-item:hover { background: rgba(255, 255, 255, 0.02); }
+.kmp.kmp-dark .kmp-watermark { color: rgba(128, 128, 128, 0.3); }
+
+/* Sidebar input spin-button removal */
+.kmp .kmp-sidebar-input::-webkit-outer-spin-button,
+.kmp .kmp-sidebar-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+}
+.kmp .kmp-sidebar-input[type=number] {
+  -moz-appearance: textfield;
 }
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #141414;
+/* Axis label fill for SVG */
+.kmp-axis-label {
+  font-size: 11px;
+  fill: var(--kmp-text-tertiary);
+  font-family: 'Inter', sans-serif;
 }
 
-input,
-button,
-select {
-  font-family: inherit;
-  color-scheme: dark;
+/* Light mode market row hover */
+.kmp .kmp-market-row:hover { background: rgba(0, 0, 0, 0.02); }
+.kmp .kmp-market-row.selected { background: rgba(0, 0, 0, 0.04); }
+.kmp .kmp-related-item:hover { background: rgba(0, 0, 0, 0.02); }
+
+/* Sidebar input focus */
+.kmp .kmp-sidebar-input-wrapper:hover { border-color: rgba(0, 0, 0, 0.3); }
+.kmp .kmp-sidebar-input-wrapper:focus-within {
+  border-color: #0AC285;
+  outline: 1px solid #0AC285;
+}
+.kmp .kmp-sidebar-input::placeholder { color: rgba(0, 0, 0, 0.3); }
+
+/* Light mode sidebar toggle active */
+.kmp .kmp-sidebar-toggle.active {
+  background: rgba(10, 194, 133, 0.1);
+  color: #0AC285;
+  border-color: rgba(10, 194, 133, 0.2);
 }
 
-input[type="checkbox"] {
-  accent-color: #09C285;
+/* Responsive overrides */
+@media (max-width: 1024px) {
+  .kmp .kmp-sidebar { display: none; }
+  .kmp .kmp-nav-search span { display: none; }
+  .kmp .kmp-nav-search { min-width: auto; padding: 8px; border-radius: 50%; }
 }
 
-select {
-  background-color: #141414;
-  color: #e5e7eb;
-}
-
-button {
-  user-select: none;
+@media (max-width: 768px) {
+  .kmp .kmp-nav-links { display: none; }
+  .kmp .kmp-layout { padding: 16px; }
+  .kmp .kmp-header { flex-direction: column; gap: 16px; }
+  .kmp .kmp-header-actions { align-self: flex-start; }
+  .kmp .kmp-header-image { width: 64px; height: 64px; }
+  .kmp .kmp-title { font-size: 20px; }
+  .kmp .kmp-markets-header-center,
+  .kmp .kmp-markets-header-right { display: none; }
+  .kmp .kmp-market-row { flex-wrap: wrap; gap: 12px; }
+  .kmp .kmp-market-info { flex-basis: 100%; }
+  .kmp .kmp-market-chance { width: auto; }
+  .kmp .kmp-market-buttons { width: auto; flex: 1; justify-content: flex-end; }
+  .kmp .kmp-btn { min-width: 80px; padding: 0 12px; font-size: 14px; }
+  .kmp .kmp-footer-inner { gap: 32px; }
 }

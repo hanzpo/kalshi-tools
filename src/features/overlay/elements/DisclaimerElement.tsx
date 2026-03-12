@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 
 export interface DisclaimerProps {
   type: 'disclaimer';
@@ -27,22 +28,22 @@ function DisclaimerRenderer({ props, width, height }: {
 
 function DisclaimerPropsEditor({ props, onChange }: { props: DisclaimerProps; onChange: (p: DisclaimerProps) => void }) {
   return (
-    <div className="oe-props">
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">Text</span>
-        <textarea className="oe-input" rows={3} value={props.text} onChange={e => onChange({ ...props, text: e.target.value })} style={{ resize: 'vertical', minHeight: 50 }} />
+    <div className={oe.props}>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Text</span>
+        <textarea className={oe.input} rows={3} value={props.text} onChange={e => onChange({ ...props, text: e.target.value })} style={{ resize: 'vertical', minHeight: 50 }} />
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Size</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.fontSize || 9} min={6} max={16} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 9 })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Size</span>
+          <input type="number" className={oe.inputSm} value={props.fontSize || 9} min={6} max={16} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 9 })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Color</span>
-          <input type="color" className="oe-color" value={props.color || '#ffffff'} onChange={e => onChange({ ...props, color: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Color</span>
+          <input type="color" className={oe.color} value={props.color || '#ffffff'} onChange={e => onChange({ ...props, color: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Opacity</span>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Opacity</span>
           <input type="range" min={0} max={1} step={0.05} value={props.opacity ?? 0.3} onChange={e => onChange({ ...props, opacity: parseFloat(e.target.value) })} />
         </div>
       </div>

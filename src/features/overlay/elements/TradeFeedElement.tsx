@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 import { MarketLiveData, LiveTrade } from '../types';
 import { extractTicker } from '../useMarketData';
 import { fetchKalshiEvent } from '../../../lib/kalshiApi';
@@ -219,22 +220,22 @@ function OutcomeMapEditor({ outcomeMap, onChange }: { outcomeMap: string; onChan
 
   if (entries.length === 0) {
     return (
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">Outcomes</span>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Outcomes</span>
         <span style={{ fontSize: 11, color: '#6b7280' }}>Apply a market URL to populate outcomes.</span>
       </div>
     );
   }
 
   return (
-    <div className="oe-field oe-field--full">
-      <span className="oe-field-label">Outcomes</span>
+    <div className={oe.fieldFull}>
+      <span className={oe.fieldLabel}>Outcomes</span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {entries.map((entry, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <input
               type="text"
-              className="oe-input oe-input--sm"
+              className={oe.inputSm}
               style={{ flex: 1, minWidth: 0 }}
               placeholder="Full name"
               title="Full display name"
@@ -243,7 +244,7 @@ function OutcomeMapEditor({ outcomeMap, onChange }: { outcomeMap: string; onChan
             />
             <input
               type="text"
-              className="oe-input oe-input--sm"
+              className={oe.inputSm}
               style={{ width: 48, flexShrink: 0 }}
               placeholder="Abbr"
               title="Acronym / abbreviation"
@@ -252,7 +253,7 @@ function OutcomeMapEditor({ outcomeMap, onChange }: { outcomeMap: string; onChan
             />
             <input
               type="color"
-              className="oe-color"
+              className={oe.color}
               value={entry.color}
               onChange={e => update(i, { color: e.target.value })}
             />
@@ -300,60 +301,60 @@ function TradeFeedPropsEditor({ props, onChange }: { props: TradeFeedProps; onCh
   };
 
   return (
-    <div className="oe-props">
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">Market / Event URL</span>
-        <div className="oe-row">
-          <input type="text" className="oe-input" placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
-          <button className="oe-btn oe-btn--sm" onClick={applyUrl} disabled={loading}>{loading ? '...' : 'Apply'}</button>
+    <div className={oe.props}>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Market / Event URL</span>
+        <div className={oe.row}>
+          <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
+          <button className={oe.btnSm} onClick={applyUrl} disabled={loading}>{loading ? '...' : 'Apply'}</button>
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Header</span>
-          <input type="text" className="oe-input" value={props.headerText} onChange={e => onChange({ ...props, headerText: e.target.value })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Header</span>
+          <input type="text" className={oe.input} value={props.headerText} onChange={e => onChange({ ...props, headerText: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Header Color</span>
-          <input type="color" className="oe-color" value={props.headerColor || '#ffffff'} onChange={e => onChange({ ...props, headerColor: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Header Color</span>
+          <input type="color" className={oe.color} value={props.headerColor || '#ffffff'} onChange={e => onChange({ ...props, headerColor: e.target.value })} />
         </div>
       </div>
-      <div className="oe-row">
-        <label className="oe-checkbox">
+      <div className={oe.row}>
+        <label className={oe.checkbox}>
           <input type="checkbox" checked={props.showDot} onChange={e => onChange({ ...props, showDot: e.target.checked })} />
           Live Dot
         </label>
-        <label className="oe-checkbox">
+        <label className={oe.checkbox}>
           <input type="checkbox" checked={props.showSide} onChange={e => onChange({ ...props, showSide: e.target.checked })} />
           Show Side
         </label>
-        <label className="oe-checkbox">
+        <label className={oe.checkbox}>
           <input type="checkbox" checked={props.useAcronyms} onChange={e => onChange({ ...props, useAcronyms: e.target.checked })} />
           Acronyms
         </label>
-        <div className="oe-field">
-          <span className="oe-field-label">Dot Color</span>
-          <input type="color" className="oe-color" value={props.dotColor || '#ef4444'} onChange={e => onChange({ ...props, dotColor: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Dot Color</span>
+          <input type="color" className={oe.color} value={props.dotColor || '#ef4444'} onChange={e => onChange({ ...props, dotColor: e.target.value })} />
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Amount Color</span>
-          <input type="color" className="oe-color" value={props.amountColor || '#09C285'} onChange={e => onChange({ ...props, amountColor: e.target.value })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Amount Color</span>
+          <input type="color" className={oe.color} value={props.amountColor || '#09C285'} onChange={e => onChange({ ...props, amountColor: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Max Trades</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.maxTrades || 6} min={1} max={20} onChange={e => onChange({ ...props, maxTrades: parseInt(e.target.value) || 6 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Max Trades</span>
+          <input type="number" className={oe.inputSm} value={props.maxTrades || 6} min={1} max={20} onChange={e => onChange({ ...props, maxTrades: parseInt(e.target.value) || 6 })} />
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Font Size</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.fontSize || 36} min={12} max={120} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 36 })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Font Size</span>
+          <input type="number" className={oe.inputSm} value={props.fontSize || 36} min={12} max={120} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 36 })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Line Spacing</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.lineSpacing || 1.4} step={0.1} min={0.8} max={3} onChange={e => onChange({ ...props, lineSpacing: parseFloat(e.target.value) || 1.4 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Line Spacing</span>
+          <input type="number" className={oe.inputSm} value={props.lineSpacing || 1.4} step={0.1} min={0.8} max={3} onChange={e => onChange({ ...props, lineSpacing: parseFloat(e.target.value) || 1.4 })} />
         </div>
       </div>
       <OutcomeMapEditor outcomeMap={props.outcomeMap} onChange={map => onChange({ ...props, outcomeMap: map })} />

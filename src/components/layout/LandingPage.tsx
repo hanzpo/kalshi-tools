@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { trackEvent } from "../../lib/analytics";
-import "./LandingPage.css";
 
 export function LandingPage() {
   const handleToolClick = (tool: string) => {
@@ -8,13 +7,13 @@ export function LandingPage() {
   };
 
   return (
-    <div className="landing-page">
-      <div className="landing-shell">
-        <header className="landing-hero">
-          <h1>
-            <span className="landing-title-logo" aria-hidden="true">
+    <div className="flex flex-1 justify-center overflow-y-auto overflow-x-hidden bg-dark px-6 pt-16 pb-20 font-sans text-text-primary max-[960px]:px-5 max-[960px]:pt-12 max-[960px]:pb-16">
+      <div className="flex w-full max-w-[800px] flex-col gap-10 max-[960px]:gap-8">
+        <header className="flex flex-col items-start gap-2 max-[960px]:items-center max-[960px]:text-center">
+          <h1 className="flex items-center gap-2.5 text-[clamp(32px,4.5vw,44px)] font-semibold tracking-tight text-gray-100">
+            <span className="inline-flex items-center leading-none text-brand" aria-hidden="true">
               <svg
-                className="landing-title-wordmark"
+                className="h-[0.78em] w-auto"
                 width="55"
                 height="16"
                 viewBox="0 0 772 226"
@@ -27,141 +26,99 @@ export function LandingPage() {
                 ></path>
               </svg>
             </span>
-            <span className="landing-title-text">Tools</span>
+            <span>Tools</span>
           </h1>
-          <p>Make fake Kalshi charts and trade slips.</p>
+          <p className="text-base leading-normal text-text-secondary">Make fake Kalshi charts and trade slips.</p>
         </header>
 
-        <div className="landing-grid">
+        <div className="flex flex-col gap-4 max-[640px]:gap-3">
           <Link
             to="/chart"
-            className="landing-option landing-option--chart"
+            className="group flex rounded-lg border border-dark-border bg-dark-surface text-left text-inherit no-underline transition-[border-color,box-shadow] duration-150 hover:border-brand hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             onClick={() => handleToolClick("chart")}
           >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M4 20h16" />
-                    <path d="M6 16l3-4 4 3 5-7" />
-                    <path d="M5 11V4" />
-                    <path d="M9 13V4" />
-                    <path d="M13 15V4" />
-                    <path d="M18 9V4" />
+            <div className="flex w-full items-center gap-5 px-5 py-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3.5 max-[640px]:px-4 max-[640px]:py-5">
+              <div className="flex items-center gap-4">
+                <span className="flex size-13 shrink-0 items-center justify-center rounded-lg bg-[#0d2e1f] text-brand max-[640px]:size-11 [&_svg]:size-6 max-[640px]:[&_svg]:size-5" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 20h16" /><path d="M6 16l3-4 4 3 5-7" /><path d="M5 11V4" /><path d="M9 13V4" /><path d="M13 15V4" /><path d="M18 9V4" />
                   </svg>
                 </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">Create a</span>
-                  <span className="option-label">Chart</span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="block text-[11px] font-semibold uppercase tracking-widest text-brand">Create a</span>
+                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">Chart</span>
                 </div>
               </div>
-              <p className="option-description">
-                Create realistic Kalshi market charts with binary or
-                multi-outcome options, custom trend drawing, volatility
-                controls, volume data, and save as PNG.
+              <p className="flex-1 text-sm leading-normal text-text-secondary max-[640px]:text-[13px]">
+                Create realistic Kalshi market charts with binary or multi-outcome options, custom trend drawing, volatility controls, volume data, and save as PNG.
               </p>
             </div>
           </Link>
 
           <Link
             to="/trade-slip"
-            className="landing-option landing-option--tradeslip"
+            className="group flex rounded-lg border border-dark-border bg-dark-surface text-left text-inherit no-underline transition-[border-color,box-shadow] duration-150 hover:border-brand hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             onClick={() => handleToolClick("trade-slip")}
           >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M15 3v4a1 1 0 0 0 1 1h4" />
-                    <path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
-                    <path d="M8 13h8" />
-                    <path d="M8 17h5" />
+            <div className="flex w-full items-center gap-5 px-5 py-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3.5 max-[640px]:px-4 max-[640px]:py-5">
+              <div className="flex items-center gap-4">
+                <span className="flex size-13 shrink-0 items-center justify-center rounded-lg bg-[#0d2e1f] text-brand max-[640px]:size-11 [&_svg]:size-6 max-[640px]:[&_svg]:size-5" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3v4a1 1 0 0 0 1 1h4" /><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" /><path d="M8 13h8" /><path d="M8 17h5" />
                   </svg>
                 </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">Create a</span>
-                  <span className="option-label">Trade Slip</span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="block text-[11px] font-semibold uppercase tracking-widest text-brand">Create a</span>
+                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">Trade Slip</span>
                 </div>
               </div>
-              <p className="option-description">
-                Build realistic Kalshi trade slips with customizable questions,
-                answers, wager amounts, odds, automatic payout calculations, and
-                optional images.
+              <p className="flex-1 text-sm leading-normal text-text-secondary max-[640px]:text-[13px]">
+                Build realistic Kalshi trade slips with customizable questions, answers, wager amounts, odds, automatic payout calculations, and optional images.
               </p>
             </div>
           </Link>
 
           <Link
             to="/market-page"
-            className="landing-option landing-option--marketpage"
+            className="group flex rounded-lg border border-dark-border bg-dark-surface text-left text-inherit no-underline transition-[border-color,box-shadow] duration-150 hover:border-brand hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             onClick={() => handleToolClick("market-page")}
           >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                    <path d="M3 9h18" />
-                    <path d="M9 21V9" />
-                    <path d="M13 13h4" />
-                    <path d="M13 17h4" />
+            <div className="flex w-full items-center gap-5 px-5 py-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3.5 max-[640px]:px-4 max-[640px]:py-5">
+              <div className="flex items-center gap-4">
+                <span className="flex size-13 shrink-0 items-center justify-center rounded-lg bg-[#0d2e1f] text-brand max-[640px]:size-11 [&_svg]:size-6 max-[640px]:[&_svg]:size-5" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" /><path d="M13 13h4" /><path d="M13 17h4" />
                   </svg>
                 </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">Create a</span>
-                  <span className="option-label">Market Page</span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="block text-[11px] font-semibold uppercase tracking-widest text-brand">Create a</span>
+                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">Market Page</span>
                 </div>
               </div>
-              <p className="option-description">
-                Generate pixel-perfect Kalshi market pages with multi-outcome
-                charts, Yes/No buttons, and rules sections.
+              <p className="flex-1 text-sm leading-normal text-text-secondary max-[640px]:text-[13px]">
+                Generate pixel-perfect Kalshi market pages with multi-outcome charts, Yes/No buttons, and rules sections.
               </p>
             </div>
           </Link>
 
           <Link
             to="/banner"
-            className="landing-option landing-option--banner"
+            className="group flex rounded-lg border border-dark-border bg-dark-surface text-left text-inherit no-underline transition-[border-color,box-shadow] duration-150 hover:border-brand hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             onClick={() => handleToolClick('banner')}
           >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
+            <div className="flex w-full items-center gap-5 px-5 py-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3.5 max-[640px]:px-4 max-[640px]:py-5">
+              <div className="flex items-center gap-4">
+                <span className="flex size-13 shrink-0 items-center justify-center rounded-lg bg-[#0d2e1f] text-brand max-[640px]:size-11 [&_svg]:size-6 max-[640px]:[&_svg]:size-5" aria-hidden="true">
                   <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="4" width="20" height="16" rx="2" />
-                    <path d="M6 10h4" />
-                    <path d="M6 14h3" />
-                    <path d="M14 10h4" />
-                    <path d="M14 14h2" />
+                    <rect x="2" y="4" width="20" height="16" rx="2" /><path d="M6 10h4" /><path d="M6 14h3" /><path d="M14 10h4" /><path d="M14 14h2" />
                   </svg>
                 </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">Create a</span>
-                  <span className="option-label">Banner</span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="block text-[11px] font-semibold uppercase tracking-widest text-brand">Create a</span>
+                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">Banner</span>
                 </div>
               </div>
-              <p className="option-description">
+              <p className="flex-1 text-sm leading-normal text-text-secondary max-[640px]:text-[13px]">
                 Create shareable market banners with a question, outcome image, position, and price movement indicator.
               </p>
             </div>
@@ -169,35 +126,23 @@ export function LandingPage() {
 
           <Link
             to="/overlay?edit"
-            className="landing-option landing-option--overlay"
+            className="group flex rounded-lg border border-dark-border bg-dark-surface text-left text-inherit no-underline transition-[border-color,box-shadow] duration-150 hover:border-brand hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             onClick={() => handleToolClick("overlay")}
           >
-            <div className="option-body">
-              <div className="option-header">
-                <span className="option-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <path d="M8 21h8" />
-                    <path d="M12 17v4" />
-                    <path d="M7 9l3 3-3 3" />
-                    <path d="M13 13h4" />
+            <div className="flex w-full items-center gap-5 px-5 py-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3.5 max-[640px]:px-4 max-[640px]:py-5">
+              <div className="flex items-center gap-4">
+                <span className="flex size-13 shrink-0 items-center justify-center rounded-lg bg-[#0d2e1f] text-brand max-[640px]:size-11 [&_svg]:size-6 max-[640px]:[&_svg]:size-5" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /><path d="M7 9l3 3-3 3" /><path d="M13 13h4" />
                   </svg>
                 </span>
-                <div className="option-title-group">
-                  <span className="option-subtitle">Build an</span>
-                  <span className="option-label">Overlay</span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="block text-[11px] font-semibold uppercase tracking-widest text-brand">Build an</span>
+                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">Overlay</span>
                 </div>
               </div>
-              <p className="option-description">
-                Build live OBS overlays with drag-and-drop market widgets, text,
-                logos, and presets. Paste the link into a browser source.
+              <p className="flex-1 text-sm leading-normal text-text-secondary max-[640px]:text-[13px]">
+                Build live OBS overlays with drag-and-drop market widgets, text, logos, and presets. Paste the link into a browser source.
               </p>
             </div>
           </Link>

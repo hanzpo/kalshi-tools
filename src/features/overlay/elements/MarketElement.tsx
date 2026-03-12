@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 import { MarketLiveData } from '../types';
 import { extractTicker } from '../useMarketData';
 
@@ -122,38 +123,38 @@ function MarketPropsEditor({ props, onChange }: { props: MarketProps; onChange: 
   };
 
   return (
-    <div className="oe-props">
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">Market URL</span>
-        <div className="oe-row">
-          <input type="text" className="oe-input" placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
-          <button className="oe-btn oe-btn--sm" onClick={applyUrl}>Apply</button>
+    <div className={oe.props}>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Market URL</span>
+        <div className={oe.row}>
+          <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
+          <button className={oe.btnSm} onClick={applyUrl}>Apply</button>
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Variant</span>
-          <select className="oe-select" value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Variant</span>
+          <select className={oe.select} value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
             <option value="expanded">Expanded</option>
             <option value="compact">Compact</option>
             <option value="minimal">Minimal</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Accent</span>
-          <input type="color" className="oe-color" value={props.accentColor} onChange={e => onChange({ ...props, accentColor: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Accent</span>
+          <input type="color" className={oe.color} value={props.accentColor} onChange={e => onChange({ ...props, accentColor: e.target.value })} />
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Poll (s)</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.pollInterval} min={5} max={300} onChange={e => onChange({ ...props, pollInterval: parseInt(e.target.value) || 30 })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Poll (s)</span>
+          <input type="number" className={oe.inputSm} value={props.pollInterval} min={5} max={300} onChange={e => onChange({ ...props, pollInterval: parseInt(e.target.value) || 30 })} />
         </div>
-        <label className="oe-checkbox">
+        <label className={oe.checkbox}>
           <input type="checkbox" checked={props.showTitle} onChange={e => onChange({ ...props, showTitle: e.target.checked })} />
           Title
         </label>
-        <label className="oe-checkbox">
+        <label className={oe.checkbox}>
           <input type="checkbox" checked={props.showVolume} onChange={e => onChange({ ...props, showVolume: e.target.checked })} />
           Volume
         </label>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 
 export interface ShapeProps {
   type: 'shape';
@@ -31,28 +32,28 @@ function ShapeRenderer({ props, width, height }: { props: ShapeProps; width: num
 
 function ShapePropsEditor({ props, onChange }: { props: ShapeProps; onChange: (p: ShapeProps) => void }) {
   return (
-    <div className="oe-props">
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Type</span>
-          <select className="oe-select" value={props.shapeType} onChange={e => onChange({ ...props, shapeType: e.target.value as any })}>
+    <div className={oe.props}>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Type</span>
+          <select className={oe.select} value={props.shapeType} onChange={e => onChange({ ...props, shapeType: e.target.value as any })}>
             <option value="rectangle">Rectangle</option>
             <option value="line">Line</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Color</span>
-          <input type="text" className="oe-input oe-input--sm" value={props.color} placeholder="rgba(0,0,0,0.5)" onChange={e => onChange({ ...props, color: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Color</span>
+          <input type="text" className={oe.inputSm} value={props.color} placeholder="rgba(0,0,0,0.5)" onChange={e => onChange({ ...props, color: e.target.value })} />
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Opacity</span>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Opacity</span>
           <input type="range" min={0} max={1} step={0.05} value={props.opacity} onChange={e => onChange({ ...props, opacity: parseFloat(e.target.value) })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Radius</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.borderRadius} min={0} onChange={e => onChange({ ...props, borderRadius: parseInt(e.target.value) || 0 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Radius</span>
+          <input type="number" className={oe.inputSm} value={props.borderRadius} min={0} onChange={e => onChange({ ...props, borderRadius: parseInt(e.target.value) || 0 })} />
         </div>
       </div>
     </div>

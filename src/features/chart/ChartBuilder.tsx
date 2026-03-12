@@ -18,7 +18,7 @@ import { useToast } from '../../hooks/useToast';
 import { useExport } from '../../hooks/useExport';
 import { trackEvent } from '../../lib/analytics';
 import { KalshiImportResult } from '../../lib/kalshiApi';
-import '../../App.css';
+import { layout } from '../../styles/layout';
 
 const CHART_PREVIEW_ID = 'chart-preview';
 
@@ -256,8 +256,8 @@ export default function ChartBuilder() {
   }
 
   return (
-    <div className="app">
-      <div className="app-container">
+    <div className={layout.app}>
+      <div className={layout.appContainer}>
         <ControlPanel
           config={config}
           onConfigChange={handleConfigChange}
@@ -270,7 +270,7 @@ export default function ChartBuilder() {
           mode="chart"
           onImportKalshiMarket={handleImportKalshiMarket}
         />
-        <div className="preview-section">
+        <div className={layout.previewSection}>
           <ChartPreview
             config={config}
             data={data}

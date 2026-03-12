@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from 'react';
-import './TrendDrawer.css';
 
 interface TrendDrawerProps {
   onComplete: (trendData: number[]) => void;
@@ -25,7 +24,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
     // Draw grid
     ctx.strokeStyle = '#e5e7eb';
     ctx.lineWidth = 1;
-    
+
     // Horizontal lines
     for (let i = 0; i <= 10; i++) {
       const y = (i / 10) * canvas.height;
@@ -60,7 +59,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
       ctx.lineWidth = 3;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      
+
       ctx.beginPath();
       ctx.moveTo(points[0].x, points[0].y);
       for (let i = 1; i < points.length; i++) {
@@ -77,10 +76,10 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    
+
     const x = (e.clientX - rect.left) * scaleX;
     const y = (e.clientY - rect.top) * scaleY;
-    
+
     return {
       x: Math.max(0, Math.min(canvas.width, x)),
       y: Math.max(0, Math.min(canvas.height, y))
@@ -98,7 +97,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
 
   function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
     if (!isDrawing) return;
-    
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -124,7 +123,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
   function handleTouchMove(e: React.TouchEvent<HTMLCanvasElement>) {
     e.preventDefault();
     if (!isDrawing) return;
-    
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -152,10 +151,10 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
     // Convert points to percentage values (100 data points)
     const numPoints = 100;
     const trendData: number[] = [];
-    
+
     // Sort points by x coordinate
     const sortedPoints = [...points].sort((a, b) => a.x - b.x);
-    
+
     // Remove duplicate x coordinates, keep first occurrence
     const uniquePoints: { x: number; y: number }[] = [];
     let lastX = -1;
@@ -165,14 +164,14 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
         lastX = point.x;
       }
     }
-    
+
     for (let i = 0; i < numPoints; i++) {
       const targetX = (i / (numPoints - 1)) * canvas.width;
-      
+
       // Find the two closest points for interpolation
       let p1 = uniquePoints[0];
       let p2 = uniquePoints[uniquePoints.length - 1];
-      
+
       for (let j = 0; j < uniquePoints.length - 1; j++) {
         if (uniquePoints[j].x <= targetX && uniquePoints[j + 1].x >= targetX) {
           p1 = uniquePoints[j];
@@ -180,7 +179,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
           break;
         }
       }
-      
+
       // Interpolate between the two points
       let y: number;
       if (p1.x === p2.x || p2.x - p1.x === 0) {
@@ -189,7 +188,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
         const t = (targetX - p1.x) / (p2.x - p1.x);
         y = p1.y + t * (p2.y - p1.y);
       }
-      
+
       // Convert y coordinate to percentage (0-100)
       // Canvas y goes from 0 (top) to height (bottom)
       // We want 0% at bottom, 100% at top
@@ -202,19 +201,19 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
   }
 
   return (
-    <div className="trend-drawer-modal">
-      <div className="trend-drawer-content">
-        <h3>Draw Your Trend</h3>
-        <p className="drawer-instructions">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/85 p-5">
+      <div className="flex max-h-[90vh] max-w-[90vw] flex-col gap-5 rounded-xl bg-[#1e1e1e] p-7 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.3),0_10px_10px_-5px_rgba(0,0,0,0.2)] max-md:p-5">
+        <h3 className="m-0 text-xl font-semibold tracking-[-0.2px] text-[#f3f4f6]">Draw Your Trend</h3>
+        <p className="m-0 text-sm text-[#9ca3af]">
           Click and drag to draw a line from left to right showing your custom market trend
         </p>
-        
-        <div className="canvas-container">
+
+        <div className="overflow-hidden rounded-lg border-2 border-[#333] bg-white max-md:max-w-full">
           <canvas
             ref={canvasRef}
             width={600}
             height={300}
-            className="drawing-canvas"
+            className="block h-auto w-full cursor-crosshair touch-none"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -225,15 +224,24 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
           />
         </div>
 
-        <div className="drawer-actions">
-          <button onClick={handleClear} className="button-secondary">
+        <div className="flex justify-between gap-3 max-md:flex-col">
+          <button
+            onClick={handleClear}
+            className="cursor-pointer rounded-lg border border-[#333] bg-[#252525] px-[22px] py-[11px] text-[15px] font-semibold text-[#d1d5db] transition-all duration-200 hover:border-[#444] hover:bg-[#333] max-md:flex-1"
+          >
             Clear
           </button>
-          <div className="drawer-actions-right">
-            <button onClick={onCancel} className="button-secondary">
+          <div className="flex gap-3 max-md:w-full">
+            <button
+              onClick={onCancel}
+              className="cursor-pointer rounded-lg border border-[#333] bg-[#252525] px-[22px] py-[11px] text-[15px] font-semibold text-[#d1d5db] transition-all duration-200 hover:border-[#444] hover:bg-[#333] max-md:flex-1"
+            >
               Cancel
             </button>
-            <button onClick={handleApply} className="button-primary">
+            <button
+              onClick={handleApply}
+              className="cursor-pointer rounded-lg border-none bg-[#09C285] px-[22px] py-[11px] text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#08a770] hover:shadow-[0_2px_8px_rgba(9,194,133,0.25)] max-md:flex-1"
+            >
               Apply Trend
             </button>
           </div>

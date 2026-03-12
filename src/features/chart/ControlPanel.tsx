@@ -18,7 +18,7 @@ import {
 } from '../../components/ui/Icons';
 import { trackEvent } from '../../lib/analytics';
 import { isKalshiUrl, importKalshiMarket, KalshiImportResult } from '../../lib/kalshiApi';
-import './ControlPanel.css';
+import { ctrl } from '../../styles/controls';
 
 interface ControlPanelProps {
   config: MarketConfig;
@@ -493,17 +493,17 @@ export function ControlPanel({
   }
 
   return (
-    <div className="control-panel">
+    <div className={ctrl.panel}>
       {onBack && (
-        <button onClick={onBack} className="back-button-control-panel">
+        <button onClick={onBack} className={ctrl.backBtn}>
           <ArrowLeftIcon size={14} />
           Back
         </button>
       )}
-      <h1 className="panel-title">
+      <h1 className={ctrl.title}>
         {mode === 'search' ? 'Search Result Builder' : mode === 'link-preview' ? 'Link Preview Builder' : 'Chart Maker'}
       </h1>
-      <p className="panel-subtitle">
+      <p className={ctrl.subtitle}>
         {mode === 'search' 
           ? 'Realistic Google search result generator for Kalshi markets'
           : mode === 'link-preview'
@@ -513,9 +513,9 @@ export function ControlPanel({
 
       {/* Import from Kalshi */}
       {mode === 'chart' && onImportKalshiMarket && (
-        <div className="control-section">
-          <div className="control-section-title">Import from Kalshi</div>
-          <div className="control-group">
+        <div className={ctrl.section}>
+          <div className={ctrl.sectionTitle}>Import from Kalshi</div>
+          <div className={ctrl.group}>
             <label>Market URL</label>
             <div
               onDragOver={handleUrlDragOver}
@@ -533,7 +533,7 @@ export function ControlPanel({
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input
                   type="text"
-                  className="text-input"
+                  className={ctrl.input}
                   placeholder="Paste Kalshi URL or drag & drop"
                   value={urlInput}
                   onChange={(e) => {
@@ -581,13 +581,13 @@ export function ControlPanel({
               </div>
             </div>
             {importError && (
-              <p className="help-text" style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <p className={ctrl.helpText} style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <WarningIcon size={14} />
                 {importError}
               </p>
             )}
             {!importError && (
-              <p className="help-text">
+              <p className={ctrl.helpText}>
                 Paste a link like kalshi.com/markets/TICKER or press Ctrl+V anywhere
               </p>
             )}
@@ -596,26 +596,26 @@ export function ControlPanel({
       )}
 
       {/* Content Section */}
-      <div className="control-section">
-        <div className="control-section-title">Content</div>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Content</div>
 
         {mode === 'search' && (
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label htmlFor="search-query">Search Query</label>
             <input
               id="search-query"
               type="text"
-              className="text-input"
+              className={ctrl.input}
               placeholder="e.g., How high will Bitcoin get this year?"
               value={config.searchQuery || ''}
               onChange={(e) => onConfigChange({ searchQuery: e.target.value })}
             />
-            <p className="help-text">The search query displayed in the Google search bar</p>
+            <p className={ctrl.helpText}>The search query displayed in the Google search bar</p>
           </div>
         )}
 
         {mode === 'link-preview' && onLeftImageUpload && (
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label>Left Side Image</label>
             <div
               onDragOver={handleLeftDragOver}
@@ -675,11 +675,11 @@ export function ControlPanel({
                 )}
               </label>
             </div>
-            <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+            <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
           </div>
         )}
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="market-image">Market Image (Optional)</label>
           <div
             onDragOver={handleDragOver}
@@ -704,7 +704,7 @@ export function ControlPanel({
               type="file"
               accept="image/jpeg,image/png,image/jpg"
               onChange={handleImageChange}
-              className="file-input"
+              className={ctrl.fileInput}
               style={{ display: 'none' }}
             />
             <label
@@ -735,15 +735,15 @@ export function ControlPanel({
               )}
             </label>
           </div>
-          <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+          <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="market-title">Market Title</label>
           <input
             id="market-title"
             type="text"
-            className="text-input"
+            className={ctrl.input}
             placeholder="e.g., Will SpaceX land on Mars by 2030?"
             value={config.title}
             onChange={(e) => onConfigChange({ title: e.target.value })}
@@ -752,14 +752,14 @@ export function ControlPanel({
       </div>
 
       {/* Market Settings Section */}
-      <div className="control-section">
-        <div className="control-section-title">Market Settings</div>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Market Settings</div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="market-type">Market Type</label>
           <select
             id="market-type"
-            className="text-input"
+            className={ctrl.input}
             value={config.marketType}
             onChange={(e) => handleMarketTypeChange(e.target.value as MarketType)}
             style={{
@@ -779,7 +779,7 @@ export function ControlPanel({
             <option value="multi">Multi-Outcome</option>
             <option value="forecast">Forecast</option>
           </select>
-          <p className="help-text">
+          <p className={ctrl.helpText}>
             {config.marketType === 'binary'
               ? 'Single yes/no outcome market'
               : config.marketType === 'multi'
@@ -790,7 +790,7 @@ export function ControlPanel({
 
         {config.marketType === 'multi' && (
         <>
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label htmlFor="mutually-exclusive" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
               <input
                 id="mutually-exclusive"
@@ -806,13 +806,13 @@ export function ControlPanel({
               />
               <span>Mutually Exclusive (odds sum to 100%)</span>
             </label>
-            <p className="help-text">
+            <p className={ctrl.helpText}>
               {config.mutuallyExclusive !== false 
                 ? 'Outcomes are mutually exclusive - changing one adjusts others to keep total at 100%'
                 : 'Outcomes are independent - each can have any odds value'}
             </p>
           </div>
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label>Outcomes</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
               {config.outcomes.map((outcome, index) => (
@@ -934,7 +934,7 @@ export function ControlPanel({
       )}
 
       {config.marketType === 'binary' && (
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="current-odds">
             Current Odds: {config.currentOdds}%
           </label>
@@ -950,12 +950,12 @@ export function ControlPanel({
             }}
             className="slider-input"
           />
-          <div className="slider-labels">
+          <div className={ctrl.sliderLabels}>
             <span>0%</span>
             <span>100%</span>
           </div>
           {config.customTrendData && (
-            <p className="help-text" style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <p className={ctrl.helpText} style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <WarningIcon size={14} />
               Adjusting odds will reset your custom trend
             </p>
@@ -965,14 +965,14 @@ export function ControlPanel({
 
       {config.marketType === 'forecast' && (
         <>
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label htmlFor="forecast-value">
               Forecast Value: {config.forecastValue ?? 128000}
             </label>
             <input
               id="forecast-value"
               type="number"
-              className="text-input"
+              className={ctrl.input}
               placeholder="e.g., 128000"
               value={config.forecastValue ?? 128000}
               onChange={(e) => {
@@ -983,46 +983,46 @@ export function ControlPanel({
               min="0"
               step="1"
             />
-            <p className="help-text">Enter the forecasted numerical value</p>
+            <p className={ctrl.helpText}>Enter the forecasted numerical value</p>
             {config.customTrendData && (
-              <p className="help-text" style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <p className={ctrl.helpText} style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <WarningIcon size={14} />
                 Adjusting value will reset your custom trend
               </p>
             )}
           </div>
 
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label htmlFor="forecast-unit">Unit</label>
             <input
               id="forecast-unit"
               type="text"
-              className="text-input"
+              className={ctrl.input}
               placeholder="e.g., K"
               value={config.forecastUnit ?? 'K'}
               onChange={(e) => {
                 onConfigChange({ forecastUnit: e.target.value });
               }}
             />
-            <p className="help-text">Unit to display after the forecast value (e.g., K, $, etc.)</p>
+            <p className={ctrl.helpText}>Unit to display after the forecast value (e.g., K, $, etc.)</p>
           </div>
         </>
       )}
 
       {(config.marketType === 'binary' || config.marketType === 'forecast') && (
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label>Market Trend (Optional)</label>
-          <button onClick={onOpenTrendDrawer} className="button-draw">
+          <button onClick={onOpenTrendDrawer} className={ctrl.btnDraw}>
             <PencilIcon size={16} />
             {config.customTrendData ? 'Redraw Trend' : 'Draw Custom Trend'}
           </button>
           {config.customTrendData ? (
-            <p className="help-text" style={{ color: '#09C285', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <p className={ctrl.helpText} style={{ color: '#09C285', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
               <CheckIcon size={14} />
               Using your custom drawn trend
             </p>
           ) : (
-            <p className="help-text">
+            <p className={ctrl.helpText}>
               Using random walk default • Draw your own trend line
             </p>
           )}
@@ -1031,10 +1031,10 @@ export function ControlPanel({
       </div>
 
       {/* Chart Settings Section */}
-      <div className="control-section">
-        <div className="control-section-title">Chart Settings</div>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Chart Settings</div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="dark-mode" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
             <input
               id="dark-mode"
@@ -1052,7 +1052,7 @@ export function ControlPanel({
           </label>
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="volatility">
             Volatility: {config.volatility}x
           </label>
@@ -1069,13 +1069,13 @@ export function ControlPanel({
             }}
             className="slider-input"
           />
-          <div className="slider-labels">
+          <div className={ctrl.sliderLabels}>
             <span>Low</span>
             <span>High</span>
           </div>
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label>Time Horizon</label>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
             {(['6H', '1D', '1W', '1M', 'ALL'] as TimeHorizon[]).map((horizon) => (
@@ -1104,7 +1104,7 @@ export function ControlPanel({
               </button>
             ))}
           </div>
-          <p className="help-text">
+          <p className={ctrl.helpText}>
             {config.timeHorizon === 'ALL'
               ? 'Custom date range (use Advanced Settings)'
               : `Last ${config.timeHorizon === '6H' ? '6 hours' : config.timeHorizon === '1D' ? 'day' : config.timeHorizon === '1W' ? 'week' : 'month'}`}
@@ -1112,7 +1112,7 @@ export function ControlPanel({
         </div>
       </div>
 
-      <div className="control-group">
+      <div className={ctrl.group}>
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
           style={{
@@ -1152,12 +1152,12 @@ export function ControlPanel({
           backgroundColor: '#252525',
           marginTop: '-4px',
         }}>
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label htmlFor="volume">Volume</label>
             <input
               id="volume"
               type="number"
-              className="text-input"
+              className={ctrl.input}
               placeholder="e.g., 528110"
               value={config.volume}
               onChange={(e) => {
@@ -1167,16 +1167,16 @@ export function ControlPanel({
               min="0"
               step="1000"
             />
-            <p className="help-text">Enter amount (e.g., 528110)</p>
+            <p className={ctrl.helpText}>Enter amount (e.g., 528110)</p>
           </div>
 
           {config.timeHorizon === 'ALL' && (
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="start-date">Start Date</label>
               <input
                 id="start-date"
                 type="date"
-                className="text-input"
+                className={ctrl.input}
                 value={config.startDate.toISOString().split('T')[0]}
                 onChange={(e) => {
                   const newDate = new Date(e.target.value);
@@ -1185,16 +1185,16 @@ export function ControlPanel({
                 }}
                 max={config.endDate.toISOString().split('T')[0]}
               />
-              <p className="help-text">Chart start date (default: 3 months ago)</p>
+              <p className={ctrl.helpText}>Chart start date (default: 3 months ago)</p>
             </div>
           )}
 
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label htmlFor="end-date">End Date</label>
             <input
               id="end-date"
               type="date"
-              className="text-input"
+              className={ctrl.input}
               value={config.endDate.toISOString().split('T')[0]}
               onChange={(e) => {
                 const newDate = new Date(e.target.value);
@@ -1203,10 +1203,10 @@ export function ControlPanel({
               }}
               min={config.startDate.toISOString().split('T')[0]}
             />
-            <p className="help-text">Chart end date (default: today)</p>
+            <p className={ctrl.helpText}>Chart end date (default: today)</p>
           </div>
 
-          <div className="control-group" style={{ marginBottom: 0 }}>
+          <div className={ctrl.group} style={{ marginBottom: 0 }}>
             <label htmlFor="show-watermark" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
               <input
                 id="show-watermark"
@@ -1222,14 +1222,14 @@ export function ControlPanel({
               />
               <span>Show Watermark</span>
             </label>
-            <p className="help-text">Display "kalshi.tools" at bottom of chart</p>
+            <p className={ctrl.helpText}>Display "kalshi.tools" at bottom of chart</p>
           </div>
         </div>
       )}
 
       <button 
         onClick={onRegenerateData} 
-        className="button-regenerate"
+        className={ctrl.btnRegen}
         style={{ marginTop: '20px' }}
       >
         <RefreshIcon size={16} />
@@ -1239,7 +1239,7 @@ export function ControlPanel({
       <div style={{ display: 'flex', gap: '8px' }}>
         <button 
           onClick={onExport} 
-          className="button-export"
+          className={ctrl.btnExport}
           style={{ flex: 1 }}
         >
           <DownloadIcon size={16} />
@@ -1247,7 +1247,7 @@ export function ControlPanel({
         </button>
         <button 
           onClick={onCopyToClipboard} 
-          className="button-export"
+          className={ctrl.btnExport}
           style={{ flex: 1 }}
         >
           <CopyIcon size={16} />

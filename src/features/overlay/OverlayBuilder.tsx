@@ -12,7 +12,6 @@ import { Toast } from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { trackEvent } from '../../lib/analytics';
 import { kalshiWs } from '../../lib/kalshiWebSocket';
-import './OverlayBuilder.css';
 
 export default function OverlayBuilder() {
   const [searchParams] = useSearchParams();
@@ -34,23 +33,19 @@ export default function OverlayBuilder() {
   const [sidebarWidth, setSidebarWidth] = useState(340);
   const resizingRef = useRef(false);
 
-  // WebSocket status
   const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>(
     kalshiWs.isConnected ? 'connected' : 'disconnected'
   );
 
-  // Listen to WebSocket status changes
   useEffect(() => {
     return kalshiWs.onStatus(setWsStatus);
   }, []);
 
-  // Auto-connect WebSocket (proxy handles auth via env vars)
   useEffect(() => {
     if (kalshiWs.isConnected) return;
     kalshiWs.connect();
   }, []);
 
-  // Track resize of canvas container
   useEffect(() => {
     if (!canvasContainerRef.current) return;
     const observer = new ResizeObserver(entries => {
@@ -62,8 +57,6 @@ export default function OverlayBuilder() {
     return () => observer.disconnect();
   }, []);
 
-  // Collect market tickers for polling from any element that uses market data.
-  // Deduplicate by ticker, and set fetchTrades=true if any element needs trades.
   const marketTickers = useMemo(() => {
     const tickerMap = new Map<string, { ticker: string; pollInterval: number; fetchTrades: boolean }>();
     for (const el of config.elements) {
@@ -103,12 +96,10 @@ export default function OverlayBuilder() {
       showToast('OBS link copied to clipboard!');
       trackEvent('overlay_copy_link', { element_count: config.elements.length });
     }).catch(() => {
-      // Fallback: show URL in prompt
       window.prompt('Copy this URL for OBS:', url);
     });
   }, [config, showToast]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     if (!isEditMode) return;
     const handler = (e: KeyboardEvent) => {
@@ -151,10 +142,10 @@ export default function OverlayBuilder() {
     document.body.style.userSelect = 'none';
   }, [sidebarWidth]);
 
-  // Viewer mode — full screen, no chrome
+  // Viewer mode
   if (!isEditMode) {
     return (
-      <div className="overlay-viewer">
+      <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-transparent">
         <OverlayCanvas
           config={config}
           editMode={false}
@@ -170,8 +161,8 @@ export default function OverlayBuilder() {
 
   // Editor mode
   return (
-    <div className="overlay-builder" style={{ gridTemplateColumns: `${sidebarWidth}px 0px 1fr` }}>
-      <div className="overlay-builder__editor">
+    <div className="grid min-h-screen flex-1 bg-dark font-sans text-text-primary max-[900px]:!grid-cols-[1fr]" style={{ gridTemplateColumns: `${sidebarWidth}px 0px 1fr` }}>
+      <div className="h-screen overflow-y-auto bg-dark-card [scrollbar-color:transparent_transparent] [scrollbar-width:thin] hover:[scrollbar-color:rgba(255,255,255,0.12)_transparent] max-[900px]:h-auto max-[900px]:max-h-[50vh] max-[900px]:border-b max-[900px]:border-dark-border">
         <OverlayEditor
           config={config}
           selectedId={selectedId}
@@ -181,8 +172,11 @@ export default function OverlayBuilder() {
           onCopyLink={handleCopyLink}
         />
       </div>
-      <div className="overlay-builder__resize-handle" onPointerDown={handleResizeStart} />
-      <div className="overlay-builder__canvas" ref={canvasContainerRef} onClick={(e) => { if (e.target === e.currentTarget) setSelectedId(null); }}>
+      <div
+        className="relative z-10 -ml-0.5 w-[5px] cursor-col-resize bg-transparent transition-[background] duration-150 after:absolute after:inset-y-0 after:left-0.5 after:w-px after:bg-dark-border hover:bg-brand/15 hover:after:bg-brand active:bg-brand/15 active:after:bg-brand max-[900px]:hidden"
+        onPointerDown={handleResizeStart}
+      />
+      <div className="flex items-start justify-center overflow-auto bg-[#111] p-6 max-[900px]:p-3" ref={canvasContainerRef} onClick={(e) => { if (e.target === e.currentTarget) setSelectedId(null); }}>
         <OverlayCanvas
           config={config}
           editMode={true}

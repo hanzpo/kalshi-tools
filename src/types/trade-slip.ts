@@ -1,4 +1,4 @@
-export type TradeSlipMode = 'single' | 'combo' | 'single-old' | 'combo-old' | 'prizepick' | 'coinbase' | 'horizontal' | 'biggame' | 'biggame-combo';
+export type TradeSlipMode = 'single' | 'combo' | 'single-old' | 'combo-old' | 'prizepick' | 'coinbase' | 'horizontal';
 
 export interface ComboLeg {
   id: string;
@@ -93,12 +93,6 @@ export interface TradeSlipConfig {
   coinbaseWager: number;
   coinbasePayout: number;
   coinbasePlayType: string;
-  // Big Game fields
-  bigGameTeam1: string;
-  bigGameTeam2: string;
-  bigGameTitle: string;
-  bigGameColor1: string;
-  bigGameColor2: string;
   isPaidOut: boolean;
 }
 

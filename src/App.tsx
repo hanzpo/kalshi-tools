@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LandingPage } from './components/layout/LandingPage';
 import { Footer } from './components/layout/Footer';
 import { useAnalytics } from './hooks/useAnalytics';
-import './App.css';
-import './components/layout/Footer.css';
 
 const ChartBuilder = lazy(() => import('./features/chart/ChartBuilder'));
 const TradeSlipBuilder = lazy(() => import('./features/trade-slip/TradeSlipBuilder'));
@@ -17,8 +15,8 @@ const BannerBuilder = lazy(() => import('./features/banner/BannerBuilder'));
 function AppContent() {
   useAnalytics();
   return (
-    <div className="app-wrapper">
-      <Suspense fallback={<div className="app-loading">Loading...</div>}>
+    <div className="flex min-h-screen flex-col">
+      <Suspense fallback={<div className="flex flex-1 items-center justify-center font-medium text-text-primary">Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/chart" element={<ChartBuilder />} />

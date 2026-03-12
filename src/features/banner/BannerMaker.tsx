@@ -8,7 +8,7 @@ import {
   ArrowLeftIcon,
 } from '../../components/ui/Icons';
 import { trackEvent } from '../../lib/analytics';
-import '../chart/ControlPanel.css';
+import { ctrl } from '../../styles/controls';
 
 const BRAND_GREEN = '#09C285';
 
@@ -75,21 +75,21 @@ export function BannerMaker({
   }
 
   return (
-    <div className="control-panel">
-      <button onClick={onBack} className="back-button-control-panel">
+    <div className={ctrl.panel}>
+      <button onClick={onBack} className={ctrl.backBtn}>
         <ArrowLeftIcon size={14} />
         Back
       </button>
-      <h1 className="panel-title">Banner Maker</h1>
-      <p className="panel-subtitle">
+      <h1 className={ctrl.title}>Banner Maker</h1>
+      <p className={ctrl.subtitle}>
         Create Kalshi-style shareable banners
       </p>
 
       {/* Content Section */}
-      <div className="control-section">
-        <div className="control-section-title">Content</div>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Content</div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="banner-image">Image (Optional)</label>
           <div
             onDragOver={handleDragOver}
@@ -114,7 +114,7 @@ export function BannerMaker({
               type="file"
               accept="image/jpeg,image/png,image/jpg"
               onChange={handleImageChange}
-              className="file-input"
+              className="hidden"
               style={{ display: 'none' }}
             />
             <label
@@ -145,43 +145,43 @@ export function BannerMaker({
               )}
             </label>
           </div>
-          <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+          <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="banner-title">Question</label>
           <input
             id="banner-title"
             type="text"
-            className="text-input"
+            className={ctrl.input}
             placeholder="e.g., Will Rod Wave score 20+ points?"
             value={config.title}
             onChange={(e) => onConfigChange({ title: e.target.value })}
           />
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="banner-outcome">Outcome</label>
           <input
             id="banner-outcome"
             type="text"
-            className="text-input"
+            className={ctrl.input}
             placeholder="e.g., Over 20.5"
             value={config.outcome}
             onChange={(e) => onConfigChange({ outcome: e.target.value })}
           />
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label>Trade Side</label>
-          <div className="segmented-control">
+          <div className={ctrl.segmented}>
             {(['Yes', 'No'] as const).map((side) => {
               const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
               return (
                 <button
                   key={side}
                   type="button"
-                  className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                  className={`${ctrl.segmentedOption} ${config.tradeSide === side ? ctrl.segmentedOptionActive : ''}`}
                   onClick={() => onConfigChange({ tradeSide: side })}
                   aria-pressed={config.tradeSide === side}
                   style={{
@@ -198,12 +198,12 @@ export function BannerMaker({
       </div>
 
       {/* Price Section */}
-      <div className="control-section">
-        <div className="control-section-title">Price</div>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Price</div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="banner-odds">Odds (%)</label>
-          <div className="slider-wrapper">
+          <div className={ctrl.sliderWrapper}>
             <input
               id="banner-odds"
               type="range"
@@ -214,18 +214,18 @@ export function BannerMaker({
               max="99"
               step="1"
             />
-            <div className="slider-value">{config.odds}%</div>
+            <div className={ctrl.sliderValue}>{config.odds}%</div>
           </div>
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label>Trend</label>
-          <div className="segmented-control">
+          <div className={ctrl.segmented}>
             {(['up', 'down'] as const).map((dir) => (
               <button
                 key={dir}
                 type="button"
-                className={`segmented-option${config.trendDirection === dir ? ' active' : ''}`}
+                className={`${ctrl.segmentedOption} ${config.trendDirection === dir ? ctrl.segmentedOptionActive : ''}`}
                 onClick={() => onConfigChange({ trendDirection: dir })}
                 aria-pressed={config.trendDirection === dir}
               >
@@ -235,12 +235,12 @@ export function BannerMaker({
           </div>
         </div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="banner-change">Change</label>
           <input
             id="banner-change"
             type="text"
-            className="text-input"
+            className={ctrl.input}
             placeholder="e.g., 1"
             value={config.change}
             onChange={(e) => onConfigChange({ change: e.target.value })}
@@ -248,10 +248,10 @@ export function BannerMaker({
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
+      <div className="mt-5 flex gap-2">
         <button
           onClick={onExport}
-          className="button-export"
+          className={ctrl.btnExport}
           style={{ flex: 1 }}
         >
           <DownloadIcon size={16} />
@@ -259,7 +259,7 @@ export function BannerMaker({
         </button>
         <button
           onClick={onCopyToClipboard}
-          className="button-export"
+          className={ctrl.btnExport}
           style={{ flex: 1 }}
         >
           <CopyIcon size={16} />

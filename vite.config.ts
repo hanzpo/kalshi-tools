@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { WebSocket as NodeWebSocket, WebSocketServer } from 'ws'
 import type { IncomingMessage } from 'http'
 import type { Duplex } from 'stream'
@@ -114,7 +115,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [react(), kalshiWsProxy(env)],
+    plugins: [react(), tailwindcss(), kalshiWsProxy(env)],
     server: {
       proxy: {
         '/api/kalshi': {
