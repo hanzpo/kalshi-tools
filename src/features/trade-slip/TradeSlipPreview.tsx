@@ -53,20 +53,20 @@ const ComboStrokeIcon = () => (
   </svg>
 );
 
-// Green check circle icon for big game combo market items (from Figma check_circle)
+// Green check circle icon for combo market items (from Figma check_circle)
 const CheckCircleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="check-circle-icon">
     <path d="M8.6 14.6L15.65 7.55L14.25 6.15L8.6 11.8L5.75 8.95L4.35 10.35L8.6 14.6ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM10 18C12.2333 18 14.125 17.225 15.675 15.675C17.225 14.125 18 12.2333 18 10C18 7.76667 17.225 5.875 15.675 4.325C14.125 2.775 12.2333 2 10 2C7.76667 2 5.875 2.775 4.325 4.325C2.775 5.875 2 7.76667 2 10C2 12.2333 2.775 14.125 4.325 15.675C5.875 17.225 7.76667 18 10 18Z" fill="#28CC95"/>
   </svg>
 );
 
-// Big game combo market item with check circle connector
-interface BigGameComboMarketItemProps {
+// Combo market item with check circle connector
+interface ComboMarketItemProps {
   market: ComboMarket;
   position: 'first' | 'middle' | 'last' | 'only';
 }
 
-const BigGameComboMarketItem = ({ market, position }: BigGameComboMarketItemProps) => (
+const ComboMarketItem = ({ market, position }: ComboMarketItemProps) => (
   <div className="flex items-stretch gap-3 p-0">
     <div className="flex w-5 shrink-0 flex-col items-center">
       <div className={`min-h-px w-px flex-1 ${position === 'first' || position === 'only' ? 'bg-transparent' : 'bg-white/20'}`} />
@@ -86,12 +86,12 @@ const BigGameComboMarketItem = ({ market, position }: BigGameComboMarketItemProp
   </div>
 );
 
-// Big game combo event item
-interface BigGameComboEventItemProps {
+// Combo event item
+interface ComboEventItemProps {
   event: ComboEvent;
 }
 
-const BigGameComboEventItem = ({ event }: BigGameComboEventItemProps) => {
+const ComboEventItem = ({ event }: ComboEventItemProps) => {
   const color1 = event.color1 || '#E31837';
   const color2 = event.color2 || '#004C54';
 
@@ -114,7 +114,7 @@ const BigGameComboEventItem = ({ event }: BigGameComboEventItemProps) => {
                 ? 'last'
                 : 'middle';
           return (
-            <BigGameComboMarketItem
+            <ComboMarketItem
               key={market.id}
               market={market}
               position={position}
@@ -170,9 +170,6 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isSingleOld = config.mode === 'single-old';
   const isComboOld = config.mode === 'combo-old';
   const isHorizontal = config.mode === 'horizontal';
-  const isBigGame = config.mode === 'biggame';
-  const isBigGameCombo = config.mode === 'biggame-combo';
-
   if (isPrizePick) {
     return <PrizePickPreview config={config} />;
   }
@@ -185,206 +182,6 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
       coinbasePlayType: config.coinbasePlayType,
       showWatermark: config.showWatermark,
     }} />;
-  }
-
-  if (isBigGameCombo) {
-    const team1Color = config.bigGameColor1 || '#408FFF';
-    const team2Color = config.bigGameColor2 || '#FF4D6A';
-    const headerImage = '/biggame-header.png';
-    const totalMarkets = config.comboCategories?.reduce(
-      (sum, cat) => sum + cat.events.reduce(
-        (eventSum, event) => eventSum + event.markets.length,
-        0
-      ),
-      0
-    ) || 0;
-    const payout = config.comboPayout || 0;
-    const cost = config.comboCost || 0;
-    const allEvents = config.comboCategories?.flatMap(cat => cat.events) || [];
-
-    return (
-      <div className="flex min-h-full w-full items-center justify-center p-[clamp(16px,3vw,32px)]">
-        <div
-          id="trade-slip-preview"
-          className="trade-slip-preview biggame-mode relative w-[clamp(300px,75vw,361px)] max-w-[361px] overflow-hidden rounded-2xl px-0 pb-4 pt-0 font-[Inter,-apple-system,BlinkMacSystemFont,'Segoe_UI','Roboto',sans-serif] shadow-[0_10px_40px_rgba(0,0,0,0.15)] max-[480px]:max-w-[320px] max-[480px]:w-[clamp(280px,90vw,320px)] max-[480px]:px-0 max-[480px]:pb-3"
-          style={{
-            '--team1-color': team1Color,
-            '--team2-color': team2Color,
-            background: `
-              radial-gradient(ellipse at 0% 0%, ${team1Color}99 0%, transparent 55%),
-              radial-gradient(ellipse at 100% 0%, ${team2Color}82 0%, transparent 55%),
-              radial-gradient(ellipse at 50% 10%, transparent 0%, rgb(17, 19, 22) 70%),
-              rgb(17, 19, 21)
-            `,
-            paddingLeft: '16px',
-            paddingRight: '16px',
-          } as React.CSSProperties}
-        >
-          {/* Header image (contains team names + title) */}
-          <div className="relative -ml-4 mt-0 h-auto w-[calc(100%+32px)] overflow-hidden max-[480px]:-ml-3 max-[480px]:w-[calc(100%+24px)]">
-            <img src={headerImage} alt="" className="block h-auto w-full object-cover" />
-          </div>
-
-          {/* Combo trade slip card */}
-          <div className="relative z-[2] w-full">
-            <div className="flex flex-col gap-3 rounded-t-lg bg-black/75 p-4 max-[480px]:p-3.5">
-              {/* Combo badge and header info */}
-              <div className="flex flex-col gap-1">
-                <div className="flex h-5 items-center gap-1.5 text-white/90">
-                  <ComboStrokeIcon />
-                  <span className="font-[Inter,-apple-system,BlinkMacSystemFont,sans-serif] text-[11px] font-semibold uppercase tracking-[0.88px] leading-[18px] text-white/90">COMBO</span>
-                </div>
-                <div className="font-barlow text-2xl font-medium leading-7 text-white/90">
-                  {totalMarkets} market{totalMarkets !== 1 ? 's' : ''} pay{' '}
-                  <span className="font-graphik text-[#28CC95]">
-                    ${payout.toLocaleString()}
-                  </span>
-                </div>
-                <div className="font-[Inter,-apple-system,BlinkMacSystemFont,sans-serif] text-[15px] font-normal leading-6 text-white/50">
-                  {config.isPaidOut ? 'Original cost' : 'Cost'}: ${cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </div>
-              </div>
-
-              {/* Kalshi Divider with green logo */}
-              <div className="flex w-full items-center gap-2">
-                <div className="h-px flex-1 bg-white/12" />
-                <svg width="55" height="16" viewBox="0 0 772 226" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 text-brand">
-                  <path d="M255.677 58.1911C210.683 58.1911 183.381 78.5114 181.206 113.922H228.062C229.924 100.374 238.611 93.2917 253.814 93.2917C269.018 93.2917 277.396 100.064 277.088 110.842C276.775 119.156 271.501 122.852 258.16 124.7L238.923 127.164C195.484 132.398 175.002 148.717 175.002 177.967C175.002 207.218 195.48 226 229.611 226C251.331 226 267.776 218.302 278.017 203.522V222.61H326.422V117.924C326.422 78.5114 302.532 58.1911 255.677 58.1911ZM245.44 192.437C231.478 192.437 223.72 186.281 223.72 174.887C223.72 164.109 230.545 158.875 249.473 156.105L258.16 154.873C265.845 153.8 272.17 152.274 277.396 150.131V166.267C277.396 181.663 264.368 192.437 245.44 192.437ZM343.488 3.38607H393.135V222.61H343.488V3.38607ZM105.23 105.628L179.66 222.61H115.118L54.3009 121.934V222.61H0V3.38607H54.3009V99.102L119.464 3.38607H177.489L105.23 105.628ZM716.145 26.1705C716.145 12.0062 728.557 0 744.073 0C759.588 0 772 12.0062 772 26.1705C772 40.3347 759.588 52.3409 744.073 52.3409C728.557 52.3409 716.145 40.6407 716.145 26.1705ZM544.868 172.423C544.868 208.446 518.494 225.996 474.743 225.996C430.991 225.996 403.997 206.908 402.447 172.113H448.369C450.232 185.351 456.435 192.743 474.434 192.743C489.95 192.743 497.395 186.587 497.395 177.347C497.395 168.107 488.396 163.489 465.747 160.107C422.616 154.257 405.242 141.631 405.242 109.304C405.242 75.1293 436.582 58.1911 471.643 58.1911C509.186 58.1911 536.493 71.4293 540.218 108.688H495.225C493.054 96.9877 486.225 91.1376 471.951 91.1376C458.61 91.1376 451.161 97.2937 451.161 105.608C451.161 114.844 458.61 118.23 480.638 121.31C523.148 127.16 544.868 137.934 544.868 172.423ZM719.249 61.5771H768.896V222.61H719.249V61.5771ZM702.183 115.77V222.61H652.536V124.39C652.536 107.146 645.399 98.2197 629.884 98.2197C614.368 98.2197 603.51 108.072 603.51 127.47V222.61H553.863V3.38607H603.51V85.5617C611.32 70.1734 627.761 58.1911 651.603 58.1911C681.393 58.1911 702.179 76.9734 702.179 115.766L702.183 115.77Z" fill="currentColor" />
-                </svg>
-                <div className="h-px flex-1 bg-white/12" />
-              </div>
-
-              {/* Events and markets */}
-              <div className="flex flex-col gap-0">
-                {allEvents.map((event) => (
-                  <BigGameComboEventItem key={event.id} event={event} />
-                ))}
-              </div>
-
-              {/* Timestamp */}
-              {config.showTimestamp && (
-                <div className="mt-2 font-[Inter,-apple-system,BlinkMacSystemFont,sans-serif] text-[10px] font-normal leading-[14px] text-white/30">
-                  {formatTimestamp(config.timestamp)}
-                </div>
-              )}
-            </div>
-            {/* Scalloped edge */}
-            <div className="trade-slip-scalloped-edge block h-1.5 w-full bg-[length:14px_6px] bg-repeat-x" />
-          </div>
-
-          {config.showWatermark && (
-            <div className="absolute bottom-5 right-5 text-[clamp(8px,1.5vw,10px)] font-medium text-[rgba(128,128,128,0.5)] z-10">
-              kalshi.tools
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  if (isBigGame) {
-    const bigGamePayout = calculateSinglePayout(config.wager, config.odds);
-    const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';
-    const tradeColor = config.tradeSide === 'No'
-      ? '#ff4d6a'
-      : config.tradeSide === 'Custom'
-        ? (config.customSideColor || '#00C688')
-        : '#00C688';
-    const tradeSideText = config.tradeSide === 'Custom'
-      ? (config.customSideText || 'Custom')
-      : config.tradeSide;
-    const outcomeText = config.outcome?.trim();
-    const team1Color = config.bigGameColor1 || '#408FFF';
-    const team2Color = config.bigGameColor2 || '#FF4D6A';
-    const headerImage = '/biggame-header.png';
-
-    return (
-      <div className="flex min-h-full w-full items-center justify-center p-[clamp(16px,3vw,32px)]">
-        <div
-          id="trade-slip-preview"
-          className="trade-slip-preview biggame-mode relative w-[clamp(300px,75vw,361px)] max-w-[361px] overflow-hidden rounded-2xl pb-4 pt-0 font-[Inter,-apple-system,BlinkMacSystemFont,'Segoe_UI','Roboto',sans-serif] shadow-[0_10px_40px_rgba(0,0,0,0.15)] max-[480px]:max-w-[320px] max-[480px]:w-[clamp(280px,90vw,320px)] max-[480px]:pb-3"
-          style={{
-            '--team1-color': team1Color,
-            '--team2-color': team2Color,
-            background: `
-              radial-gradient(ellipse at 0% 0%, ${team1Color}99 0%, transparent 55%),
-              radial-gradient(ellipse at 100% 0%, ${team2Color}82 0%, transparent 55%),
-              radial-gradient(ellipse at 50% 10%, transparent 0%, rgb(17, 19, 22) 70%),
-              rgb(17, 19, 21)
-            `,
-            paddingLeft: '16px',
-            paddingRight: '16px',
-          } as React.CSSProperties}
-        >
-          {/* Header image (contains team names + title) */}
-          <div className="relative -ml-4 mt-0 h-auto w-[calc(100%+32px)] overflow-hidden max-[480px]:-ml-3 max-[480px]:w-[calc(100%+24px)]">
-            <img src={headerImage} alt="" className="block h-auto w-full object-cover" />
-          </div>
-
-          {/* Trade slip card */}
-          <div className="relative z-[2] w-full">
-            <div className="flex flex-col gap-3 rounded-t-lg bg-black/75 p-4 max-[480px]:p-3.5">
-              {/* Question and Answer Section */}
-              <div className="flex flex-col items-start gap-0">
-                <div className="min-w-0 flex-1">
-                  <div className="m-0 text-[15px] font-normal leading-6 text-white/90">{marketName}</div>
-                  <div className="m-0 font-barlow text-2xl font-medium leading-7" style={{ color: tradeColor }}>
-                    <span>{tradeSideText}</span>
-                    {outcomeText && (
-                      <span className="font-barlow font-medium text-white/90 before:mx-1.5 before:font-bold before:text-inherit before:content-['\00b7']">{outcomeText}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Kalshi Divider with green logo */}
-              <div className="flex w-full items-center gap-2">
-                <div className="h-px flex-1 bg-white/12" />
-                <svg width="55" height="16" viewBox="0 0 772 226" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 text-brand">
-                  <path d="M255.677 58.1911C210.683 58.1911 183.381 78.5114 181.206 113.922H228.062C229.924 100.374 238.611 93.2917 253.814 93.2917C269.018 93.2917 277.396 100.064 277.088 110.842C276.775 119.156 271.501 122.852 258.16 124.7L238.923 127.164C195.484 132.398 175.002 148.717 175.002 177.967C175.002 207.218 195.48 226 229.611 226C251.331 226 267.776 218.302 278.017 203.522V222.61H326.422V117.924C326.422 78.5114 302.532 58.1911 255.677 58.1911ZM245.44 192.437C231.478 192.437 223.72 186.281 223.72 174.887C223.72 164.109 230.545 158.875 249.473 156.105L258.16 154.873C265.845 153.8 272.17 152.274 277.396 150.131V166.267C277.396 181.663 264.368 192.437 245.44 192.437ZM343.488 3.38607H393.135V222.61H343.488V3.38607ZM105.23 105.628L179.66 222.61H115.118L54.3009 121.934V222.61H0V3.38607H54.3009V99.102L119.464 3.38607H177.489L105.23 105.628ZM716.145 26.1705C716.145 12.0062 728.557 0 744.073 0C759.588 0 772 12.0062 772 26.1705C772 40.3347 759.588 52.3409 744.073 52.3409C728.557 52.3409 716.145 40.6407 716.145 26.1705ZM544.868 172.423C544.868 208.446 518.494 225.996 474.743 225.996C430.991 225.996 403.997 206.908 402.447 172.113H448.369C450.232 185.351 456.435 192.743 474.434 192.743C489.95 192.743 497.395 186.587 497.395 177.347C497.395 168.107 488.396 163.489 465.747 160.107C422.616 154.257 405.242 141.631 405.242 109.304C405.242 75.1293 436.582 58.1911 471.643 58.1911C509.186 58.1911 536.493 71.4293 540.218 108.688H495.225C493.054 96.9877 486.225 91.1376 471.951 91.1376C458.61 91.1376 451.161 97.2937 451.161 105.608C451.161 114.844 458.61 118.23 480.638 121.31C523.148 127.16 544.868 137.934 544.868 172.423ZM719.249 61.5771H768.896V222.61H719.249V61.5771ZM702.183 115.77V222.61H652.536V124.39C652.536 107.146 645.399 98.2197 629.884 98.2197C614.368 98.2197 603.51 108.072 603.51 127.47V222.61H553.863V3.38607H603.51V85.5617C611.32 70.1734 627.761 58.1911 651.603 58.1911C681.393 58.1911 702.179 76.9734 702.179 115.766L702.183 115.77Z" fill="currentColor" />
-                </svg>
-                <div className="h-px flex-1 bg-white/12" />
-              </div>
-
-              {/* Details Section */}
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-[13px] font-normal leading-5 text-white/50">Odds</span>
-                  <span className="text-[15px] font-normal leading-6 text-white/90">{config.odds}% chance</span>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-[13px] font-normal leading-5 text-white/50">{config.isPaidOut ? 'Original cost' : 'Cost'}</span>
-                  <span className="text-[15px] font-normal leading-6 text-white/90">
-                    ${config.wager.toLocaleString()}
-                  </span>
-                </div>
-                <div className="mb-[-16px] flex flex-col gap-0">
-                  <div className="mt-0 flex items-start justify-between gap-4 pt-0">
-                    <span className="flex flex-1 items-start p-0 text-[13px] font-normal leading-5 text-white/50">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
-                    <span className="font-graphik text-[30px] font-medium leading-9 text-[#00C688]">
-                      ${bigGamePayout.toLocaleString()}
-                    </span>
-                  </div>
-                  {config.showTimestamp && (
-                    <div className="mt-2 pb-2 text-[11px] font-normal leading-[18px] text-white/50">
-                      {formatTimestamp(config.timestamp)}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            {/* Scalloped edge */}
-            <div className="trade-slip-scalloped-edge block h-1.5 w-full bg-[length:14px_6px] bg-repeat-x" />
-          </div>
-
-          {config.showWatermark && (
-            <div className="absolute bottom-5 right-5 text-[clamp(8px,1.5vw,10px)] font-medium text-[rgba(128,128,128,0.5)] z-10">
-              kalshi.tools
-            </div>
-          )}
-        </div>
-      </div>
-    );
   }
 
   if (isHorizontal) {
@@ -549,7 +346,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               {/* Events and markets */}
               <div className="biggame-combo-events">
                 {config.comboCategories?.flatMap(cat => cat.events).map((event) => (
-                  <BigGameComboEventItem key={event.id} event={event} />
+                  <ComboEventItem key={event.id} event={event} />
                 ))}
               </div>
 

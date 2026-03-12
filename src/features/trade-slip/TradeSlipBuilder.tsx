@@ -92,11 +92,6 @@ export default function TradeSlipBuilder() {
     coinbaseWager: 1000,
     coinbasePayout: 25000,
     coinbasePlayType: '',
-    bigGameTeam1: 'SEA',
-    bigGameTeam2: 'NE',
-    bigGameTitle: 'PRO FOOTBALL CHAMPIONSHIP',
-    bigGameColor1: '#408FFF',
-    bigGameColor2: '#FF4D6A',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);
@@ -160,7 +155,7 @@ export default function TradeSlipBuilder() {
       const marketName = config.marketName?.trim();
       const titleName = config.title?.trim();
       let nameSource: string;
-      if (config.mode === 'single' || config.mode === 'biggame') {
+      if (config.mode === 'single') {
         nameSource = outcomeName || marketName || titleName || 'trade-slip';
       } else if (config.mode === 'coinbase') {
         nameSource = config.coinbasePlayType?.trim() || 'coinbase-slip';

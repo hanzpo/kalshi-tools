@@ -85,16 +85,14 @@ export function TradeSlipMaker({
   const isSingleOldMode = config.mode === 'single-old';
   const isComboOldMode = config.mode === 'combo-old';
   const isHorizontalMode = config.mode === 'horizontal';
-  const isBigGameMode = config.mode === 'biggame';
-  const isBigGameComboMode = config.mode === 'biggame-combo';
-  const payout = isSingleMode || isSingleOldMode || isHorizontalMode || isBigGameMode
+  const payout = isSingleMode || isSingleOldMode || isHorizontalMode
     ? calculateSinglePayout(config.wager, config.odds)
     : calculateAmericanPayout(config.wager, config.comboOdds);
 
   function handleModeChange(mode: TradeSlipMode) {
     if (mode === config.mode) return;
 
-    if ((mode === 'combo' || mode === 'biggame-combo') && (!config.comboCategories || config.comboCategories.length === 0)) {
+    if (mode === 'combo' && (!config.comboCategories || config.comboCategories.length === 0)) {
       onConfigChange({
         mode,
         comboCategories: [createComboCategory()],
@@ -308,21 +306,21 @@ export function TradeSlipMaker({
   }
 
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode && !isBigGameMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   }
 
   function handleDragLeave(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode && !isBigGameMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   }
 
   function handleDrop(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode && !isBigGameMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -366,8 +364,6 @@ export function TradeSlipMaker({
           <option value="single-old">Single (old)</option>
           <option value="combo-old">Combo (old)</option>
           <option value="horizontal">Horizontal</option>
-          {/* <option value="biggame">Big game</option>
-          <option value="biggame-combo">Big game combo</option> */}
         </select>
       </div>
 
@@ -798,248 +794,9 @@ export function TradeSlipMaker({
             </div>
           </div>
         </>
-      ) : isBigGameMode ? (
-        <>
-          {/* Content Section for Big Game */}
-          <div className={ctrl.section}>
-            <div className={ctrl.sectionTitle}>Header</div>
-
-            <div className={ctrl.group}>
-              <label>Background Glow Colors</label>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <div style={{ flex: 1 }}>
-                  <label htmlFor="biggame-color1" style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px', display: 'block' }}>Left</label>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <input
-                      id="biggame-color1"
-                      type="color"
-                      value={config.bigGameColor1}
-                      onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
-                      className={ctrl.colorInput}
-                      style={{ width: '36px', height: '36px', cursor: 'pointer' }}
-                    />
-                    <input
-                      type="text"
-                      className={ctrl.input}
-                      value={config.bigGameColor1}
-                      onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
-                      style={{ flex: 1 }}
-                    />
-                  </div>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label htmlFor="biggame-color2" style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px', display: 'block' }}>Right</label>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <input
-                      id="biggame-color2"
-                      type="color"
-                      value={config.bigGameColor2}
-                      onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
-                      className={ctrl.colorInput}
-                      style={{ width: '36px', height: '36px', cursor: 'pointer' }}
-                    />
-                    <input
-                      type="text"
-                      className={ctrl.input}
-                      value={config.bigGameColor2}
-                      onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
-                      style={{ flex: 1 }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div className={ctrl.section}>
-            <div className={ctrl.sectionTitle}>Market</div>
-
-            <div className={ctrl.group}>
-              <label htmlFor="bet-market-name-biggame">Market Name</label>
-              <input
-                id="bet-market-name-biggame"
-                type="text"
-                className={ctrl.input}
-                placeholder="e.g., SB MVP Winner?"
-                value={config.marketName}
-                onChange={(e) => onConfigChange({ marketName: e.target.value })}
-              />
-            </div>
-
-            <div className={ctrl.group}>
-              <label htmlFor="bet-outcome-biggame">Outcome</label>
-              <input
-                id="bet-outcome-biggame"
-                type="text"
-                className={ctrl.input}
-                placeholder="e.g., Drake Maye"
-                value={config.outcome}
-                onChange={(e) => onConfigChange({ outcome: e.target.value })}
-              />
-            </div>
-
-            <div className={ctrl.group}>
-              <label>Trade Side</label>
-              <div className={ctrl.segmented}>
-                {(['Yes', 'No', 'Custom'] as const).map((side) => {
-                  const sideColor = side === 'Yes' ? '#0f9b6c' : side === 'No' ? '#d91616' : '#666666';
-                  return (
-                    <button
-                      key={side}
-                      type="button"
-                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
-                      onClick={() => onConfigChange({ tradeSide: side })}
-                      aria-pressed={config.tradeSide === side}
-                      style={{
-                        color: sideColor,
-                        fontWeight: config.tradeSide === side ? 600 : 500,
-                      }}
-                    >
-                      {side}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {config.tradeSide === 'Custom' && (
-              <>
-                <div className={ctrl.group}>
-                  <label htmlFor="custom-side-color-biggame">Custom Side Color</label>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <input
-                      id="custom-side-color-biggame"
-                      type="color"
-                      value={config.customSideColor || '#0f9b6c'}
-                      onChange={(e) => onConfigChange({ customSideColor: e.target.value })}
-                      className={ctrl.colorInput}
-                      style={{ width: '48px', height: '36px', cursor: 'pointer' }}
-                    />
-                    <input
-                      type="text"
-                      className={ctrl.input}
-                      value={config.customSideColor || '#0f9b6c'}
-                      onChange={(e) => onConfigChange({ customSideColor: e.target.value })}
-                      placeholder="#0f9b6c"
-                      style={{ flex: 1 }}
-                    />
-                  </div>
-                </div>
-                <div className={ctrl.group}>
-                  <label htmlFor="custom-side-text-biggame">Custom Side Text</label>
-                  <input
-                    id="custom-side-text-biggame"
-                    type="text"
-                    className={ctrl.input}
-                    placeholder="e.g., Maybe"
-                    value={config.customSideText || ''}
-                    onChange={(e) => onConfigChange({ customSideText: e.target.value })}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        </>
-      ) : isBigGameComboMode ? (
-        <>
-          {/* Header Section for Big Game Combo */}
-          <div className={ctrl.section}>
-            <div className={ctrl.sectionTitle}>Header</div>
-
-            <div className={ctrl.group}>
-              <label>Background Glow Colors</label>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <div style={{ flex: 1 }}>
-                  <label htmlFor="biggame-combo-color1" style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px', display: 'block' }}>Left</label>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <input
-                      id="biggame-combo-color1"
-                      type="color"
-                      value={config.bigGameColor1}
-                      onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
-                      className={ctrl.colorInput}
-                      style={{ width: '36px', height: '36px', cursor: 'pointer' }}
-                    />
-                    <input
-                      type="text"
-                      className={ctrl.input}
-                      value={config.bigGameColor1}
-                      onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
-                      style={{ flex: 1 }}
-                    />
-                  </div>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label htmlFor="biggame-combo-color2" style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px', display: 'block' }}>Right</label>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <input
-                      id="biggame-combo-color2"
-                      type="color"
-                      value={config.bigGameColor2}
-                      onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
-                      className={ctrl.colorInput}
-                      style={{ width: '36px', height: '36px', cursor: 'pointer' }}
-                    />
-                    <input
-                      type="text"
-                      className={ctrl.input}
-                      value={config.bigGameColor2}
-                      onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
-                      style={{ flex: 1 }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Financials Section for Big Game Combo */}
-          <div className={ctrl.section}>
-            <div className={ctrl.sectionTitle}>Financials</div>
-
-            <div className={ctrl.group}>
-              <label htmlFor="biggame-combo-payout">Payout Amount ($)</label>
-              <input
-                id="biggame-combo-payout"
-                type="number"
-                className={ctrl.input}
-                placeholder="e.g., 1920"
-                value={config.comboPayout || ''}
-                onChange={(e) => onConfigChange({ comboPayout: parseFloat(e.target.value) || 0 })}
-                min="0"
-                step="1"
-              />
-            </div>
-            <div className={ctrl.group}>
-              <label htmlFor="biggame-combo-cost">Cost ($)</label>
-              <input
-                id="biggame-combo-cost"
-                type="number"
-                className={ctrl.input}
-                placeholder="e.g., 99.84"
-                value={config.comboCost || ''}
-                onChange={(e) => onConfigChange({ comboCost: parseFloat(e.target.value) || 0 })}
-                min="0"
-                step="0.01"
-              />
-            </div>
-            <div className={ctrl.group}>
-              <label htmlFor="biggame-combo-timestamp">Purchase Date/Time (Optional)</label>
-              <input
-                id="biggame-combo-timestamp"
-                type="datetime-local"
-                className={ctrl.input}
-                value={config.timestamp ?? ''}
-                onChange={(e) => onConfigChange({ timestamp: e.target.value })}
-              />
-              <p className={ctrl.helpText}>Leave blank to use current date/time</p>
-            </div>
-          </div>
-        </>
       ) : null}
 
-      {(isComboMode || isBigGameComboMode) && (
+      {isComboMode && (
         <div className={ctrl.group}>
           <label aria-hidden="true">Categories &amp; Markets</label>
           <div className={ctrl.comboLegs}>
@@ -1286,8 +1043,8 @@ export function TradeSlipMaker({
         </div>
       )}
 
-      {/* Financials Section - hidden for combo and biggame-combo which have their own */}
-      {!isComboMode && !isBigGameComboMode && (
+      {/* Financials Section - hidden for combo which has its own */}
+      {!isComboMode && (
       <div className={ctrl.section}>
         <div className={ctrl.sectionTitle}>Financials</div>
 
@@ -1305,7 +1062,7 @@ export function TradeSlipMaker({
           />
         </div>
 
-        {isSingleMode || isSingleOldMode || isHorizontalMode || isBigGameMode ? (
+        {isSingleMode || isSingleOldMode || isHorizontalMode ? (
           <>
             <div className={ctrl.group}>
               <label htmlFor="bet-odds">Odds (%)</label>
@@ -1325,8 +1082,8 @@ export function TradeSlipMaker({
               <p className={ctrl.helpText}>Expected payout: ${payout.toLocaleString()}</p>
             </div>
 
-            {/* Timestamp only for new single mode and big game mode */}
-            {(isSingleMode || isBigGameMode) && (
+            {/* Timestamp only for new single mode */}
+            {isSingleMode && (
               <div className={ctrl.group}>
                 <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
                 <input
@@ -1385,8 +1142,8 @@ export function TradeSlipMaker({
       <div className={ctrl.section}>
         <div className={ctrl.sectionTitle}>Display Options</div>
 
-        {/* Background color picker - only for new modes (not biggame which uses team colors) */}
-        {!isSingleOldMode && !isComboOldMode && !isBigGameMode && !isBigGameComboMode && (
+        {/* Background color picker - only for new modes */}
+        {!isSingleOldMode && !isComboOldMode && (
           <div className={ctrl.group}>
             <label htmlFor="background-color">Background Color</label>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -1457,8 +1214,7 @@ export function TradeSlipMaker({
         </div>
 
 
-        {!isBigGameMode && !isBigGameComboMode && (
-          <div className={ctrl.group} style={{ marginBottom: 0 }}>
+        <div className={ctrl.group} style={{ marginBottom: 0 }}>
             <label
               htmlFor="show-cashed-out"
               style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
@@ -1479,7 +1235,6 @@ export function TradeSlipMaker({
             </label>
             <p className={ctrl.helpText}>Display cashed out badge in corner</p>
           </div>
-        )}
 
         <div className={ctrl.group} style={{ marginBottom: 0 }}>
           <label
