@@ -12,6 +12,7 @@ const SearchBuilder = lazy(() => import('./features/search/SearchBuilder'));
 const LinkPreviewBuilder = lazy(() => import('./features/link-preview/LinkPreviewBuilder'));
 const MarketPageBuilder = lazy(() => import('./features/market-page/MarketPageBuilder'));
 const OverlayBuilder = lazy(() => import('./features/overlay/OverlayBuilder'));
+const BannerBuilder = lazy(() => import('./features/banner/BannerBuilder'));
 
 function AppContent() {
   useAnalytics();
@@ -26,6 +27,7 @@ function AppContent() {
           <Route path="/link-preview" element={<LinkPreviewBuilder />} />
           <Route path="/market-page" element={<MarketPageBuilder />} />
           <Route path="/overlay" element={<OverlayBuilder />} />
+          <Route path="/banner" element={<BannerBuilder />} />
           <Route path="*" element={<LandingPage />} />
         </Routes>
       </Suspense>

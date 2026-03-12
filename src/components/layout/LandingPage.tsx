@@ -141,6 +141,33 @@ export function LandingPage() {
           </Link>
 
           <Link
+            to="/banner"
+            className="landing-option landing-option--banner"
+            onClick={() => handleToolClick('banner')}
+          >
+            <div className="option-body">
+              <div className="option-header">
+                <span className="option-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="M6 10h4" />
+                    <path d="M6 14h3" />
+                    <path d="M14 10h4" />
+                    <path d="M14 14h2" />
+                  </svg>
+                </span>
+                <div className="option-title-group">
+                  <span className="option-subtitle">Create a</span>
+                  <span className="option-label">Banner</span>
+                </div>
+              </div>
+              <p className="option-description">
+                Create shareable market banners with a question, outcome image, position, and price movement indicator.
+              </p>
+            </div>
+          </Link>
+
+          <Link
             to="/overlay?edit"
             className="landing-option landing-option--overlay"
             onClick={() => handleToolClick("overlay")}
