@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 import { MarketLiveData } from '../types';
 import { extractTicker } from '../useMarketData';
 
@@ -119,67 +120,67 @@ function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange
   };
 
   return (
-    <div className="oe-props">
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">Market URL</span>
-        <div className="oe-row">
-          <input type="text" className="oe-input" placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
-          <button className="oe-btn oe-btn--sm" onClick={applyUrl}>Apply</button>
+    <div className={oe.props}>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Market URL</span>
+        <div className={oe.row}>
+          <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
+          <button className={oe.btnSm} onClick={applyUrl}>Apply</button>
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Team 1</span>
-          <input type="text" className="oe-input" value={props.team1Name} placeholder="SEA" onChange={e => onChange({ ...props, team1Name: e.target.value })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Team 1</span>
+          <input type="text" className={oe.input} value={props.team1Name} placeholder="SEA" onChange={e => onChange({ ...props, team1Name: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Color</span>
-          <input type="color" className="oe-color" value={props.team1Color} onChange={e => onChange({ ...props, team1Color: e.target.value })} />
-        </div>
-      </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Team 2</span>
-          <input type="text" className="oe-input" value={props.team2Name} placeholder="NE" onChange={e => onChange({ ...props, team2Name: e.target.value })} />
-        </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Color</span>
-          <input type="color" className="oe-color" value={props.team2Color} onChange={e => onChange({ ...props, team2Color: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Color</span>
+          <input type="color" className={oe.color} value={props.team1Color} onChange={e => onChange({ ...props, team1Color: e.target.value })} />
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Variant</span>
-          <select className="oe-select" value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Team 2</span>
+          <input type="text" className={oe.input} value={props.team2Name} placeholder="NE" onChange={e => onChange({ ...props, team2Name: e.target.value })} />
+        </div>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Color</span>
+          <input type="color" className={oe.color} value={props.team2Color} onChange={e => onChange({ ...props, team2Color: e.target.value })} />
+        </div>
+      </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Variant</span>
+          <select className={oe.select} value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
             <option value="large">Large</option>
             <option value="compact">Compact</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">VS Style</span>
-          <select className="oe-select" value={props.vsStyle} onChange={e => onChange({ ...props, vsStyle: e.target.value as any })}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>VS Style</span>
+          <select className={oe.select} value={props.vsStyle} onChange={e => onChange({ ...props, vsStyle: e.target.value as any })}>
             <option value="text">vs</option>
             <option value="slash">/</option>
             <option value="hidden">Hidden</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Poll (s)</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.pollInterval} min={5} max={300} onChange={e => onChange({ ...props, pollInterval: parseInt(e.target.value) || 30 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Poll (s)</span>
+          <input type="number" className={oe.inputSm} value={props.pollInterval} min={5} max={300} onChange={e => onChange({ ...props, pollInterval: parseInt(e.target.value) || 30 })} />
         </div>
       </div>
-      <div className="oe-row">
-        <label className="oe-checkbox">
+      <div className={oe.row}>
+        <label className={oe.checkbox}>
           <input type="checkbox" checked={props.showOdds} onChange={e => onChange({ ...props, showOdds: e.target.checked })} />
           Show Odds
         </label>
-        <label className="oe-checkbox">
+        <label className={oe.checkbox}>
           <input type="checkbox" checked={props.showPayout} onChange={e => onChange({ ...props, showPayout: e.target.checked })} />
           Show Payout
         </label>
-        <div className="oe-field">
-          <span className="oe-field-label">Wager $</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.payoutWager} min={1} onChange={e => onChange({ ...props, payoutWager: parseInt(e.target.value) || 100 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Wager $</span>
+          <input type="number" className={oe.inputSm} value={props.payoutWager} min={1} onChange={e => onChange({ ...props, payoutWager: parseInt(e.target.value) || 100 })} />
         </div>
       </div>
     </div>

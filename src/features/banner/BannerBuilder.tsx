@@ -9,7 +9,7 @@ import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '..
 import { createFileName } from '../../lib/chartHelpers';
 import { useToast } from '../../hooks/useToast';
 import { trackEvent } from '../../lib/analytics';
-import '../../App.css';
+import { layout } from '../../styles/layout';
 
 export default function BannerBuilder() {
   const navigate = useNavigate();
@@ -115,8 +115,8 @@ export default function BannerBuilder() {
   }
 
   return (
-    <div className="app">
-      <div className="app-container">
+    <div className={layout.app}>
+      <div className={layout.appContainer}>
         <BannerMaker
           config={config}
           onConfigChange={handleConfigChange}
@@ -125,7 +125,7 @@ export default function BannerBuilder() {
           onCopyToClipboard={handleCopyToClipboard}
           onBack={() => navigate('/')}
         />
-        <div className="preview-section">
+        <div className={layout.previewSection}>
           <BannerPreview config={config} />
         </div>
       </div>

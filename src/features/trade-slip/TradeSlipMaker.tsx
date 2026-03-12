@@ -8,7 +8,7 @@ import {
   ArrowLeftIcon
 } from '../../components/ui/Icons';
 import { trackEvent } from '../../lib/analytics';
-import '../chart/ControlPanel.css';
+import { ctrl } from '../../styles/controls';
 
 interface TradeSlipMakerProps {
   config: TradeSlipConfig;
@@ -343,21 +343,21 @@ export function TradeSlipMaker({
   }
 
   return (
-    <div className="control-panel">
-      <button onClick={onBack} className="back-button-control-panel">
+    <div className={ctrl.panel}>
+      <button onClick={onBack} className={ctrl.backBtn}>
         <ArrowLeftIcon size={14} />
         Back
       </button>
-      <h1 className="panel-title">Trade Slip Maker</h1>
-      <p className="panel-subtitle">
+      <h1 className={ctrl.title}>Trade Slip Maker</h1>
+      <p className={ctrl.subtitle}>
         Create Kalshi-style trade slips
       </p>
 
-      <div className="control-group">
+      <div className={ctrl.group}>
         <label htmlFor="trade-slip-type">Trade Slip Type</label>
         <select
           id="trade-slip-type"
-          className="text-input"
+          className={ctrl.input}
           value={config.mode}
           onChange={(e) => handleModeChange(e.target.value as TradeSlipMode)}
         >
@@ -374,10 +374,10 @@ export function TradeSlipMaker({
       {isSingleMode ? (
         <>
           {/* Content Section */}
-          <div className="control-section">
-            <div className="control-section-title">Content</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Content</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-image">Image (Optional)</label>
               <div
                 onDragOver={handleDragOver}
@@ -402,7 +402,7 @@ export function TradeSlipMaker({
                   type="file"
                   accept="image/jpeg,image/png,image/jpg"
                   onChange={handleImageChange}
-                  className="file-input"
+                  className={ctrl.fileInput}
                   style={{ display: 'none' }}
                 />
                 <label
@@ -433,43 +433,43 @@ export function TradeSlipMaker({
                   )}
                 </label>
               </div>
-              <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+              <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-market-name">Market Name</label>
               <input
                 id="bet-market-name"
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., Bitcoin price today at 6pm EDT?"
                 value={config.marketName}
                 onChange={(e) => onConfigChange({ marketName: e.target.value })}
               />
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-outcome">Outcome</label>
               <input
                 id="bet-outcome"
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., $111,000 or above"
                 value={config.outcome}
                 onChange={(e) => onConfigChange({ outcome: e.target.value })}
               />
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label>Trade Side</label>
-              <div className="segmented-control">
+              <div className={ctrl.segmented}>
                 {(['Yes', 'No', 'Custom'] as const).map((side) => {
                   const sideColor = side === 'Yes' ? '#0f9b6c' : side === 'No' ? '#d91616' : '#666666';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
                       onClick={() => onConfigChange({ tradeSide: side })}
                       aria-pressed={config.tradeSide === side}
                       style={{
@@ -486,7 +486,7 @@ export function TradeSlipMaker({
 
             {config.tradeSide === 'Custom' && (
               <>
-                <div className="control-group">
+                <div className={ctrl.group}>
                   <label htmlFor="custom-side-color">Custom Side Color</label>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <input
@@ -494,12 +494,12 @@ export function TradeSlipMaker({
                       type="color"
                       value={config.customSideColor || '#0f9b6c'}
                       onChange={(e) => onConfigChange({ customSideColor: e.target.value })}
-                      className="color-input"
+                      className={ctrl.colorInput}
                       style={{ width: '48px', height: '36px', cursor: 'pointer' }}
                     />
                     <input
                       type="text"
-                      className="text-input"
+                      className={ctrl.input}
                       value={config.customSideColor || '#0f9b6c'}
                       onChange={(e) => onConfigChange({ customSideColor: e.target.value })}
                       placeholder="#0f9b6c"
@@ -507,12 +507,12 @@ export function TradeSlipMaker({
                     />
                   </div>
                 </div>
-                <div className="control-group">
+                <div className={ctrl.group}>
                   <label htmlFor="custom-side-text">Custom Side Text</label>
                   <input
                     id="custom-side-text"
                     type="text"
-                    className="text-input"
+                    className={ctrl.input}
                     placeholder="e.g., Maybe"
                     value={config.customSideText || ''}
                     onChange={(e) => onConfigChange({ customSideText: e.target.value })}
@@ -525,15 +525,15 @@ export function TradeSlipMaker({
       ) : isComboMode ? (
         <>
           {/* Financials Section */}
-          <div className="control-section">
-            <div className="control-section-title">Financials</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Financials</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="combo-payout">Payout Amount ($)</label>
               <input
                 id="combo-payout"
                 type="number"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., 1920"
                 value={config.comboPayout || ''}
                 onChange={(e) => onConfigChange({ comboPayout: parseFloat(e.target.value) || 0 })}
@@ -541,12 +541,12 @@ export function TradeSlipMaker({
                 step="1"
               />
             </div>
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="combo-cost">Cost ($)</label>
               <input
                 id="combo-cost"
                 type="number"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., 99.84"
                 value={config.comboCost || ''}
                 onChange={(e) => onConfigChange({ comboCost: parseFloat(e.target.value) || 0 })}
@@ -554,59 +554,59 @@ export function TradeSlipMaker({
                 step="0.01"
               />
             </div>
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="combo-timestamp">Purchase Date/Time (Optional)</label>
               <input
                 id="combo-timestamp"
                 type="datetime-local"
-                className="text-input"
+                className={ctrl.input}
                 value={config.timestamp ?? ''}
                 onChange={(e) => onConfigChange({ timestamp: e.target.value })}
               />
-              <p className="help-text">Leave blank to use current date/time</p>
+              <p className={ctrl.helpText}>Leave blank to use current date/time</p>
             </div>
           </div>
         </>
       ) : isSingleOldMode ? (
         <>
           {/* Content Section */}
-          <div className="control-section">
-            <div className="control-section-title">Content</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Content</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-market-name-old">Market Name</label>
               <input
                 id="bet-market-name-old"
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., Bitcoin price today at 6pm EDT?"
                 value={config.marketName}
                 onChange={(e) => onConfigChange({ marketName: e.target.value })}
               />
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-outcome-old">Outcome</label>
               <input
                 id="bet-outcome-old"
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., $111,000 or above"
                 value={config.outcome}
                 onChange={(e) => onConfigChange({ outcome: e.target.value })}
               />
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label>Trade Side</label>
-              <div className="segmented-control">
+              <div className={ctrl.segmented}>
                 {(['Yes', 'No'] as const).map((side) => {
                   const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
                       onClick={() => onConfigChange({ tradeSide: side })}
                       aria-pressed={config.tradeSide === side}
                       style={{
@@ -621,7 +621,7 @@ export function TradeSlipMaker({
               </div>
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-image-old">Image (Optional)</label>
               <div
                 onDragOver={handleDragOver}
@@ -646,7 +646,7 @@ export function TradeSlipMaker({
                   type="file"
                   accept="image/jpeg,image/png,image/jpg"
                   onChange={handleImageChange}
-                  className="file-input"
+                  className={ctrl.fileInput}
                   style={{ display: 'none' }}
                 />
                 <label
@@ -677,19 +677,19 @@ export function TradeSlipMaker({
                   )}
                 </label>
               </div>
-              <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+              <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
             </div>
           </div>
         </>
       ) : isComboOldMode ? (
-        <div className="control-section">
-          <div className="control-section-title">Content</div>
-          <div className="control-group">
+        <div className={ctrl.section}>
+          <div className={ctrl.sectionTitle}>Content</div>
+          <div className={ctrl.group}>
             <label htmlFor="bet-title-old">Slip Title</label>
             <input
               id="bet-title-old"
               type="text"
-              className="text-input"
+              className={ctrl.input}
               placeholder="e.g., Sunday Night Combo"
               value={config.title}
               onChange={(e) => onConfigChange({ title: e.target.value })}
@@ -699,10 +699,10 @@ export function TradeSlipMaker({
       ) : isHorizontalMode ? (
         <>
           {/* Content Section for Horizontal */}
-          <div className="control-section">
-            <div className="control-section-title">Content</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Content</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-image-horizontal">Background Image</label>
               <div
                 onDragOver={handleDragOver}
@@ -727,7 +727,7 @@ export function TradeSlipMaker({
                   type="file"
                   accept="image/jpeg,image/png,image/jpg"
                   onChange={handleImageChange}
-                  className="file-input"
+                  className={ctrl.fileInput}
                   style={{ display: 'none' }}
                 />
                 <label
@@ -758,31 +758,31 @@ export function TradeSlipMaker({
                   )}
                 </label>
               </div>
-              <p className="help-text">Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+              <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-market-name-horizontal">Market Question</label>
               <input
                 id="bet-market-name-horizontal"
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., Will Donald Trump win the 2024 election?"
                 value={config.marketName}
                 onChange={(e) => onConfigChange({ marketName: e.target.value })}
               />
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label>Trade Side</label>
-              <div className="segmented-control">
+              <div className={ctrl.segmented}>
                 {(['Yes', 'No'] as const).map((side) => {
                   const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
                       onClick={() => onConfigChange({ tradeSide: side })}
                       aria-pressed={config.tradeSide === side}
                       style={{
@@ -801,10 +801,10 @@ export function TradeSlipMaker({
       ) : isBigGameMode ? (
         <>
           {/* Content Section for Big Game */}
-          <div className="control-section">
-            <div className="control-section-title">Header</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Header</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label>Background Glow Colors</label>
               <div style={{ display: 'flex', gap: '12px' }}>
                 <div style={{ flex: 1 }}>
@@ -815,12 +815,12 @@ export function TradeSlipMaker({
                       type="color"
                       value={config.bigGameColor1}
                       onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
-                      className="color-input"
+                      className={ctrl.colorInput}
                       style={{ width: '36px', height: '36px', cursor: 'pointer' }}
                     />
                     <input
                       type="text"
-                      className="text-input"
+                      className={ctrl.input}
                       value={config.bigGameColor1}
                       onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
                       style={{ flex: 1 }}
@@ -835,12 +835,12 @@ export function TradeSlipMaker({
                       type="color"
                       value={config.bigGameColor2}
                       onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
-                      className="color-input"
+                      className={ctrl.colorInput}
                       style={{ width: '36px', height: '36px', cursor: 'pointer' }}
                     />
                     <input
                       type="text"
-                      className="text-input"
+                      className={ctrl.input}
                       value={config.bigGameColor2}
                       onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
                       style={{ flex: 1 }}
@@ -852,43 +852,43 @@ export function TradeSlipMaker({
 
           </div>
 
-          <div className="control-section">
-            <div className="control-section-title">Market</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Market</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-market-name-biggame">Market Name</label>
               <input
                 id="bet-market-name-biggame"
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., SB MVP Winner?"
                 value={config.marketName}
                 onChange={(e) => onConfigChange({ marketName: e.target.value })}
               />
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-outcome-biggame">Outcome</label>
               <input
                 id="bet-outcome-biggame"
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., Drake Maye"
                 value={config.outcome}
                 onChange={(e) => onConfigChange({ outcome: e.target.value })}
               />
             </div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label>Trade Side</label>
-              <div className="segmented-control">
+              <div className={ctrl.segmented}>
                 {(['Yes', 'No', 'Custom'] as const).map((side) => {
                   const sideColor = side === 'Yes' ? '#0f9b6c' : side === 'No' ? '#d91616' : '#666666';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`segmented-option${config.tradeSide === side ? ' active' : ''}`}
+                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
                       onClick={() => onConfigChange({ tradeSide: side })}
                       aria-pressed={config.tradeSide === side}
                       style={{
@@ -905,7 +905,7 @@ export function TradeSlipMaker({
 
             {config.tradeSide === 'Custom' && (
               <>
-                <div className="control-group">
+                <div className={ctrl.group}>
                   <label htmlFor="custom-side-color-biggame">Custom Side Color</label>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <input
@@ -913,12 +913,12 @@ export function TradeSlipMaker({
                       type="color"
                       value={config.customSideColor || '#0f9b6c'}
                       onChange={(e) => onConfigChange({ customSideColor: e.target.value })}
-                      className="color-input"
+                      className={ctrl.colorInput}
                       style={{ width: '48px', height: '36px', cursor: 'pointer' }}
                     />
                     <input
                       type="text"
-                      className="text-input"
+                      className={ctrl.input}
                       value={config.customSideColor || '#0f9b6c'}
                       onChange={(e) => onConfigChange({ customSideColor: e.target.value })}
                       placeholder="#0f9b6c"
@@ -926,12 +926,12 @@ export function TradeSlipMaker({
                     />
                   </div>
                 </div>
-                <div className="control-group">
+                <div className={ctrl.group}>
                   <label htmlFor="custom-side-text-biggame">Custom Side Text</label>
                   <input
                     id="custom-side-text-biggame"
                     type="text"
-                    className="text-input"
+                    className={ctrl.input}
                     placeholder="e.g., Maybe"
                     value={config.customSideText || ''}
                     onChange={(e) => onConfigChange({ customSideText: e.target.value })}
@@ -944,10 +944,10 @@ export function TradeSlipMaker({
       ) : isBigGameComboMode ? (
         <>
           {/* Header Section for Big Game Combo */}
-          <div className="control-section">
-            <div className="control-section-title">Header</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Header</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label>Background Glow Colors</label>
               <div style={{ display: 'flex', gap: '12px' }}>
                 <div style={{ flex: 1 }}>
@@ -958,12 +958,12 @@ export function TradeSlipMaker({
                       type="color"
                       value={config.bigGameColor1}
                       onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
-                      className="color-input"
+                      className={ctrl.colorInput}
                       style={{ width: '36px', height: '36px', cursor: 'pointer' }}
                     />
                     <input
                       type="text"
-                      className="text-input"
+                      className={ctrl.input}
                       value={config.bigGameColor1}
                       onChange={(e) => onConfigChange({ bigGameColor1: e.target.value })}
                       style={{ flex: 1 }}
@@ -978,12 +978,12 @@ export function TradeSlipMaker({
                       type="color"
                       value={config.bigGameColor2}
                       onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
-                      className="color-input"
+                      className={ctrl.colorInput}
                       style={{ width: '36px', height: '36px', cursor: 'pointer' }}
                     />
                     <input
                       type="text"
-                      className="text-input"
+                      className={ctrl.input}
                       value={config.bigGameColor2}
                       onChange={(e) => onConfigChange({ bigGameColor2: e.target.value })}
                       style={{ flex: 1 }}
@@ -995,15 +995,15 @@ export function TradeSlipMaker({
           </div>
 
           {/* Financials Section for Big Game Combo */}
-          <div className="control-section">
-            <div className="control-section-title">Financials</div>
+          <div className={ctrl.section}>
+            <div className={ctrl.sectionTitle}>Financials</div>
 
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="biggame-combo-payout">Payout Amount ($)</label>
               <input
                 id="biggame-combo-payout"
                 type="number"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., 1920"
                 value={config.comboPayout || ''}
                 onChange={(e) => onConfigChange({ comboPayout: parseFloat(e.target.value) || 0 })}
@@ -1011,12 +1011,12 @@ export function TradeSlipMaker({
                 step="1"
               />
             </div>
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="biggame-combo-cost">Cost ($)</label>
               <input
                 id="biggame-combo-cost"
                 type="number"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., 99.84"
                 value={config.comboCost || ''}
                 onChange={(e) => onConfigChange({ comboCost: parseFloat(e.target.value) || 0 })}
@@ -1024,60 +1024,60 @@ export function TradeSlipMaker({
                 step="0.01"
               />
             </div>
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="biggame-combo-timestamp">Purchase Date/Time (Optional)</label>
               <input
                 id="biggame-combo-timestamp"
                 type="datetime-local"
-                className="text-input"
+                className={ctrl.input}
                 value={config.timestamp ?? ''}
                 onChange={(e) => onConfigChange({ timestamp: e.target.value })}
               />
-              <p className="help-text">Leave blank to use current date/time</p>
+              <p className={ctrl.helpText}>Leave blank to use current date/time</p>
             </div>
           </div>
         </>
       ) : null}
 
       {(isComboMode || isBigGameComboMode) && (
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label aria-hidden="true">Categories &amp; Markets</label>
-          <div className="combo-legs">
+          <div className={ctrl.comboLegs}>
             {config.comboCategories?.map((category, catIndex) => (
-              <div key={category.id} className="combo-leg combo-category-input">
-                <div className="combo-leg-header">
-                  <span className="combo-leg-title">Category {catIndex + 1}</span>
+              <div key={category.id} className={`${ctrl.comboLeg} bg-dark-elevated`}>
+                <div className={ctrl.comboLegHeader}>
+                  <span className={ctrl.comboLegTitle}>Category {catIndex + 1}</span>
                   <button
                     type="button"
-                    className="combo-leg-remove"
+                    className={ctrl.comboLegRemove}
                     onClick={() => handleRemoveCategory(category.id)}
                     disabled={config.comboCategories.length <= 1}
                   >
                     Remove
                   </button>
                 </div>
-                <div className="combo-leg-body">
-                  <label className="combo-leg-label" htmlFor={`category-name-${category.id}`}>
+                <div className={ctrl.comboLegBody}>
+                  <label className={ctrl.comboLegLabel} htmlFor={`category-name-${category.id}`}>
                     Category Name
                   </label>
                   <input
                     id={`category-name-${category.id}`}
                     type="text"
-                    className="text-input"
+                    className={ctrl.input}
                     placeholder="e.g., Pro Football"
                     value={category.name}
                     onChange={(e) => handleCategoryChange(category.id, { name: e.target.value })}
                   />
 
                   {/* Events within category */}
-                  <div className="combo-events-container">
+                  <div className="mt-3 flex flex-col gap-3 border-l-2 border-dark-border-light pl-3">
                     {category.events.map((event, eventIndex) => (
-                      <div key={event.id} className="combo-event-input">
-                        <div className="combo-event-header-input">
-                          <span className="combo-event-title">Event {eventIndex + 1}</span>
+                      <div key={event.id} className="flex flex-col gap-2 rounded-[6px] border border-dark-border-light bg-dark-surface p-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-semibold uppercase tracking-[0.04em] text-text-secondary">Event {eventIndex + 1}</span>
                           <button
                             type="button"
-                            className="combo-leg-remove"
+                            className={ctrl.comboLegRemove}
                             onClick={() => handleRemoveEvent(category.id, event.id)}
                             disabled={category.events.length <= 1}
                           >
@@ -1086,53 +1086,53 @@ export function TradeSlipMaker({
                         </div>
                         <input
                           type="text"
-                          className="text-input"
+                          className={ctrl.input}
                           placeholder="e.g., Kansas City @ Philadelphia"
                           value={event.name}
                           onChange={(e) => handleEventChange(category.id, event.id, { name: e.target.value })}
                         />
 
                         {/* Team colors */}
-                        <div className="combo-color-pickers">
-                          <div className="combo-color-picker">
+                        <div className="mt-2 flex gap-3">
+                          <div className="flex items-center gap-1.5 [&_label]:mb-0 [&_label]:text-[10px] [&_label]:font-medium [&_label]:text-text-secondary">
                             <label>Color 1</label>
                             <input
                               type="color"
                               value={event.color1 || '#E31837'}
                               onChange={(e) => handleEventChange(category.id, event.id, { color1: e.target.value })}
-                              className="color-input"
+                              className={ctrl.colorInput}
                             />
                           </div>
-                          <div className="combo-color-picker">
+                          <div className="flex items-center gap-1.5 [&_label]:mb-0 [&_label]:text-[10px] [&_label]:font-medium [&_label]:text-text-secondary">
                             <label>Color 2</label>
                             <input
                               type="color"
                               value={event.color2 || '#004C54'}
                               onChange={(e) => handleEventChange(category.id, event.id, { color2: e.target.value })}
-                              className="color-input"
+                              className={ctrl.colorInput}
                             />
                           </div>
                         </div>
 
                         {/* Markets within event */}
-                        <div className="combo-markets-container">
+                        <div className="mt-2 flex flex-col gap-2 border-l-2 border-dark-border pl-2.5">
                           {event.markets.map((market, marketIndex) => (
-                            <div key={market.id} className="combo-market-input">
-                              <div className="combo-market-header-input">
-                                <span className="combo-market-title">Market {marketIndex + 1}</span>
+                            <div key={market.id} className="flex flex-col gap-1">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-medium uppercase tracking-[0.04em] text-text-secondary">Market {marketIndex + 1}</span>
                                 <button
                                   type="button"
-                                  className="combo-leg-remove"
+                                  className={ctrl.comboLegRemove}
                                   onClick={() => handleRemoveMarket(category.id, event.id, market.id)}
                                   disabled={event.markets.length <= 1}
                                 >
                                   Remove
                                 </button>
                               </div>
-                              <div className="combo-market-inputs">
+                              <div className="flex items-center gap-1.5">
                                 <input
                                   type="text"
-                                  className="text-input combo-prefix-input"
+                                  className={ctrl.input}
                                   placeholder="Prefix (e.g., No)"
                                   value={market.prefix || ''}
                                   onChange={(e) => handleMarketChange(category.id, event.id, market.id, { prefix: e.target.value || undefined })}
@@ -1140,7 +1140,7 @@ export function TradeSlipMaker({
                                 />
                                 <input
                                   type="text"
-                                  className="text-input"
+                                  className={ctrl.input}
                                   placeholder="Market text (e.g., Philadelphia)"
                                   value={market.text}
                                   onChange={(e) => handleMarketChange(category.id, event.id, market.id, { text: e.target.value })}
@@ -1162,7 +1162,7 @@ export function TradeSlipMaker({
                           ))}
                           <button
                             type="button"
-                            className="combo-leg-add combo-add-market"
+                            className={ctrl.comboLegAdd}
                             onClick={() => handleAddMarket(category.id, event.id)}
                           >
                             + Add Market
@@ -1172,7 +1172,7 @@ export function TradeSlipMaker({
                     ))}
                     <button
                       type="button"
-                      className="combo-leg-add combo-add-event"
+                      className={ctrl.comboLegAdd}
                       onClick={() => handleAddEvent(category.id)}
                     >
                       + Add Event
@@ -1181,7 +1181,7 @@ export function TradeSlipMaker({
                 </div>
               </div>
             ))}
-            <button type="button" className="combo-leg-add" onClick={handleAddCategory}>
+            <button type="button" className={ctrl.comboLegAdd} onClick={handleAddCategory}>
               + Add Category
             </button>
           </div>
@@ -1189,43 +1189,43 @@ export function TradeSlipMaker({
       )}
 
       {isComboOldMode && (
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label aria-hidden="true">Combo Legs</label>
-          <div className="combo-legs">
+          <div className={ctrl.comboLegs}>
             {config.comboLegs.map((leg, index) => (
-              <div key={leg.id} className="combo-leg">
-                <div className="combo-leg-header">
-                  <span className="combo-leg-title">Leg {index + 1}</span>
+              <div key={leg.id} className={ctrl.comboLeg}>
+                <div className={ctrl.comboLegHeader}>
+                  <span className={ctrl.comboLegTitle}>Leg {index + 1}</span>
                   <button
                     type="button"
-                    className="combo-leg-remove"
+                    className={ctrl.comboLegRemove}
                     onClick={() => handleRemoveLeg(leg.id)}
                     disabled={config.comboLegs.length <= 1}
                   >
                     Remove
                   </button>
                 </div>
-                <div className="combo-leg-body">
-                  <label className="combo-leg-label" htmlFor={`combo-question-${leg.id}`}>
+                <div className={ctrl.comboLegBody}>
+                  <label className={ctrl.comboLegLabel} htmlFor={`combo-question-${leg.id}`}>
                     Question
                   </label>
                   <input
                     id={`combo-question-${leg.id}`}
                     type="text"
-                    className="text-input"
+                    className={ctrl.input}
                     placeholder="e.g., New York Giants to win?"
                     value={leg.question}
                     onChange={(e) => handleLegChange(leg.id, { question: e.target.value })}
                   />
-                  <div className="combo-leg-controls">
-                    <div className="combo-leg-control">
-                      <span className="combo-leg-label">Answer</span>
-                      <div className="segmented-control combo-answer-toggle">
+                  <div className={ctrl.comboLegControls}>
+                    <div className={ctrl.comboLegControl}>
+                      <span className={ctrl.comboLegLabel}>Answer</span>
+                      <div className={`${ctrl.segmented} p-0.5`}>
                         {(['Yes', 'No'] as ComboLeg['answer'][]).map((answer) => (
                           <button
                             key={answer}
                             type="button"
-                            className={`segmented-option${leg.answer === answer ? ' active' : ''}`}
+                            className={`${ctrl.segmentedOption}${leg.answer === answer ? ` ${ctrl.segmentedOptionActive}` : ''}`}
                             onClick={() => handleLegChange(leg.id, { answer })}
                             aria-pressed={leg.answer === answer}
                           >
@@ -1234,10 +1234,10 @@ export function TradeSlipMaker({
                         ))}
                       </div>
                     </div>
-                    <div className="combo-leg-control">
-                      <span className="combo-leg-label">Image</span>
+                    <div className={ctrl.comboLegControl}>
+                      <span className={ctrl.comboLegLabel}>Image</span>
                       <div
-                        className="combo-image-upload"
+                        className={ctrl.comboImageUpload}
                         onDragOver={(e) => handleLegDragOver(leg.id, e)}
                         onDragLeave={handleLegDragLeave}
                         onDrop={(e) => handleLegDrop(leg.id, e)}
@@ -1249,10 +1249,10 @@ export function TradeSlipMaker({
                       >
                         {leg.image ? (
                           <>
-                            <img src={leg.image} alt="" className="combo-leg-image" />
+                            <img src={leg.image} alt="" className={ctrl.comboLegImage} />
                             <button
                               type="button"
-                              className="combo-image-clear"
+                              className={ctrl.comboImageClear}
                               onClick={() => handleLegChange(leg.id, { image: null })}
                             >
                               Remove
@@ -1260,7 +1260,7 @@ export function TradeSlipMaker({
                           </>
                         ) : (
                           <>
-                            <label htmlFor={`combo-image-${leg.id}`} className="combo-image-placeholder">
+                            <label htmlFor={`combo-image-${leg.id}`} className={ctrl.comboImagePlaceholder}>
                               {draggingLegId === leg.id ? 'Drop image' : 'Upload or drop'}
                             </label>
                             <input
@@ -1268,7 +1268,7 @@ export function TradeSlipMaker({
                               type="file"
                               accept="image/jpeg,image/png,image/jpg"
                               onChange={(e) => handleLegImageInput(leg.id, e)}
-                              className="file-input"
+                              className={ctrl.fileInput}
                               style={{ display: 'none' }}
                             />
                           </>
@@ -1279,7 +1279,7 @@ export function TradeSlipMaker({
                 </div>
               </div>
             ))}
-            <button type="button" className="combo-leg-add" onClick={handleAddLeg}>
+            <button type="button" className={ctrl.comboLegAdd} onClick={handleAddLeg}>
               + Add Leg
             </button>
           </div>
@@ -1288,15 +1288,15 @@ export function TradeSlipMaker({
 
       {/* Financials Section - hidden for combo and biggame-combo which have their own */}
       {!isComboMode && !isBigGameComboMode && (
-      <div className="control-section">
-        <div className="control-section-title">Financials</div>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Financials</div>
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label htmlFor="bet-wager">Wager Amount ($)</label>
           <input
             id="bet-wager"
             type="number"
-            className="text-input"
+            className={ctrl.input}
             placeholder="e.g., 1000"
             value={config.wager}
             onChange={(e) => onConfigChange({ wager: parseFloat(e.target.value) || 0 })}
@@ -1307,9 +1307,9 @@ export function TradeSlipMaker({
 
         {isSingleMode || isSingleOldMode || isHorizontalMode || isBigGameMode ? (
           <>
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="bet-odds">Odds (%)</label>
-              <div className="slider-wrapper">
+              <div className={ctrl.sliderWrapper}>
                 <input
                   id="bet-odds"
                   type="range"
@@ -1320,34 +1320,34 @@ export function TradeSlipMaker({
                   max="99"
                   step="1"
                 />
-                <div className="slider-value">{config.odds}% chance</div>
+                <div className={ctrl.sliderValue}>{config.odds}% chance</div>
               </div>
-              <p className="help-text">Expected payout: ${payout.toLocaleString()}</p>
+              <p className={ctrl.helpText}>Expected payout: ${payout.toLocaleString()}</p>
             </div>
 
             {/* Timestamp only for new single mode and big game mode */}
             {(isSingleMode || isBigGameMode) && (
-              <div className="control-group">
+              <div className={ctrl.group}>
                 <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
                 <input
                   id="bet-timestamp"
                   type="datetime-local"
-                  className="text-input"
+                  className={ctrl.input}
                   value={config.timestamp ?? ''}
                   onChange={(e) => onConfigChange({ timestamp: e.target.value })}
                 />
-                <p className="help-text">Leave blank to use current date/time</p>
+                <p className={ctrl.helpText}>Leave blank to use current date/time</p>
               </div>
             )}
           </>
         ) : isComboOldMode ? (
           <>
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="combo-odds-old">American Odds</label>
               <input
                 id="combo-odds-old"
                 type="number"
-                className="text-input"
+                className={ctrl.input}
                 value={config.comboOdds}
                 onChange={(e) =>
                   onConfigChange({ comboOdds: Number(e.target.value) || 0 })
@@ -1355,16 +1355,16 @@ export function TradeSlipMaker({
                 placeholder="+500"
                 step="10"
               />
-              <p className="help-text">
+              <p className={ctrl.helpText}>
                 Enter positive or negative odds (e.g., -110 or +250). Potential payout: ${payout.toLocaleString()}
               </p>
             </div>
-            <div className="control-group">
+            <div className={ctrl.group}>
               <label htmlFor="combo-cash-out-old">Cash Out Amount ($)</label>
               <input
                 id="combo-cash-out-old"
                 type="number"
-                className="text-input"
+                className={ctrl.input}
                 placeholder="e.g., 947"
                 value={config.comboCashOut || ''}
                 onChange={(e) => {
@@ -1374,7 +1374,7 @@ export function TradeSlipMaker({
                 min="0"
                 step="1"
               />
-              <p className="help-text">Optional: Current cash out value</p>
+              <p className={ctrl.helpText}>Optional: Current cash out value</p>
             </div>
           </>
         ) : null}
@@ -1382,12 +1382,12 @@ export function TradeSlipMaker({
       )}
 
       {/* Display Options Section */}
-      <div className="control-section">
-        <div className="control-section-title">Display Options</div>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Display Options</div>
 
         {/* Background color picker - only for new modes (not biggame which uses team colors) */}
         {!isSingleOldMode && !isComboOldMode && !isBigGameMode && !isBigGameComboMode && (
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label htmlFor="background-color">Background Color</label>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <input
@@ -1395,12 +1395,12 @@ export function TradeSlipMaker({
                 type="color"
                 value={config.backgroundColor}
                 onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
-                className="color-input"
+                className={ctrl.colorInput}
                 style={{ width: '48px', height: '36px', cursor: 'pointer' }}
               />
               <input
                 type="text"
-                className="text-input"
+                className={ctrl.input}
                 value={config.backgroundColor}
                 onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
                 placeholder="#28CC95"
@@ -1411,7 +1411,7 @@ export function TradeSlipMaker({
         )}
 
         {!isSingleOldMode && !isComboOldMode && !isHorizontalMode && (
-          <div className="control-group">
+          <div className={ctrl.group}>
             <label
               htmlFor="show-timestamp-bet"
               style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
@@ -1430,11 +1430,11 @@ export function TradeSlipMaker({
               />
               <span>Show Date/Time</span>
             </label>
-            <p className="help-text">Display purchase date and time on trade slip</p>
+            <p className={ctrl.helpText}>Display purchase date and time on trade slip</p>
           </div>
         )}
 
-        <div className="control-group">
+        <div className={ctrl.group}>
           <label
             htmlFor="show-watermark-bet"
             style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
@@ -1453,12 +1453,12 @@ export function TradeSlipMaker({
             />
             <span>Show Watermark</span>
           </label>
-          <p className="help-text">Display watermark on trade slip</p>
+          <p className={ctrl.helpText}>Display watermark on trade slip</p>
         </div>
 
 
         {!isBigGameMode && !isBigGameComboMode && (
-          <div className="control-group" style={{ marginBottom: 0 }}>
+          <div className={ctrl.group} style={{ marginBottom: 0 }}>
             <label
               htmlFor="show-cashed-out"
               style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
@@ -1477,11 +1477,11 @@ export function TradeSlipMaker({
               />
               <span>Show "Cashed out" Badge</span>
             </label>
-            <p className="help-text">Display cashed out badge in corner</p>
+            <p className={ctrl.helpText}>Display cashed out badge in corner</p>
           </div>
         )}
 
-        <div className="control-group" style={{ marginBottom: 0 }}>
+        <div className={ctrl.group} style={{ marginBottom: 0 }}>
           <label
             htmlFor="is-paid-out"
             style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
@@ -1500,14 +1500,14 @@ export function TradeSlipMaker({
             />
             <span>Paid Out</span>
           </label>
-          <p className="help-text">Show as a paid out trade slip</p>
+          <p className={ctrl.helpText}>Show as a paid out trade slip</p>
         </div>
       </div>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
         <button
           onClick={onExport}
-          className="button-export"
+          className={ctrl.btnExport}
           style={{ flex: 1 }}
         >
           <DownloadIcon size={16} />
@@ -1515,7 +1515,7 @@ export function TradeSlipMaker({
         </button>
         <button
           onClick={onCopyToClipboard}
-          className="button-export"
+          className={ctrl.btnExport}
           style={{ flex: 1 }}
         >
           <CopyIcon size={16} />

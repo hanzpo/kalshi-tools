@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 
 export interface LogoProps {
   type: 'logo';
@@ -26,21 +27,21 @@ function LogoRenderer({ props, width, height }: { props: LogoProps; width: numbe
 
 function LogoPropsEditor({ props, onChange }: { props: LogoProps; onChange: (p: LogoProps) => void }) {
   return (
-    <div className="oe-props">
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Variant</span>
-          <select className="oe-select" value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
+    <div className={oe.props}>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Variant</span>
+          <select className={oe.select} value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
             <option value="wordmark">Wordmark</option>
             <option value="icon">Icon</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Color</span>
-          <input type="color" className="oe-color" value={props.color} onChange={e => onChange({ ...props, color: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Color</span>
+          <input type="color" className={oe.color} value={props.color} onChange={e => onChange({ ...props, color: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Opacity</span>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Opacity</span>
           <input type="range" min={0} max={1} step={0.05} value={props.opacity} onChange={e => onChange({ ...props, opacity: parseFloat(e.target.value) })} />
         </div>
       </div>

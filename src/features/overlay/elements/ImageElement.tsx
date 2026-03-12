@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 
 export interface ImageProps {
   type: 'image';
@@ -24,26 +25,26 @@ function ImageRenderer({ props, width, height }: { props: ImageProps; width: num
 
 function ImagePropsEditor({ props, onChange }: { props: ImageProps; onChange: (p: ImageProps) => void }) {
   return (
-    <div className="oe-props">
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">Image URL</span>
-        <input type="text" className="oe-input" placeholder="https://..." value={props.src} onChange={e => onChange({ ...props, src: e.target.value })} />
+    <div className={oe.props}>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Image URL</span>
+        <input type="text" className={oe.input} placeholder="https://..." value={props.src} onChange={e => onChange({ ...props, src: e.target.value })} />
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Fit</span>
-          <select className="oe-select" value={props.objectFit} onChange={e => onChange({ ...props, objectFit: e.target.value as any })}>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Fit</span>
+          <select className={oe.select} value={props.objectFit} onChange={e => onChange({ ...props, objectFit: e.target.value as any })}>
             <option value="contain">Contain</option>
             <option value="cover">Cover</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Opacity</span>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Opacity</span>
           <input type="range" min={0} max={1} step={0.05} value={props.opacity} onChange={e => onChange({ ...props, opacity: parseFloat(e.target.value) })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Radius</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.borderRadius} min={0} onChange={e => onChange({ ...props, borderRadius: parseInt(e.target.value) || 0 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Radius</span>
+          <input type="number" className={oe.inputSm} value={props.borderRadius} min={0} onChange={e => onChange({ ...props, borderRadius: parseInt(e.target.value) || 0 })} />
         </div>
       </div>
     </div>

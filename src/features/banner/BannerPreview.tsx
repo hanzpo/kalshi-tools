@@ -1,5 +1,4 @@
 import { BannerConfig } from '../../types';
-import './BannerPreview.css';
 
 interface BannerPreviewProps {
   config: BannerConfig;
@@ -27,36 +26,45 @@ const BANNER_PREVIEW_ID = 'banner-preview';
 
 export function BannerPreview({ config }: BannerPreviewProps) {
   return (
-    <div className="banner-card" id={BANNER_PREVIEW_ID}>
-      <div className="banner-top-row">
-        <h2 className="banner-title">
+    <div
+      className="flex w-full flex-col gap-5 rounded-2xl bg-white p-[28px_32px] font-sans"
+      id={BANNER_PREVIEW_ID}
+    >
+      <div className="flex items-start justify-between gap-5">
+        <h2 className="m-0 flex-1 text-[26px] font-bold leading-[1.2] text-[#1a1a1a]">
           {config.title || 'Will this happen?'}
         </h2>
-        <div className="banner-logo">
+        <div className="flex shrink-0 items-start pt-1 text-[#09C285]">
           <KalshiLogo />
         </div>
       </div>
 
-      <div className="banner-bottom-row">
-        <div className="banner-outcome-section">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
           {config.image && (
             <img
               src={config.image}
               alt=""
-              className="banner-image"
+              className="size-[72px] shrink-0 rounded-[10px] object-cover"
             />
           )}
-          <span className="banner-outcome-text">
+          <span className="text-[32px] font-bold text-[#1a1a1a]">
             {config.outcome || config.tradeSide}
           </span>
         </div>
 
-        <div className="banner-price-section">
-          <span className="banner-price-change">{config.odds}%</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[48px] font-bold leading-none text-[#1a1a1a]">{config.odds}%</span>
           {config.change && (
-            <div className="banner-change-badge">
-              <div className={`banner-change-arrow banner-change-arrow--${config.trendDirection}`} />
-              <span className="banner-change-number">{config.change}</span>
+            <div className="flex items-center gap-0.5">
+              <div
+                className={`h-0 w-0 border-x-[8px] border-x-transparent ${
+                  config.trendDirection === 'up'
+                    ? 'border-b-[12px] border-b-[#09C285]'
+                    : 'border-t-[12px] border-t-[#ef4444]'
+                }`}
+              />
+              <span className="text-lg font-semibold text-[#6b7280]">{config.change}</span>
             </div>
           )}
         </div>

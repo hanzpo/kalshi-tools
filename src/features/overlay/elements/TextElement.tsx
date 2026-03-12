@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 
 export interface TextProps {
   type: 'text';
@@ -45,19 +46,19 @@ function TextRenderer({ props, width, height }: { props: TextProps; width: numbe
 
 function TextPropsEditor({ props, onChange }: { props: TextProps; onChange: (p: TextProps) => void }) {
   return (
-    <div className="oe-props">
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">Text</span>
-        <input type="text" className="oe-input" value={props.text} onChange={e => onChange({ ...props, text: e.target.value })} />
+    <div className={oe.props}>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Text</span>
+        <input type="text" className={oe.input} value={props.text} onChange={e => onChange({ ...props, text: e.target.value })} />
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Size</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.fontSize} min={8} max={400} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 16 })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Size</span>
+          <input type="number" className={oe.inputSm} value={props.fontSize} min={8} max={400} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 16 })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Weight</span>
-          <select className="oe-select" value={props.fontWeight} onChange={e => onChange({ ...props, fontWeight: parseInt(e.target.value) })}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Weight</span>
+          <select className={oe.select} value={props.fontWeight} onChange={e => onChange({ ...props, fontWeight: parseInt(e.target.value) })}>
             <option value={400}>Regular</option>
             <option value={600}>Semi Bold</option>
             <option value={700}>Bold</option>
@@ -65,64 +66,64 @@ function TextPropsEditor({ props, onChange }: { props: TextProps; onChange: (p: 
             <option value={900}>Black</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Style</span>
-          <select className="oe-select" value={props.fontStyle || 'normal'} onChange={e => onChange({ ...props, fontStyle: e.target.value as any })}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Style</span>
+          <select className={oe.select} value={props.fontStyle || 'normal'} onChange={e => onChange({ ...props, fontStyle: e.target.value as any })}>
             <option value="normal">Normal</option>
             <option value="italic">Italic</option>
           </select>
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Color</span>
-          <input type="color" className="oe-color" value={props.color} onChange={e => onChange({ ...props, color: e.target.value })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Color</span>
+          <input type="color" className={oe.color} value={props.color} onChange={e => onChange({ ...props, color: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Align</span>
-          <select className="oe-select" value={props.textAlign} onChange={e => onChange({ ...props, textAlign: e.target.value as any })}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Align</span>
+          <select className={oe.select} value={props.textAlign} onChange={e => onChange({ ...props, textAlign: e.target.value as any })}>
             <option value="left">Left</option>
             <option value="center">Center</option>
             <option value="right">Right</option>
           </select>
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Transform</span>
-          <select className="oe-select" value={props.textTransform || 'none'} onChange={e => onChange({ ...props, textTransform: e.target.value as any })}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Transform</span>
+          <select className={oe.select} value={props.textTransform || 'none'} onChange={e => onChange({ ...props, textTransform: e.target.value as any })}>
             <option value="none">None</option>
             <option value="uppercase">UPPER</option>
             <option value="lowercase">lower</option>
           </select>
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Spacing</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.letterSpacing || 0} step={0.5} onChange={e => onChange({ ...props, letterSpacing: parseFloat(e.target.value) || 0 })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Spacing</span>
+          <input type="number" className={oe.inputSm} value={props.letterSpacing || 0} step={0.5} onChange={e => onChange({ ...props, letterSpacing: parseFloat(e.target.value) || 0 })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Line H</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.lineHeight || 1.2} step={0.1} min={0.5} max={3} onChange={e => onChange({ ...props, lineHeight: parseFloat(e.target.value) || 1.2 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Line H</span>
+          <input type="number" className={oe.inputSm} value={props.lineHeight || 1.2} step={0.1} min={0.5} max={3} onChange={e => onChange({ ...props, lineHeight: parseFloat(e.target.value) || 1.2 })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">BG</span>
-          <input type="text" className="oe-input oe-input--sm" value={props.backgroundColor} placeholder="transparent" onChange={e => onChange({ ...props, backgroundColor: e.target.value })} />
-        </div>
-      </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Shadow</span>
-          <input type="text" className="oe-input" value={props.textShadow || ''} placeholder="2px 2px 4px #000" onChange={e => onChange({ ...props, textShadow: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>BG</span>
+          <input type="text" className={oe.inputSm} value={props.backgroundColor} placeholder="transparent" onChange={e => onChange({ ...props, backgroundColor: e.target.value })} />
         </div>
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">Stroke W</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.strokeWidth || 0} min={0} max={20} onChange={e => onChange({ ...props, strokeWidth: parseInt(e.target.value) || 0 })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Shadow</span>
+          <input type="text" className={oe.input} value={props.textShadow || ''} placeholder="2px 2px 4px #000" onChange={e => onChange({ ...props, textShadow: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Stroke Color</span>
-          <input type="color" className="oe-color" value={props.strokeColor || '#000000'} onChange={e => onChange({ ...props, strokeColor: e.target.value })} />
+      </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Stroke W</span>
+          <input type="number" className={oe.inputSm} value={props.strokeWidth || 0} min={0} max={20} onChange={e => onChange({ ...props, strokeWidth: parseInt(e.target.value) || 0 })} />
+        </div>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Stroke Color</span>
+          <input type="color" className={oe.color} value={props.strokeColor || '#000000'} onChange={e => onChange({ ...props, strokeColor: e.target.value })} />
         </div>
       </div>
     </div>

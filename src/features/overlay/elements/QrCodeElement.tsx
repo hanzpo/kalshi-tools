@@ -1,5 +1,6 @@
 import React from 'react';
 import { registerElement } from './registry';
+import { oe } from '../styles';
 
 export interface QrCodeProps {
   type: 'qr-code';
@@ -40,27 +41,27 @@ function QrCodeRenderer({ props, width, height }: {
 
 function QrCodePropsEditor({ props, onChange }: { props: QrCodeProps; onChange: (p: QrCodeProps) => void }) {
   return (
-    <div className="oe-props">
-      <div className="oe-field oe-field--full">
-        <span className="oe-field-label">URL</span>
-        <input type="text" className="oe-input" placeholder="https://kalshi.com/markets/..." value={props.url} onChange={e => onChange({ ...props, url: e.target.value })} />
+    <div className={oe.props}>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>URL</span>
+        <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={props.url} onChange={e => onChange({ ...props, url: e.target.value })} />
       </div>
-      <div className="oe-row">
-        <div className="oe-field">
-          <span className="oe-field-label">FG Color</span>
-          <input type="color" className="oe-color" value={props.fgColor} onChange={e => onChange({ ...props, fgColor: e.target.value })} />
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>FG Color</span>
+          <input type="color" className={oe.color} value={props.fgColor} onChange={e => onChange({ ...props, fgColor: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">BG Color</span>
-          <input type="color" className="oe-color" value={props.bgColor} onChange={e => onChange({ ...props, bgColor: e.target.value })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>BG Color</span>
+          <input type="color" className={oe.color} value={props.bgColor} onChange={e => onChange({ ...props, bgColor: e.target.value })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Padding</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.padding} min={0} max={40} onChange={e => onChange({ ...props, padding: parseInt(e.target.value) || 0 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Padding</span>
+          <input type="number" className={oe.inputSm} value={props.padding} min={0} max={40} onChange={e => onChange({ ...props, padding: parseInt(e.target.value) || 0 })} />
         </div>
-        <div className="oe-field">
-          <span className="oe-field-label">Radius</span>
-          <input type="number" className="oe-input oe-input--sm" value={props.borderRadius} min={0} onChange={e => onChange({ ...props, borderRadius: parseInt(e.target.value) || 0 })} />
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Radius</span>
+          <input type="number" className={oe.inputSm} value={props.borderRadius} min={0} onChange={e => onChange({ ...props, borderRadius: parseInt(e.target.value) || 0 })} />
         </div>
       </div>
     </div>

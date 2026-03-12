@@ -4,6 +4,7 @@ import { OverlayConfig, OverlayElement } from './types';
 import { createElement, generateId } from './overlayState';
 import { getAllElementDefs, getElementDef } from './elements';
 import { PRESETS } from './presets';
+import { oe } from './styles';
 
 interface OverlayEditorProps {
   config: OverlayConfig;
@@ -78,25 +79,25 @@ export function OverlayEditor({
   const allDefs = getAllElementDefs();
 
   return (
-    <div className="overlay-editor">
+    <div className="flex flex-col">
       {/* Header */}
-      <div className="oe-section">
-        <Link to="/" className="oe-back">&larr; Home</Link>
-        <h2 className="oe-title">Overlay Editor</h2>
-        <p className="oe-subtitle">Build live overlays for OBS</p>
+      <div className={oe.section}>
+        <Link to="/" className="mb-2 inline-block text-[13px] text-text-muted no-underline transition-colors duration-150 hover:text-brand">&larr; Home</Link>
+        <h2 className="text-lg font-semibold tracking-tight text-gray-100">Overlay Editor</h2>
+        <p className="mt-1 text-[13px] text-text-muted">Build live overlays for OBS</p>
       </div>
 
       {/* Copy Link */}
-      <div className="oe-section">
-        <button className="oe-btn oe-btn--primary" onClick={onCopyLink}>
+      <div className={oe.section}>
+        <button className={oe.btnPrimary} onClick={onCopyLink}>
           Copy OBS Link
         </button>
       </div>
 
       {/* Live Data Status */}
-      <div className="oe-section">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <label className="oe-label" style={{ margin: 0 }}>Live Data</label>
+      <div className={oe.section}>
+        <div className="flex items-center justify-between">
+          <label className={`${oe.label} !mb-0`}>Live Data</label>
           <span style={{
             fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
             background: wsStatus === 'connected' ? '#09C28522' : wsStatus === 'connecting' ? '#F59E0B22' : '#333',
@@ -105,7 +106,7 @@ export function OverlayEditor({
             {wsStatus === 'connected' ? 'WebSocket' : wsStatus === 'connecting' ? 'Connecting...' : wsStatus === 'error' ? 'No API Key' : 'Polling (3s)'}
           </span>
         </div>
-        <span style={{ fontSize: 11, color: '#6b7280', marginTop: 4, display: 'block' }}>
+        <span className="mt-1 block text-[11px] text-text-muted">
           {wsStatus === 'connected'
             ? 'Real-time trades & prices via WebSocket'
             : 'Set KALSHI_API_KEY_ID & KALSHI_PRIVATE_KEY env vars for WebSocket'}
@@ -113,11 +114,11 @@ export function OverlayEditor({
       </div>
 
       {/* Presets */}
-      <div className="oe-section">
-        <label className="oe-label">Presets</label>
-        <div className="oe-preset-grid">
+      <div className={oe.section}>
+        <label className={oe.label}>Presets</label>
+        <div className={oe.presetGrid}>
           {PRESETS.map(preset => (
-            <button key={preset.id} className="oe-preset-btn" onClick={() => loadPreset(preset.id)} title={preset.description}>
+            <button key={preset.id} className={oe.presetBtn} onClick={() => loadPreset(preset.id)} title={preset.description}>
               {preset.name}
             </button>
           ))}
@@ -125,20 +126,20 @@ export function OverlayEditor({
       </div>
 
       {/* Canvas Settings */}
-      <div className="oe-section">
-        <label className="oe-label">Canvas</label>
-        <div className="oe-row">
-          <div className="oe-field">
-            <span className="oe-field-label">W</span>
-            <input type="number" className="oe-input oe-input--sm" value={config.width} onChange={e => onConfigChange({ ...config, width: parseInt(e.target.value) || 1920 })} />
+      <div className={oe.section}>
+        <label className={oe.label}>Canvas</label>
+        <div className={oe.row}>
+          <div className={oe.field}>
+            <span className={oe.fieldLabel}>W</span>
+            <input type="number" className={oe.inputSm} value={config.width} onChange={e => onConfigChange({ ...config, width: parseInt(e.target.value) || 1920 })} />
           </div>
-          <div className="oe-field">
-            <span className="oe-field-label">H</span>
-            <input type="number" className="oe-input oe-input--sm" value={config.height} onChange={e => onConfigChange({ ...config, height: parseInt(e.target.value) || 1080 })} />
+          <div className={oe.field}>
+            <span className={oe.fieldLabel}>H</span>
+            <input type="number" className={oe.inputSm} value={config.height} onChange={e => onConfigChange({ ...config, height: parseInt(e.target.value) || 1080 })} />
           </div>
         </div>
-        <div className="oe-row" style={{ marginTop: 8 }}>
-          <select className="oe-select" value={config.background.type} onChange={e => {
+        <div className={`${oe.row} mt-2`}>
+          <select className={oe.select} value={config.background.type} onChange={e => {
             const type = e.target.value as 'solid' | 'gradient' | 'transparent';
             onConfigChange({
               ...config,
@@ -152,20 +153,20 @@ export function OverlayEditor({
             <option value="gradient">Gradient</option>
           </select>
           {config.background.type === 'solid' && (
-            <input type="color" className="oe-color" value={config.background.color || '#000000'} onChange={e => onConfigChange({ ...config, background: { type: 'solid', color: e.target.value } })} />
+            <input type="color" className={oe.color} value={config.background.color || '#000000'} onChange={e => onConfigChange({ ...config, background: { type: 'solid', color: e.target.value } })} />
           )}
           {config.background.type === 'gradient' && (
-            <input type="text" className="oe-input" placeholder="CSS gradient" value={config.background.gradient || ''} onChange={e => onConfigChange({ ...config, background: { type: 'gradient', gradient: e.target.value } })} />
+            <input type="text" className={oe.input} placeholder="CSS gradient" value={config.background.gradient || ''} onChange={e => onConfigChange({ ...config, background: { type: 'gradient', gradient: e.target.value } })} />
           )}
         </div>
       </div>
 
-      {/* Add Elements — auto-generated from registry */}
-      <div className="oe-section">
-        <label className="oe-label">Add Element</label>
-        <div className="oe-add-grid">
+      {/* Add Elements */}
+      <div className={oe.section}>
+        <label className={oe.label}>Add Element</label>
+        <div className={oe.addGrid}>
           {allDefs.map(def => (
-            <button key={def.type} className="oe-add-btn" onClick={() => addElement(def.type)}>
+            <button key={def.type} className={oe.addBtn} onClick={() => addElement(def.type)}>
               {def.icon}
               {def.label}
             </button>
@@ -174,15 +175,15 @@ export function OverlayEditor({
       </div>
 
       {/* Element List */}
-      <div className="oe-section">
-        <label className="oe-label">Layers</label>
-        <div className="oe-layer-list">
+      <div className={oe.section}>
+        <label className={oe.label}>Layers</label>
+        <div className={oe.layerList}>
           {[...config.elements].sort((a, b) => b.zIndex - a.zIndex).map(el => {
             const def = getElementDef(el.type);
             return (
               <div
                 key={el.id}
-                className={`oe-layer-item ${selectedId === el.id ? 'oe-layer-item--selected' : ''} ${dragOverId === el.id ? 'oe-layer-item--dragover' : ''} ${dragLayerId === el.id ? 'oe-layer-item--dragging' : ''}`}
+                className={`${oe.layerItem} ${selectedId === el.id ? oe.layerItemSelected : ''} ${dragOverId === el.id ? oe.layerItemDragover : ''} ${dragLayerId === el.id ? oe.layerItemDragging : ''}`}
                 draggable
                 onDragStart={(e) => { setDragLayerId(el.id); e.dataTransfer.effectAllowed = 'move'; }}
                 onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDragOverId(el.id); }}
@@ -191,51 +192,47 @@ export function OverlayEditor({
                 onDragEnd={() => { setDragLayerId(null); setDragOverId(null); }}
                 onClick={() => onSelect(el.id)}
               >
-                <span className="oe-layer-grip" title="Drag to reorder">&#8942;&#8942;</span>
-                <span className="oe-layer-type">{def?.label || el.type}</span>
-                <span className="oe-layer-detail">{def?.layerLabel(el.props) || ''}</span>
-                <div className="oe-layer-actions">
-                  <button className="oe-layer-btn oe-layer-btn--delete" onClick={(e) => { e.stopPropagation(); deleteElement(el.id); }} title="Delete">&#10005;</button>
+                <span className={oe.layerGrip} title="Drag to reorder">&#8942;&#8942;</span>
+                <span className={oe.layerType}>{def?.label || el.type}</span>
+                <span className={oe.layerDetail}>{def?.layerLabel(el.props) || ''}</span>
+                <div className={oe.layerActions}>
+                  <button className={oe.layerBtnDelete} onClick={(e) => { e.stopPropagation(); deleteElement(el.id); }} title="Delete">&#10005;</button>
                 </div>
               </div>
             );
           })}
           {config.elements.length === 0 && (
-            <div className="oe-empty">No elements yet. Add one above or load a preset.</div>
+            <div className={oe.empty}>No elements yet. Add one above or load a preset.</div>
           )}
         </div>
       </div>
 
-      {/* Property Inspector — driven by registry */}
+      {/* Property Inspector */}
       {selectedElement && selectedDef && (
-        <div className="oe-section">
-          <label className="oe-label">Properties — {selectedDef.label}</label>
-
-          {/* Position & Size (universal for all elements) */}
-          <div className="oe-row">
-            <div className="oe-field">
-              <span className="oe-field-label">X</span>
-              <input type="number" className="oe-input oe-input--sm" value={selectedElement.x}
+        <div className={oe.section}>
+          <label className={oe.label}>Properties — {selectedDef.label}</label>
+          <div className={oe.row}>
+            <div className={oe.field}>
+              <span className={oe.fieldLabel}>X</span>
+              <input type="number" className={oe.inputSm} value={selectedElement.x}
                 onChange={e => updateElements(els => els.map(el => el.id === selectedElement.id ? { ...el, x: parseInt(e.target.value) || 0 } : el))} />
             </div>
-            <div className="oe-field">
-              <span className="oe-field-label">Y</span>
-              <input type="number" className="oe-input oe-input--sm" value={selectedElement.y}
+            <div className={oe.field}>
+              <span className={oe.fieldLabel}>Y</span>
+              <input type="number" className={oe.inputSm} value={selectedElement.y}
                 onChange={e => updateElements(els => els.map(el => el.id === selectedElement.id ? { ...el, y: parseInt(e.target.value) || 0 } : el))} />
             </div>
-            <div className="oe-field">
-              <span className="oe-field-label">W</span>
-              <input type="number" className="oe-input oe-input--sm" value={selectedElement.width}
+            <div className={oe.field}>
+              <span className={oe.fieldLabel}>W</span>
+              <input type="number" className={oe.inputSm} value={selectedElement.width}
                 onChange={e => updateElements(els => els.map(el => el.id === selectedElement.id ? { ...el, width: parseInt(e.target.value) || 40 } : el))} />
             </div>
-            <div className="oe-field">
-              <span className="oe-field-label">H</span>
-              <input type="number" className="oe-input oe-input--sm" value={selectedElement.height}
+            <div className={oe.field}>
+              <span className={oe.fieldLabel}>H</span>
+              <input type="number" className={oe.inputSm} value={selectedElement.height}
                 onChange={e => updateElements(els => els.map(el => el.id === selectedElement.id ? { ...el, height: parseInt(e.target.value) || 20 } : el))} />
             </div>
           </div>
-
-          {/* Type-specific props editor from registry */}
           <selectedDef.PropsEditor
             props={selectedElement.props}
             onChange={(newProps) => {
