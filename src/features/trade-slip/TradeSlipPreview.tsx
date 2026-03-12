@@ -206,7 +206,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
       <div className="flex min-h-full w-full items-center justify-center p-[clamp(16px,3vw,32px)]">
         <div
           id="trade-slip-preview"
-          className="biggame-mode relative w-[clamp(300px,75vw,361px)] max-w-[361px] overflow-hidden rounded-2xl px-0 pb-4 pt-0 font-[Inter,-apple-system,BlinkMacSystemFont,'Segoe_UI','Roboto',sans-serif] shadow-[0_10px_40px_rgba(0,0,0,0.15)] max-[480px]:max-w-[320px] max-[480px]:w-[clamp(280px,90vw,320px)] max-[480px]:px-0 max-[480px]:pb-3"
+          className="trade-slip-preview biggame-mode relative w-[clamp(300px,75vw,361px)] max-w-[361px] overflow-hidden rounded-2xl px-0 pb-4 pt-0 font-[Inter,-apple-system,BlinkMacSystemFont,'Segoe_UI','Roboto',sans-serif] shadow-[0_10px_40px_rgba(0,0,0,0.15)] max-[480px]:max-w-[320px] max-[480px]:w-[clamp(280px,90vw,320px)] max-[480px]:px-0 max-[480px]:pb-3"
           style={{
             '--team1-color': team1Color,
             '--team2-color': team2Color,
@@ -302,7 +302,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
       <div className="flex min-h-full w-full items-center justify-center p-[clamp(16px,3vw,32px)]">
         <div
           id="trade-slip-preview"
-          className="biggame-mode relative w-[clamp(300px,75vw,361px)] max-w-[361px] overflow-hidden rounded-2xl pb-4 pt-0 font-[Inter,-apple-system,BlinkMacSystemFont,'Segoe_UI','Roboto',sans-serif] shadow-[0_10px_40px_rgba(0,0,0,0.15)] max-[480px]:max-w-[320px] max-[480px]:w-[clamp(280px,90vw,320px)] max-[480px]:pb-3"
+          className="trade-slip-preview biggame-mode relative w-[clamp(300px,75vw,361px)] max-w-[361px] overflow-hidden rounded-2xl pb-4 pt-0 font-[Inter,-apple-system,BlinkMacSystemFont,'Segoe_UI','Roboto',sans-serif] shadow-[0_10px_40px_rgba(0,0,0,0.15)] max-[480px]:max-w-[320px] max-[480px]:w-[clamp(280px,90vw,320px)] max-[480px]:pb-3"
           style={{
             '--team1-color': team1Color,
             '--team2-color': team2Color,
