@@ -30,6 +30,26 @@ export function decodeOverlayState(encoded: string): OverlayConfig | null {
   }
 }
 
+const STORAGE_KEY = 'kalshi_overlay_config';
+
+export function saveOverlayState(config: OverlayConfig): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+  } catch {
+    // localStorage full or unavailable — silently ignore
+  }
+}
+
+export function loadOverlayState(): OverlayConfig | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as OverlayConfig;
+  } catch {
+    return null;
+  }
+}
+
 let nextId = 1;
 export function generateId(): string {
   return `el_${Date.now()}_${nextId++}`;

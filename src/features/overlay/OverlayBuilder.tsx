@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { OverlayConfig } from './types';
-import { encodeOverlayState, decodeOverlayState, createDefaultConfig } from './overlayState';
+import { encodeOverlayState, decodeOverlayState, createDefaultConfig, saveOverlayState, loadOverlayState } from './overlayState';
 import { useMarketData } from './useMarketData';
 import { getElementDef } from './elements';
 // Register all element types (side-effect import)
@@ -23,7 +23,7 @@ export default function OverlayBuilder() {
       const decoded = decodeOverlayState(encodedState);
       if (decoded) return decoded;
     }
-    return createDefaultConfig();
+    return loadOverlayState() ?? createDefaultConfig();
   });
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -36,6 +36,13 @@ export default function OverlayBuilder() {
   const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>(
     kalshiWs.isConnected ? 'connected' : 'disconnected'
   );
+
+  // Persist config to localStorage on every change (edit mode only)
+  useEffect(() => {
+    if (isEditMode) {
+      saveOverlayState(config);
+    }
+  }, [config, isEditMode]);
 
   useEffect(() => {
     return kalshiWs.onStatus(setWsStatus);
