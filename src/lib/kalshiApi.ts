@@ -239,6 +239,69 @@ function marketToImportResult(market: KalshiMarket): KalshiImportResult {
   };
 }
 
+// ---- Trades ----
+
+export interface KalshiTrade {
+  trade_id: string;
+  ticker: string;
+  count_fp: string;
+  yes_price_dollars: string;
+  no_price_dollars: string;
+  taker_side: 'yes' | 'no';
+  created_time: string;
+}
+
+export interface KalshiTradesResponse {
+  trades: KalshiTrade[];
+  cursor: string;
+}
+
+/**
+ * Fetch recent trades for a market ticker.
+ */
+export async function fetchKalshiTrades(ticker: string, limit = 20): Promise<KalshiTrade[]> {
+  const url = getApiUrl(`/markets/trades?ticker=${encodeURIComponent(ticker)}&limit=${limit}`);
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch trades: ${response.status} ${response.statusText}`);
+  }
+  const data: KalshiTradesResponse = await response.json();
+  return data.trades || [];
+}
+
+/**
+ * Fetch recent trades for an event by fetching the event's markets
+ * and then querying trades for each market ticker individually.
+ * The /markets/trades?event_ticker= param does NOT filter correctly.
+ */
+export async function fetchKalshiEventTrades(eventTicker: string, limit = 20): Promise<KalshiTrade[]> {
+  // Get all market tickers in this event
+  const { markets } = await fetchKalshiEvent(eventTicker);
+  const tickers = markets
+    .filter(m => m.status !== 'finalized')
+    .sort((a, b) => (b.volume || 0) - (a.volume || 0))
+    .slice(0, 5) // Limit to top 5 markets by volume to avoid rate limits
+    .map(m => m.ticker);
+
+  if (tickers.length === 0) return [];
+
+  // Fetch trades for each market sequentially to avoid rate limits
+  const allTrades: KalshiTrade[] = [];
+  const perMarket = Math.max(3, Math.ceil(limit / tickers.length));
+  for (const ticker of tickers) {
+    try {
+      const trades = await fetchKalshiTrades(ticker, perMarket);
+      allTrades.push(...trades);
+    } catch {
+      // Skip failed fetches
+    }
+  }
+
+  // Sort by time descending and limit
+  allTrades.sort((a, b) => new Date(b.created_time).getTime() - new Date(a.created_time).getTime());
+  return allTrades.slice(0, limit);
+}
+
 /**
  * Get the current odds from a market (0-100 scale)
  * Kalshi API returns prices in dollars (e.g., "0.13" = 13 cents = 13%)
