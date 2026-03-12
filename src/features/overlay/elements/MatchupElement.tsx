@@ -3,6 +3,7 @@ import { registerElement } from './registry';
 import { oe } from '../styles';
 import { MarketLiveData } from '../types';
 import { extractTicker } from '../useMarketData';
+import { fetchKalshiEvent, fetchKalshiMarket } from '../../../lib/kalshiApi';
 
 export interface MatchupProps {
   type: 'matchup';
@@ -16,21 +17,26 @@ export interface MatchupProps {
   showOdds: boolean;
   showPayout: boolean;
   payoutWager: number;
-  variant: 'large' | 'compact';
   vsStyle: 'text' | 'slash' | 'hidden';
 }
 
 function MatchupRenderer({ props, width, height, liveData }: {
   props: MatchupProps; width: number; height: number; liveData?: MarketLiveData;
 }) {
-  const isCompact = props.variant === 'compact';
-  const fontSize = isCompact ? Math.min(width * 0.12, 48) : Math.min(width * 0.15, 100);
+  // Scale based on the more constraining dimension
+  const rowCount = 1 + (props.showOdds ? 1 : 0);
+  const heightBasedSize = height / (rowCount * 1.4);
+  // Estimate width of names row: bold uppercase chars ~0.62em each + vs/gaps
+  const t1Len = (props.team1Name || 'TEAM1').length;
+  const t2Len = (props.team2Name || 'TEAM2').length;
+  const vsEm = props.vsStyle !== 'hidden' ? 1.5 : 0;
+  const widthBasedSize = width / ((t1Len + t2Len) * 0.62 + vsEm + 0.3);
+  const fontSize = Math.min(heightBasedSize, widthBasedSize);
   const vsFontSize = fontSize * 0.35;
-  const oddsFontSize = isCompact ? fontSize * 0.4 : fontSize * 0.55;
-  const payoutFontSize = isCompact ? fontSize * 0.2 : fontSize * 0.25;
+  const oddsFontSize = fontSize * 0.55;
+  const payoutFontSize = fontSize * 0.25;
+  const gap = height * 0.03;
 
-  // Determine odds: if we have multi-outcome live data, use first two outcomes.
-  // If binary, team1 = yes odds, team2 = 100 - yes odds.
   let team1Odds = 50;
   let team2Odds = 50;
   if (liveData) {
@@ -54,9 +60,9 @@ function MatchupRenderer({ props, width, height, liveData }: {
   }
 
   return (
-    <div style={{ width, height, display: 'flex', flexDirection: 'column', justifyContent: 'center', fontFamily: 'Inter, sans-serif', overflow: 'hidden', gap: isCompact ? 4 : 8 }}>
+    <div style={{ width, height, display: 'flex', flexDirection: 'column', justifyContent: 'center', fontFamily: 'Inter, sans-serif', overflow: 'hidden', gap }}>
       {/* Team names row */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: isCompact ? 8 : 16 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: fontSize * 0.15 }}>
         <span style={{ fontSize, fontWeight: 900, color: props.team1Color, letterSpacing: -2, lineHeight: 1, textTransform: 'uppercase' }}>
           {props.team1Name || 'TEAM1'}
         </span>
@@ -72,7 +78,7 @@ function MatchupRenderer({ props, width, height, liveData }: {
 
       {/* Odds row */}
       {props.showOdds && (
-        <div style={{ display: 'flex', gap: isCompact ? 20 : 40, alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', gap: fontSize * 0.4, alignItems: 'flex-start' }}>
           {/* Team 1 odds */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
@@ -113,10 +119,43 @@ function MatchupRenderer({ props, width, height, liveData }: {
 
 function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange: (p: MatchupProps) => void }) {
   const [urlInput, setUrlInput] = React.useState(props.marketUrl);
+  const [loading, setLoading] = React.useState(false);
 
-  const applyUrl = () => {
+  const applyUrl = async () => {
     const ticker = extractTicker(urlInput);
-    if (ticker) onChange({ ...props, ticker, marketUrl: urlInput });
+    if (!ticker) return;
+
+    setLoading(true);
+    const updates: Partial<MatchupProps> = { ticker, marketUrl: urlInput };
+    const colors = ['#09C285', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899'];
+
+    try {
+      const { markets } = await fetchKalshiEvent(ticker);
+      if (markets.length >= 2) {
+        const m1 = markets[0];
+        const m2 = markets[1];
+        updates.team1Name = m1.ticker.split('-').pop() || 'TEAM1';
+        updates.team2Name = m2.ticker.split('-').pop() || 'TEAM2';
+        updates.team1Color = colors[0];
+        updates.team2Color = colors[1];
+      } else if (markets.length === 1) {
+        const suffix = markets[0].ticker.split('-').pop() || '';
+        updates.team1Name = suffix || markets[0].yes_sub_title || 'YES';
+        updates.team2Name = 'NO';
+      }
+    } catch {
+      // Not an event — try as a single market
+      try {
+        const m = await fetchKalshiMarket(ticker);
+        updates.team1Name = m.yes_sub_title || 'YES';
+        updates.team2Name = m.no_sub_title || 'NO';
+      } catch {
+        // Keep existing names
+      }
+    }
+
+    onChange({ ...props, ...updates });
+    setLoading(false);
   };
 
   return (
@@ -125,7 +164,7 @@ function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange
         <span className={oe.fieldLabel}>Market URL</span>
         <div className={oe.row}>
           <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
-          <button className={oe.btnSm} onClick={applyUrl}>Apply</button>
+          <button className={oe.btnSm} onClick={applyUrl} disabled={loading}>{loading ? '...' : 'Apply'}</button>
         </div>
       </div>
       <div className={oe.row}>
@@ -150,23 +189,12 @@ function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange
       </div>
       <div className={oe.row}>
         <div className={oe.field}>
-          <span className={oe.fieldLabel}>Variant</span>
-          <select className={oe.select} value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
-            <option value="large">Large</option>
-            <option value="compact">Compact</option>
-          </select>
-        </div>
-        <div className={oe.field}>
           <span className={oe.fieldLabel}>VS Style</span>
           <select className={oe.select} value={props.vsStyle} onChange={e => onChange({ ...props, vsStyle: e.target.value as any })}>
             <option value="text">vs</option>
             <option value="slash">/</option>
             <option value="hidden">Hidden</option>
           </select>
-        </div>
-        <div className={oe.field}>
-          <span className={oe.fieldLabel}>Poll (s)</span>
-          <input type="number" className={oe.inputSm} value={props.pollInterval} min={5} max={300} onChange={e => onChange({ ...props, pollInterval: parseInt(e.target.value) || 30 })} />
         </div>
       </div>
       <div className={oe.row}>
@@ -205,7 +233,7 @@ registerElement<MatchupProps>({
       team1Name: 'TEAM1', team2Name: 'TEAM2',
       team1Color: '#09C285', team2Color: '#3B82F6',
       showOdds: true, showPayout: true, payoutWager: 100,
-      variant: 'large', vsStyle: 'text',
+      vsStyle: 'text',
     },
   },
   Renderer: MatchupRenderer,

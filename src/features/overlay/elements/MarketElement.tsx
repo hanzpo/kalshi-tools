@@ -8,7 +8,6 @@ export interface MarketProps {
   type: 'market';
   ticker: string;
   marketUrl: string;
-  variant: 'compact' | 'expanded' | 'minimal';
   pollInterval: number;
   showTitle: boolean;
   showVolume: boolean;
@@ -20,8 +19,10 @@ export interface MarketProps {
 function MarketRenderer({ props, width, height, liveData }: {
   props: MarketProps; width: number; height: number; liveData?: MarketLiveData;
 }) {
-  const isCompact = props.variant === 'compact';
-  const isMinimal = props.variant === 'minimal';
+  // Scale everything from the bounding box (reference: 400x160)
+  const s = Math.min(width / 400, height / 160);
+  // Auto-detect layout: wide boxes use row layout, tall/square use column
+  const isWide = width / height > 2.5;
 
   if (!props.ticker && !liveData) {
     return (
@@ -49,26 +50,27 @@ function MarketRenderer({ props, width, height, liveData }: {
 
   // Multi-outcome
   if (liveData.marketType === 'multi' && liveData.outcomes) {
+    const maxOutcomes = Math.max(2, Math.floor((height - (props.showTitle ? 30 * s : 0) - (props.showVolume ? 20 * s : 0)) / (22 * s)));
     return (
-      <div style={{ width, height, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderRadius: 12, border: `1px solid ${props.accentColor}33`, padding: isCompact ? '10px 14px' : '16px 20px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: isCompact ? 6 : 10, fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
+      <div style={{ width, height, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderRadius: 12 * s, border: `1px solid ${props.accentColor}33`, padding: `${14 * s}px ${18 * s}px`, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 8 * s, fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
         {props.showTitle && (
-          <div style={{ fontSize: isCompact ? 13 : 16, fontWeight: 600, color: '#ffffff', opacity: 0.9, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ fontSize: 15 * s, fontWeight: 600, color: '#ffffff', opacity: 0.9, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {liveData.title}
           </div>
         )}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: isCompact ? 3 : 5, overflow: 'hidden' }}>
-          {liveData.outcomes.slice(0, isCompact ? 4 : 6).map((outcome, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ flex: 1, fontSize: isCompact ? 12 : 14, color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{outcome.name}</div>
-              <div style={{ fontSize: isCompact ? 13 : 15, fontWeight: 700, color: props.accentColor, fontVariantNumeric: 'tabular-nums', minWidth: 42, textAlign: 'right' }}>{outcome.odds}%</div>
-              <div style={{ width: isCompact ? 60 : 80, height: isCompact ? 6 : 8, background: 'rgba(255,255,255,0.08)', borderRadius: 4, overflow: 'hidden', flexShrink: 0 }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 * s, overflow: 'hidden' }}>
+          {liveData.outcomes.slice(0, maxOutcomes).map((outcome, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 * s }}>
+              <div style={{ flex: 1, fontSize: 13 * s, color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{outcome.name}</div>
+              <div style={{ fontSize: 14 * s, fontWeight: 700, color: props.accentColor, fontVariantNumeric: 'tabular-nums', minWidth: 40 * s, textAlign: 'right' }}>{outcome.odds}%</div>
+              <div style={{ width: 70 * s, height: 7 * s, background: 'rgba(255,255,255,0.08)', borderRadius: 4, overflow: 'hidden', flexShrink: 0 }}>
                 <div style={{ width: `${outcome.odds}%`, height: '100%', background: props.accentColor, borderRadius: 4, transition: 'width 0.5s ease' }} />
               </div>
             </div>
           ))}
         </div>
-        {props.showVolume && !isCompact && (
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums' }}>
+        {props.showVolume && (
+          <div style={{ fontSize: 11 * s, color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums' }}>
             Vol: ${liveData.volume.toLocaleString()}
           </div>
         )}
@@ -76,34 +78,22 @@ function MarketRenderer({ props, width, height, liveData }: {
     );
   }
 
-  // Minimal
-  if (isMinimal) {
-    return (
-      <div style={{ width, height, display: 'flex', alignItems: 'center', gap: 12, fontFamily: 'Inter, sans-serif' }}>
-        <div style={{ fontSize: Math.min(height * 0.6, 48), fontWeight: 800, color: props.accentColor, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{liveData.odds}%</div>
-        {props.showTitle && (
-          <div style={{ fontSize: Math.min(height * 0.3, 18), color: 'rgba(255,255,255,0.7)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{liveData.title}</div>
-        )}
-      </div>
-    );
-  }
-
-  // Expanded / Compact
+  // Binary market
   return (
-    <div style={{ width, height, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderRadius: 12, border: `1px solid ${props.accentColor}33`, padding: isCompact ? '10px 14px' : '20px 24px', boxSizing: 'border-box', display: 'flex', flexDirection: isCompact ? 'row' : 'column', alignItems: isCompact ? 'center' : 'flex-start', gap: 12, fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
-      <div style={{ fontSize: isCompact ? 28 : 48, fontWeight: 800, color: props.accentColor, fontVariantNumeric: 'tabular-nums', lineHeight: 1, flexShrink: 0 }}>
-        {liveData.odds}<span style={{ fontSize: isCompact ? 16 : 28, opacity: 0.7 }}>%</span>
+    <div style={{ width, height, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', borderRadius: 12 * s, border: `1px solid ${props.accentColor}33`, padding: `${16 * s}px ${20 * s}px`, boxSizing: 'border-box', display: 'flex', flexDirection: isWide ? 'row' : 'column', alignItems: isWide ? 'center' : 'flex-start', gap: 12 * s, fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
+      <div style={{ fontSize: 48 * s, fontWeight: 800, color: props.accentColor, fontVariantNumeric: 'tabular-nums', lineHeight: 1, flexShrink: 0 }}>
+        {liveData.odds}<span style={{ fontSize: 28 * s, opacity: 0.7 }}>%</span>
       </div>
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4, justifyContent: 'center' }}>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 * s, justifyContent: 'center' }}>
         {props.showTitle && (
-          <div style={{ fontSize: isCompact ? 13 : 18, fontWeight: 600, color: '#ffffff', opacity: 0.9, lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: isCompact ? 1 : 2, WebkitBoxOrient: 'vertical' }}>{liveData.title}</div>
+          <div style={{ fontSize: 16 * s, fontWeight: 600, color: '#ffffff', opacity: 0.9, lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: isWide ? 1 : 2, WebkitBoxOrient: 'vertical' }}>{liveData.title}</div>
         )}
         {props.showVolume && (
-          <div style={{ fontSize: isCompact ? 11 : 13, color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums' }}>Vol: ${liveData.volume.toLocaleString()}</div>
+          <div style={{ fontSize: 12 * s, color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums' }}>Vol: ${liveData.volume.toLocaleString()}</div>
         )}
       </div>
-      {!isCompact && (
-        <div style={{ width: '100%', display: 'flex', gap: 4, height: 8, borderRadius: 4, overflow: 'hidden' }}>
+      {!isWide && (
+        <div style={{ width: '100%', display: 'flex', gap: 4, height: 8 * s, borderRadius: 4, overflow: 'hidden' }}>
           <div style={{ width: `${liveData.odds}%`, background: props.accentColor, borderRadius: 4, transition: 'width 0.5s ease' }} />
           <div style={{ flex: 1, background: 'rgba(239,68,68,0.5)', borderRadius: 4 }} />
         </div>
@@ -133,22 +123,8 @@ function MarketPropsEditor({ props, onChange }: { props: MarketProps; onChange: 
       </div>
       <div className={oe.row}>
         <div className={oe.field}>
-          <span className={oe.fieldLabel}>Variant</span>
-          <select className={oe.select} value={props.variant} onChange={e => onChange({ ...props, variant: e.target.value as any })}>
-            <option value="expanded">Expanded</option>
-            <option value="compact">Compact</option>
-            <option value="minimal">Minimal</option>
-          </select>
-        </div>
-        <div className={oe.field}>
           <span className={oe.fieldLabel}>Accent</span>
           <input type="color" className={oe.color} value={props.accentColor} onChange={e => onChange({ ...props, accentColor: e.target.value })} />
-        </div>
-      </div>
-      <div className={oe.row}>
-        <div className={oe.field}>
-          <span className={oe.fieldLabel}>Poll (s)</span>
-          <input type="number" className={oe.inputSm} value={props.pollInterval} min={5} max={300} onChange={e => onChange({ ...props, pollInterval: parseInt(e.target.value) || 30 })} />
         </div>
         <label className={oe.checkbox}>
           <input type="checkbox" checked={props.showTitle} onChange={e => onChange({ ...props, showTitle: e.target.checked })} />
@@ -181,7 +157,6 @@ registerElement<MarketProps>({
       type: 'market',
       ticker: '',
       marketUrl: '',
-      variant: 'expanded',
       pollInterval: 30,
       showTitle: true,
       showVolume: true,

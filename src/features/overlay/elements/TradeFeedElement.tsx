@@ -77,9 +77,13 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
   props: TradeFeedProps; width: number; height: number; liveData?: MarketLiveData;
 }) {
   const outcomeMap = parseOutcomeMap(props.outcomeMap);
-  const fontSize = props.fontSize || 36;
-  const lineSpacing = props.lineSpacing || 1.4;
   const maxTrades = props.maxTrades || 6;
+  const lineSpacing = props.lineSpacing || 1.4;
+  // Scale font from bounding box — use the more constraining dimension
+  const totalRows = (props.headerText ? 1.3 : 0) + maxTrades;
+  const heightBasedSize = height / (totalRows * lineSpacing);
+  const widthBasedSize = width / 14; // ~14em per trade line at mixed sizes
+  const fontSize = Math.min(heightBasedSize, widthBasedSize);
 
   const trades = liveData?.trades || [];
   const visibleTrades = trades.slice(0, maxTrades);
@@ -345,16 +349,6 @@ function TradeFeedPropsEditor({ props, onChange }: { props: TradeFeedProps; onCh
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Max Trades</span>
           <input type="number" className={oe.inputSm} value={props.maxTrades || 6} min={1} max={20} onChange={e => onChange({ ...props, maxTrades: parseInt(e.target.value) || 6 })} />
-        </div>
-      </div>
-      <div className={oe.row}>
-        <div className={oe.field}>
-          <span className={oe.fieldLabel}>Font Size</span>
-          <input type="number" className={oe.inputSm} value={props.fontSize || 36} min={12} max={120} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 36 })} />
-        </div>
-        <div className={oe.field}>
-          <span className={oe.fieldLabel}>Line Spacing</span>
-          <input type="number" className={oe.inputSm} value={props.lineSpacing || 1.4} step={0.1} min={0.8} max={3} onChange={e => onChange({ ...props, lineSpacing: parseFloat(e.target.value) || 1.4 })} />
         </div>
       </div>
       <OutcomeMapEditor outcomeMap={props.outcomeMap} onChange={map => onChange({ ...props, outcomeMap: map })} />
