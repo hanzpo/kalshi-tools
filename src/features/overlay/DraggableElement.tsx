@@ -40,6 +40,7 @@ export function DraggableElement({
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (!editMode) return;
     e.stopPropagation();
+    e.preventDefault();
     onSelect(element.id);
 
     dragState.current = {
@@ -156,6 +157,8 @@ export function DraggableElement({
         outlineOffset: 1,
         userSelect: 'none',
       }}
+      draggable={false}
+      onDragStart={e => e.preventDefault()}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
