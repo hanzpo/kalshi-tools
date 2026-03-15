@@ -960,12 +960,12 @@
 }
 
 /* Old combo brand logo - make it visible on white background */
-.combo-old-mode .combo-brand .kalshi-divider-logo {
+.combo-old-mode .combo-brand svg {
   color: #09C285;
 }
 
 /* Old single brand logo - make it visible on white background */
-.single-old-mode .trade-slip-brand .kalshi-divider-logo {
+.single-old-mode .trade-slip-brand svg {
   color: #09C285;
 }
 
