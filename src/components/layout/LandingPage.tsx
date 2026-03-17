@@ -125,6 +125,30 @@ export function LandingPage() {
           </Link>
 
           <Link
+            to="/bracket"
+            className="group flex rounded-lg border border-dark-border bg-dark-surface text-left text-inherit no-underline transition-[border-color,box-shadow] duration-150 hover:border-brand hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            onClick={() => handleToolClick('bracket')}
+          >
+            <div className="flex w-full items-center gap-5 px-5 py-6 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3.5 max-[640px]:px-4 max-[640px]:py-5">
+              <div className="flex items-center gap-4">
+                <span className="flex size-13 shrink-0 items-center justify-center rounded-lg bg-[#0d2e1f] text-brand max-[640px]:size-11 [&_svg]:size-6 max-[640px]:[&_svg]:size-5" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M8 21h8m-4-4v4m-5-9a5 5 0 0 1-4-5V4h18v3a5 5 0 0 1-4 5" />
+                    <path d="M7 4v3a5 5 0 0 0 10 0V4" />
+                  </svg>
+                </span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="block text-[11px] font-semibold uppercase tracking-widest text-brand">Build a</span>
+                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">Men&apos;s College Basketball Bracket</span>
+                </div>
+              </div>
+              <p className="flex-1 text-sm leading-normal text-text-secondary max-[640px]:text-[13px]">
+                Fill out your men&apos;s college basketball bracket picks, share with friends via a link, and export as a PNG image.
+              </p>
+            </div>
+          </Link>
+
+          <Link
             to="/overlay?edit"
             className="group flex rounded-lg border border-dark-border bg-dark-surface text-left text-inherit no-underline transition-[border-color,box-shadow] duration-150 hover:border-brand hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             onClick={() => handleToolClick("overlay")}
