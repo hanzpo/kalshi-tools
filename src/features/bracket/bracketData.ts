@@ -5,6 +5,7 @@ import {
   BracketRegion,
   BracketTeam,
 } from '../../types/bracket';
+import { decodeBracketState, encodeBracketState } from './bracketStateCodec';
 
 export const DEFAULT_BRACKET_TITLE = '$1 BILLION\nBRACKET';
 export const DEFAULT_BRACKET_SUBTITLE = "Men's College Basketball";
@@ -288,36 +289,22 @@ function getNextGame(gameIndex: number): number | null {
 
 // Encode bracket state to URL-safe base64 (compact: picks + play-in picks)
 export function encodeBracket(config: BracketConfig): string {
-  const picksStr = config.picks.map(p => p === null ? '_' : String(p)).join('');
-  const playInStr = PLAY_IN_IDS.map((id) => String(config.playInPicks[id])).join('');
-  const data = { p: picksStr, pi: playInStr };
-  const json = JSON.stringify(data);
-  const base64 = btoa(unescape(encodeURIComponent(json)));
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return encodeBracketState({
+    picks: config.picks,
+    playInPicks: config.playInPicks,
+  });
 }
 
 // Decode bracket state from URL-safe base64
 export function decodeBracket(encoded: string): BracketConfig | null {
-  try {
-    let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
-    while (base64.length % 4) base64 += '=';
-    const json = decodeURIComponent(escape(atob(base64)));
-    const data = JSON.parse(json);
-    const playInPicks = typeof data.pi === 'string' && data.pi.length === PLAY_IN_IDS.length
-      ? PLAY_IN_IDS.reduce((acc, id, index) => {
-        acc[id] = data.pi[index] === '1' ? 1 : 0;
-        return acc;
-      }, {} as Record<BracketPlayInId, 0 | 1>)
-      : createRandomPlayInPicks();
-    const picks: (number | null)[] = typeof data.p === 'string'
-      ? data.p.split('').map((c: string) => c === '_' ? null : Number(c))
-      : (data.p || new Array(63).fill(null));
-    return {
-      regions: DEFAULT_REGIONS,
-      picks: fillMissingPicks(picks, playInPicks),
-      playInPicks,
-    };
-  } catch {
+  const decoded = decodeBracketState(encoded);
+  if (!decoded) {
     return null;
   }
+
+  return {
+    regions: DEFAULT_REGIONS,
+    picks: fillMissingPicks(decoded.picks, decoded.playInPicks),
+    playInPicks: decoded.playInPicks,
+  };
 }

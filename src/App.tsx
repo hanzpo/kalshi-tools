@@ -12,12 +12,14 @@ const MarketPageBuilder = lazy(() => import('./features/market-page/MarketPageBu
 const OverlayBuilder = lazy(() => import('./features/overlay/OverlayBuilder'));
 const BannerBuilder = lazy(() => import('./features/banner/BannerBuilder'));
 const BracketBuilder = lazy(() => import('./features/bracket/BracketBuilder'));
+const BracketRenderPage = lazy(() => import('./features/bracket/BracketRenderPage'));
 
 function AppContent() {
   useAnalytics();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const isOverlayViewer = location.pathname === '/overlay' && !searchParams.has('edit');
+  const isBracketRender = location.pathname === '/bracket/render';
 
   useEffect(() => {
     if (isOverlayViewer) {
@@ -43,10 +45,11 @@ function AppContent() {
           <Route path="/overlay" element={<OverlayBuilder />} />
           <Route path="/banner" element={<BannerBuilder />} />
           <Route path="/bracket" element={<BracketBuilder />} />
+          <Route path="/bracket/render" element={<BracketRenderPage />} />
           <Route path="*" element={<LandingPage />} />
         </Routes>
       </Suspense>
-      {!isOverlayViewer && <Footer />}
+      {!isOverlayViewer && !isBracketRender && <Footer />}
     </div>
   );
 }
