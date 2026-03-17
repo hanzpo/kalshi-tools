@@ -139,11 +139,11 @@ export function LandingPage() {
                 </span>
                 <div className="flex flex-col gap-0.5">
                   <span className="block text-[11px] font-semibold uppercase tracking-widest text-brand">Build a</span>
-                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">March Madness Bracket</span>
+                  <span className="text-xl font-semibold tracking-tight text-gray-100 max-[640px]:text-lg">Men&apos;s College Basketball Bracket</span>
                 </div>
               </div>
               <p className="flex-1 text-sm leading-normal text-text-secondary max-[640px]:text-[13px]">
-                Fill out your March Madness bracket picks, share with friends via a link, and export as a PNG image.
+                Fill out your men&apos;s college basketball bracket picks, share with friends via a link, and export as a PNG image.
               </p>
             </div>
           </Link>

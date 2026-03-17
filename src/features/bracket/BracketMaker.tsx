@@ -36,7 +36,7 @@ export function BracketMaker({
       </button>
 
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-100">March Madness Bracket</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-100">Men&apos;s College Basketball Bracket</h1>
         <p className="text-sm text-text-secondary">
           Randomized bracket loaded. Tap any game slot to switch the winner. {picksCount}/63 picks set.
         </p>

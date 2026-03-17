@@ -73,7 +73,7 @@ export default function BracketBuilder() {
 
     try {
       const dataUrl = await captureElementAsPng(element);
-      downloadDataUrl(dataUrl, createFileName('march-madness', 'kalshi-bracket'));
+      downloadDataUrl(dataUrl, createFileName('mens-college-basketball', 'kalshi-bracket'));
       trackEvent('export_image', { tool: 'bracket', method: 'download' });
     } catch (error) {
       console.error('Error exporting image:', error);
