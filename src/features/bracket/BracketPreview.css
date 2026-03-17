@@ -1,0 +1,551 @@
+@font-face {
+  font-family: 'Graphik';
+  src: url('/Graphik-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik';
+  src: url('/Graphik-Semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Condensed App';
+  src: url('/GraphikCondensed-Regular-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Condensed App';
+  src: url('/GraphikCondensed-Medium-Trial.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Root container ── */
+.bracket-preview {
+  width: 590px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 72px;
+  position: relative;
+  background: #0b0d0c;
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Green glow - layered gradients matching Figma */
+.bracket-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(11,13,12,1) 100%),
+    linear-gradient(90deg, rgba(10,194,133,0.08) 10%, rgba(10,194,133,0.5) 50%, rgba(10,194,133,0.08) 90%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Header ── */
+.bracket-header {
+  text-align: center;
+  width: 100%;
+  margin-bottom: -48px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bracket-subtitle {
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  line-height: 27px;
+  margin: 0;
+  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
+}
+
+.bracket-title {
+  font-family: 'Graphik Condensed App', 'Barlow Condensed', system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 45px;
+  line-height: 54px;
+  color: rgba(255,255,255,0.9);
+  margin: 0;
+  white-space: pre-line;
+  text-transform: uppercase;
+  font-feature-settings: 'case' 1, 'lnum' 1, 'pnum' 1;
+}
+
+/* ── Bracket container ── */
+.bracket-container {
+  width: 590px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Bracket body ── */
+.bracket-body {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Half (top or bottom) ── */
+.bracket-half {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
+  height: 477px;
+}
+
+.bracket-half--top {
+  align-items: flex-start;
+}
+
+.bracket-half--bottom {
+  align-items: flex-end;
+}
+
+/* ── Region side ── */
+.bracket-region-side {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.bracket-region-side--right {
+  flex-direction: row-reverse;
+}
+
+/* ── Region name label (centered in each quadrant) ── */
+.bracket-region-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+  line-height: 27px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+/* ── Round column ── */
+.bracket-round-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.bracket-round-col--r32,
+.bracket-round-col--s16,
+.bracket-round-col--e8 {
+  width: 60px;
+}
+
+/* ── Matchup row ── */
+.bracket-matchup-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-height: 1px;
+  min-width: 1px;
+  width: 100%;
+}
+
+.bracket-matchup-row--right {
+  flex-direction: row-reverse;
+}
+
+/* ── Bracket connector ── */
+.bracket-connector {
+  display: flex;
+  height: 60px;
+  align-items: center;
+  width: 12px;
+  max-width: 12px;
+  flex-shrink: 0;
+}
+
+.bracket-connector-inner {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bracket-connector-left,
+.bracket-connector-right {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  min-height: 1px;
+  min-width: 1px;
+}
+
+.bracket-connector-top-left {
+  flex: 1;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.bracket-connector-bottom-left {
+  flex: 1;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.bracket-connector-top-right {
+  flex: 1;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.bracket-connector-bottom-right {
+  flex: 1;
+}
+
+/* Mirrored connector (right side regions) */
+.bracket-connector--mirrored .bracket-connector-inner {
+  transform: scaleX(-1);
+}
+
+.bracket-connector--mirrored .bracket-connector-top-left {
+  border-right: 1px solid rgba(255,255,255,0.1);
+  border-left: none;
+}
+
+.bracket-connector--mirrored .bracket-connector-bottom-left {
+  border-right: 1px solid rgba(255,255,255,0.1);
+  border-left: none;
+}
+
+/* ── Team square ── */
+.bracket-team {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.1);
+  background: #0b0d0c;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 5px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+  position: relative;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.bracket-team:hover {
+  transform: scale(1.12);
+  box-shadow: 0 3px 18px rgba(0,0,0,0.5);
+  z-index: 5;
+}
+
+.bracket-team:active {
+  transform: scale(0.95);
+}
+
+.bracket-team--empty {
+  cursor: default;
+  opacity: 0.25;
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.06);
+}
+
+.bracket-team--empty:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.bracket-team-inner {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bracket-team-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.92px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1;
+  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
+}
+
+.bracket-team-name--play-in {
+  font-size: 8.5px;
+  letter-spacing: 0.28px;
+}
+
+/* ── Championship team (larger) ── */
+.bracket-team--champion {
+  width: 81px;
+  height: 81px;
+  padding: 5px;
+}
+
+.bracket-team--champion .bracket-team-name {
+  font-size: 19.5px;
+  letter-spacing: 1.48px;
+  line-height: 1;
+}
+
+/* ── Center finals row ── */
+.bracket-center-row {
+  width: 100%;
+  height: 81px;
+  display: grid;
+  grid-template-columns: 1fr 44px 36px 201px 36px 44px 1fr;
+  align-items: center;
+  position: relative;
+  z-index: 3;
+}
+
+.bracket-semifinal-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: flex-start;
+  z-index: 4;
+}
+
+.bracket-semifinal-labels--left {
+  grid-column: 2;
+  margin-top: 7.5px;
+}
+
+.bracket-semifinal-labels--right {
+  grid-column: 6;
+  margin-top: 13.5px;
+}
+
+.bracket-semifinal-label {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.bracket-semifinal-label:hover:not(:disabled) {
+  transform: scale(1.04);
+}
+
+.bracket-semifinal-label:disabled {
+  cursor: default;
+  opacity: 0.32;
+}
+
+.bracket-semifinal-label--selected {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.16);
+}
+
+.bracket-semifinal-label--left {
+  width: 44px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 9px;
+  padding: 3px;
+  background: rgba(255,255,255,0.02);
+}
+
+.bracket-semifinal-label--right {
+  width: 44px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 9px;
+  padding: 3px;
+  background: rgba(255,255,255,0.02);
+}
+
+.bracket-semifinal-label-inner {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 24px;
+  padding: 0 1px;
+  border-radius: 6px;
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.88px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
+}
+
+.bracket-center-matchup {
+  grid-column: 4;
+  width: 201px;
+  height: 81px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bracket-championship-row {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 201px;
+  height: 81px;
+}
+
+.bracket-championship-row .bracket-team {
+  position: relative;
+  z-index: 2;
+}
+
+.bracket-center-slot {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.bracket-championship-line {
+  height: 0;
+  width: 12px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.bracket-championship-line::after {
+  content: '';
+  position: absolute;
+  top: -0.5px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+
+.bracket-champion-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 240px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bracket-champion-label {
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: #0AC285;
+  line-height: 27px;
+  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
+}
+
+.bracket-champion-ring {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(128,128,128,0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 108px;
+  padding-top: 6px;
+  box-sizing: border-box;
+}
+
+/* ── Kalshi watermark ── */
+.bracket-watermark {
+  color: #0AC285;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bracket-watermark svg {
+  width: 81px;
+  height: 24px;
+}
+
+/* ── Region labels (legacy, unused but kept for compat) ── */
+.bracket-region-labels {
+  display: none;
+}
+
+.bracket-region-label {
+  flex: 1;
+  text-align: center;
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+  line-height: 27px;
+  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
+}
