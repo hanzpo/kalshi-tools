@@ -42,7 +42,7 @@ function ShapePropsEditor({ props, onChange }: { props: ShapeProps; onChange: (p
           </select>
         </div>
         <div className={oe.field}>
-          <span className={oe.fieldLabel}>Color</span>
+          <span className={oe.fieldLabel}>Fill</span>
           <input type="text" className={oe.inputSm} value={props.color} placeholder="rgba(0,0,0,0.5)" onChange={e => onChange({ ...props, color: e.target.value })} />
         </div>
       </div>
@@ -54,6 +54,16 @@ function ShapePropsEditor({ props, onChange }: { props: ShapeProps; onChange: (p
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Radius</span>
           <input type="number" className={oe.inputSm} value={props.borderRadius} min={0} onChange={e => onChange({ ...props, borderRadius: parseInt(e.target.value) || 0 })} />
+        </div>
+      </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Border</span>
+          <input type="number" className={oe.inputSm} value={props.borderWidth} min={0} max={20} onChange={e => onChange({ ...props, borderWidth: parseInt(e.target.value) || 0 })} />
+        </div>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Border Color</span>
+          <input type="color" className={oe.color} value={props.borderColor === 'transparent' ? '#000000' : props.borderColor} onChange={e => onChange({ ...props, borderColor: e.target.value })} />
         </div>
       </div>
     </div>

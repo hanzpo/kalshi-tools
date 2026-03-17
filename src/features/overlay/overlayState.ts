@@ -65,6 +65,29 @@ export function createDefaultConfig(): OverlayConfig {
 }
 
 /**
+ * Proportionally rescale all elements from one canvas size to another.
+ * Adjusts x, y, width, and height of every element.
+ */
+export function scaleElements(
+  elements: OverlayElement[],
+  fromW: number,
+  fromH: number,
+  toW: number,
+  toH: number,
+): OverlayElement[] {
+  if (fromW === toW && fromH === toH) return elements;
+  const sx = toW / fromW;
+  const sy = toH / fromH;
+  return elements.map(el => ({
+    ...el,
+    x: Math.round(el.x * sx),
+    y: Math.round(el.y * sy),
+    width: Math.round(el.width * sx),
+    height: Math.round(el.height * sy),
+  }));
+}
+
+/**
  * Create a new element instance from the registry by type key.
  */
 export function createElement(type: string, x = 100, y = 100): OverlayElement | null {

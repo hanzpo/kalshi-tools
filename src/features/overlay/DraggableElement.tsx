@@ -1,14 +1,23 @@
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback, useState } from 'react';
 import { OverlayElement } from './types';
+
+export interface Guide {
+  type: 'v' | 'h';
+  pos: number;
+}
+
+export type SnapFn = (id: string, x: number, y: number, w: number, h: number) => { x: number; y: number; guides: Guide[] };
 
 interface DraggableElementProps {
   element: OverlayElement;
   selected: boolean;
   editMode: boolean;
   scale: number;
+  snap?: SnapFn;
   onSelect: (id: string) => void;
   onMove: (id: string, x: number, y: number) => void;
   onResize: (id: string, width: number, height: number) => void;
+  onGuidesChange?: (guides: Guide[]) => void;
   children: React.ReactNode;
 }
 
@@ -19,9 +28,11 @@ export function DraggableElement({
   selected,
   editMode,
   scale,
+  snap,
   onSelect,
   onMove,
   onResize,
+  onGuidesChange,
   children,
 }: DraggableElementProps) {
   const elRef = useRef<HTMLDivElement>(null);
@@ -43,6 +54,8 @@ export function DraggableElement({
     e.preventDefault();
     onSelect(element.id);
 
+    if (element.locked) return;
+
     dragState.current = {
       type: 'move',
       startX: e.clientX,
@@ -57,7 +70,7 @@ export function DraggableElement({
   }, [editMode, element, onSelect]);
 
   const handleResizeDown = useCallback((e: React.PointerEvent, handle: ResizeHandle) => {
-    if (!editMode) return;
+    if (!editMode || element.locked) return;
     e.stopPropagation();
     e.preventDefault();
 
@@ -81,7 +94,17 @@ export function DraggableElement({
     const dy = (e.clientY - dragState.current.startY) / scale;
 
     if (dragState.current.type === 'move') {
-      onMove(element.id, Math.round(dragState.current.origX + dx), Math.round(dragState.current.origY + dy));
+      let newX = Math.round(dragState.current.origX + dx);
+      let newY = Math.round(dragState.current.origY + dy);
+
+      if (snap) {
+        const result = snap(element.id, newX, newY, element.width, element.height);
+        newX = result.x;
+        newY = result.y;
+        onGuidesChange?.(result.guides);
+      }
+
+      onMove(element.id, newX, newY);
     } else if (dragState.current.type === 'resize' && dragState.current.handle) {
       const h = dragState.current.handle;
       let newW = dragState.current.origW;
@@ -100,21 +123,35 @@ export function DraggableElement({
         newY = dragState.current.origY + (dragState.current.origH - newH);
       }
 
-      onMove(element.id, Math.round(newX), Math.round(newY));
-      onResize(element.id, Math.round(newW), Math.round(newH));
+      newW = Math.round(newW);
+      newH = Math.round(newH);
+      newX = Math.round(newX);
+      newY = Math.round(newY);
+
+      if (snap) {
+        const result = snap(element.id, newX, newY, newW, newH);
+        // For resize, adjust size based on snap offset
+        const snapDx = result.x - newX;
+        const snapDy = result.y - newY;
+        if (h.includes('w')) { newW -= snapDx; newX = result.x; }
+        else if (h.includes('e')) { newW += snapDx; }
+        else { newX = result.x; }
+        if (h.includes('n')) { newH -= snapDy; newY = result.y; }
+        else if (h.includes('s')) { newH += snapDy; }
+        else { newY = result.y; }
+        onGuidesChange?.(result.guides);
+      }
+
+      onMove(element.id, newX, newY);
+      onResize(element.id, newW, newH);
     }
-  }, [element.id, scale, onMove, onResize]);
+  }, [element.id, element.width, element.height, scale, snap, onMove, onResize, onGuidesChange]);
 
   const handlePointerUp = useCallback(() => {
     dragState.current = null;
     setIsDragging(false);
-  }, []);
-
-  // Handle keyboard delete
-  useEffect(() => {
-    if (!selected || !editMode) return;
-    // Keyboard handling is done at the parent level
-  }, [selected, editMode]);
+    onGuidesChange?.([]);
+  }, [onGuidesChange]);
 
   const handles: ResizeHandle[] = ['nw', 'ne', 'sw', 'se', 'n', 's', 'e', 'w'];
   const handleSize = 8;
@@ -152,8 +189,8 @@ export function DraggableElement({
         width: element.width,
         height: element.height,
         zIndex: element.zIndex,
-        cursor: editMode ? (isDragging ? 'grabbing' : 'grab') : 'default',
-        outline: selected && editMode ? '2px solid #09C285' : 'none',
+        cursor: editMode ? (element.locked ? 'default' : isDragging ? 'grabbing' : 'grab') : 'default',
+        outline: selected && editMode ? `2px solid ${element.locked ? '#F59E0B' : '#09C285'}` : 'none',
         outlineOffset: 1,
         userSelect: 'none',
       }}
@@ -164,7 +201,7 @@ export function DraggableElement({
       onPointerUp={handlePointerUp}
     >
       {children}
-      {selected && editMode && handles.map(h => (
+      {selected && editMode && !element.locked && handles.map(h => (
         <div
           key={h}
           style={getHandleStyle(h)}

@@ -19,6 +19,7 @@ export interface OverlayElement {
   width: number;
   height: number;
   zIndex: number;
+  locked?: boolean;
   props: Record<string, any>;
 }
 

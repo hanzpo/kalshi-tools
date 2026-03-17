@@ -1,6 +1,7 @@
-import React, { useState, useId, useMemo } from 'react';
+import React, { useEffect, useId, useMemo, useRef } from 'react';
 import { registerElement } from './registry';
 import { oe } from '../styles';
+import { UrlComboBox } from '../UrlComboBox';
 import { MarketLiveData, LiveTrade } from '../types';
 import { extractTicker } from '../useMarketData';
 import { scaleLinear } from '@visx/scale';
@@ -13,6 +14,7 @@ export interface MarketProps {
   showTitle: boolean;
   showVolume: boolean;
   accentColor: string;
+  bgOpacity: number; // 0-1, default 1
 }
 
 // ---- SVG Path Helpers (pure math, no visx rendering) ----
@@ -221,126 +223,135 @@ function MarketRenderer({ props, width, height, liveData }: {
   // ---- Multi-outcome market ----
 
   if (liveData.marketType === 'multi' && liveData.outcomes) {
-    const maxOutcomes = Math.max(2, Math.floor(
-      (height - (props.showTitle ? 28 * s : 0) - 24 * s) / (26 * s)
-    ));
+    const pad = Math.max(12, 16 * s);
+    const titleH = props.showTitle ? Math.max(20, 28 * s) : 0;
+    const footerH = Math.max(16, 22 * s);
+    const availH = height - titleH - footerH - pad * 2;
+    const rowH = Math.max(22, 28 * s);
+    const rowGap = Math.max(3, 4 * s);
+    const maxOutcomes = Math.max(2, Math.floor((availH + rowGap) / (rowH + rowGap)));
+    const topOdds = Math.max(1, ...liveData.outcomes.slice(0, maxOutcomes).map(o => o.odds));
+    const barMaxFraction = Math.min(0.55, width > 500 ? 0.55 : 0.45);
 
     return (
       <div style={{
         width, height, position: 'relative',
-        background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(16px)',
+        background: `rgba(0,0,0,${props.bgOpacity ?? 1})`, backdropFilter: (props.bgOpacity ?? 1) < 1 ? 'blur(16px)' : undefined,
         borderRadius: 10 * s,
-        border: `1px solid ${hexToRgba(props.accentColor, 0.15)}`,
+        border: `1px solid rgba(255,255,255,0.06)`,
         overflow: 'hidden', fontFamily: 'Inter, sans-serif',
       }}>
-        {/* Background chart from trade data */}
-        <ChartBackground
-          width={width} height={height}
-          priceHistory={priceHistory}
-          chartColor={props.accentColor}
-          uid={`${uid}m`}
-          isLarge={isLarge}
-        />
-
-        {/* Top accent glow */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-          background: `linear-gradient(90deg, transparent, ${hexToRgba(props.accentColor, 0.6)}, transparent)`,
-        }} />
 
         <div style={{
           position: 'relative', zIndex: 1,
-          padding: `${Math.max(10, 14 * s)}px ${Math.max(12, 16 * s)}px`,
-          height: '100%', boxSizing: 'border-box',
+          padding: pad, height: '100%', boxSizing: 'border-box',
           display: 'flex', flexDirection: 'column',
         }}>
           {/* Title row */}
           {props.showTitle && (
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              marginBottom: 8 * s, gap: 8 * s,
+              marginBottom: Math.max(8, 10 * s), gap: 8 * s, flexShrink: 0,
             }}>
               <div style={{
-                fontSize: Math.max(11, 14 * s), fontWeight: 600, color: '#fff', opacity: 0.9,
+                fontSize: Math.max(12, 15 * s), fontWeight: 700, color: '#fff',
                 flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                textShadow,
+                letterSpacing: '-0.01em',
               }}>
                 {liveData.title}
               </div>
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 4 * s,
-                background: 'rgba(0,0,0,0.4)', borderRadius: 100,
-                padding: `${Math.max(2, 2 * s)}px ${Math.max(5, 7 * s)}px`,
                 flexShrink: 0,
               }}>
                 <div style={{
-                  width: Math.max(4, 5 * s), height: Math.max(4, 5 * s),
+                  width: Math.max(5, 6 * s), height: Math.max(5, 6 * s),
                   borderRadius: '50%', background: '#ef4444',
-                  boxShadow: `0 0 ${3 * s}px rgba(239,68,68,0.6)`,
+                  boxShadow: '0 0 4px rgba(239,68,68,0.5)',
+                  animation: 'pulse 2s ease-in-out infinite',
                 }} />
                 <span style={{
-                  fontSize: Math.max(7, 8 * s), fontWeight: 700,
-                  color: 'rgba(255,255,255,0.55)', letterSpacing: '0.06em',
+                  fontSize: Math.max(8, 9.5 * s), fontWeight: 700,
+                  color: 'rgba(255,255,255,0.45)', letterSpacing: '0.05em',
                 }}>LIVE</span>
               </div>
             </div>
           )}
 
           {/* Outcome rows */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 * s, overflow: 'hidden' }}>
-            {liveData.outcomes.slice(0, maxOutcomes).map((outcome, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 * s }}>
-                <div style={{
-                  width: 3 * Math.max(1, s), height: 14 * s,
-                  borderRadius: 2, background: props.accentColor,
-                  opacity: 0.5 + (outcome.odds / 200), flexShrink: 0,
-                }} />
-                <div style={{
-                  flex: 1, fontSize: Math.max(10, 12 * s),
-                  color: 'rgba(255,255,255,0.75)',
-                  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                  textShadow,
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: rowGap, justifyContent: 'center', overflow: 'hidden' }}>
+            {liveData.outcomes.slice(0, maxOutcomes).map((outcome, i) => {
+              const barW = Math.max(0.04, outcome.odds / topOdds) * barMaxFraction;
+              const isLeader = i === 0;
+              return (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: Math.max(6, 8 * s),
+                  height: rowH,
                 }}>
-                  {outcome.name}
-                </div>
-                <div style={{
-                  fontSize: Math.max(11, 13 * s), fontWeight: 700,
-                  color: props.accentColor, fontVariantNumeric: 'tabular-nums',
-                  minWidth: 36 * s, textAlign: 'right',
-                  textShadow,
-                }}>
-                  {outcome.odds}%
-                </div>
-                <div style={{
-                  width: 60 * s, height: 5 * s,
-                  background: 'rgba(255,255,255,0.06)', borderRadius: 3,
-                  overflow: 'hidden', flexShrink: 0,
-                }}>
+                  {/* Color pip */}
                   <div style={{
-                    width: `${outcome.odds}%`, height: '100%',
-                    background: `linear-gradient(90deg, ${hexToRgba(props.accentColor, 0.5)}, ${props.accentColor})`,
-                    borderRadius: 3, transition: 'width 0.5s ease',
+                    width: Math.max(3, 3.5 * s), alignSelf: 'stretch',
+                    borderRadius: 2,
+                    background: isLeader ? props.accentColor : hexToRgba(props.accentColor, 0.4 + (outcome.odds / topOdds) * 0.4),
+                    flexShrink: 0,
                   }} />
+                  {/* Name */}
+                  <div style={{
+                    flex: 1, fontSize: Math.max(11, 13 * s),
+                    color: isLeader ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
+                    fontWeight: isLeader ? 600 : 400,
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    minWidth: 0,
+                  }}>
+                    {outcome.name}
+                  </div>
+                  {/* Odds value */}
+                  <div style={{
+                    fontSize: Math.max(12, 14 * s), fontWeight: 700,
+                    color: isLeader ? '#fff' : 'rgba(255,255,255,0.65)',
+                    fontVariantNumeric: 'tabular-nums',
+                    minWidth: Math.max(32, 40 * s), textAlign: 'right',
+                    flexShrink: 0,
+                  }}>
+                    {outcome.odds}<span style={{ fontSize: '0.75em', opacity: 0.5 }}>%</span>
+                  </div>
+                  {/* Bar */}
+                  <div style={{
+                    width: width * barMaxFraction,
+                    height: Math.max(5, 6 * s),
+                    background: 'rgba(255,255,255,0.04)',
+                    borderRadius: 3,
+                    overflow: 'hidden', flexShrink: 0,
+                  }}>
+                    <div style={{
+                      width: `${barW / barMaxFraction * 100}%`,
+                      height: '100%',
+                      background: isLeader
+                        ? `linear-gradient(90deg, ${hexToRgba(props.accentColor, 0.7)}, ${props.accentColor})`
+                        : `linear-gradient(90deg, ${hexToRgba(props.accentColor, 0.25)}, ${hexToRgba(props.accentColor, 0.5)})`,
+                      borderRadius: 3,
+                      transition: 'width 0.5s ease',
+                    }} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Footer */}
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            marginTop: 6 * s, paddingTop: 4 * s,
-            borderTop: `1px solid ${hexToRgba(props.accentColor, 0.08)}`,
+            marginTop: Math.max(6, 8 * s), flexShrink: 0,
           }}>
             {props.showVolume ? (
               <div style={{
-                fontSize: Math.max(8, 10 * s), color: 'rgba(255,255,255,0.3)',
-                fontVariantNumeric: 'tabular-nums', textShadow,
+                fontSize: Math.max(9, 10.5 * s), color: 'rgba(255,255,255,0.3)',
+                fontVariantNumeric: 'tabular-nums',
               }}>
                 Vol: ${liveData.volume.toLocaleString()}
               </div>
             ) : <div />}
-            <svg width={Math.max(28, 40 * s)} height={Math.max(8, 12 * s)} viewBox="0 0 772 226" fill="none" style={{ opacity: 0.35 }}>
+            <svg width={Math.max(32, 44 * s)} height={Math.max(9, 13 * s)} viewBox="0 0 772 226" fill="none" style={{ opacity: 0.3 }}>
               <path d={KALSHI_LOGO} fill={props.accentColor} />
             </svg>
           </div>
@@ -354,7 +365,7 @@ function MarketRenderer({ props, width, height, liveData }: {
   return (
     <div style={{
       width, height, position: 'relative',
-      background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(16px)',
+      background: `rgba(0,0,0,${props.bgOpacity ?? 1})`, backdropFilter: (props.bgOpacity ?? 1) < 1 ? 'blur(16px)' : undefined,
       borderRadius: 10 * s,
       border: `1px solid ${hexToRgba(chartColor, 0.15)}`,
       overflow: 'hidden', fontFamily: 'Inter, sans-serif',
@@ -494,21 +505,32 @@ function MarketRenderer({ props, width, height, liveData }: {
 // ---- Props Editor ----
 
 function MarketPropsEditor({ props, onChange }: { props: MarketProps; onChange: (p: MarketProps) => void }) {
-  const [urlInput, setUrlInput] = useState(props.marketUrl);
+  const propsRef = useRef(props);
+  propsRef.current = props;
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
-  const applyUrl = () => {
-    const ticker = extractTicker(urlInput);
-    if (ticker) onChange({ ...props, ticker, marketUrl: urlInput });
-  };
+  // Debounce ticker extraction so partial URLs don't hit the API
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const { marketUrl, ticker: currentTicker } = propsRef.current;
+      if (!marketUrl.trim()) {
+        if (currentTicker) onChangeRef.current({ ...propsRef.current, ticker: '' });
+        return;
+      }
+      const ticker = extractTicker(marketUrl);
+      if (ticker && ticker !== currentTicker) {
+        onChangeRef.current({ ...propsRef.current, ticker });
+      }
+    }, 400);
+    return () => clearTimeout(timeout);
+  }, [props.marketUrl]);
 
   return (
     <div className={oe.props}>
       <div className={oe.fieldFull}>
         <span className={oe.fieldLabel}>Market URL</span>
-        <div className={oe.row}>
-          <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
-          <button className={oe.btnSm} onClick={applyUrl}>Apply</button>
-        </div>
+        <UrlComboBox value={props.marketUrl} onChange={url => onChange({ ...props, marketUrl: url })} placeholder="https://kalshi.com/markets/..." />
       </div>
       <div className={oe.row}>
         <div className={oe.field}>
@@ -523,6 +545,10 @@ function MarketPropsEditor({ props, onChange }: { props: MarketProps; onChange: 
           <input type="checkbox" checked={props.showVolume} onChange={e => onChange({ ...props, showVolume: e.target.checked })} />
           Volume
         </label>
+      </div>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Background Opacity — {Math.round((props.bgOpacity ?? 1) * 100)}%</span>
+        <input type="range" min={0} max={1} step={0.05} value={props.bgOpacity ?? 1} onChange={e => onChange({ ...props, bgOpacity: parseFloat(e.target.value) })} style={{ width: '100%' }} />
       </div>
     </div>
   );
@@ -550,6 +576,7 @@ registerElement<MarketProps>({
       showTitle: true,
       showVolume: true,
       accentColor: '#09C285',
+      bgOpacity: 1,
     },
   },
   Renderer: MarketRenderer,

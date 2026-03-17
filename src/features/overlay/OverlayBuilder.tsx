@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { OverlayConfig } from './types';
+import { OverlayConfig, MarketLiveData } from './types';
 import { encodeOverlayState, decodeOverlayState, createDefaultConfig, saveOverlayState, loadOverlayState } from './overlayState';
 import { useMarketData } from './useMarketData';
 import { getElementDef } from './elements';
@@ -12,6 +12,60 @@ import { Toast } from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { trackEvent } from '../../lib/analytics';
 import { kalshiWs } from '../../lib/kalshiWebSocket';
+
+function ViewerCanvas({ config, marketData }: { config: OverlayConfig; marketData: Record<string, MarketLiveData> }) {
+  const [viewportSize, setViewportSize] = useState({ w: window.innerWidth, h: window.innerHeight });
+
+  useEffect(() => {
+    const onResize = () => setViewportSize({ w: window.innerWidth, h: window.innerHeight });
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const scale = Math.min(viewportSize.w / config.width, viewportSize.h / config.height);
+
+  return (
+    <div className="fixed inset-0 overflow-hidden" style={{
+      background: config.background.type === 'transparent'
+        ? 'transparent'
+        : config.background.type === 'gradient'
+          ? (config.background.gradient || '#000')
+          : (config.background.color || '#000'),
+    }}>
+      <div
+        style={{
+          width: config.width,
+          height: config.height,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          position: 'relative',
+        }}
+      >
+        {config.elements.map((el) => {
+          const def = getElementDef(el.type);
+          if (!def) return null;
+          const Renderer = def.Renderer;
+          const liveData = def.usesMarketData ? marketData[el.props.ticker] : undefined;
+          return (
+            <div
+              key={el.id}
+              style={{
+                position: 'absolute',
+                left: el.x,
+                top: el.y,
+                width: el.width,
+                height: el.height,
+                zIndex: el.zIndex,
+              }}
+            >
+              <Renderer props={el.props} width={el.width} height={el.height} liveData={liveData} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function OverlayBuilder() {
   const [searchParams] = useSearchParams();
@@ -31,17 +85,18 @@ export default function OverlayBuilder() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [sidebarWidth, setSidebarWidth] = useState(340);
+  const [guidesEnabled, setGuidesEnabled] = useState(true);
   const resizingRef = useRef(false);
 
   const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>(
     kalshiWs.isConnected ? 'connected' : 'disconnected'
   );
 
-  // Persist config to localStorage on every change (edit mode only)
+  // Debounce persist to localStorage so drag/resize don't block the main thread
   useEffect(() => {
-    if (isEditMode) {
-      saveOverlayState(config);
-    }
+    if (!isEditMode) return;
+    const timeout = setTimeout(() => saveOverlayState(config), 500);
+    return () => clearTimeout(timeout);
   }, [config, isEditMode]);
 
   useEffect(() => {
@@ -64,6 +119,17 @@ export default function OverlayBuilder() {
     return () => observer.disconnect();
   }, []);
 
+  // Build a stable ticker key so moving/resizing elements doesn't re-trigger subscriptions
+  const tickerKey = useMemo(() => {
+    const entries: string[] = [];
+    for (const el of config.elements) {
+      const def = getElementDef(el.type);
+      if (!def?.usesMarketData || !el.props.ticker) continue;
+      entries.push(`${el.props.ticker}:${(el.props.pollInterval as number) || 30}:${!!def.usesTradeData}`);
+    }
+    return entries.sort().join(',');
+  }, [config.elements]);
+
   const marketTickers = useMemo(() => {
     const tickerMap = new Map<string, { ticker: string; pollInterval: number; fetchTrades: boolean }>();
     for (const el of config.elements) {
@@ -78,22 +144,25 @@ export default function OverlayBuilder() {
       });
     }
     return Array.from(tickerMap.values());
-  }, [config.elements]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tickerKey]);
 
   const marketData = useMarketData(marketTickers, true);
 
   const handleMove = useCallback((id: string, x: number, y: number) => {
-    setConfig(prev => ({
-      ...prev,
-      elements: prev.elements.map(el => el.id === id ? { ...el, x, y } : el),
-    }));
+    setConfig(prev => {
+      const el = prev.elements.find(e => e.id === id);
+      if (el?.locked) return prev;
+      return { ...prev, elements: prev.elements.map(el => el.id === id ? { ...el, x, y } : el) };
+    });
   }, []);
 
   const handleResize = useCallback((id: string, width: number, height: number) => {
-    setConfig(prev => ({
-      ...prev,
-      elements: prev.elements.map(el => el.id === id ? { ...el, width, height } : el),
-    }));
+    setConfig(prev => {
+      const el = prev.elements.find(e => e.id === id);
+      if (el?.locked) return prev;
+      return { ...prev, elements: prev.elements.map(el => el.id === id ? { ...el, width, height } : el) };
+    });
   }, []);
 
   const handleCopyLink = useCallback(() => {
@@ -112,6 +181,8 @@ export default function OverlayBuilder() {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Delete' || e.key === 'Backspace') {
         if (selectedId && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
+          const el = config.elements.find(el => el.id === selectedId);
+          if (el?.locked) return;
           setConfig(prev => ({
             ...prev,
             elements: prev.elements.filter(el => el.id !== selectedId),
@@ -149,34 +220,26 @@ export default function OverlayBuilder() {
     document.body.style.userSelect = 'none';
   }, [sidebarWidth]);
 
-  // Viewer mode
+  // Viewer mode — fills entire viewport for OBS browser source
   if (!isEditMode) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-transparent">
-        <OverlayCanvas
-          config={config}
-          editMode={false}
-          selectedId={null}
-          marketData={marketData}
-          onSelect={() => {}}
-          onMove={() => {}}
-          onResize={() => {}}
-        />
-      </div>
+      <ViewerCanvas config={config} marketData={marketData} />
     );
   }
 
   // Editor mode
   return (
     <div className="grid min-h-screen flex-1 bg-dark font-sans text-text-primary max-[900px]:!grid-cols-[1fr]" style={{ gridTemplateColumns: `${sidebarWidth}px 0px 1fr` }}>
-      <div className="h-screen overflow-y-auto bg-dark-card [scrollbar-color:transparent_transparent] [scrollbar-width:thin] hover:[scrollbar-color:rgba(255,255,255,0.12)_transparent] max-[900px]:h-auto max-[900px]:max-h-[50vh] max-[900px]:border-b max-[900px]:border-dark-border">
+      <div className="h-screen overflow-y-auto bg-dark-card [scrollbar-color:transparent_transparent] [scrollbar-gutter:stable] [scrollbar-width:thin] hover:[scrollbar-color:rgba(255,255,255,0.12)_transparent] max-[900px]:h-auto max-[900px]:max-h-[50vh] max-[900px]:border-b max-[900px]:border-dark-border">
         <OverlayEditor
           config={config}
           selectedId={selectedId}
           wsStatus={wsStatus}
+          guidesEnabled={guidesEnabled}
           onConfigChange={setConfig}
           onSelect={setSelectedId}
           onCopyLink={handleCopyLink}
+          onGuidesToggle={() => setGuidesEnabled(v => !v)}
         />
       </div>
       <div
@@ -188,6 +251,7 @@ export default function OverlayBuilder() {
           config={config}
           editMode={true}
           selectedId={selectedId}
+          guidesEnabled={guidesEnabled}
           marketData={marketData}
           onSelect={setSelectedId}
           onMove={handleMove}

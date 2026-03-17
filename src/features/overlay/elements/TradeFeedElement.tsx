@@ -1,6 +1,7 @@
 import React from 'react';
 import { registerElement } from './registry';
 import { oe } from '../styles';
+import { UrlComboBox } from '../UrlComboBox';
 import { MarketLiveData, LiveTrade } from '../types';
 import { extractTicker } from '../useMarketData';
 import { fetchKalshiEvent } from '../../../lib/kalshiApi';
@@ -22,7 +23,20 @@ export interface TradeFeedProps {
   lineSpacing: number;
   showSide: boolean;
   useAcronyms: boolean;
+  textShadow: string;
+  fontFamily: string;
 }
+
+const FONT_OPTIONS = [
+  { value: 'Inter, sans-serif', label: 'Inter' },
+  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Matricha', 'Barlow Condensed', sans-serif", label: 'Matricha' },
+  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
+  { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
+  { value: "'Oswald', sans-serif", label: 'Oswald' },
+  { value: 'Impact, sans-serif', label: 'Impact' },
+  { value: "'Arial Black', sans-serif", label: 'Arial Black' },
+];
 
 interface ParsedOutcome {
   label: string;
@@ -53,16 +67,17 @@ function matchOutcome(
   trade: LiveTrade,
   outcomeMap: Record<string, ParsedOutcome>,
 ): ParsedOutcome | null {
-  // First try exact ticker match
+  // Exact ticker match
   if (outcomeMap[trade.ticker]) return outcomeMap[trade.ticker];
-  // Then try partial match (key is contained in ticker)
-  for (const [key, val] of Object.entries(outcomeMap)) {
-    if (trade.ticker.toUpperCase().includes(key.toUpperCase())) return val;
-  }
-  // Fallback: use the last segment of the ticker
+  // Match by suffix (last segment after '-'), which is the outcome identifier
   const parts = trade.ticker.split('-');
   const suffix = parts[parts.length - 1];
   if (outcomeMap[suffix]) return outcomeMap[suffix];
+  // Try suffix as a case-insensitive partial match against keys
+  const suffixUpper = suffix.toUpperCase();
+  for (const [key, val] of Object.entries(outcomeMap)) {
+    if (suffixUpper === key.toUpperCase()) return val;
+  }
   return null;
 }
 
@@ -76,7 +91,7 @@ function formatTradeAmount(trade: LiveTrade): string {
 function TradeFeedRenderer({ props, width, height, liveData }: {
   props: TradeFeedProps; width: number; height: number; liveData?: MarketLiveData;
 }) {
-  const outcomeMap = parseOutcomeMap(props.outcomeMap);
+  const outcomeMap = React.useMemo(() => parseOutcomeMap(props.outcomeMap), [props.outcomeMap]);
   const maxTrades = props.maxTrades || 6;
   const lineSpacing = props.lineSpacing || 1.4;
   // Scale font from bounding box — use the more constraining dimension
@@ -120,8 +135,11 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
     );
   }
 
+  const font = props.fontFamily || 'Inter, sans-serif';
+  const shadow = props.textShadow || 'none';
+
   return (
-    <div style={{ width, height, display: 'flex', flexDirection: 'column', gap: fontSize * 0.3, fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
+    <div style={{ width, height, display: 'flex', flexDirection: 'column', gap: fontSize * 0.3, fontFamily: font, overflow: 'hidden' }}>
       {/* Header */}
       {props.headerText && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: fontSize * 0.1 }}>
@@ -132,7 +150,7 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
               animation: 'pulse 2s ease-in-out infinite',
             }} />
           )}
-          <span style={{ fontSize, fontWeight: 700, color: props.headerColor || '#ffffff', lineHeight: 1 }}>
+          <span style={{ fontSize, fontWeight: 700, color: props.headerColor || '#ffffff', lineHeight: 1, textShadow: shadow }}>
             {props.headerText}
           </span>
         </div>
@@ -165,17 +183,17 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
             animation: isNew ? 'tradeFadeIn 0.4s ease-out' : undefined,
             opacity: i === 0 ? 1 : Math.max(0.5, 1 - i * 0.08),
           }}>
-            <span style={{ fontSize, fontWeight: 700, color: props.amountColor || '#09C285', fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ fontSize, fontWeight: 700, color: props.amountColor || '#09C285', fontVariantNumeric: 'tabular-nums', textShadow: shadow }}>
               {amount}
             </span>
-            <span style={{ fontSize: fontSize * 0.75, fontWeight: 500, color: 'rgba(255,255,255,0.6)' }}>
+            <span style={{ fontSize: fontSize * 0.75, fontWeight: 500, color: 'rgba(255,255,255,0.6)', textShadow: shadow }}>
               on
             </span>
-            <span style={{ fontSize, fontWeight: 800, color }}>
+            <span style={{ fontSize, fontWeight: 800, color, textShadow: shadow }}>
               {label}
             </span>
             {sideLabel && (
-              <span style={{ fontSize: fontSize * 0.55, fontWeight: 600, color: trade.side === 'yes' ? '#09C285' : '#ef4444', opacity: 0.7 }}>
+              <span style={{ fontSize: fontSize * 0.55, fontWeight: 600, color: trade.side === 'yes' ? '#09C285' : '#ef4444', opacity: 0.7, textShadow: shadow }}>
                 {sideLabel}
               </span>
             )}
@@ -271,47 +289,62 @@ function OutcomeMapEditor({ outcomeMap, onChange }: { outcomeMap: string; onChan
 // ---- Props Editor ----
 
 function TradeFeedPropsEditor({ props, onChange }: { props: TradeFeedProps; onChange: (p: TradeFeedProps) => void }) {
-  const [urlInput, setUrlInput] = React.useState(props.marketUrl);
   const [loading, setLoading] = React.useState(false);
+  const lastFetchedRef = React.useRef(props.ticker);
+  const propsRef = React.useRef(props);
+  propsRef.current = props;
+  const onChangeRef = React.useRef(onChange);
+  onChangeRef.current = onChange;
 
-  const applyUrl = async () => {
-    const ticker = extractTicker(urlInput);
-    if (!ticker) return;
-
-    setLoading(true);
-    let outcomeMap = props.outcomeMap;
-
-    // Try to auto-build outcome map from event markets
-    try {
-      const { markets } = await fetchKalshiEvent(ticker);
-      if (markets.length > 1) {
-        const map: Record<string, { label: string; acronym: string; color: string }> = {};
-        const colors = ['#09C285', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
-        markets.forEach((m, i) => {
-          // Use last segment of ticker as key for matching trades
-          const suffix = m.ticker.split('-').pop() || m.ticker;
-          // Use yes_sub_title for human-readable label (e.g. "Seattle Seahawks" instead of "SEA")
-          const label = m.yes_sub_title || m.title || suffix;
-          map[suffix] = { label, acronym: suffix, color: colors[i % colors.length] };
-        });
-        outcomeMap = JSON.stringify(map);
+  // Debounce ticker extraction + auto-fetch outcome map
+  React.useEffect(() => {
+    const timeout = setTimeout(async () => {
+      const { marketUrl, ticker: currentTicker } = propsRef.current;
+      if (!marketUrl.trim()) {
+        if (currentTicker) onChangeRef.current({ ...propsRef.current, ticker: '' });
+        return;
       }
-    } catch {
-      // Not an event or fetch failed — keep existing outcomeMap
-    }
+      const ticker = extractTicker(marketUrl);
+      if (!ticker) return;
 
-    onChange({ ...props, ticker, marketUrl: urlInput, outcomeMap });
-    setLoading(false);
-  };
+      const updates: Partial<TradeFeedProps> = {};
+      if (ticker !== currentTicker) updates.ticker = ticker;
+
+      // Fetch outcome map if ticker is new
+      if (ticker !== lastFetchedRef.current) {
+        lastFetchedRef.current = ticker;
+        setLoading(true);
+
+        try {
+          const { markets } = await fetchKalshiEvent(ticker);
+          if (markets.length > 1) {
+            const map: Record<string, { label: string; acronym: string; color: string }> = {};
+            const colors = ['#09C285', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+            markets.forEach((m, i) => {
+              const suffix = m.ticker.split('-').pop() || m.ticker;
+              const label = m.yes_sub_title || m.title || suffix;
+              map[suffix] = { label, acronym: suffix, color: colors[i % colors.length] };
+            });
+            updates.outcomeMap = JSON.stringify(map);
+          }
+        } catch { /* keep existing */ }
+        setLoading(false);
+      }
+
+      if (Object.keys(updates).length > 0) {
+        onChangeRef.current({ ...propsRef.current, ...updates });
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [props.marketUrl]);
 
   return (
     <div className={oe.props}>
       <div className={oe.fieldFull}>
         <span className={oe.fieldLabel}>Market / Event URL</span>
-        <div className={oe.row}>
-          <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
-          <button className={oe.btnSm} onClick={applyUrl} disabled={loading}>{loading ? '...' : 'Apply'}</button>
-        </div>
+        <UrlComboBox value={props.marketUrl} onChange={url => onChange({ ...props, marketUrl: url })} placeholder="https://kalshi.com/markets/..." />
+        {loading && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>Loading outcomes...</span>}
       </div>
       <div className={oe.row}>
         <div className={oe.field}>
@@ -351,6 +384,28 @@ function TradeFeedPropsEditor({ props, onChange }: { props: TradeFeedProps; onCh
           <input type="number" className={oe.inputSm} value={props.maxTrades || 6} min={1} max={20} onChange={e => onChange({ ...props, maxTrades: parseInt(e.target.value) || 6 })} />
         </div>
       </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Font Size</span>
+          <input type="number" className={oe.inputSm} value={props.fontSize || 36} min={8} max={120} onChange={e => onChange({ ...props, fontSize: parseInt(e.target.value) || 36 })} />
+        </div>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Line Spacing</span>
+          <input type="number" className={oe.inputSm} value={props.lineSpacing || 1.4} min={0.8} max={3} step={0.1} onChange={e => onChange({ ...props, lineSpacing: parseFloat(e.target.value) || 1.4 })} />
+        </div>
+      </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Font</span>
+          <select className={oe.select} value={props.fontFamily || 'Inter, sans-serif'} onChange={e => onChange({ ...props, fontFamily: e.target.value })}>
+            {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+          </select>
+        </div>
+      </div>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Text Shadow</span>
+        <input type="text" className={oe.input} value={props.textShadow || ''} placeholder="0 2px 12px rgba(0,0,0,0.8)" onChange={e => onChange({ ...props, textShadow: e.target.value })} />
+      </div>
       <OutcomeMapEditor outcomeMap={props.outcomeMap} onChange={map => onChange({ ...props, outcomeMap: map })} />
     </div>
   );
@@ -386,6 +441,8 @@ registerElement<TradeFeedProps>({
       lineSpacing: 1.4,
       showSide: false,
       useAcronyms: true,
+      textShadow: '0 2px 12px rgba(0,0,0,0.8)',
+      fontFamily: 'Inter, sans-serif',
     },
   },
   Renderer: TradeFeedRenderer,

@@ -1,5 +1,5 @@
-import { Suspense, lazy } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter, Route, Routes, useLocation, useSearchParams } from 'react-router-dom';
 import { LandingPage } from './components/layout/LandingPage';
 import { Footer } from './components/layout/Footer';
 import { useAnalytics } from './hooks/useAnalytics';
@@ -14,8 +14,23 @@ const BannerBuilder = lazy(() => import('./features/banner/BannerBuilder'));
 
 function AppContent() {
   useAnalytics();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const isOverlayViewer = location.pathname === '/overlay' && !searchParams.has('edit');
+
+  useEffect(() => {
+    if (isOverlayViewer) {
+      document.documentElement.style.background = 'transparent';
+      document.body.style.background = 'transparent';
+    }
+    return () => {
+      document.documentElement.style.background = '';
+      document.body.style.background = '';
+    };
+  }, [isOverlayViewer]);
+
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className={`flex min-h-screen flex-col${isOverlayViewer ? ' !bg-transparent' : ''}`}>
       <Suspense fallback={<div className="flex flex-1 items-center justify-center font-medium text-text-primary">Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -29,7 +44,7 @@ function AppContent() {
           <Route path="*" element={<LandingPage />} />
         </Routes>
       </Suspense>
-      <Footer />
+      {!isOverlayViewer && <Footer />}
     </div>
   );
 }

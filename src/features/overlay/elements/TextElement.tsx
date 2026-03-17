@@ -19,7 +19,21 @@ export interface TextProps {
   lineHeight: number;
   strokeColor: string;
   strokeWidth: number;
+  fontFamily: string;
 }
+
+const FONT_OPTIONS = [
+  { value: 'Inter, sans-serif', label: 'Inter' },
+  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Matricha', 'Barlow Condensed', sans-serif", label: 'Matricha' },
+  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
+  { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
+  { value: "'Oswald', sans-serif", label: 'Oswald' },
+  { value: 'Impact, sans-serif', label: 'Impact' },
+  { value: "'Arial Black', sans-serif", label: 'Arial Black' },
+  { value: 'Georgia, serif', label: 'Georgia' },
+  { value: "'Courier New', monospace", label: 'Courier New' },
+];
 
 function TextRenderer({ props, width, height }: { props: TextProps; width: number; height: number }) {
   const hasStroke = props.strokeWidth > 0 && props.strokeColor;
@@ -28,7 +42,7 @@ function TextRenderer({ props, width, height }: { props: TextProps; width: numbe
       width, height, fontSize: props.fontSize, fontWeight: props.fontWeight,
       color: props.color, textAlign: props.textAlign, backgroundColor: props.backgroundColor,
       padding: props.padding, borderRadius: props.borderRadius, boxSizing: 'border-box',
-      fontFamily: 'Inter, sans-serif', lineHeight: props.lineHeight || 1.2,
+      fontFamily: props.fontFamily || 'Inter, sans-serif', lineHeight: props.lineHeight || 1.2,
       letterSpacing: props.letterSpacing || 0,
       textShadow: props.textShadow || 'none',
       textTransform: props.textTransform || 'none',
@@ -76,6 +90,14 @@ function TextPropsEditor({ props, onChange }: { props: TextProps; onChange: (p: 
       </div>
       <div className={oe.row}>
         <div className={oe.field}>
+          <span className={oe.fieldLabel}>Font</span>
+          <select className={oe.select} value={props.fontFamily || 'Inter, sans-serif'} onChange={e => onChange({ ...props, fontFamily: e.target.value })}>
+            {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+          </select>
+        </div>
+      </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
           <span className={oe.fieldLabel}>Color</span>
           <input type="color" className={oe.color} value={props.color} onChange={e => onChange({ ...props, color: e.target.value })} />
         </div>
@@ -102,11 +124,11 @@ function TextPropsEditor({ props, onChange }: { props: TextProps; onChange: (p: 
           <input type="number" className={oe.inputSm} value={props.letterSpacing || 0} step={0.5} onChange={e => onChange({ ...props, letterSpacing: parseFloat(e.target.value) || 0 })} />
         </div>
         <div className={oe.field}>
-          <span className={oe.fieldLabel}>Line H</span>
+          <span className={oe.fieldLabel}>Line Height</span>
           <input type="number" className={oe.inputSm} value={props.lineHeight || 1.2} step={0.1} min={0.5} max={3} onChange={e => onChange({ ...props, lineHeight: parseFloat(e.target.value) || 1.2 })} />
         </div>
         <div className={oe.field}>
-          <span className={oe.fieldLabel}>BG</span>
+          <span className={oe.fieldLabel}>Background</span>
           <input type="text" className={oe.inputSm} value={props.backgroundColor} placeholder="transparent" onChange={e => onChange({ ...props, backgroundColor: e.target.value })} />
         </div>
       </div>
@@ -118,7 +140,7 @@ function TextPropsEditor({ props, onChange }: { props: TextProps; onChange: (p: 
       </div>
       <div className={oe.row}>
         <div className={oe.field}>
-          <span className={oe.fieldLabel}>Stroke W</span>
+          <span className={oe.fieldLabel}>Stroke</span>
           <input type="number" className={oe.inputSm} value={props.strokeWidth || 0} min={0} max={20} onChange={e => onChange({ ...props, strokeWidth: parseInt(e.target.value) || 0 })} />
         </div>
         <div className={oe.field}>
@@ -141,7 +163,7 @@ registerElement<TextProps>({
   ),
   defaults: {
     width: 300, height: 60, zIndex: 1,
-    props: { type: 'text', text: 'Headline Text', fontSize: 32, fontWeight: 700, color: '#ffffff', textAlign: 'left', backgroundColor: 'transparent', padding: 8, borderRadius: 0, letterSpacing: 0, textShadow: '', textTransform: 'none', fontStyle: 'normal', lineHeight: 1.2, strokeColor: '#000000', strokeWidth: 0 },
+    props: { type: 'text', text: 'Headline Text', fontSize: 32, fontWeight: 700, color: '#ffffff', textAlign: 'left', backgroundColor: 'transparent', padding: 8, borderRadius: 0, letterSpacing: 0, textShadow: '', textTransform: 'none', fontStyle: 'normal', lineHeight: 1.2, strokeColor: '#000000', strokeWidth: 0, fontFamily: 'Inter, sans-serif' },
   },
   Renderer: TextRenderer,
   PropsEditor: TextPropsEditor,

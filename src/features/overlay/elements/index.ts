@@ -15,9 +15,11 @@ import './ImageElement';
 
 // Specialized elements
 import './MatchupElement';
+import './MatchupChartElement';
 import './TradeFeedElement';
 import './QrCodeElement';
 import './DisclaimerElement';
+import './NewsTickerElement';
 
 export { getElementDef, getAllElementDefs, registerElement } from './registry';
 export type { ElementDefinition } from './registry';

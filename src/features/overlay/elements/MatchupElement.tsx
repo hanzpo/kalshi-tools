@@ -1,6 +1,7 @@
 import React from 'react';
 import { registerElement } from './registry';
 import { oe } from '../styles';
+import { UrlComboBox } from '../UrlComboBox';
 import { MarketLiveData } from '../types';
 import { extractTicker } from '../useMarketData';
 import { fetchKalshiEvent, fetchKalshiMarket } from '../../../lib/kalshiApi';
@@ -18,7 +19,30 @@ export interface MatchupProps {
   showPayout: boolean;
   payoutWager: number;
   vsStyle: 'text' | 'slash' | 'hidden';
+  nameFont: string;
+  oddsFont: string;
+  payoutFont: string;
+  textShadow: string;
 }
+
+const FONT_OPTIONS = [
+  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
+  { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
+  { value: "'Oswald', sans-serif", label: 'Oswald' },
+  { value: 'Inter, sans-serif', label: 'Inter' },
+  { value: 'Impact, sans-serif', label: 'Impact' },
+  { value: "'Arial Black', sans-serif", label: 'Arial Black' },
+];
+
+const ODDS_FONT_OPTIONS = [
+  { value: "'Matricha', 'Barlow Condensed', sans-serif", label: 'Matricha' },
+  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
+  { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
+  { value: "'Oswald', sans-serif", label: 'Oswald' },
+  { value: 'Inter, sans-serif', label: 'Inter' },
+];
 
 function MatchupRenderer({ props, width, height, liveData }: {
   props: MatchupProps; width: number; height: number; liveData?: MarketLiveData;
@@ -59,19 +83,24 @@ function MatchupRenderer({ props, width, height, liveData }: {
     );
   }
 
+  const nameFont = props.nameFont || "'Sohne Schmal', 'Barlow Condensed', sans-serif";
+  const oddsFont = props.oddsFont || "'Matricha', 'Barlow Condensed', sans-serif";
+  const payoutFont = props.payoutFont || 'Inter, sans-serif';
+  const shadow = props.textShadow || 'none';
+
   return (
-    <div style={{ width, height, display: 'flex', flexDirection: 'column', justifyContent: 'center', fontFamily: 'Inter, sans-serif', overflow: 'hidden', gap }}>
+    <div style={{ width, height, display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden', gap }}>
       {/* Team names row */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: fontSize * 0.15 }}>
-        <span style={{ fontSize, fontWeight: 900, color: props.team1Color, letterSpacing: -2, lineHeight: 1, textTransform: 'uppercase' }}>
+        <span style={{ fontSize, fontWeight: 900, color: props.team1Color, letterSpacing: -2, lineHeight: 1, textTransform: 'uppercase', textShadow: shadow, fontFamily: nameFont }}>
           {props.team1Name || 'TEAM1'}
         </span>
         {props.vsStyle !== 'hidden' && (
-          <span style={{ fontSize: vsFontSize, fontWeight: 500, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic', lineHeight: 1 }}>
+          <span style={{ fontSize: vsFontSize, fontWeight: 500, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic', lineHeight: 1, textShadow: shadow, fontFamily: 'Inter, sans-serif' }}>
             {props.vsStyle === 'slash' ? '/' : 'vs'}
           </span>
         )}
-        <span style={{ fontSize, fontWeight: 900, color: props.team2Color, letterSpacing: -2, lineHeight: 1, textTransform: 'uppercase' }}>
+        <span style={{ fontSize, fontWeight: 900, color: props.team2Color, letterSpacing: -2, lineHeight: 1, textTransform: 'uppercase', textShadow: shadow, fontFamily: nameFont }}>
           {props.team2Name || 'TEAM2'}
         </span>
       </div>
@@ -82,15 +111,15 @@ function MatchupRenderer({ props, width, height, liveData }: {
           {/* Team 1 odds */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-              <span style={{ fontSize: oddsFontSize * 0.5, color: props.team1Color, lineHeight: 1 }}>
+              <span style={{ fontSize: oddsFontSize * 0.5, color: props.team1Color, lineHeight: 1, textShadow: shadow, fontFamily: oddsFont }}>
                 {team1Odds < team2Odds ? '\u2191' : '\u2193'}
               </span>
-              <span style={{ fontSize: oddsFontSize, fontWeight: 800, color: props.team1Color, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+              <span style={{ fontSize: oddsFontSize, fontWeight: 800, color: props.team1Color, fontVariantNumeric: 'tabular-nums', lineHeight: 1, textShadow: shadow, fontFamily: oddsFont }}>
                 {team1Odds}%
               </span>
             </div>
             {props.showPayout && (
-              <span style={{ fontSize: payoutFontSize, color: props.team1Color, opacity: 0.8, fontVariantNumeric: 'tabular-nums' }}>
+              <span style={{ fontSize: payoutFontSize, color: props.team1Color, opacity: 0.8, fontVariantNumeric: 'tabular-nums', textShadow: shadow, fontFamily: payoutFont }}>
                 ${wager} → ${team1Odds > 0 ? Math.round(wager / (team1Odds / 100)) : '?'}
               </span>
             )}
@@ -98,15 +127,15 @@ function MatchupRenderer({ props, width, height, liveData }: {
           {/* Team 2 odds */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-              <span style={{ fontSize: oddsFontSize * 0.5, color: props.team2Color, lineHeight: 1 }}>
+              <span style={{ fontSize: oddsFontSize * 0.5, color: props.team2Color, lineHeight: 1, textShadow: shadow, fontFamily: oddsFont }}>
                 {team2Odds < team1Odds ? '\u2191' : '\u2193'}
               </span>
-              <span style={{ fontSize: oddsFontSize, fontWeight: 800, color: props.team2Color, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+              <span style={{ fontSize: oddsFontSize, fontWeight: 800, color: props.team2Color, fontVariantNumeric: 'tabular-nums', lineHeight: 1, textShadow: shadow, fontFamily: oddsFont }}>
                 {team2Odds}%
               </span>
             </div>
             {props.showPayout && (
-              <span style={{ fontSize: payoutFontSize, color: props.team2Color, opacity: 0.8, fontVariantNumeric: 'tabular-nums' }}>
+              <span style={{ fontSize: payoutFontSize, color: props.team2Color, opacity: 0.8, fontVariantNumeric: 'tabular-nums', textShadow: shadow, fontFamily: payoutFont }}>
                 ${wager} → ${team2Odds > 0 ? Math.round(wager / (team2Odds / 100)) : '?'}
               </span>
             )}
@@ -118,54 +147,69 @@ function MatchupRenderer({ props, width, height, liveData }: {
 }
 
 function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange: (p: MatchupProps) => void }) {
-  const [urlInput, setUrlInput] = React.useState(props.marketUrl);
   const [loading, setLoading] = React.useState(false);
+  const lastFetchedRef = React.useRef(props.ticker);
+  const propsRef = React.useRef(props);
+  propsRef.current = props;
+  const onChangeRef = React.useRef(onChange);
+  onChangeRef.current = onChange;
 
-  const applyUrl = async () => {
-    const ticker = extractTicker(urlInput);
-    if (!ticker) return;
-
-    setLoading(true);
-    const updates: Partial<MatchupProps> = { ticker, marketUrl: urlInput };
-    const colors = ['#09C285', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899'];
-
-    try {
-      const { markets } = await fetchKalshiEvent(ticker);
-      if (markets.length >= 2) {
-        const m1 = markets[0];
-        const m2 = markets[1];
-        updates.team1Name = m1.ticker.split('-').pop() || 'TEAM1';
-        updates.team2Name = m2.ticker.split('-').pop() || 'TEAM2';
-        updates.team1Color = colors[0];
-        updates.team2Color = colors[1];
-      } else if (markets.length === 1) {
-        const suffix = markets[0].ticker.split('-').pop() || '';
-        updates.team1Name = suffix || markets[0].yes_sub_title || 'YES';
-        updates.team2Name = 'NO';
+  // Debounce ticker extraction + auto-fetch team names
+  React.useEffect(() => {
+    const timeout = setTimeout(async () => {
+      const { marketUrl, ticker: currentTicker } = propsRef.current;
+      if (!marketUrl.trim()) {
+        if (currentTicker) onChangeRef.current({ ...propsRef.current, ticker: '' });
+        return;
       }
-    } catch {
-      // Not an event — try as a single market
-      try {
-        const m = await fetchKalshiMarket(ticker);
-        updates.team1Name = m.yes_sub_title || 'YES';
-        updates.team2Name = m.no_sub_title || 'NO';
-      } catch {
-        // Keep existing names
-      }
-    }
+      const ticker = extractTicker(marketUrl);
+      if (!ticker) return;
 
-    onChange({ ...props, ...updates });
-    setLoading(false);
-  };
+      const updates: Partial<MatchupProps> = {};
+      if (ticker !== currentTicker) updates.ticker = ticker;
+
+      // Fetch team data if ticker is new
+      if (ticker !== lastFetchedRef.current) {
+        lastFetchedRef.current = ticker;
+        setLoading(true);
+        const colors = ['#09C285', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899'];
+
+        try {
+          const { markets } = await fetchKalshiEvent(ticker);
+          if (markets.length >= 2) {
+            updates.team1Name = markets[0].ticker.split('-').pop() || 'TEAM1';
+            updates.team2Name = markets[1].ticker.split('-').pop() || 'TEAM2';
+            updates.team1Color = colors[0];
+            updates.team2Color = colors[1];
+          } else if (markets.length === 1) {
+            const suffix = markets[0].ticker.split('-').pop() || '';
+            updates.team1Name = suffix || markets[0].yes_sub_title || 'YES';
+            updates.team2Name = 'NO';
+          }
+        } catch {
+          try {
+            const m = await fetchKalshiMarket(ticker);
+            updates.team1Name = m.yes_sub_title || 'YES';
+            updates.team2Name = m.no_sub_title || 'NO';
+          } catch { /* keep existing names */ }
+        }
+        setLoading(false);
+      }
+
+      if (Object.keys(updates).length > 0) {
+        onChangeRef.current({ ...propsRef.current, ...updates });
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [props.marketUrl]);
 
   return (
     <div className={oe.props}>
       <div className={oe.fieldFull}>
         <span className={oe.fieldLabel}>Market URL</span>
-        <div className={oe.row}>
-          <input type="text" className={oe.input} placeholder="https://kalshi.com/markets/..." value={urlInput} onChange={e => setUrlInput(e.target.value)} />
-          <button className={oe.btnSm} onClick={applyUrl} disabled={loading}>{loading ? '...' : 'Apply'}</button>
-        </div>
+        <UrlComboBox value={props.marketUrl} onChange={url => onChange({ ...props, marketUrl: url })} placeholder="https://kalshi.com/markets/..." />
+        {loading && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>Loading team data...</span>}
       </div>
       <div className={oe.row}>
         <div className={oe.field}>
@@ -196,6 +240,33 @@ function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange
             <option value="hidden">Hidden</option>
           </select>
         </div>
+      </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Name Font</span>
+          <select className={oe.select} value={props.nameFont || "'Sohne Schmal', 'Barlow Condensed', sans-serif"} onChange={e => onChange({ ...props, nameFont: e.target.value })}>
+            {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+          </select>
+        </div>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Odds Font</span>
+          <select className={oe.select} value={props.oddsFont || "'Matricha', 'Barlow Condensed', sans-serif"} onChange={e => onChange({ ...props, oddsFont: e.target.value })}>
+            {ODDS_FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+          </select>
+        </div>
+      </div>
+      <div className={oe.row}>
+        <div className={oe.field}>
+          <span className={oe.fieldLabel}>Payout Font</span>
+          <select className={oe.select} value={props.payoutFont || 'Inter, sans-serif'} onChange={e => onChange({ ...props, payoutFont: e.target.value })}>
+            {ODDS_FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+            <option value="Inter, sans-serif">Inter</option>
+          </select>
+        </div>
+      </div>
+      <div className={oe.fieldFull}>
+        <span className={oe.fieldLabel}>Text Shadow</span>
+        <input type="text" className={oe.input} value={props.textShadow || ''} placeholder="0 2px 12px rgba(0,0,0,0.8)" onChange={e => onChange({ ...props, textShadow: e.target.value })} />
       </div>
       <div className={oe.row}>
         <label className={oe.checkbox}>
@@ -234,6 +305,10 @@ registerElement<MatchupProps>({
       team1Color: '#09C285', team2Color: '#3B82F6',
       showOdds: true, showPayout: true, payoutWager: 100,
       vsStyle: 'text',
+      nameFont: "'Sohne Schmal', 'Barlow Condensed', sans-serif",
+      oddsFont: "'Matricha', 'Barlow Condensed', sans-serif",
+      payoutFont: 'Inter, sans-serif',
+      textShadow: '0 2px 12px rgba(0,0,0,0.8)',
     },
   },
   Renderer: MatchupRenderer,

@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+/* Custom overlay fonts — drop .otf/.ttf/.woff2 files into public/ */
+@font-face {
+  font-family: 'Sohne Schmal';
+  src: url('/SohneSchmal-Dreiviertelfett.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sohne Schmal';
+  src: url('/SohneSchmal-Fett.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Sohne Schmal';
+  src: url('/SohneSchmal-Extrafett.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Matricha';
+  src: url('/Matricha.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --font-barlow: 'Barlow Condensed', sans-serif;
