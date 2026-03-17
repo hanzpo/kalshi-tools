@@ -326,11 +326,6 @@
   font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
 }
 
-.bracket-team-name--play-in {
-  font-size: 8.5px;
-  letter-spacing: 0.28px;
-}
-
 /* ── Championship team (larger) ── */
 .bracket-team--champion {
   width: 81px;

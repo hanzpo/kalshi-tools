@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BracketConfig } from '../../types/bracket';
-import { createDefaultConfig, createRandomPicks, fillMissingPicks, clearDownstreamPicks, encodeBracket, decodeBracket } from './bracketData';
+import { BracketConfig, BracketPlayInId } from '../../types/bracket';
+import {
+  clearDownstreamPicks,
+  createDefaultConfig,
+  createRandomPicks,
+  createRandomPlayInPicks,
+  decodeBracket,
+  encodeBracket,
+  fillMissingPicks,
+} from './bracketData';
 import { BracketMaker } from './BracketMaker';
 import { BracketPreview, BRACKET_PREVIEW_ID } from './BracketPreview';
 import { Toast } from '../../components/ui/Toast';
@@ -43,14 +51,31 @@ export default function BracketBuilder() {
       }
       const newPicks = clearDownstreamPicks(prev.picks, gameIndex);
       newPicks[gameIndex] = pick;
-      return { ...prev, picks: fillMissingPicks(newPicks) };
+      return { ...prev, picks: fillMissingPicks(newPicks, prev.playInPicks) };
     });
     setShareUrl(null);
     trackEvent('bracket_pick', { game: gameIndex, pick });
   }
 
+  function handlePlayInPick(playInId: BracketPlayInId, pick: 0 | 1) {
+    setConfig((prev) => ({
+      ...prev,
+      playInPicks: {
+        ...prev.playInPicks,
+        [playInId]: pick,
+      },
+    }));
+    setShareUrl(null);
+    trackEvent('bracket_play_in_pick', { play_in_id: playInId, pick });
+  }
+
   function handleRandomize() {
-    setConfig((prev) => ({ ...prev, picks: createRandomPicks() }));
+    const playInPicks = createRandomPlayInPicks();
+    setConfig((prev) => ({
+      ...prev,
+      playInPicks,
+      picks: createRandomPicks(playInPicks),
+    }));
     setShareUrl(null);
     trackEvent('bracket_randomize');
   }
@@ -101,6 +126,7 @@ export default function BracketBuilder() {
       <div className={layout.appContainer}>
         <BracketMaker
           config={config}
+          onPlayInPick={handlePlayInPick}
           onExport={handleExport}
           onCopyToClipboard={handleCopyToClipboard}
           onShare={handleShare}

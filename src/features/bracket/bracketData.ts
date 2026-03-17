@@ -1,4 +1,10 @@
-import { BracketTeam, BracketRegion, BracketConfig } from '../../types/bracket';
+import {
+  BracketConfig,
+  BracketPlayInId,
+  BracketPlayInOption,
+  BracketRegion,
+  BracketTeam,
+} from '../../types/bracket';
 
 export const DEFAULT_BRACKET_TITLE = '$1 BILLION\nBRACKET';
 export const DEFAULT_BRACKET_SUBTITLE = "Men's College Basketball";
@@ -7,9 +13,25 @@ function team(name: string, seed: number, fullName: string, bgColor: string, tex
   return { name, seed, fullName, bgColor, textColor };
 }
 
-function playInTeam(name: string, seed: number, fullName: string): BracketTeam {
-  return { ...team(name, seed, fullName, '#2B2F3A'), isPlayIn: true };
+function playInOption(
+  name: string,
+  fullName: string,
+  bgColor: string,
+  textColor: string = 'rgba(255,255,255,0.95)',
+): BracketPlayInOption {
+  return { name, fullName, bgColor, textColor };
 }
+
+function playInTeam(seed: number, playInId: BracketPlayInId, options: [BracketPlayInOption, BracketPlayInOption]): BracketTeam {
+  const [firstOption] = options;
+  return {
+    ...team(firstOption.name, seed, firstOption.fullName, firstOption.bgColor, firstOption.textColor),
+    playInId,
+    playInOptions: options,
+  };
+}
+
+export const PLAY_IN_IDS: BracketPlayInId[] = ['south-16', 'west-11', 'midwest-11', 'midwest-16'];
 
 // South Region — Top Left
 const southTeams: BracketTeam[] = [
@@ -28,7 +50,10 @@ const southTeams: BracketTeam[] = [
   team('TRY', 13, 'Troy', '#8B2332', 'rgba(255,255,255,0.9)'),
   team('PEN', 14, 'Penn', '#011F5B', 'rgba(204,0,0,0.9)'),
   team('IDA', 15, 'Idaho', '#666666', 'rgba(255,204,0,0.9)'),
-  playInTeam('PV / LE', 16, 'Prairie View A&M / Lehigh'),
+  playInTeam(16, 'south-16', [
+    playInOption('PV', 'Prairie View A&M', '#5F249F', 'rgba(255,212,0,0.9)'),
+    playInOption('LEH', 'Lehigh', '#653819', 'rgba(255,255,255,0.9)'),
+  ]),
 ];
 
 // East Region — Top Right
@@ -63,7 +88,10 @@ const westTeams: BracketTeam[] = [
   team('VIL', 8, 'Villanova', '#003366', 'rgba(255,255,255,0.9)'),
   team('USU', 9, 'Utah St.', '#00304D', 'rgba(140,197,221,0.9)'),
   team('MIZ', 10, 'Missouri', '#F1B300', 'rgba(0,0,0,0.9)'),
-  playInTeam('TX / NC', 11, 'Texas / NC State'),
+  playInTeam(11, 'west-11', [
+    playInOption('TEX', 'Texas', '#BF5700', 'rgba(255,255,255,0.9)'),
+    playInOption('NCS', 'NC State', '#CC0000', 'rgba(255,255,255,0.9)'),
+  ]),
   team('HPU', 12, 'High Point', '#5C068C', 'rgba(255,255,255,0.9)'),
   team('HAW', 13, "Hawai'i", '#024731', 'rgba(255,255,255,0.9)'),
   team('KSU', 14, 'Kennesaw State', '#000000', 'rgba(193,153,0,0.9)'),
@@ -83,12 +111,18 @@ const midwestTeams: BracketTeam[] = [
   team('UGA', 8, 'Georgia', '#BA0C2F', 'rgba(255,255,255,0.9)'),
   team('SLU', 9, 'Saint Louis', '#003DA5', 'rgba(255,255,255,0.9)'),
   team('SCU', 10, 'Santa Clara', '#862633', 'rgba(255,255,255,0.9)'),
-  playInTeam('MOH / SM', 11, 'Miami (OH) / SMU'),
+  playInTeam(11, 'midwest-11', [
+    playInOption('MOH', 'Miami (OH)', '#B61E2E', 'rgba(255,255,255,0.9)'),
+    playInOption('SMU', 'SMU', '#003057', 'rgba(204,0,53,0.9)'),
+  ]),
   team('AKR', 12, 'Akron', '#002366', 'rgba(196,160,0,0.9)'),
   team('HOF', 13, 'Hofstra', '#0061FF', 'rgba(0,0,0,0.9)'),
   team('WSU', 14, 'Wright St.', '#006833', 'rgba(255,204,0,0.9)'),
   team('TNS', 15, 'Tenn. St.', '#003087', 'rgba(255,255,255,0.9)'),
-  playInTeam('UMB / HOW', 16, 'UMBC / Howard'),
+  playInTeam(16, 'midwest-16', [
+    playInOption('UMB', 'UMBC', '#000000', 'rgba(255,204,0,0.9)'),
+    playInOption('HOW', 'Howard', '#003087', 'rgba(255,255,255,0.9)'),
+  ]),
 ];
 
 export const DEFAULT_REGIONS: [BracketRegion, BracketRegion, BracketRegion, BracketRegion] = [
@@ -98,11 +132,24 @@ export const DEFAULT_REGIONS: [BracketRegion, BracketRegion, BracketRegion, Brac
   { name: 'Midwest', teams: midwestTeams },
 ];
 
-export function fillMissingPicks(existingPicks: (number | null)[]): (number | null)[] {
+export function createRandomPlayInPicks(): Record<BracketPlayInId, 0 | 1> {
+  return {
+    'south-16': Math.random() < 0.5 ? 0 : 1,
+    'west-11': Math.random() < 0.5 ? 0 : 1,
+    'midwest-11': Math.random() < 0.5 ? 0 : 1,
+    'midwest-16': Math.random() < 0.5 ? 0 : 1,
+  };
+}
+
+export function fillMissingPicks(
+  existingPicks: (number | null)[],
+  playInPicks: Record<BracketPlayInId, 0 | 1>,
+): (number | null)[] {
   const picks = [...existingPicks];
   const tempConfig: BracketConfig = {
     regions: DEFAULT_REGIONS,
     picks,
+    playInPicks,
   };
 
   for (let gameIndex = 0; gameIndex < 63; gameIndex += 1) {
@@ -116,14 +163,16 @@ export function fillMissingPicks(existingPicks: (number | null)[]): (number | nu
   return picks;
 }
 
-export function createRandomPicks(): (number | null)[] {
-  return fillMissingPicks(new Array(63).fill(null));
+export function createRandomPicks(playInPicks: Record<BracketPlayInId, 0 | 1>): (number | null)[] {
+  return fillMissingPicks(new Array(63).fill(null), playInPicks);
 }
 
 export function createDefaultConfig(): BracketConfig {
+  const playInPicks = createRandomPlayInPicks();
   return {
     regions: DEFAULT_REGIONS,
-    picks: createRandomPicks(),
+    picks: createRandomPicks(playInPicks),
+    playInPicks,
   };
 }
 
@@ -138,6 +187,21 @@ export const SEED_MATCHUPS: [number, number][] = [
   [6, 9],   // 7 vs 10
   [1, 14],  // 2 vs 15
 ];
+
+function resolveTeam(config: BracketConfig, team: BracketTeam): BracketTeam {
+  if (!team.playInId || !team.playInOptions) {
+    return team;
+  }
+
+  const selectedOption = team.playInOptions[config.playInPicks[team.playInId]];
+  return {
+    ...team,
+    name: selectedOption.name,
+    fullName: selectedOption.fullName,
+    bgColor: selectedOption.bgColor,
+    textColor: selectedOption.textColor,
+  };
+}
 
 // Get the two teams in a given R64 matchup for a region
 export function getR64Matchup(region: BracketRegion, matchupIndex: number): [BracketTeam, BracketTeam] {
@@ -168,7 +232,7 @@ export function getMatchupParticipants(
     const regionIndex = Math.floor(gameIndex / 8);
     const matchupInRegion = gameIndex % 8;
     const [a, b] = getR64Matchup(config.regions[regionIndex], matchupInRegion);
-    return [a, b];
+    return [resolveTeam(config, a), resolveTeam(config, b)];
   }
 
   // Later rounds: participants are winners of two previous games
@@ -222,10 +286,11 @@ function getNextGame(gameIndex: number): number | null {
   return null;
 }
 
-// Encode bracket state to URL-safe base64 (compact: picks only)
+// Encode bracket state to URL-safe base64 (compact: picks + play-in picks)
 export function encodeBracket(config: BracketConfig): string {
   const picksStr = config.picks.map(p => p === null ? '_' : String(p)).join('');
-  const data = { p: picksStr };
+  const playInStr = PLAY_IN_IDS.map((id) => String(config.playInPicks[id])).join('');
+  const data = { p: picksStr, pi: playInStr };
   const json = JSON.stringify(data);
   const base64 = btoa(unescape(encodeURIComponent(json)));
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
@@ -238,12 +303,19 @@ export function decodeBracket(encoded: string): BracketConfig | null {
     while (base64.length % 4) base64 += '=';
     const json = decodeURIComponent(escape(atob(base64)));
     const data = JSON.parse(json);
+    const playInPicks = typeof data.pi === 'string' && data.pi.length === PLAY_IN_IDS.length
+      ? PLAY_IN_IDS.reduce((acc, id, index) => {
+        acc[id] = data.pi[index] === '1' ? 1 : 0;
+        return acc;
+      }, {} as Record<BracketPlayInId, 0 | 1>)
+      : createRandomPlayInPicks();
     const picks: (number | null)[] = typeof data.p === 'string'
       ? data.p.split('').map((c: string) => c === '_' ? null : Number(c))
       : (data.p || new Array(63).fill(null));
     return {
       regions: DEFAULT_REGIONS,
-      picks: fillMissingPicks(picks),
+      picks: fillMissingPicks(picks, playInPicks),
+      playInPicks,
     };
   } catch {
     return null;

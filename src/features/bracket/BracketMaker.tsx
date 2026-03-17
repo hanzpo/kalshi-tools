@@ -1,7 +1,8 @@
-import { BracketConfig } from '../../types/bracket';
+import { BracketConfig, BracketPlayInId } from '../../types/bracket';
 
 interface Props {
   config: BracketConfig;
+  onPlayInPick: (playInId: BracketPlayInId, pick: 0 | 1) => void;
   onExport: () => void;
   onCopyToClipboard: () => void;
   onShare: () => void;
@@ -12,6 +13,7 @@ interface Props {
 
 export function BracketMaker({
   config,
+  onPlayInPick,
   onExport,
   onCopyToClipboard,
   onShare,
@@ -20,6 +22,16 @@ export function BracketMaker({
   shareUrl,
 }: Props) {
   const picksCount = config.picks.filter((p) => p !== null).length;
+  const playInTeams = config.regions.flatMap((region) =>
+    region.teams
+      .filter((team) => team.playInId && team.playInOptions)
+      .map((team) => ({
+        regionName: region.name,
+        seed: team.seed,
+        playInId: team.playInId as BracketPlayInId,
+        options: team.playInOptions!,
+      }))
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -57,6 +69,47 @@ export function BracketMaker({
           <span>E8</span>
           <span>F4</span>
           <span>Champ</span>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3 rounded-lg border border-dark-border bg-dark-surface p-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-text-muted">First Four</h2>
+          <p className="text-xs text-text-secondary">
+            Pick the play-in winner and the bracket tree updates automatically.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {playInTeams.map(({ regionName, seed, playInId, options }) => (
+            <div key={playInId} className="flex flex-col gap-2">
+              <div className="text-xs font-medium text-text-secondary">
+                {regionName} {seed}-seed play-in
+              </div>
+              <div className="flex gap-2">
+                {options.map((option, index) => {
+                  const isSelected = config.playInPicks[playInId] === index;
+                  return (
+                    <button
+                      key={option.name}
+                      type="button"
+                      onClick={() => onPlayInPick(playInId, index as 0 | 1)}
+                      className={`flex-1 rounded-md border px-3 py-2 text-left text-sm font-semibold transition-colors ${
+                        isSelected ? 'border-brand' : 'border-dark-border'
+                      }`}
+                      style={{
+                        background: option.bgColor,
+                        color: option.textColor,
+                        boxShadow: isSelected ? '0 0 0 1px rgba(21, 183, 115, 0.35)' : 'none',
+                      }}
+                    >
+                      {option.fullName}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

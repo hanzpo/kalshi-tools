@@ -43,10 +43,7 @@ function TeamSquare({
       onClick={onClick}
     >
       <div className="bracket-team-inner" style={{ background: team.bgColor }}>
-        <span
-          className={`bracket-team-name${team.isPlayIn ? ' bracket-team-name--play-in' : ''}`}
-          style={{ color: team.textColor }}
-        >
+        <span className="bracket-team-name" style={{ color: team.textColor }}>
           {team.name}
         </span>
       </div>
