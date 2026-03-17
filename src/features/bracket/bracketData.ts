@@ -34,7 +34,7 @@ function playInTeam(seed: number, playInId: BracketPlayInId, options: [BracketPl
 
 export const PLAY_IN_IDS: BracketPlayInId[] = ['south-16', 'west-11', 'midwest-11', 'midwest-16'];
 
-// South Region — Top Left
+// South Region — Bottom Left
 const southTeams: BracketTeam[] = [
   team('FLA', 1, 'Florida', '#0021A5', 'rgba(250,70,22,0.9)'),
   team('HOU', 2, 'Houston', '#C8102E', 'rgba(255,255,255,0.9)'),
@@ -57,7 +57,7 @@ const southTeams: BracketTeam[] = [
   ]),
 ];
 
-// East Region — Top Right
+// East Region — Top Left
 const eastTeams: BracketTeam[] = [
   team('DUK', 1, 'Duke', '#003087', 'rgba(255,255,255,0.9)'),
   team('UCN', 2, 'UConn', '#000E2F', 'rgba(255,255,255,0.9)'),
@@ -77,7 +77,7 @@ const eastTeams: BracketTeam[] = [
   team('SIE', 16, 'Siena', '#007A33', 'rgba(255,204,0,0.9)'),
 ];
 
-// West Region — Bottom Left
+// West Region — Top Right
 const westTeams: BracketTeam[] = [
   team('ARZ', 1, 'Arizona', '#002147', 'rgba(204,0,51,0.9)'),
   team('PUR', 2, 'Purdue', '#000000', 'rgba(207,184,124,0.9)'),
@@ -127,8 +127,8 @@ const midwestTeams: BracketTeam[] = [
 ];
 
 export const DEFAULT_REGIONS: [BracketRegion, BracketRegion, BracketRegion, BracketRegion] = [
-  { name: 'South', teams: southTeams },
   { name: 'East', teams: eastTeams },
+  { name: 'South', teams: southTeams },
   { name: 'West', teams: westTeams },
   { name: 'Midwest', teams: midwestTeams },
 ];
