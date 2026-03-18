@@ -9,6 +9,19 @@ import './BracketPreview.css';
 
 export const BRACKET_PREVIEW_ID = 'bracket-preview';
 
+const LIGHT_TEXT = 'rgba(255,255,255,0.95)';
+const DARK_TEXT = '#0a1128';
+
+function textColorForBg(hex: string): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16) / 255;
+  const g = parseInt(h.substring(2, 4), 16) / 255;
+  const b = parseInt(h.substring(4, 6), 16) / 255;
+  const toLinear = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  const L = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+  return L > 0.35 ? DARK_TEXT : LIGHT_TEXT;
+}
+
 interface Props {
   config: BracketConfig;
   onPick: (gameIndex: number, pick: number) => void;
@@ -43,7 +56,7 @@ function TeamSquare({
       onClick={onClick}
     >
       <div className="bracket-team-inner" style={{ background: team.bgColor }}>
-        <span className="bracket-team-name" style={{ color: team.textColor }}>
+        <span className="bracket-team-name" style={{ color: textColorForBg(team.bgColor) }}>
           {team.name}
         </span>
       </div>
@@ -217,7 +230,7 @@ function FinalFourLabels({
             className="bracket-semifinal-label-inner"
             style={{
               background: team?.bgColor ?? 'rgba(255,255,255,0.04)',
-              color: team?.textColor ?? 'rgba(255,255,255,0.18)',
+              color: team ? textColorForBg(team.bgColor) : 'rgba(255,255,255,0.18)',
             }}
           >
             {team?.name ?? '?'}
