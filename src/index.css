@@ -244,10 +244,14 @@
 
 /* Sidebar Yes/No buttons */
 .kmp .kmp-sidebar-yes {
-  background: var(--kmp-yes-bg);
+  background: transparent;
   color: var(--kmp-yes);
-  border: 1px solid var(--kmp-yes);
+  border: 1px solid var(--kmp-no-border);
   border-radius: 100px;
+}
+.kmp .kmp-sidebar-yes.active {
+  background: var(--kmp-yes-bg);
+  border-color: var(--kmp-yes);
 }
 .kmp .kmp-sidebar-no {
   background: var(--kmp-no-bg);
