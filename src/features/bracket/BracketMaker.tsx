@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BracketConfig, BracketPlayInId } from '../../types/bracket';
 
 function textColorForBg(hex: string): string {
@@ -31,6 +32,9 @@ export function BracketMaker({
   onBack,
   shareUrl,
 }: Props) {
+  const [hintDismissed, setHintDismissed] = useState(
+    () => localStorage.getItem('bracket-hint-dismissed') === '1'
+  );
   const picksCount = config.picks.filter((p) => p !== null).length;
   const playInTeams = config.regions.flatMap((region) =>
     region.teams
@@ -81,6 +85,27 @@ export function BracketMaker({
           <span>Champ</span>
         </div>
       </div>
+
+      {!hintDismissed && (
+        <div className="flex items-start gap-3 rounded-lg border border-dark-border bg-dark-elevated px-4 py-3">
+          <p className="flex-1 text-xs leading-relaxed text-text-secondary">
+            All 64 teams are available — tap any first-round matchup on the bracket to toggle the winner.
+          </p>
+          <button
+            onClick={() => {
+              setHintDismissed(true);
+              localStorage.setItem('bracket-hint-dismissed', '1');
+            }}
+            className="shrink-0 text-text-muted transition-colors hover:text-text-secondary"
+            aria-label="Dismiss"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+      )}
 
       <div className="flex flex-col gap-3 rounded-lg border border-dark-border bg-dark-surface p-4">
         <div className="flex flex-col gap-1">
