@@ -402,7 +402,7 @@ export function MarketPagePreview({
 
           {/* Markets List */}
           <div className="flex flex-col">
-            {config.outcomes.map((outcome, index) => {
+            {config.outcomes.map((outcome) => {
               const isResolvedNo = config.eventStatus === 'closed' && outcome.yesPrice <= 0;
               return (
                 <div
@@ -448,7 +448,7 @@ export function MarketPagePreview({
                   {!isResolvedNo && config.eventStatus !== 'closed' && (
                     <div className="kmp-market-buttons flex justify-end gap-2" style={{ width: 288 }}>
                       <button
-                        className={`kmp-btn kmp-btn-yes flex h-8 cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal ${index === 0 ? 'selected' : ''}`}
+                        className={`kmp-btn kmp-btn-yes flex h-8 cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal ${config.selectedOutcome === outcome.id && config.selectedSide === 'Yes' ? 'selected' : ''}`}
                         style={{ width: 136, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -459,7 +459,7 @@ export function MarketPagePreview({
                         Yes <span className="ml-1">{outcome.yesPrice}¢</span>
                       </button>
                       <button
-                        className="kmp-btn kmp-btn-no flex h-8 cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal"
+                        className={`kmp-btn kmp-btn-no flex h-8 cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal ${config.selectedOutcome === outcome.id && config.selectedSide === 'No' ? 'selected' : ''}`}
                         style={{ width: 136, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
                         onClick={(e) => {
                           e.stopPropagation();
