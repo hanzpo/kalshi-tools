@@ -68,6 +68,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       },
       body: JSON.stringify({
         url: renderUrl.toString(),
+        gotoOptions: {
+          waitUntil: 'networkidle0',
+        },
         selector: '#bracket-preview',
         waitForSelector: {
           selector: '#bracket-preview',
