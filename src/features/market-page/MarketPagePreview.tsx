@@ -402,7 +402,7 @@ export function MarketPagePreview({
 
           {/* Markets List */}
           <div className="flex flex-col">
-            {config.outcomes.map((outcome, index) => {
+            {config.outcomes.map((outcome) => {
               const isResolvedNo = config.eventStatus === 'closed' && outcome.yesPrice <= 0;
               return (
                 <div
