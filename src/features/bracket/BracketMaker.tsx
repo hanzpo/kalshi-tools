@@ -1,5 +1,15 @@
 import { BracketConfig, BracketPlayInId } from '../../types/bracket';
 
+function textColorForBg(hex: string): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16) / 255;
+  const g = parseInt(h.substring(2, 4), 16) / 255;
+  const b = parseInt(h.substring(4, 6), 16) / 255;
+  const toLinear = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  const L = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+  return L > 0.35 ? '#0a1128' : 'rgba(255,255,255,0.95)';
+}
+
 interface Props {
   config: BracketConfig;
   onPlayInPick: (playInId: BracketPlayInId, pick: 0 | 1) => void;
@@ -99,7 +109,7 @@ export function BracketMaker({
                       }`}
                       style={{
                         background: option.bgColor,
-                        color: option.textColor,
+                        color: textColorForBg(option.bgColor),
                         boxShadow: isSelected ? '0 0 0 1px rgba(21, 183, 115, 0.35)' : 'none',
                       }}
                     >
