@@ -545,3 +545,72 @@
   line-height: 27px;
   font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
 }
+
+/* ── R64 (Round of 64) view ── */
+.bracket-preview--r64 {
+  width: 800px;
+}
+
+.bracket-preview--r64 .bracket-container {
+  width: 800px;
+}
+
+.bracket-preview--r64 .bracket-half {
+  height: 560px;
+}
+
+/* R64 matchup column (seed pairs + connectors + winners) */
+.bracket-r64-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Each R64 matchup row: seed pair → connector → winner */
+.bracket-r64-matchup {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-height: 1px;
+  width: 100%;
+}
+
+.bracket-r64-matchup--right {
+  flex-direction: row-reverse;
+}
+
+/* Seed pair container */
+.bracket-seed-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+/* Individual seed badge */
+.bracket-seed-badge {
+  width: 36px;
+  height: 18px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bracket-seed-badge--empty {
+  background: rgba(255,255,255,0.06);
+}
+
+.bracket-seed-badge-name {
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
+}
