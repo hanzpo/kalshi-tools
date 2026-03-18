@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BracketConfig, BracketPlayInId } from '../../types/bracket';
+import type { BracketView } from './BracketBuilder';
 
 function textColorForBg(hex: string): string {
   const h = hex.replace('#', '');
@@ -20,6 +21,8 @@ interface Props {
   onRandomize: () => void;
   onBack: () => void;
   shareUrl: string | null;
+  bracketView: BracketView;
+  onViewChange: (view: BracketView) => void;
 }
 
 export function BracketMaker({
@@ -31,6 +34,8 @@ export function BracketMaker({
   onRandomize,
   onBack,
   shareUrl,
+  bracketView,
+  onViewChange,
 }: Props) {
   const [hintDismissed, setHintDismissed] = useState(
     () => localStorage.getItem('bracket-hint-dismissed') === '1'
@@ -66,6 +71,23 @@ export function BracketMaker({
         <p className="text-sm text-text-secondary">
           Randomized bracket loaded. Tap any game slot to switch the winner. {picksCount}/63 picks set.
         </p>
+      </div>
+
+      {/* View toggle */}
+      <div className="flex rounded-lg border border-dark-border bg-dark-surface p-1">
+        {([['r32', 'Round of 32'], ['r64', 'Round of 64']] as const).map(([view, label]) => (
+          <button
+            key={view}
+            onClick={() => onViewChange(view)}
+            className={`flex-1 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+              bracketView === view
+                ? 'bg-brand text-white'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Progress bar */}

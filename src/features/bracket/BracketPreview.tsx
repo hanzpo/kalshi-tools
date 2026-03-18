@@ -25,6 +25,7 @@ function textColorForBg(hex: string): string {
 interface Props {
   config: BracketConfig;
   onPick: (gameIndex: number, pick: number) => void;
+  view?: 'r32' | 'r64';
 }
 
 function getNextPick(currentPick: number | null): number {
@@ -64,6 +65,19 @@ function TeamSquare({
   );
 }
 
+function SeedBadge({ team }: { team: BracketTeam | null }) {
+  if (!team) {
+    return <div className="bracket-seed-badge bracket-seed-badge--empty" />;
+  }
+  return (
+    <div className="bracket-seed-badge" style={{ background: team.bgColor }}>
+      <span className="bracket-seed-badge-name" style={{ color: textColorForBg(team.bgColor) }}>
+        {team.name}
+      </span>
+    </div>
+  );
+}
+
 function Connector({ height = 40, mirrored = false }: { height?: number; mirrored?: boolean }) {
   return (
     <div
@@ -89,16 +103,18 @@ function RegionBracket({
   regionIndex,
   mirrored = false,
   onPick,
+  view = 'r32',
 }: {
   config: BracketConfig;
   regionIndex: number;
   mirrored?: boolean;
   onPick: (gameIndex: number, pick: number) => void;
+  view?: 'r32' | 'r64';
 }) {
   const regionName = config.regions[regionIndex].name;
   const baseGame = regionIndex * 8;
 
-  const r64Col = (
+  const r64Col = view === 'r32' ? (
     <div className="bracket-round-col">
       {Array.from({ length: 8 }, (_, i) => {
         const gameIdx = baseGame + i;
@@ -115,6 +131,31 @@ function RegionBracket({
               onPick(gameIdx, getNextPick(currentPick));
             }}
           />
+        );
+      })}
+    </div>
+  ) : (
+    <div className="bracket-r64-col">
+      {Array.from({ length: 8 }, (_, i) => {
+        const gameIdx = baseGame + i;
+        const [teamA, teamB] = getMatchupParticipants(config, gameIdx);
+        const currentWinner = getWinner(config, gameIdx);
+        const currentPick = config.picks[gameIdx];
+        return (
+          <div key={i} className={`bracket-r64-matchup ${mirrored ? 'bracket-r64-matchup--right' : ''}`}>
+            <div className="bracket-seed-pair">
+              <SeedBadge team={teamA} />
+              <SeedBadge team={teamB} />
+            </div>
+            <Connector height={36} mirrored={mirrored} />
+            <TeamSquare
+              team={currentWinner || teamA}
+              onClick={() => {
+                if (!teamA || !teamB) return;
+                onPick(gameIdx, getNextPick(currentPick));
+              }}
+            />
+          </div>
         );
       })}
     </div>
@@ -241,7 +282,7 @@ function FinalFourLabels({
   );
 }
 
-export function BracketPreview({ config, onPick }: Props) {
+export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
   const champion = getWinner(config, 62);
   const [champA, champB] = getMatchupParticipants(config, 62);
   const championPick = config.picks[62];
@@ -249,7 +290,7 @@ export function BracketPreview({ config, onPick }: Props) {
   const f4RightWinner = getWinner(config, 61);
 
   return (
-    <div className="bracket-preview" id={BRACKET_PREVIEW_ID}>
+    <div className={`bracket-preview ${view === 'r64' ? 'bracket-preview--r64' : ''}`} id={BRACKET_PREVIEW_ID}>
       {/* Header */}
       <div className="bracket-header">
         <p className="bracket-subtitle">{DEFAULT_BRACKET_SUBTITLE}</p>
@@ -259,8 +300,8 @@ export function BracketPreview({ config, onPick }: Props) {
       <div className="bracket-container">
         <div className="bracket-body">
           <div className="bracket-half bracket-half--top">
-            <RegionBracket config={config} regionIndex={0} onPick={onPick} />
-            <RegionBracket config={config} regionIndex={2} mirrored onPick={onPick} />
+            <RegionBracket config={config} regionIndex={0} onPick={onPick} view={view} />
+            <RegionBracket config={config} regionIndex={2} mirrored onPick={onPick} view={view} />
           </div>
 
           <div className="bracket-center-row">
@@ -311,8 +352,8 @@ export function BracketPreview({ config, onPick }: Props) {
           </div>
 
           <div className="bracket-half bracket-half--bottom">
-            <RegionBracket config={config} regionIndex={1} onPick={onPick} />
-            <RegionBracket config={config} regionIndex={3} mirrored onPick={onPick} />
+            <RegionBracket config={config} regionIndex={1} onPick={onPick} view={view} />
+            <RegionBracket config={config} regionIndex={3} mirrored onPick={onPick} view={view} />
           </div>
         </div>
       </div>

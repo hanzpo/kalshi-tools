@@ -7,6 +7,8 @@ export default function BracketRenderPage() {
   const [searchParams] = useSearchParams();
   const [fontsReady, setFontsReady] = useState(false);
 
+  const view = searchParams.get('v') === '64' ? 'r64' as const : 'r32' as const;
+
   const config = useMemo(() => {
     const encoded = searchParams.get('b');
     if (!encoded) {
@@ -26,7 +28,7 @@ export default function BracketRenderPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#0b0d0c] p-6">
-      <BracketPreview config={config} onPick={() => undefined} />
+      <BracketPreview config={config} onPick={() => undefined} view={view} />
     </div>
   );
 }

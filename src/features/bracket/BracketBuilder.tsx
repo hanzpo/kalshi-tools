@@ -19,6 +19,8 @@ import { useToast } from '../../hooks/useToast';
 import { trackEvent } from '../../lib/analytics';
 import { layout } from '../../styles/layout';
 
+export type BracketView = 'r32' | 'r64';
+
 export default function BracketBuilder() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,6 +31,9 @@ export default function BracketBuilder() {
       if (decoded) return decoded;
     }
     return createDefaultConfig();
+  });
+  const [bracketView, setBracketView] = useState<BracketView>(() => {
+    return searchParams.get('v') === '64' ? 'r64' : 'r32';
   });
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const { message: toastMessage, showToast } = useToast();
@@ -82,13 +87,15 @@ export default function BracketBuilder() {
 
   function handleShare() {
     const encoded = encodeBracket(config);
-    const url = `${window.location.origin}${window.location.pathname}?b=${encoded}`;
+    const params: Record<string, string> = { b: encoded };
+    if (bracketView === 'r64') params.v = '64';
+    const qs = new URLSearchParams(params).toString();
+    const url = `${window.location.origin}${window.location.pathname}?${qs}`;
     setShareUrl(url);
     navigator.clipboard.writeText(url).then(() => {
       showToast('Share link copied to clipboard!');
     });
-    // Also update the URL bar
-    setSearchParams({ b: encoded }, { replace: true });
+    setSearchParams(params, { replace: true });
     trackEvent('bracket_share');
   }
 
@@ -133,9 +140,11 @@ export default function BracketBuilder() {
           onRandomize={handleRandomize}
           onBack={() => navigate('/')}
           shareUrl={shareUrl}
+          bracketView={bracketView}
+          onViewChange={setBracketView}
         />
         <div className={layout.previewSection}>
-          <BracketPreview config={config} onPick={handlePick} />
+          <BracketPreview config={config} onPick={handlePick} view={bracketView} />
         </div>
       </div>
 
