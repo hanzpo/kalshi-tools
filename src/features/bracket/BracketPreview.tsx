@@ -247,7 +247,7 @@ export function BracketPreview({ config, onPick }: Props) {
         <div className="bracket-body">
           <div className="bracket-half bracket-half--top">
             <RegionBracket config={config} regionIndex={0} onPick={onPick} />
-            <RegionBracket config={config} regionIndex={1} mirrored onPick={onPick} />
+            <RegionBracket config={config} regionIndex={2} mirrored onPick={onPick} />
           </div>
 
           <div className="bracket-center-row">
@@ -298,7 +298,7 @@ export function BracketPreview({ config, onPick }: Props) {
           </div>
 
           <div className="bracket-half bracket-half--bottom">
-            <RegionBracket config={config} regionIndex={2} onPick={onPick} />
+            <RegionBracket config={config} regionIndex={1} onPick={onPick} />
             <RegionBracket config={config} regionIndex={3} mirrored onPick={onPick} />
           </div>
         </div>

@@ -243,7 +243,7 @@ export function buildBracketStateFromKalshiPayload(input: unknown): {
 
   const picks = new Array<number | null>(63).fill(null);
 
-  [south, east, west, midwest].forEach((regionPicks, regionIndex) => {
+  [east, south, west, midwest].forEach((regionPicks, regionIndex) => {
     regionPicks.r64.forEach((pick, index) => {
       picks[regionIndex * 8 + index] = pick;
     });
@@ -259,7 +259,7 @@ export function buildBracketStateFromKalshiPayload(input: unknown): {
     picks[56 + regionIndex] = regionPicks.e8;
   });
 
-  picks[60] = getPickFromWinner(semifinalLeftWinnerId, [south.championId, east.championId], 'Final Four left semifinal');
+  picks[60] = getPickFromWinner(semifinalLeftWinnerId, [east.championId, south.championId], 'Final Four left semifinal');
   picks[61] = getPickFromWinner(semifinalRightWinnerId, [west.championId, midwest.championId], 'Final Four right semifinal');
   picks[62] = getPickFromWinner(championId, [semifinalLeftWinnerId, semifinalRightWinnerId], 'Championship');
 
