@@ -21,6 +21,10 @@ export default function BannerBuilder() {
     odds: 65,
     trendDirection: 'up',
     change: '',
+    variant: 'classic',
+    cardWidth: 500,
+    cardHeight: 0,
+    cardBorderRadius: 16,
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);

@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { BannerConfig } from '../../types';
+import { BannerConfig, BannerVariant } from '../../types';
 import {
   ImageIcon,
   UploadIcon,
@@ -85,6 +85,31 @@ export function BannerMaker({
         Create Kalshi-style shareable banners
       </p>
 
+      {/* Style Section */}
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Style</div>
+        <div className={ctrl.group}>
+          <label>Layout</label>
+          <div className={ctrl.segmented}>
+            {([
+              { value: 'classic', label: 'Classic' },
+              { value: 'horizontal', label: 'Horizontal' },
+              { value: 'horizontal-dark', label: 'Horizontal Dark' },
+            ] as const).map(({ value, label }) => (
+              <button
+                key={value}
+                type="button"
+                className={`${ctrl.segmentedOption} ${config.variant === value ? ctrl.segmentedOptionActive : ''}`}
+                onClick={() => onConfigChange({ variant: value as BannerVariant })}
+                aria-pressed={config.variant === value}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Content Section */}
       <div className={ctrl.section}>
         <div className={ctrl.sectionTitle}>Content</div>
@@ -146,6 +171,57 @@ export function BannerMaker({
             </label>
           </div>
           <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+        </div>
+
+        <div className={ctrl.group}>
+          <label htmlFor="card-width">Card Width</label>
+          <div className={ctrl.sliderWrapper}>
+            <input
+              id="card-width"
+              type="range"
+              className="slider-input"
+              value={config.cardWidth}
+              onChange={(e) => onConfigChange({ cardWidth: Number(e.target.value) })}
+              min="300"
+              max="800"
+              step="1"
+            />
+            <div className={ctrl.sliderValue}>{config.cardWidth}px</div>
+          </div>
+        </div>
+
+        <div className={ctrl.group}>
+          <label htmlFor="card-height">Card Height (0 = auto)</label>
+          <div className={ctrl.sliderWrapper}>
+            <input
+              id="card-height"
+              type="range"
+              className="slider-input"
+              value={config.cardHeight}
+              onChange={(e) => onConfigChange({ cardHeight: Number(e.target.value) })}
+              min="0"
+              max="400"
+              step="1"
+            />
+            <div className={ctrl.sliderValue}>{config.cardHeight === 0 ? 'auto' : `${config.cardHeight}px`}</div>
+          </div>
+        </div>
+
+        <div className={ctrl.group}>
+          <label htmlFor="card-border-radius">Card Border Radius</label>
+          <div className={ctrl.sliderWrapper}>
+            <input
+              id="card-border-radius"
+              type="range"
+              className="slider-input"
+              value={config.cardBorderRadius}
+              onChange={(e) => onConfigChange({ cardBorderRadius: Number(e.target.value) })}
+              min="0"
+              max="48"
+              step="1"
+            />
+            <div className={ctrl.sliderValue}>{config.cardBorderRadius}px</div>
+          </div>
         </div>
 
         <div className={ctrl.group}>

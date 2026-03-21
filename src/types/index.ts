@@ -2,7 +2,7 @@
 export type { MarketType, TimeHorizon, Outcome, MarketConfig, DataPoint } from './market';
 
 // Banner types
-export type { BannerConfig } from './banner';
+export type { BannerConfig, BannerVariant } from './banner';
 
 // Bracket types
 export type { BracketTeam, BracketRegion, BracketConfig } from './bracket';

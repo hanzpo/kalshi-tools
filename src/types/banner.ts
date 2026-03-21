@@ -1,3 +1,5 @@
+export type BannerVariant = 'classic' | 'horizontal' | 'horizontal-dark';
+
 export interface BannerConfig {
   title: string;
   image: string | null;
@@ -6,4 +8,8 @@ export interface BannerConfig {
   odds: number;
   trendDirection: 'up' | 'down';
   change: string;
+  variant: BannerVariant;
+  cardWidth: number;
+  cardHeight: number;
+  cardBorderRadius: number;
 }
