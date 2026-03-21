@@ -1,4 +1,16 @@
+import { useState } from 'react';
 import { BracketConfig, BracketPlayInId } from '../../types/bracket';
+import type { BracketView } from './BracketBuilder';
+
+function textColorForBg(hex: string): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16) / 255;
+  const g = parseInt(h.substring(2, 4), 16) / 255;
+  const b = parseInt(h.substring(4, 6), 16) / 255;
+  const toLinear = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  const L = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+  return L > 0.35 ? '#0a1128' : 'rgba(255,255,255,0.95)';
+}
 
 interface Props {
   config: BracketConfig;
@@ -9,6 +21,8 @@ interface Props {
   onRandomize: () => void;
   onBack: () => void;
   shareUrl: string | null;
+  bracketView: BracketView;
+  onViewChange: (view: BracketView) => void;
 }
 
 export function BracketMaker({
@@ -20,7 +34,12 @@ export function BracketMaker({
   onRandomize,
   onBack,
   shareUrl,
+  bracketView,
+  onViewChange,
 }: Props) {
+  const [hintDismissed, setHintDismissed] = useState(
+    () => localStorage.getItem('bracket-hint-dismissed') === '1'
+  );
   const picksCount = config.picks.filter((p) => p !== null).length;
   const playInTeams = config.regions.flatMap((region) =>
     region.teams
@@ -54,6 +73,23 @@ export function BracketMaker({
         </p>
       </div>
 
+      {/* View toggle */}
+      <div className="flex rounded-lg border border-dark-border bg-dark-surface p-1">
+        {([['r32', 'Round of 32'], ['r64', 'Round of 64']] as const).map(([view, label]) => (
+          <button
+            key={view}
+            onClick={() => onViewChange(view)}
+            className={`flex-1 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+              bracketView === view
+                ? 'bg-brand text-white'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {/* Progress bar */}
       <div className="flex flex-col gap-2">
         <div className="h-2 w-full overflow-hidden rounded-full bg-dark-elevated">
@@ -71,6 +107,27 @@ export function BracketMaker({
           <span>Champ</span>
         </div>
       </div>
+
+      {!hintDismissed && (
+        <div className="flex items-start gap-3 rounded-lg border border-dark-border bg-dark-elevated px-4 py-3">
+          <p className="flex-1 text-xs leading-relaxed text-text-secondary">
+            All 64 teams are available — tap any first-round matchup on the bracket to toggle the winner.
+          </p>
+          <button
+            onClick={() => {
+              setHintDismissed(true);
+              localStorage.setItem('bracket-hint-dismissed', '1');
+            }}
+            className="shrink-0 text-text-muted transition-colors hover:text-text-secondary"
+            aria-label="Dismiss"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+      )}
 
       <div className="flex flex-col gap-3 rounded-lg border border-dark-border bg-dark-surface p-4">
         <div className="flex flex-col gap-1">
@@ -99,7 +156,7 @@ export function BracketMaker({
                       }`}
                       style={{
                         background: option.bgColor,
-                        color: option.textColor,
+                        color: textColorForBg(option.bgColor),
                         boxShadow: isSelected ? '0 0 0 1px rgba(21, 183, 115, 0.35)' : 'none',
                       }}
                     >

@@ -9,9 +9,23 @@ import './BracketPreview.css';
 
 export const BRACKET_PREVIEW_ID = 'bracket-preview';
 
+const LIGHT_TEXT = 'rgba(255,255,255,0.95)';
+const DARK_TEXT = '#0a1128';
+
+function textColorForBg(hex: string): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16) / 255;
+  const g = parseInt(h.substring(2, 4), 16) / 255;
+  const b = parseInt(h.substring(4, 6), 16) / 255;
+  const toLinear = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  const L = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+  return L > 0.35 ? DARK_TEXT : LIGHT_TEXT;
+}
+
 interface Props {
   config: BracketConfig;
   onPick: (gameIndex: number, pick: number) => void;
+  view?: 'r32' | 'r64';
 }
 
 function getNextPick(currentPick: number | null): number {
@@ -43,10 +57,23 @@ function TeamSquare({
       onClick={onClick}
     >
       <div className="bracket-team-inner" style={{ background: team.bgColor }}>
-        <span className="bracket-team-name" style={{ color: team.textColor }}>
+        <span className="bracket-team-name" style={{ color: textColorForBg(team.bgColor) }}>
           {team.name}
         </span>
       </div>
+    </div>
+  );
+}
+
+function SeedBadge({ team }: { team: BracketTeam | null }) {
+  if (!team) {
+    return <div className="bracket-seed-badge bracket-seed-badge--empty" />;
+  }
+  return (
+    <div className="bracket-seed-badge" style={{ background: team.bgColor }}>
+      <span className="bracket-seed-badge-name" style={{ color: textColorForBg(team.bgColor) }}>
+        {team.name}
+      </span>
     </div>
   );
 }
@@ -76,16 +103,18 @@ function RegionBracket({
   regionIndex,
   mirrored = false,
   onPick,
+  view = 'r32',
 }: {
   config: BracketConfig;
   regionIndex: number;
   mirrored?: boolean;
   onPick: (gameIndex: number, pick: number) => void;
+  view?: 'r32' | 'r64';
 }) {
   const regionName = config.regions[regionIndex].name;
   const baseGame = regionIndex * 8;
 
-  const r64Col = (
+  const r64Col = view === 'r32' ? (
     <div className="bracket-round-col">
       {Array.from({ length: 8 }, (_, i) => {
         const gameIdx = baseGame + i;
@@ -102,6 +131,31 @@ function RegionBracket({
               onPick(gameIdx, getNextPick(currentPick));
             }}
           />
+        );
+      })}
+    </div>
+  ) : (
+    <div className="bracket-r64-col">
+      {Array.from({ length: 8 }, (_, i) => {
+        const gameIdx = baseGame + i;
+        const [teamA, teamB] = getMatchupParticipants(config, gameIdx);
+        const currentWinner = getWinner(config, gameIdx);
+        const currentPick = config.picks[gameIdx];
+        return (
+          <div key={i} className={`bracket-r64-matchup ${mirrored ? 'bracket-r64-matchup--right' : ''}`}>
+            <div className="bracket-seed-pair">
+              <SeedBadge team={teamA} />
+              <SeedBadge team={teamB} />
+            </div>
+            <Connector height={36} mirrored={mirrored} />
+            <TeamSquare
+              team={currentWinner || teamA}
+              onClick={() => {
+                if (!teamA || !teamB) return;
+                onPick(gameIdx, getNextPick(currentPick));
+              }}
+            />
+          </div>
         );
       })}
     </div>
@@ -217,7 +271,7 @@ function FinalFourLabels({
             className="bracket-semifinal-label-inner"
             style={{
               background: team?.bgColor ?? 'rgba(255,255,255,0.04)',
-              color: team?.textColor ?? 'rgba(255,255,255,0.18)',
+              color: team ? textColorForBg(team.bgColor) : 'rgba(255,255,255,0.18)',
             }}
           >
             {team?.name ?? '?'}
@@ -228,7 +282,7 @@ function FinalFourLabels({
   );
 }
 
-export function BracketPreview({ config, onPick }: Props) {
+export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
   const champion = getWinner(config, 62);
   const [champA, champB] = getMatchupParticipants(config, 62);
   const championPick = config.picks[62];
@@ -236,7 +290,7 @@ export function BracketPreview({ config, onPick }: Props) {
   const f4RightWinner = getWinner(config, 61);
 
   return (
-    <div className="bracket-preview" id={BRACKET_PREVIEW_ID}>
+    <div className={`bracket-preview ${view === 'r64' ? 'bracket-preview--r64' : ''}`} id={BRACKET_PREVIEW_ID}>
       {/* Header */}
       <div className="bracket-header">
         <p className="bracket-subtitle">{DEFAULT_BRACKET_SUBTITLE}</p>
@@ -246,8 +300,8 @@ export function BracketPreview({ config, onPick }: Props) {
       <div className="bracket-container">
         <div className="bracket-body">
           <div className="bracket-half bracket-half--top">
-            <RegionBracket config={config} regionIndex={0} onPick={onPick} />
-            <RegionBracket config={config} regionIndex={1} mirrored onPick={onPick} />
+            <RegionBracket config={config} regionIndex={0} onPick={onPick} view={view} />
+            <RegionBracket config={config} regionIndex={2} mirrored onPick={onPick} view={view} />
           </div>
 
           <div className="bracket-center-row">
@@ -298,8 +352,8 @@ export function BracketPreview({ config, onPick }: Props) {
           </div>
 
           <div className="bracket-half bracket-half--bottom">
-            <RegionBracket config={config} regionIndex={2} onPick={onPick} />
-            <RegionBracket config={config} regionIndex={3} mirrored onPick={onPick} />
+            <RegionBracket config={config} regionIndex={1} onPick={onPick} view={view} />
+            <RegionBracket config={config} regionIndex={3} mirrored onPick={onPick} view={view} />
           </div>
         </div>
       </div>
