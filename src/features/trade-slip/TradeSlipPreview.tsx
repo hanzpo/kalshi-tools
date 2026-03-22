@@ -170,6 +170,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isSingleOld = config.mode === 'single-old';
   const isComboOld = config.mode === 'combo-old';
   const isHorizontal = config.mode === 'horizontal';
+  const isChampionship = config.mode === 'championship';
   if (isPrizePick) {
     return <PrizePickPreview config={config} />;
   }
@@ -257,6 +258,173 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
 
           {config.showWatermark && (
             <div className="absolute bottom-2 right-2 text-[9px] text-white/30">
+              kalshi.tools
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (isChampionship) {
+    const championshipPayout = calculateSinglePayout(config.wager, config.odds);
+    const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';
+    const tradeColor = config.tradeSide === 'No'
+      ? '#ff4d6a'
+      : config.tradeSide === 'Custom'
+        ? (config.customSideColor || '#00C688')
+        : '#00C688';
+    const tradeSideText = config.tradeSide === 'Custom'
+      ? (config.customSideText || 'Custom')
+      : config.tradeSide;
+    const outcomeText = config.outcome?.trim();
+    const primaryColor = config.backgroundColor || '#28CC95';
+    const secondaryColor = config.championshipSecondaryColor || '#0a3d2e';
+
+    // Parse primary color to rgba variants
+    const hexToRgb = (hex: string) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return { r, g, b };
+    };
+    const pc = hexToRgb(primaryColor.startsWith('#') ? primaryColor : '#28CC95');
+    const sc = hexToRgb(secondaryColor.startsWith('#') ? secondaryColor : '#0a3d2e');
+    // Lighten the secondary color for the gradient glow
+    const lighten = (c: { r: number; g: number; b: number }, amount: number) => ({
+      r: Math.min(255, c.r + Math.round((255 - c.r) * amount)),
+      g: Math.min(255, c.g + Math.round((255 - c.g) * amount)),
+      b: Math.min(255, c.b + Math.round((255 - c.b) * amount)),
+    });
+    const scLight = lighten(sc, 0.35);
+
+    return (
+      <div className="trade-slip-container">
+        <div
+          id="trade-slip-preview"
+          className="championship-preview"
+          style={{
+            '--champ-primary': primaryColor,
+            '--champ-primary-25': `rgba(${pc.r},${pc.g},${pc.b},0.25)`,
+            '--champ-primary-18': `rgba(${pc.r},${pc.g},${pc.b},0.18)`,
+            '--champ-primary-035': `rgba(${pc.r},${pc.g},${pc.b},0.035)`,
+            '--champ-secondary': secondaryColor,
+            '--champ-secondary-25': `rgba(${scLight.r},${scLight.g},${scLight.b},0.25)`,
+            '--champ-secondary-035': `rgba(${scLight.r},${scLight.g},${scLight.b},0.035)`,
+          } as React.CSSProperties}
+        >
+          {config.showCashedOut && (
+            <div className="trade-slip-cashed-out-badge">Cashed out</div>
+          )}
+
+          {/* Bracket decorations */}
+          <div className="championship-bracket-left">
+            <div className="championship-bracket-line" />
+            <div className="championship-bracket-round1" />
+            <div className="championship-bracket-round2">
+              <div className="championship-bracket-slot" />
+              <div className="championship-bracket-slot" />
+            </div>
+          </div>
+          <div className="championship-bracket-right">
+            <div className="championship-bracket-line" />
+            <div className="championship-bracket-round1" />
+            <div className="championship-bracket-round2">
+              <div className="championship-bracket-slot" />
+              <div className="championship-bracket-slot" />
+            </div>
+          </div>
+
+          {/* Titles */}
+          <div className="championship-titles">
+            <div className="championship-subtitle">Men's College Basketball</div>
+            <div className="championship-title">CHAMPIONSHIP</div>
+          </div>
+
+          {/* Basketball graphic — flows after header, behind trade slip */}
+          <div className="championship-graphic-container">
+            <div
+              className="championship-graphic"
+              style={{
+                backgroundColor: primaryColor,
+                maskImage: 'url(/championship-basketball.png)',
+                WebkitMaskImage: 'url(/championship-basketball.png)',
+              }}
+            />
+          </div>
+
+          {/* Trade Slip Content */}
+          <div className="championship-slip-wrapper">
+            <div className="trade-slip-content trade-slip-dark">
+              {/* Question and Answer Section */}
+              <div className={`trade-slip-question${config.image ? ' has-image' : ''}`}>
+                {config.image && (
+                  <div className="championship-image-container">
+                    <img src={config.image} alt={`${marketName} market image`} className="championship-image" />
+                  </div>
+                )}
+                <div className="trade-slip-question-copy">
+                  <div className="trade-slip-market-name">
+                    {marketName}
+                  </div>
+                  <div
+                    className="trade-slip-answer"
+                    style={{ color: tradeColor }}
+                  >
+                    <span className="trade-slip-answer-side">{tradeSideText}</span>
+                    {outcomeText && (
+                      <span className="trade-slip-answer-outcome">
+                        {outcomeText}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Kalshi Divider — green for championship */}
+              <div className="flex w-full items-center gap-2">
+                <div className="h-px flex-1 bg-white/12" />
+                <svg width="55" height="16" viewBox="0 0 772 226" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                  <path d="M255.677 58.1911C210.683 58.1911 183.381 78.5114 181.206 113.922H228.062C229.924 100.374 238.611 93.2917 253.814 93.2917C269.018 93.2917 277.396 100.064 277.088 110.842C276.775 119.156 271.501 122.852 258.16 124.7L238.923 127.164C195.484 132.398 175.002 148.717 175.002 177.967C175.002 207.218 195.48 226 229.611 226C251.331 226 267.776 218.302 278.017 203.522V222.61H326.422V117.924C326.422 78.5114 302.532 58.1911 255.677 58.1911ZM245.44 192.437C231.478 192.437 223.72 186.281 223.72 174.887C223.72 164.109 230.545 158.875 249.473 156.105L258.16 154.873C265.845 153.8 272.17 152.274 277.396 150.131V166.267C277.396 181.663 264.368 192.437 245.44 192.437ZM343.488 3.38607H393.135V222.61H343.488V3.38607ZM105.23 105.628L179.66 222.61H115.118L54.3009 121.934V222.61H0V3.38607H54.3009V99.102L119.464 3.38607H177.489L105.23 105.628ZM716.145 26.1705C716.145 12.0062 728.557 0 744.073 0C759.588 0 772 12.0062 772 26.1705C772 40.3347 759.588 52.3409 744.073 52.3409C728.557 52.3409 716.145 40.6407 716.145 26.1705ZM544.868 172.423C544.868 208.446 518.494 225.996 474.743 225.996C430.991 225.996 403.997 206.908 402.447 172.113H448.369C450.232 185.351 456.435 192.743 474.434 192.743C489.95 192.743 497.395 186.587 497.395 177.347C497.395 168.107 488.396 163.489 465.747 160.107C422.616 154.257 405.242 141.631 405.242 109.304C405.242 75.1293 436.582 58.1911 471.643 58.1911C509.186 58.1911 536.493 71.4293 540.218 108.688H495.225C493.054 96.9877 486.225 91.1376 471.951 91.1376C458.61 91.1376 451.161 97.2937 451.161 105.608C451.161 114.844 458.61 118.23 480.638 121.31C523.148 127.16 544.868 137.934 544.868 172.423ZM719.249 61.5771H768.896V222.61H719.249V61.5771ZM702.183 115.77V222.61H652.536V124.39C652.536 107.146 645.399 98.2197 629.884 98.2197C614.368 98.2197 603.51 108.072 603.51 127.47V222.61H553.863V3.38607H603.51V85.5617C611.32 70.1734 627.761 58.1911 651.603 58.1911C681.393 58.1911 702.179 76.9734 702.179 115.766L702.183 115.77Z" fill="#09C285" />
+                </svg>
+                <div className="h-px flex-1 bg-white/12" />
+              </div>
+
+              {/* Details Section */}
+              <div className="trade-slip-details">
+                <div className="trade-slip-row">
+                  <span className="trade-slip-label">Odds</span>
+                  <span className="trade-slip-value">
+                    {config.odds}% chance
+                  </span>
+                </div>
+                <div className="trade-slip-row">
+                  <span className="trade-slip-label">{config.isPaidOut ? 'Original cost' : 'Cost'}</span>
+                  <span className="trade-slip-value">
+                    ${config.wager.toLocaleString()}
+                  </span>
+                </div>
+                <div className="trade-slip-payout-section">
+                  <div className="trade-slip-row trade-slip-payout-row">
+                    <span className="trade-slip-label">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
+                    <span className="trade-slip-payout">
+                      ${championshipPayout.toLocaleString()}
+                    </span>
+                  </div>
+                  {config.showTimestamp && (
+                    <div className="trade-slip-timestamp">
+                      {formatTimestamp(config.timestamp)}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Scalloped edge */}
+            <div className="trade-slip-scalloped-edge" />
+          </div>
+
+          {config.showWatermark && (
+            <div className="trade-slip-watermark">
               kalshi.tools
             </div>
           )}

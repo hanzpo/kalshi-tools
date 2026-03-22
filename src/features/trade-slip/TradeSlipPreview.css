@@ -1432,3 +1432,197 @@
     padding: 14px;
   }
 }
+
+/* ============================================
+   Championship Mode
+   ============================================ */
+
+.championship-preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  width: clamp(300px, 75vw, 361px);
+  max-width: 361px;
+  padding: 16px 16px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--champ-primary-18, rgba(40, 204, 149, 0.18));
+  overflow: visible;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--champ-secondary, rgb(10, 12, 15)) 100%),
+    linear-gradient(90deg, var(--champ-secondary-25, rgba(40, 204, 149, 0.25)) 10%, var(--champ-secondary-035, rgba(40, 204, 149, 0.035)) 50%, var(--champ-secondary-25, rgba(40, 204, 149, 0.25)) 90%),
+    linear-gradient(90deg, var(--champ-secondary, rgb(10, 12, 15)) 0%, var(--champ-secondary, rgb(10, 12, 15)) 100%);
+  line-height: 0;
+}
+
+/* CSS bracket decorations — left */
+.championship-bracket-left {
+  position: absolute;
+  top: 15px;
+  left: -1px;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+/* CSS bracket decorations — right (mirrored) */
+.championship-bracket-right {
+  position: absolute;
+  top: 15px;
+  right: -1px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  z-index: 1;
+}
+
+.championship-bracket-line {
+  width: 24px;
+  height: 1px;
+  background: linear-gradient(to right, var(--champ-primary-18), var(--champ-primary));
+}
+
+.championship-bracket-right .championship-bracket-line {
+  background: linear-gradient(to left, var(--champ-primary-18), var(--champ-primary));
+}
+
+.championship-bracket-round1 {
+  width: 12px;
+  height: 36px;
+  border-left: 1px solid var(--champ-primary);
+  border-top: 1px solid var(--champ-primary);
+  border-bottom: 1px solid var(--champ-primary);
+  box-sizing: border-box;
+}
+
+.championship-bracket-right .championship-bracket-round1 {
+  border-left: none;
+  border-right: 1px solid var(--champ-primary);
+}
+
+.championship-bracket-round2 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 54px;
+  justify-content: center;
+}
+
+.championship-bracket-slot {
+  width: 36px;
+  flex: 1 0 0;
+  min-height: 1px;
+  border-left: 1px solid var(--champ-primary);
+  border-top: 1px solid var(--champ-primary);
+  border-bottom: 1px solid var(--champ-primary);
+  box-sizing: border-box;
+}
+
+.championship-bracket-right .championship-bracket-slot {
+  border-left: none;
+  border-right: 1px solid var(--champ-primary);
+}
+
+/* Titles: full width, centered text */
+.championship-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
+  gap: 0;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  line-height: 0;
+}
+
+.championship-subtitle {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.88px;
+  line-height: 16px;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.championship-title {
+  font-family: 'Graphik Condensed App', 'Barlow Condensed', sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--champ-primary, rgba(255, 255, 255, 0.9));
+  line-height: 30px;
+  letter-spacing: -0.3px;
+  font-feature-settings: 'case' 1, 'lnum' 1, 'pnum' 1;
+  width: 100%;
+}
+
+/* Basketball graphic: flows after titles */
+.championship-graphic-container {
+  flex-shrink: 0;
+  width: 324px;
+  height: 280px;
+  opacity: 0.56;
+  pointer-events: none;
+}
+
+.championship-graphic {
+  width: 324px;
+  height: 280px;
+  display: block;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+/* Trade slip: overlaps at y=71 */
+.championship-slip-wrapper {
+  position: absolute;
+  top: 71px;
+  left: 0;
+  width: 100%;
+  padding: 16px;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.championship-slip-wrapper .trade-slip-content.trade-slip-dark {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.48) 40.15%, rgba(0, 0, 0, 1) 100%);
+  border: 1px solid transparent;
+  border-radius: 8px 8px 0 0;
+  padding: 16px;
+  gap: 12px;
+}
+
+/* Championship image: square, rounded, sized to answer line height (28px) */
+.championship-image-container {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  align-self: flex-end;
+}
+
+.championship-image {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  display: block;
+}
+
+.championship-slip-wrapper .trade-slip-question {
+  padding-bottom: 8px;
+}
+
+.championship-slip-wrapper .trade-slip-payout-section {
+  margin-bottom: 0;
+}
+

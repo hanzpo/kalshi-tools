@@ -92,6 +92,7 @@ export default function TradeSlipBuilder() {
     coinbaseWager: 1000,
     coinbasePayout: 25000,
     coinbasePlayType: '',
+    championshipSecondaryColor: '#0a3d2e',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);

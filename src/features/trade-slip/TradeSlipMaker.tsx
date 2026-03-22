@@ -85,7 +85,8 @@ export function TradeSlipMaker({
   const isSingleOldMode = config.mode === 'single-old';
   const isComboOldMode = config.mode === 'combo-old';
   const isHorizontalMode = config.mode === 'horizontal';
-  const payout = isSingleMode || isSingleOldMode || isHorizontalMode
+  const isChampionshipMode = config.mode === 'championship';
+  const payout = isSingleMode || isSingleOldMode || isHorizontalMode || isChampionshipMode
     ? calculateSinglePayout(config.wager, config.odds)
     : calculateAmericanPayout(config.wager, config.comboOdds);
 
@@ -306,21 +307,21 @@ export function TradeSlipMaker({
   }
 
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode && !isChampionshipMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   }
 
   function handleDragLeave(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode && !isChampionshipMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   }
 
   function handleDrop(e: DragEvent<HTMLDivElement>) {
-    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode) return;
+    if (!isSingleMode && !isSingleOldMode && !isHorizontalMode && !isChampionshipMode) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -364,10 +365,11 @@ export function TradeSlipMaker({
           <option value="single-old">Single (old)</option>
           <option value="combo-old">Combo (old)</option>
           <option value="horizontal">Horizontal</option>
+          <option value="championship">March Matchup Championship</option>
         </select>
       </div>
 
-      {isSingleMode ? (
+      {isSingleMode || isChampionshipMode ? (
         <>
           {/* Content Section */}
           <div className={ctrl.section}>
@@ -1062,7 +1064,7 @@ export function TradeSlipMaker({
           />
         </div>
 
-        {isSingleMode || isSingleOldMode || isHorizontalMode ? (
+        {isSingleMode || isSingleOldMode || isHorizontalMode || isChampionshipMode ? (
           <>
             <div className={ctrl.group}>
               <label htmlFor="bet-odds">Odds (%)</label>
@@ -1083,7 +1085,7 @@ export function TradeSlipMaker({
             </div>
 
             {/* Timestamp only for new single mode */}
-            {isSingleMode && (
+            {(isSingleMode || isChampionshipMode) && (
               <div className={ctrl.group}>
                 <label htmlFor="bet-timestamp">Purchase Date/Time (Optional)</label>
                 <input
@@ -1161,6 +1163,31 @@ export function TradeSlipMaker({
                 value={config.backgroundColor}
                 onChange={(e) => onConfigChange({ backgroundColor: e.target.value })}
                 placeholder="#28CC95"
+                style={{ flex: 1 }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Secondary color picker - championship only */}
+        {isChampionshipMode && (
+          <div className={ctrl.group}>
+            <label htmlFor="secondary-color">Secondary Color</label>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <input
+                id="secondary-color"
+                type="color"
+                value={config.championshipSecondaryColor || '#0a3d2e'}
+                onChange={(e) => onConfigChange({ championshipSecondaryColor: e.target.value })}
+                className={ctrl.colorInput}
+                style={{ width: '48px', height: '36px', cursor: 'pointer' }}
+              />
+              <input
+                type="text"
+                className={ctrl.input}
+                value={config.championshipSecondaryColor || '#0a3d2e'}
+                onChange={(e) => onConfigChange({ championshipSecondaryColor: e.target.value })}
+                placeholder="#0a3d2e"
                 style={{ flex: 1 }}
               />
             </div>
