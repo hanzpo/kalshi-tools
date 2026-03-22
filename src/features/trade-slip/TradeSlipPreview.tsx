@@ -186,7 +186,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   }
 
   if (isHorizontal) {
-    const horizontalPayout = calculateSinglePayout(config.wager, config.odds);
+    const horizontalPayout = config.customPayout != null ? config.customPayout : calculateSinglePayout(config.wager, config.odds);
     const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';
     const isYes = config.tradeSide === 'Yes';
     const sideColor = isYes ? '#00C688' : '#ff4d6a';
@@ -267,7 +267,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   }
 
   if (isChampionship) {
-    const championshipPayout = calculateSinglePayout(config.wager, config.odds);
+    const championshipPayout = config.customPayout != null ? config.customPayout : calculateSinglePayout(config.wager, config.odds);
     const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';
     const tradeColor = config.tradeSide === 'No'
       ? '#ff4d6a'
@@ -433,9 +433,11 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
     );
   }
 
-  const payout = isComboOld
-    ? calculateAmericanPayout(config.wager, config.comboOdds)
-    : calculateSinglePayout(config.wager, config.odds);
+  const payout = config.customPayout != null
+    ? config.customPayout
+    : isComboOld
+      ? calculateAmericanPayout(config.wager, config.comboOdds)
+      : calculateSinglePayout(config.wager, config.odds);
 
   const marketName = (config.marketName?.trim() || config.title.trim())
     || 'Market name goes here';

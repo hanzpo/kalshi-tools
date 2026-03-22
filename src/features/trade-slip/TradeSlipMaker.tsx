@@ -1084,6 +1084,30 @@ export function TradeSlipMaker({
               <p className={ctrl.helpText}>Expected payout: ${payout.toLocaleString()}</p>
             </div>
 
+            <div className={ctrl.group}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={config.customPayout != null}
+                  onChange={(e) => onConfigChange({ customPayout: e.target.checked ? payout : undefined })}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#00C688' }}
+                />
+                Custom Payout
+              </label>
+              {config.customPayout != null && (
+                <input
+                  id="custom-payout"
+                  type="number"
+                  className={ctrl.input}
+                  placeholder="e.g., 5000"
+                  value={config.customPayout}
+                  onChange={(e) => onConfigChange({ customPayout: parseFloat(e.target.value) || 0 })}
+                  min="0"
+                  step="100"
+                />
+              )}
+            </div>
+
             {/* Timestamp only for new single mode */}
             {(isSingleMode || isChampionshipMode) && (
               <div className={ctrl.group}>
@@ -1117,6 +1141,29 @@ export function TradeSlipMaker({
               <p className={ctrl.helpText}>
                 Enter positive or negative odds (e.g., -110 or +250). Potential payout: ${payout.toLocaleString()}
               </p>
+            </div>
+            <div className={ctrl.group}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={config.customPayout != null}
+                  onChange={(e) => onConfigChange({ customPayout: e.target.checked ? payout : undefined })}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#00C688' }}
+                />
+                Custom Payout
+              </label>
+              {config.customPayout != null && (
+                <input
+                  id="custom-payout-old"
+                  type="number"
+                  className={ctrl.input}
+                  placeholder="e.g., 5000"
+                  value={config.customPayout}
+                  onChange={(e) => onConfigChange({ customPayout: parseFloat(e.target.value) || 0 })}
+                  min="0"
+                  step="100"
+                />
+              )}
             </div>
             <div className={ctrl.group}>
               <label htmlFor="combo-cash-out-old">Cash Out Amount ($)</label>

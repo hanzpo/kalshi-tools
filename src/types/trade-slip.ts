@@ -94,6 +94,7 @@ export interface TradeSlipConfig {
   coinbasePayout: number;
   coinbasePlayType: string;
   isPaidOut: boolean;
+  customPayout?: number;
   championshipSecondaryColor: string;
 }
 
