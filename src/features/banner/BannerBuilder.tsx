@@ -1,14 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BannerConfig } from '../../types';
 import { BannerMaker } from './BannerMaker';
 import { BannerPreview, BANNER_PREVIEW_ID } from './BannerPreview';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { Toast } from '../../components/ui/Toast';
-import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../../lib/imageExport';
-import { createFileName } from '../../lib/chartHelpers';
 import { useToast } from '../../hooks/useToast';
-import { trackEvent } from '../../lib/analytics';
+import { useExport } from '../../hooks/useExport';
+import { useImagePaste } from '../../hooks/useImageUpload';
 import { layout } from '../../styles/layout';
 
 export default function BannerBuilder() {
@@ -29,6 +28,12 @@ export default function BannerBuilder() {
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);
   const { message: toastMessage, showToast } = useToast();
+
+  const { handleExport: exportImage, handleCopyToClipboard: copyToClipboard } = useExport({
+    elementId: BANNER_PREVIEW_ID,
+    onSuccess: showToast,
+    analyticsContext: { tool: 'banner', target: BANNER_PREVIEW_ID },
+  });
 
   function handleConfigChange(updates: Partial<BannerConfig>) {
     setConfig((prev) => ({ ...prev, ...updates }));
@@ -52,70 +57,15 @@ export default function BannerBuilder() {
     setCropperImage(null);
   }
 
-  useEffect(() => {
-    function handlePaste(event: ClipboardEvent) {
-      const items = Array.from(event.clipboardData?.items ?? []);
-      const imageItem = items.find((item) => item.type.startsWith('image/'));
-      if (!imageItem) return;
+  useImagePaste(handleImageUpload);
 
-      const file = imageItem.getAsFile();
-      if (!file) return;
-
-      event.preventDefault();
-      handleImageUpload(file);
-      trackEvent('image_paste', { tool: 'banner', target: 'main' });
-    }
-
-    window.addEventListener('paste', handlePaste);
-    return () => window.removeEventListener('paste', handlePaste);
-  }, [handleImageUpload]);
-
-  async function handleExport() {
-    const element = document.getElementById(BANNER_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      const nameSource = config.title?.trim() || config.outcome?.trim() || 'banner';
-      downloadDataUrl(dataUrl, createFileName(nameSource, 'kalshi-banner'));
-      trackEvent('export_image', {
-        tool: 'banner',
-        method: 'download',
-        target: BANNER_PREVIEW_ID,
-      });
-    } catch (error) {
-      console.error('Error exporting image:', error);
-      trackEvent('export_error', {
-        tool: 'banner',
-        method: 'download',
-        message: error instanceof Error ? error.message : 'unknown',
-      });
-      alert('Failed to export image. Please try again.');
-    }
+  function handleExport() {
+    const nameSource = config.title?.trim() || config.outcome?.trim() || 'banner';
+    exportImage(nameSource, 'kalshi-banner');
   }
 
-  async function handleCopyToClipboard() {
-    const element = document.getElementById(BANNER_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      await copyDataUrlToClipboard(dataUrl);
-      showToast('Banner copied to clipboard!');
-      trackEvent('copy_image', {
-        tool: 'banner',
-        method: 'clipboard',
-        target: BANNER_PREVIEW_ID,
-      });
-    } catch (error) {
-      console.error('Error copying to clipboard:', error);
-      showToast('Failed to copy to clipboard');
-      trackEvent('export_error', {
-        tool: 'banner',
-        method: 'clipboard',
-        message: error instanceof Error ? error.message : 'unknown',
-      });
-    }
+  function handleCopyToClipboard() {
+    copyToClipboard('Banner copied to clipboard!');
   }
 
   return (

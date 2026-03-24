@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { MarketPageConfig, ChartDataPoint, SubmittedOrder, MarketOutcome } from '../../types/market-page';
+import { MarketPageConfig, ChartDataPoint, SubmittedOrder, MarketOutcome, OUTCOME_COLORS } from '../../types/market-page';
 import { MarketPageMaker } from './MarketPageMaker';
 import { MarketPagePreview, MARKET_PAGE_PREVIEW_ID } from './MarketPagePreview';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { TrendDrawer } from '../../components/shared/TrendDrawer';
 import { Toast } from '../../components/ui/Toast';
-import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../../lib/imageExport';
-import { createFileName } from '../../lib/chartHelpers';
 import { useToast } from '../../hooks/useToast';
+import { useExport } from '../../hooks/useExport';
+import { useImagePaste } from '../../hooks/useImageUpload';
 import { trackEvent } from '../../lib/analytics';
-
-const OUTCOME_COLORS = ['#09C285', '#265CFF', '#000000', '#FF5A5A', '#9333EA', '#F59E0B'];
 
 function generateChartDataForOutcomes(outcomes: MarketOutcome[]): ChartDataPoint[] {
   return generateChartDataWithCustomTrends(outcomes);
@@ -165,6 +163,12 @@ export default function MarketPageBuilder() {
   const [drawingOutcomeId, setDrawingOutcomeId] = useState<string | null>(null);
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const { message: toastMessage, showToast } = useToast();
+
+  const { handleExport: exportImage, handleCopyToClipboard: copyToClipboard } = useExport({
+    elementId: MARKET_PAGE_PREVIEW_ID,
+    onSuccess: showToast,
+    analyticsContext: { tool: 'market-page', target: MARKET_PAGE_PREVIEW_ID },
+  });
 
   // Dragging state
   const [panelPosition, setPanelPosition] = useState({ x: 20, y: 20 });
@@ -412,73 +416,15 @@ export default function MarketPageBuilder() {
     showToast('Chart data regenerated');
   }
 
-  useEffect(() => {
-    function handlePaste(event: ClipboardEvent) {
-      const items = Array.from(event.clipboardData?.items ?? []);
-      const imageItem = items.find((item) => item.type.startsWith('image/'));
-      if (!imageItem) return;
+  useImagePaste(handleImageUpload);
 
-      const file = imageItem.getAsFile();
-      if (!file) return;
-
-      event.preventDefault();
-      handleImageUpload(file);
-      trackEvent('image_paste', {
-        tool: 'market-page',
-        target: 'main',
-      });
-    }
-
-    window.addEventListener('paste', handlePaste);
-    return () => window.removeEventListener('paste', handlePaste);
-  }, [handleImageUpload]);
-
-  async function handleExport() {
-    const element = document.getElementById(MARKET_PAGE_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      const name = config.title?.trim() || 'market-page';
-      downloadDataUrl(dataUrl, createFileName(name, 'kalshi-market'));
-      trackEvent('export_image', {
-        tool: 'market-page',
-        method: 'download',
-        target: MARKET_PAGE_PREVIEW_ID,
-      });
-    } catch (error) {
-      console.error('Error exporting image:', error);
-      trackEvent('export_error', {
-        tool: 'market-page',
-        method: 'download',
-        message: error instanceof Error ? error.message : 'unknown',
-      });
-      alert('Failed to export image. Please try again.');
-    }
+  function handleExport() {
+    const name = config.title?.trim() || 'market-page';
+    exportImage(name, 'kalshi-market');
   }
 
-  async function handleCopyToClipboard() {
-    const element = document.getElementById(MARKET_PAGE_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      await copyDataUrlToClipboard(dataUrl);
-      showToast('Market page copied to clipboard!');
-      trackEvent('copy_image', {
-        tool: 'market-page',
-        method: 'clipboard',
-        target: MARKET_PAGE_PREVIEW_ID,
-      });
-    } catch (error) {
-      console.error('Error copying to clipboard:', error);
-      showToast('Failed to copy to clipboard');
-      trackEvent('export_error', {
-        tool: 'market-page',
-        method: 'clipboard',
-        message: error instanceof Error ? error.message : 'unknown',
-      });
-    }
+  function handleCopyToClipboard() {
+    copyToClipboard('Market page copied to clipboard!');
   }
 
   return (

@@ -1,8 +1,10 @@
-/* Pseudo-element for answer outcome separator dot */
+/* Outcome text + separator dot after Yes/No should be white, not inherit the side color */
+.trade-slip-answer-outcome {
+  color: rgba(255, 255, 255, 0.9);
+}
 .trade-slip-answer-outcome::before {
   content: '\00b7';
   margin: 0 6px;
-  color: inherit;
   font-weight: 700;
 }
 

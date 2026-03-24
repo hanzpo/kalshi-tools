@@ -6,6 +6,4 @@ export const layout = {
   appContainer: 'mx-auto grid w-[min(1200px,100%)] grid-cols-[minmax(320px,400px)_1fr] items-start gap-8 max-lg:grid-cols-[1fr] max-lg:gap-6 max-md:gap-5',
   /** Right-side preview column: sticky on desktop */
   previewSection: 'sticky top-6 flex w-full flex-col items-stretch gap-5 self-start max-lg:static [&>*]:w-full',
-  /** Attribution block below preview */
-  attribution: 'mt-5 text-center [&_p]:text-sm [&_p]:text-text-secondary [&_a]:font-medium [&_a]:text-brand [&_a]:no-underline hover:[&_a]:underline',
 } as const;

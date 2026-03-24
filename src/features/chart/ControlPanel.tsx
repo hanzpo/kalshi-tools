@@ -53,7 +53,7 @@ export function ControlPanel({
 }: ControlPanelProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
-  const [isDraggingUrl, setIsDraggingUrl] = useState(false);
+
   const [colorPickerOpen, setColorPickerOpen] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [urlInput, setUrlInput] = useState('');
@@ -103,46 +103,6 @@ export function ControlPanel({
     }
   }, [onImportKalshiMarket, mode]);
 
-  // Handle URL drop
-  function handleUrlDragOver(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDraggingUrl(true);
-  }
-
-  function handleUrlDragLeave(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDraggingUrl(false);
-  }
-
-  async function handleUrlDrop(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDraggingUrl(false);
-
-    // Check for URL in text data
-    const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('text/uri-list');
-    if (text && isKalshiUrl(text)) {
-      setUrlInput(text);
-      await handleUrlImport(text);
-      return;
-    }
-
-    // Check for URL in dropped files (link files)
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.name.endsWith('.url') || file.name.endsWith('.webloc')) {
-        const text = await file.text();
-        const urlMatch = text.match(/URL=(.+)/i) || text.match(/<string>(.+kalshi\.com.+)<\/string>/);
-        if (urlMatch && isKalshiUrl(urlMatch[1])) {
-          setUrlInput(urlMatch[1]);
-          await handleUrlImport(urlMatch[1]);
-        }
-      }
-    }
-  }
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -517,59 +477,32 @@ export function ControlPanel({
           <div className={ctrl.sectionTitle}>Import from Kalshi</div>
           <div className={ctrl.group}>
             <label>Market URL</label>
-            <div
-              onDragOver={handleUrlDragOver}
-              onDragLeave={handleUrlDragLeave}
-              onDrop={handleUrlDrop}
-              className={`rounded-[5px] p-3 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 mb-1 ${isDraggingUrl ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
-            >
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  className={`${ctrl.input} flex-1 m-0`}
-                  placeholder="Paste Kalshi URL or drag & drop"
-                  value={urlInput}
-                  onChange={(e) => {
-                    setUrlInput(e.target.value);
-                    setImportError(null);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleUrlImport(urlInput);
-                    }
-                  }}
-                  disabled={isImporting}
-                />
-                <button
-                  onClick={() => handleUrlImport(urlInput)}
-                  disabled={isImporting || !urlInput.trim()}
-                  className={`px-4 py-2 border-none rounded-[5px] font-medium text-[13px] transition-colors duration-150 flex items-center gap-1.5 ${isImporting || !urlInput.trim() ? 'cursor-not-allowed bg-[#333] text-text-secondary' : 'cursor-pointer bg-brand text-white'}`}
-                >
-                  {isImporting ? (
-                    <>
-                      <RefreshIcon size={14} />
-                      Importing...
-                    </>
-                  ) : (
-                    <>
-                      <LinkIcon size={14} />
-                      Import
-                    </>
-                  )}
-                </button>
-              </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                className={`${ctrl.input} flex-1`}
+                placeholder="Paste Kalshi URL"
+                value={urlInput}
+                onChange={(e) => {
+                  setUrlInput(e.target.value);
+                  setImportError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleUrlImport(urlInput);
+                }}
+                disabled={isImporting}
+              />
+              <button
+                onClick={() => handleUrlImport(urlInput)}
+                disabled={isImporting || !urlInput.trim()}
+                className={`shrink-0 px-4 py-2 border-none rounded-[5px] font-medium text-[13px] transition-colors duration-150 flex items-center gap-1.5 ${isImporting || !urlInput.trim() ? 'cursor-not-allowed bg-[#333] text-text-secondary' : 'cursor-pointer bg-brand text-white'}`}
+              >
+                {isImporting ? <><RefreshIcon size={14} /> Importing...</> : <><LinkIcon size={14} /> Import</>}
+              </button>
             </div>
-            {importError && (
-              <p className={`${ctrl.helpText} text-[#dc2626] flex items-center gap-1`}>
-                <WarningIcon size={14} />
-                {importError}
-              </p>
-            )}
-            {!importError && (
-              <p className={ctrl.helpText}>
-                Paste a link like kalshi.com/markets/TICKER or press Ctrl+V anywhere
-              </p>
-            )}
+            <p className={`${ctrl.helpText} ${importError ? 'text-[#dc2626] flex items-center gap-1' : ''}`}>
+              {importError ? <><WarningIcon size={14} />{importError}</> : 'Paste a link like kalshi.com/markets/TICKER or Ctrl+V anywhere'}
+            </p>
           </div>
         </div>
       )}

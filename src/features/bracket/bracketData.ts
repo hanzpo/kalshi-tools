@@ -32,8 +32,6 @@ function playInTeam(seed: number, playInId: BracketPlayInId, options: [BracketPl
   };
 }
 
-export const PLAY_IN_IDS: BracketPlayInId[] = ['south-16', 'west-11', 'midwest-11', 'midwest-16'];
-
 // South Region — Bottom Left
 const southTeams: BracketTeam[] = [
   team('FLA', 1, 'Florida', '#0021A5'),

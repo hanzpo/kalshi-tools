@@ -62,42 +62,6 @@ export function trackSessionStart(): void {
   });
 }
 
-// Feature usage tracking
-export function trackFeatureUsed(tool: string, feature: string, value?: number | string): void {
-  trackEvent('feature_used', {
-    tool,
-    feature,
-    value,
-  });
-}
-
-// Export configuration tracking - track what settings were used on export
-export interface ExportConfig {
-  tool: string;
-  marketType?: string;
-  timeHorizon?: string;
-  hasCustomTrend?: boolean;
-  hasImage?: boolean;
-  outcomeCount?: number;
-  volatility?: number;
-  mode?: string;
-  legCount?: number;
-}
-
-export function trackExportConfig(config: ExportConfig): void {
-  trackEvent('export_config', {
-    tool: config.tool,
-    market_type: config.marketType,
-    time_horizon: config.timeHorizon,
-    has_custom_trend: config.hasCustomTrend,
-    has_image: config.hasImage,
-    outcome_count: config.outcomeCount,
-    volatility: config.volatility,
-    mode: config.mode,
-    leg_count: config.legCount,
-  });
-}
-
 // User engagement tracking - time spent and actions taken
 let sessionStartTime: number | null = null;
 let actionCount = 0;
@@ -134,20 +98,6 @@ export function startEngagementTracking(): () => void {
   return () => {
     document.removeEventListener('visibilitychange', onVisibilityChange);
   };
-}
-
-export function incrementActionCount(): void {
-  actionCount++;
-}
-
-// Conversion funnel tracking
-export type FunnelStep = 'config_started' | 'preview_ready' | 'export_attempted' | 'export_success';
-
-export function trackFunnelStep(tool: string, step: FunnelStep): void {
-  trackEvent('funnel_step', {
-    tool,
-    step,
-  });
 }
 
 export function startScrollTracking(): () => void {

@@ -3,7 +3,7 @@ import { scaleLinear } from '@visx/scale';
 import { LinePath } from '@visx/shape';
 import { GridRows } from '@visx/grid';
 import { curveLinear } from '@visx/curve';
-import { MarketPageConfig } from '../../types/market-page';
+import { MarketPageConfig, OUTCOME_COLORS } from '../../types/market-page';
 
 interface MarketPagePreviewProps {
   config: MarketPageConfig;
@@ -26,9 +26,6 @@ function KalshiLogo({ className, style }: { className?: string; style?: React.CS
     </svg>
   );
 }
-
-// Default outcome colors matching Kalshi
-const OUTCOME_COLORS = ['#09C285', '#F5A623', '#265CFF', '#FF5A5A', '#9333EA', '#F59E0B'];
 
 // Get outcome color, swapping black for white in dark mode
 function getOutcomeColor(color: string, isDarkMode: boolean): string {

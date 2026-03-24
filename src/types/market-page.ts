@@ -1,3 +1,5 @@
+export const OUTCOME_COLORS = ['#09C285', '#265CFF', '#000000', '#FF5A5A', '#9333EA', '#F59E0B'];
+
 export interface MarketOutcome {
   id: string;
   name: string;

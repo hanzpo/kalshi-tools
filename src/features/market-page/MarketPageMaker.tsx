@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
-import { MarketPageConfig, MarketOutcome } from '../../types/market-page';
+import { MarketPageConfig, MarketOutcome, OUTCOME_COLORS } from '../../types/market-page';
 import {
   UploadIcon,
   DownloadIcon,
@@ -21,8 +21,6 @@ interface MarketPageMakerProps {
   onDrawOutcomeTrend: (outcomeId: string) => void;
   onRegenerateData: () => void;
 }
-
-const OUTCOME_COLORS = ['#09C285', '#265CFF', '#000000', '#FF5A5A', '#9333EA', '#F59E0B'];
 
 function createOutcome(index: number): MarketOutcome {
   return {

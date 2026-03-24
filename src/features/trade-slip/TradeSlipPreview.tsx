@@ -1,6 +1,7 @@
 import { TradeSlipConfig, ComboEvent, ComboMarket } from '../../types';
 import { PrizePickPreview } from './PrizePickPreview';
 import { CoinbasePreview } from './CoinbasePreview';
+import { calculateSinglePayout, calculateAmericanPayout, formatAmericanOdds } from '../../lib/payoutHelpers';
 import './TradeSlipPreview.css';
 
 interface TradeSlipPreviewProps {
@@ -79,9 +80,12 @@ const ComboMarketItem = ({ market, position }: ComboMarketItemProps) => (
     </div>
     <div className="flex-1 py-1 font-sans text-[13px] font-normal leading-5 text-white/90">
       {market.prefix && (
-        <span className="text-white/90">{market.prefix} · </span>
+        <>
+          <span className={market.prefix === 'Yes' ? 'text-[#00C688]' : market.prefix === 'No' ? 'text-[#ff4d6a]' : 'text-white/90'}>{market.prefix}</span>
+          <span className="text-white/90"> · </span>
+        </>
       )}
-      <span>{market.text}</span>
+      <span className="text-white/90">{market.text}</span>
     </div>
   </div>
 );
@@ -144,23 +148,6 @@ function formatTimestamp(customTimestamp?: string): string {
   return `Bought on ${month} ${day}, ${year} @ ${hours}:${minutes}${ampm}`;
 }
 
-function calculateSinglePayout(wager: number, odds: number): number {
-  if (odds <= 0 || odds >= 100) return 0;
-  return Math.round(wager / (odds / 100));
-}
-
-function calculateAmericanPayout(wager: number, odds: number): number {
-  if (!Number.isFinite(odds) || odds === 0) return 0;
-  const fractionalReturn = odds > 0 ? odds / 100 : 100 / Math.abs(odds);
-  return Math.round(wager * (1 + fractionalReturn));
-}
-
-function formatAmericanOdds(odds: number): string {
-  if (!Number.isFinite(odds) || odds === 0) {
-    return 'EVEN';
-  }
-  return odds > 0 ? `+${odds}` : `${odds}`;
-}
 
 
 export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {

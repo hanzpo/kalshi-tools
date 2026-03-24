@@ -30,8 +30,6 @@ export const ctrl = {
   colorToggle: 'flex gap-1.5 max-[480px]:flex-col',
   /** Color option button */
   colorOption: 'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-surface px-2.5 py-2 text-[13px] font-medium text-text-secondary transition-[border-color,background-color,color] duration-150 hover:border-[#444]',
-  /** Active color option */
-  colorOptionActive: 'border-brand bg-[#0d2e1f] text-brand',
   /** Segmented control wrapper */
   segmented: 'flex gap-0.5 rounded-[5px] bg-dark-elevated p-0.5',
   /** Segmented option */
@@ -44,8 +42,6 @@ export const ctrl = {
   btnExport: 'mb-1.5 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-brand px-2.5 py-2.5 text-[13px] font-medium text-white transition-[background-color] duration-150 hover:bg-[#07a972]',
   /** Draw button */
   btnDraw: 'mb-1.5 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-[#3b82f6] px-2.5 py-2.5 text-[13px] font-medium text-white transition-[background-color] duration-150 hover:bg-[#2563eb]',
-  /** Panel footer */
-  footer: 'mt-5 border-t border-dark-border-light pt-4 text-center [&_p]:text-[11px] [&_p]:text-text-secondary [&_a]:font-medium [&_a]:text-brand [&_a]:no-underline hover:[&_a]:underline',
   /** Checkbox group wrapper (label + helpText) — no auto-styling on label */
   checkboxGroup: 'mb-3 [&>p]:mt-1',
   /** Checkbox label */

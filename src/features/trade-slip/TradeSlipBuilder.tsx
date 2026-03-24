@@ -5,9 +5,9 @@ import { TradeSlipMaker } from './TradeSlipMaker';
 import { TradeSlipPreview } from './TradeSlipPreview';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { Toast } from '../../components/ui/Toast';
-import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../../lib/imageExport';
-import { createFileName } from '../../lib/chartHelpers';
 import { useToast } from '../../hooks/useToast';
+import { useExport } from '../../hooks/useExport';
+import { useImagePaste } from '../../hooks/useImageUpload';
 import { trackEvent } from '../../lib/analytics';
 import { layout } from '../../styles/layout';
 
@@ -98,6 +98,12 @@ export default function TradeSlipBuilder() {
   const [cropperImage, setCropperImage] = useState<string | null>(null);
   const { message: toastMessage, showToast } = useToast();
 
+  const { handleExport: exportImage, handleCopyToClipboard: copyToClipboard } = useExport({
+    elementId: TRADE_SLIP_PREVIEW_ID,
+    onSuccess: showToast,
+    analyticsContext: { tool: 'trade-slip', target: TRADE_SLIP_PREVIEW_ID },
+  });
+
   function handleConfigChange(updates: Partial<TradeSlipConfig>) {
     setConfig((prev) => ({ ...prev, ...updates }));
   }
@@ -120,92 +126,29 @@ export default function TradeSlipBuilder() {
     setCropperImage(null);
   }
 
-  useEffect(() => {
-    function handlePaste(event: ClipboardEvent) {
-      const items = Array.from(event.clipboardData?.items ?? []);
-      const imageItem = items.find((item) => item.type.startsWith('image/'));
-      if (!imageItem) return;
-
-      const file = imageItem.getAsFile();
-      if (!file) return;
-
-      event.preventDefault();
-      handleImageUpload(file);
-      trackEvent('image_paste', {
-        tool: 'trade-slip',
-        mode: config.mode,
-        target: 'main',
-      });
-    }
-
-    window.addEventListener('paste', handlePaste);
-    return () => window.removeEventListener('paste', handlePaste);
-  }, [handleImageUpload, config.mode]);
+  useImagePaste(handleImageUpload);
 
   useEffect(() => {
     trackEvent('trade_slip_mode_change', { tool: 'trade-slip', mode: config.mode });
   }, [config.mode]);
 
-  async function handleExport() {
-    const element = document.getElementById(TRADE_SLIP_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      const outcomeName = config.outcome?.trim();
-      const marketName = config.marketName?.trim();
-      const titleName = config.title?.trim();
-      let nameSource: string;
-      if (config.mode === 'single') {
-        nameSource = outcomeName || marketName || titleName || 'trade-slip';
-      } else if (config.mode === 'coinbase') {
-        nameSource = config.coinbasePlayType?.trim() || 'coinbase-slip';
-      } else {
-        nameSource = titleName || 'trade-slip';
-      }
-      downloadDataUrl(dataUrl, createFileName(nameSource, 'kalshi-trade-slip'));
-      trackEvent('export_image', {
-        tool: 'trade-slip',
-        mode: config.mode,
-        method: 'download',
-        target: TRADE_SLIP_PREVIEW_ID,
-      });
-    } catch (error) {
-      console.error('Error exporting image:', error);
-      trackEvent('export_error', {
-        tool: 'trade-slip',
-        mode: config.mode,
-        method: 'download',
-        message: error instanceof Error ? error.message : 'unknown',
-      });
-      alert('Failed to export image. Please try again.');
+  function handleExport() {
+    const outcomeName = config.outcome?.trim();
+    const marketName = config.marketName?.trim();
+    const titleName = config.title?.trim();
+    let nameSource: string;
+    if (config.mode === 'single') {
+      nameSource = outcomeName || marketName || titleName || 'trade-slip';
+    } else if (config.mode === 'coinbase') {
+      nameSource = config.coinbasePlayType?.trim() || 'coinbase-slip';
+    } else {
+      nameSource = titleName || 'trade-slip';
     }
+    exportImage(nameSource, 'kalshi-trade-slip');
   }
 
-  async function handleCopyToClipboard() {
-    const element = document.getElementById(TRADE_SLIP_PREVIEW_ID);
-    if (!element) return;
-
-    try {
-      const dataUrl = await captureElementAsPng(element);
-      await copyDataUrlToClipboard(dataUrl);
-      showToast('Trade slip copied to clipboard!');
-      trackEvent('copy_image', {
-        tool: 'trade-slip',
-        mode: config.mode,
-        method: 'clipboard',
-        target: TRADE_SLIP_PREVIEW_ID,
-      });
-    } catch (error) {
-      console.error('Error copying to clipboard:', error);
-      showToast('Failed to copy to clipboard');
-      trackEvent('export_error', {
-        tool: 'trade-slip',
-        mode: config.mode,
-        method: 'clipboard',
-        message: error instanceof Error ? error.message : 'unknown',
-      });
-    }
+  function handleCopyToClipboard() {
+    copyToClipboard('Trade slip copied to clipboard!');
   }
 
   return (

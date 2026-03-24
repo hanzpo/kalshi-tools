@@ -8,6 +8,7 @@ import {
   ArrowLeftIcon
 } from '../../components/ui/Icons';
 import { trackEvent } from '../../lib/analytics';
+import { calculateSinglePayout, calculateAmericanPayout } from '../../lib/payoutHelpers';
 import { ctrl } from '../../styles/controls';
 
 interface TradeSlipMakerProps {
@@ -52,21 +53,6 @@ function createLeg(): ComboLeg {
   };
 }
 
-function calculateSinglePayout(wager: number, odds: number): number {
-  if (odds <= 0 || odds >= 100) return 0;
-  return Math.round((wager / (odds / 100)) * 100) / 100;
-}
-
-function calculateAmericanPayout(wager: number, odds: number): number {
-  if (!Number.isFinite(odds) || odds === 0) {
-    return 0;
-  }
-
-  const fractionalReturn =
-    odds > 0 ? odds / 100 : 100 / Math.abs(odds);
-
-  return Math.round((wager * (1 + fractionalReturn)) * 100) / 100;
-}
 
 
 export function TradeSlipMaker({
@@ -438,17 +424,13 @@ export function TradeSlipMaker({
               <div className={ctrl.colorToggle}>
                 {(['Yes', 'No', 'Custom'] as const).map((side) => {
                   const isActive = config.tradeSide === side;
-                  const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : side === 'No' ? 'text-[#d91616]' : 'text-[#666]';
-                  const activeCls = isActive
-                    ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
-                    : side === 'No' ? 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
-                    : 'font-semibold border-[#666] bg-[#666]/[0.125]'
-                    : 'font-medium';
+                  const color = side === 'Yes' ? '#0f9b6c' : side === 'No' ? '#d91616' : '#666';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
+                      className={`${ctrl.colorOption} ${isActive ? 'font-semibold' : 'font-medium'}`}
+                      style={isActive ? { borderColor: color, backgroundColor: `${color}20`, color } : { color }}
                       onClick={() => onConfigChange({ tradeSide: side })}
                       aria-pressed={isActive}
                     >
@@ -575,16 +557,13 @@ export function TradeSlipMaker({
               <div className={ctrl.colorToggle}>
                 {(['Yes', 'No'] as const).map((side) => {
                   const isActive = config.tradeSide === side;
-                  const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : 'text-[#d91616]';
-                  const activeCls = isActive
-                    ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
-                    : 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
-                    : 'font-medium';
+                  const color = side === 'Yes' ? '#0f9b6c' : '#d91616';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
+                      className={`${ctrl.colorOption} ${isActive ? 'font-semibold' : 'font-medium'}`}
+                      style={isActive ? { borderColor: color, backgroundColor: `${color}20`, color } : { color }}
                       onClick={() => onConfigChange({ tradeSide: side })}
                       aria-pressed={isActive}
                     >
@@ -704,16 +683,13 @@ export function TradeSlipMaker({
               <div className={ctrl.colorToggle}>
                 {(['Yes', 'No'] as const).map((side) => {
                   const isActive = config.tradeSide === side;
-                  const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : 'text-[#d91616]';
-                  const activeCls = isActive
-                    ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
-                    : 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
-                    : 'font-medium';
+                  const color = side === 'Yes' ? '#0f9b6c' : '#d91616';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
+                      className={`${ctrl.colorOption} ${isActive ? 'font-semibold' : 'font-medium'}`}
+                      style={isActive ? { borderColor: color, backgroundColor: `${color}20`, color } : { color }}
                       onClick={() => onConfigChange({ tradeSide: side })}
                       aria-pressed={isActive}
                     >
