@@ -521,11 +521,7 @@ export function ControlPanel({
               onDragOver={handleUrlDragOver}
               onDragLeave={handleUrlDragLeave}
               onDrop={handleUrlDrop}
-              className="rounded-[5px] p-3 transition-[border-color,background-color] duration-150 mb-1"
-              style={{
-                border: `1.5px dashed ${isDraggingUrl ? '#09C285' : '#444'}`,
-                backgroundColor: isDraggingUrl ? '#0d2e1f' : '#1e1e1e',
-              }}
+              className={`rounded-[5px] p-3 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 mb-1 ${isDraggingUrl ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
             >
               <div className="flex gap-2">
                 <input
@@ -547,12 +543,7 @@ export function ControlPanel({
                 <button
                   onClick={() => handleUrlImport(urlInput)}
                   disabled={isImporting || !urlInput.trim()}
-                  className="px-4 py-2 border-none rounded-[5px] font-medium text-[13px] transition-colors duration-150 flex items-center gap-1.5"
-                  style={{
-                    backgroundColor: isImporting || !urlInput.trim() ? '#333' : '#09C285',
-                    color: isImporting || !urlInput.trim() ? '#9ca3af' : 'white',
-                    cursor: isImporting || !urlInput.trim() ? 'not-allowed' : 'pointer',
-                  }}
+                  className={`px-4 py-2 border-none rounded-[5px] font-medium text-[13px] transition-colors duration-150 flex items-center gap-1.5 ${isImporting || !urlInput.trim() ? 'cursor-not-allowed bg-[#333] text-text-secondary' : 'cursor-pointer bg-brand text-white'}`}
                 >
                   {isImporting ? (
                     <>
@@ -609,11 +600,7 @@ export function ControlPanel({
               onDragOver={handleLeftDragOver}
               onDragLeave={handleLeftDragLeave}
               onDrop={handleLeftDrop}
-              className="rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 transition-[border-color,background-color] duration-150 cursor-pointer mb-1"
-              style={{
-                border: `1.5px dashed ${isDraggingLeft ? '#09C285' : '#444'}`,
-                backgroundColor: isDraggingLeft ? '#0d2e1f' : '#1e1e1e',
-              }}
+              className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDraggingLeft ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
             >
               <input
                 id="left-image"
@@ -624,10 +611,7 @@ export function ControlPanel({
               />
               <label
                 htmlFor="left-image"
-                className="cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em]"
-                style={{
-                  color: isDraggingLeft ? '#09C285' : '#9ca3af',
-                }}
+                className={`cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em] ${isDraggingLeft ? 'text-brand' : 'text-text-secondary'}`}
               >
                 {isDraggingLeft ? (
                   <>
@@ -657,11 +641,7 @@ export function ControlPanel({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className="rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 transition-[border-color,background-color] duration-150 cursor-pointer mb-1"
-            style={{
-              border: `1.5px dashed ${isDragging ? '#09C285' : '#444'}`,
-              backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
-            }}
+            className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDragging ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
           >
             <input
               id="market-image"
@@ -672,10 +652,7 @@ export function ControlPanel({
             />
             <label
               htmlFor="market-image"
-              className="cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em]"
-              style={{
-                color: isDragging ? '#09C285' : '#9ca3af',
-              }}
+              className={`cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em] ${isDragging ? 'text-brand' : 'text-text-secondary'}`}
             >
               {isDragging ? (
                 <>
@@ -733,19 +710,19 @@ export function ControlPanel({
 
         {config.marketType === 'multi' && (
         <>
-          <div className={ctrl.group}>
-            <label htmlFor="mutually-exclusive" className="flex items-center gap-2 cursor-pointer">
+          <div className={ctrl.checkboxGroup}>
+            <label htmlFor="mutually-exclusive" className={ctrl.checkboxLabel}>
               <input
                 id="mutually-exclusive"
                 type="checkbox"
                 checked={config.mutuallyExclusive !== false}
                 onChange={(e) => onConfigChange({ mutuallyExclusive: e.target.checked })}
-                className="size-4 cursor-pointer accent-[#09C285]"
+                className={ctrl.checkboxInput}
               />
-              <span>Mutually Exclusive (odds sum to 100%)</span>
+              Mutually Exclusive (odds sum to 100%)
             </label>
             <p className={ctrl.helpText}>
-              {config.mutuallyExclusive !== false 
+              {config.mutuallyExclusive !== false
                 ? 'Outcomes are mutually exclusive - changing one adjusts others to keep total at 100%'
                 : 'Outcomes are independent - each can have any odds value'}
             </p>
@@ -922,16 +899,16 @@ export function ControlPanel({
       <div className={ctrl.section}>
         <div className={ctrl.sectionTitle}>Chart Settings</div>
 
-        <div className={ctrl.group}>
-          <label htmlFor="dark-mode" className="flex items-center gap-2 cursor-pointer">
+        <div className={ctrl.checkboxGroup}>
+          <label htmlFor="dark-mode" className={ctrl.checkboxLabel}>
             <input
               id="dark-mode"
               type="checkbox"
               checked={config.darkMode === true}
               onChange={(e) => onConfigChange({ darkMode: e.target.checked })}
-              className="size-4 cursor-pointer accent-[#09C285]"
+              className={ctrl.checkboxInput}
             />
-            <span>Dark Mode</span>
+            Dark Mode
           </label>
         </div>
 
@@ -969,12 +946,7 @@ export function ControlPanel({
                   onRegenerateData();
                   trackEvent('time_horizon_change', { tool: mode, horizon });
                 }}
-                className="px-2.5 py-1.5 border rounded cursor-pointer font-medium transition-[border-color,background-color,color] duration-150 text-xs min-w-10"
-                style={{
-                  borderColor: config.timeHorizon === horizon ? '#09C285' : '#333',
-                  backgroundColor: config.timeHorizon === horizon ? '#0d2e1f' : '#1e1e1e',
-                  color: config.timeHorizon === horizon ? '#09C285' : '#9ca3af',
-                }}
+                className={`px-2.5 py-1.5 border rounded cursor-pointer font-medium transition-[border-color,background-color,color] duration-150 text-xs min-w-10 ${config.timeHorizon === horizon ? 'border-brand bg-[#0d2e1f] text-brand' : 'border-dark-border-light bg-dark-surface text-text-secondary'}`}
               >
                 {horizon}
               </button>
@@ -997,10 +969,7 @@ export function ControlPanel({
             <SettingsIcon size={16} />
             Advanced Settings
           </span>
-          <span style={{
-            transform: showAdvanced ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.15s',
-          }}>
+          <span className={`transition-transform duration-150 ${showAdvanced ? 'rotate-180' : ''}`}>
             <ChevronDownIcon size={16} />
           </span>
         </button>
@@ -1062,16 +1031,16 @@ export function ControlPanel({
             <p className={ctrl.helpText}>Chart end date (default: today)</p>
           </div>
 
-          <div className={`${ctrl.group} mb-0`}>
-            <label htmlFor="show-watermark" className="flex items-center gap-2 cursor-pointer">
+          <div className={ctrl.checkboxGroup}>
+            <label htmlFor="show-watermark" className={ctrl.checkboxLabel}>
               <input
                 id="show-watermark"
                 type="checkbox"
                 checked={config.showWatermark}
                 onChange={(e) => onConfigChange({ showWatermark: e.target.checked })}
-                className="size-4 cursor-pointer accent-[#09C285]"
+                className={ctrl.checkboxInput}
               />
-              <span>Show Watermark</span>
+              Show Watermark
             </label>
             <p className={ctrl.helpText}>Display "kalshi.tools" at bottom of chart</p>
           </div>

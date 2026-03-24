@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { BracketConfig, BracketPlayInId } from '../../types/bracket';
 import type { BracketView } from './BracketBuilder';
+import {
+  ArrowLeftIcon,
+  DownloadIcon,
+  CopyIcon,
+} from '../../components/ui/Icons';
+import { ctrl } from '../../styles/controls';
 
 function textColorForBg(hex: string): string {
   const h = hex.replace('#', '');
@@ -53,63 +59,55 @@ export function BracketMaker({
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Back button */}
-      <button
-        onClick={onBack}
-        className="flex w-fit items-center gap-1.5 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M19 12H5" />
-          <path d="M12 19l-7-7 7-7" />
-        </svg>
+    <div className={ctrl.panel}>
+      <button onClick={onBack} className={ctrl.backBtn}>
+        <ArrowLeftIcon size={14} />
         Back
       </button>
-
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-100">Men&apos;s College Basketball Bracket</h1>
-        <p className="text-sm text-text-secondary">
-          Randomized bracket loaded. Tap any game slot to switch the winner. {picksCount}/63 picks set.
-        </p>
-      </div>
+      <h1 className={ctrl.title}>Men&apos;s College Basketball Bracket</h1>
+      <p className={ctrl.subtitle}>
+        Randomized bracket loaded. Tap any game slot to switch the winner. {picksCount}/63 picks set.
+      </p>
 
       {/* View toggle */}
-      <div className="flex rounded-lg border border-dark-border bg-dark-surface p-1">
-        {([['r32', 'Round of 32'], ['r64', 'Round of 64']] as const).map(([view, label]) => (
-          <button
-            key={view}
-            onClick={() => onViewChange(view)}
-            className={`flex-1 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-              bracketView === view
-                ? 'bg-brand text-white'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>View</div>
+        <div className={ctrl.segmented}>
+          {([['r32', 'Round of 32'], ['r64', 'Round of 64']] as const).map(([view, label]) => (
+            <button
+              key={view}
+              onClick={() => onViewChange(view)}
+              className={`${ctrl.segmentedOption} ${bracketView === view ? ctrl.segmentedOptionActive : ''}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Progress bar */}
-      <div className="flex flex-col gap-2">
-        <div className="h-2 w-full overflow-hidden rounded-full bg-dark-elevated">
-          <div
-            className="h-full rounded-full bg-brand transition-all duration-300"
-            style={{ width: `${(picksCount / 63) * 100}%` }}
-          />
-        </div>
-        <div className="flex justify-between text-xs text-text-muted">
-          <span>R64</span>
-          <span>R32</span>
-          <span>S16</span>
-          <span>E8</span>
-          <span>F4</span>
-          <span>Champ</span>
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>Progress</div>
+        <div className="flex flex-col gap-2">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-dark">
+            <div
+              className="h-full rounded-full bg-brand transition-all duration-300"
+              style={{ width: `${(picksCount / 63) * 100}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-[11px] text-text-secondary">
+            <span>R64</span>
+            <span>R32</span>
+            <span>S16</span>
+            <span>E8</span>
+            <span>F4</span>
+            <span>Champ</span>
+          </div>
         </div>
       </div>
 
       {!hintDismissed && (
-        <div className="flex items-start gap-3 rounded-lg border border-dark-border bg-dark-elevated px-4 py-3">
+        <div className="mb-4 flex items-start gap-3 rounded-lg border border-dark-border bg-dark-elevated px-4 py-3">
           <p className="flex-1 text-xs leading-relaxed text-text-secondary">
             All 64 teams are available — tap any first-round matchup on the bracket to toggle the winner.
           </p>
@@ -129,13 +127,12 @@ export function BracketMaker({
         </div>
       )}
 
-      <div className="flex flex-col gap-3 rounded-lg border border-dark-border bg-dark-surface p-4">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-text-muted">First Four</h2>
-          <p className="text-xs text-text-secondary">
-            Pick the play-in winner and the bracket tree updates automatically.
-          </p>
-        </div>
+      {/* First Four */}
+      <div className={ctrl.section}>
+        <div className={ctrl.sectionTitle}>First Four</div>
+        <p className="mb-3 text-xs text-text-secondary">
+          Pick the play-in winner and the bracket tree updates automatically.
+        </p>
 
         <div className="flex flex-col gap-3">
           {playInTeams.map(({ regionName, seed, playInId, options }) => (
@@ -151,13 +148,12 @@ export function BracketMaker({
                       key={option.name}
                       type="button"
                       onClick={() => onPlayInPick(playInId, index as 0 | 1)}
-                      className={`flex-1 rounded-md border px-3 py-2 text-left text-sm font-semibold transition-colors ${
-                        isSelected ? 'border-brand' : 'border-dark-border'
+                      className={`flex-1 rounded-[5px] border px-3 py-2 text-left text-sm font-semibold transition-colors ${
+                        isSelected ? 'border-brand ring-1 ring-brand/35' : 'border-dark-border-light'
                       }`}
                       style={{
                         background: option.bgColor,
                         color: textColorForBg(option.bgColor),
-                        boxShadow: isSelected ? '0 0 0 1px rgba(21, 183, 115, 0.35)' : 'none',
                       }}
                     >
                       {option.fullName}
@@ -170,73 +166,61 @@ export function BracketMaker({
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex flex-col gap-2">
-        <button
-          onClick={onShare}
-          className="flex items-center justify-center gap-2 rounded-lg bg-brand px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-light"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="18" cy="5" r="3" />
-            <circle cx="6" cy="12" r="3" />
-            <circle cx="18" cy="19" r="3" />
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-          </svg>
-          Share Bracket
-        </button>
+      {/* Share */}
+      <button onClick={onShare} className={ctrl.btnExport}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="18" cy="5" r="3" />
+          <circle cx="6" cy="12" r="3" />
+          <circle cx="18" cy="19" r="3" />
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+        </svg>
+        Share Bracket
+      </button>
 
-        {shareUrl && (
-          <div className="flex items-center gap-2 rounded-md border border-dark-border bg-dark-elevated px-3 py-2">
-            <input
-              type="text"
-              value={shareUrl}
-              readOnly
-              className="flex-1 bg-transparent text-xs text-text-secondary outline-none"
-              onClick={(e) => (e.target as HTMLInputElement).select()}
-            />
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(shareUrl);
-              }}
-              className="text-xs font-medium text-brand hover:text-brand-light"
-            >
-              Copy
-            </button>
-          </div>
-        )}
-
-        <div className="flex gap-2">
+      {shareUrl && (
+        <div className="mb-1.5 flex items-center gap-2 rounded-[5px] border border-dark-border-light bg-dark px-3 py-2">
+          <input
+            type="text"
+            value={shareUrl}
+            readOnly
+            className="flex-1 bg-transparent text-xs text-text-secondary outline-none"
+            onClick={(e) => (e.target as HTMLInputElement).select()}
+          />
           <button
-            onClick={onExport}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-dark-border bg-dark-surface px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-dark-hover"
+            onClick={() => {
+              navigator.clipboard.writeText(shareUrl);
+            }}
+            className="text-xs font-medium text-brand hover:text-brand-light"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7,10 12,15 17,10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download
-          </button>
-          <button
-            onClick={onCopyToClipboard}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-dark-border bg-dark-surface px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-dark-hover"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
             Copy
           </button>
         </div>
+      )}
 
+      <div className="flex gap-2">
         <button
-          onClick={onRandomize}
-          className="mt-2 text-sm font-medium text-text-muted transition-colors hover:text-no"
+          onClick={onExport}
+          className={`${ctrl.btnRegen} flex-1`}
         >
-          Randomize
+          <DownloadIcon size={14} />
+          Download
+        </button>
+        <button
+          onClick={onCopyToClipboard}
+          className={`${ctrl.btnRegen} flex-1`}
+        >
+          <CopyIcon size={14} />
+          Copy
         </button>
       </div>
+
+      <button
+        onClick={onRandomize}
+        className={ctrl.btnRegen}
+      >
+        Randomize
+      </button>
     </div>
   );
 }

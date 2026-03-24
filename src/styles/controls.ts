@@ -46,6 +46,12 @@ export const ctrl = {
   btnDraw: 'mb-1.5 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-[#3b82f6] px-2.5 py-2.5 text-[13px] font-medium text-white transition-[background-color] duration-150 hover:bg-[#2563eb]',
   /** Panel footer */
   footer: 'mt-5 border-t border-dark-border-light pt-4 text-center [&_p]:text-[11px] [&_p]:text-text-secondary [&_a]:font-medium [&_a]:text-brand [&_a]:no-underline hover:[&_a]:underline',
+  /** Checkbox group wrapper (label + helpText) — no auto-styling on label */
+  checkboxGroup: 'mb-3 [&>p]:mt-1',
+  /** Checkbox label */
+  checkboxLabel: 'flex cursor-pointer items-center gap-2 text-[13px] font-medium text-text-primary',
+  /** Checkbox input */
+  checkboxInput: 'size-4 shrink-0 cursor-pointer accent-brand',
   /** Color input swatch */
   colorInput: 'size-8 cursor-pointer rounded border border-dark-border-light bg-none p-0',
   /** Combo legs container */

@@ -10,7 +10,6 @@ import {
 import { trackEvent } from '../../lib/analytics';
 import { ctrl } from '../../styles/controls';
 
-const BRAND_GREEN = '#09C285';
 
 interface BannerMakerProps {
   config: BannerConfig;
@@ -120,11 +119,7 @@ export function BannerMaker({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className="mb-1 flex min-h-[48px] cursor-pointer items-center justify-center rounded-[5px] px-3 py-4 transition-[border-color,background-color] duration-150"
-            style={{
-              border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
-              backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
-            }}
+            className={`mb-1 flex min-h-[48px] cursor-pointer items-center justify-center rounded-[5px] border-[1.5px] border-dashed px-3 py-4 transition-[border-color,background-color] duration-150 ${isDragging ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
           >
             <input
               id="banner-image"
@@ -135,10 +130,7 @@ export function BannerMaker({
             />
             <label
               htmlFor="banner-image"
-              className="flex cursor-pointer items-center justify-center gap-2 text-[13px] font-medium uppercase tracking-[0.02em]"
-              style={{
-                color: isDragging ? BRAND_GREEN : '#6b7280',
-              }}
+              className={`flex cursor-pointer items-center justify-center gap-2 text-[13px] font-medium uppercase tracking-[0.02em] ${isDragging ? 'text-brand' : 'text-text-muted'}`}
             >
               {isDragging ? (
                 <>
@@ -233,20 +225,21 @@ export function BannerMaker({
 
         <div className={ctrl.group}>
           <label>Trade Side</label>
-          <div className={ctrl.segmented}>
+          <div className={ctrl.colorToggle}>
             {(['Yes', 'No'] as const).map((side) => {
-              const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
+              const isActive = config.tradeSide === side;
+              const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : 'text-[#d91616]';
+              const activeCls = isActive
+                ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
+                : 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
+                : 'font-medium';
               return (
                 <button
                   key={side}
                   type="button"
-                  className={`${ctrl.segmentedOption} ${config.tradeSide === side ? ctrl.segmentedOptionActive : ''}`}
+                  className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
                   onClick={() => onConfigChange({ tradeSide: side })}
-                  aria-pressed={config.tradeSide === side}
-                  style={{
-                    color: sideColor,
-                    fontWeight: config.tradeSide === side ? 600 : 500,
-                  }}
+                  aria-pressed={isActive}
                 >
                   {side}
                 </button>

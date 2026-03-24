@@ -170,10 +170,7 @@ export function MarketPageMaker({
         <div className={ctrl.group}>
           <label>Image</label>
           <div
-            className={`${ctrl.comboImagePlaceholder} w-full flex flex-col items-center gap-2 p-4`}
-            style={{
-              borderColor: isDragging ? '#09C285' : undefined,
-            }}
+            className={`${ctrl.comboImagePlaceholder} w-full flex flex-col items-center gap-2 p-4 ${isDragging ? 'border-brand' : ''}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -279,7 +276,7 @@ export function MarketPageMaker({
                     type="color"
                     value={outcome.color}
                     onChange={(e) => handleOutcomeChange(outcome.id, { color: e.target.value })}
-                    className="size-6 cursor-pointer border-none p-0"
+                    className="size-6 cursor-pointer rounded border border-dark-border-light p-0"
                   />
                   <span className={ctrl.comboLegTitle}>Outcome {index + 1}</span>
                 </div>
@@ -330,7 +327,7 @@ export function MarketPageMaker({
                         </button>
                       </>
                     ) : (
-                      <label className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#252525] px-3 py-2 text-[13px] text-[#6b7280]">
+                      <label className="flex cursor-pointer items-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-elevated px-3 py-2 text-[13px] text-text-muted transition-[border-color,color] duration-150 hover:border-brand hover:text-brand">
                         <UploadIcon />
                         Upload image
                         <input
@@ -475,7 +472,7 @@ export function MarketPageMaker({
                 </button>
               </>
             ) : (
-              <label className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#252525] px-3 py-2 text-[13px] text-[#6b7280]">
+              <label className="flex cursor-pointer items-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-elevated px-3 py-2 text-[13px] text-text-muted transition-[border-color,color] duration-150 hover:border-brand hover:text-brand">
                 <UploadIcon />
                 Upload profile picture
                 <input
@@ -508,34 +505,37 @@ export function MarketPageMaker({
       <div className={ctrl.section}>
         <div className={ctrl.sectionTitle}>Display Options</div>
 
-        <div className={ctrl.group}>
-          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
+        <div className={ctrl.checkboxGroup}>
+          <label className={ctrl.checkboxLabel}>
             <input
               type="checkbox"
               checked={config.darkMode === true}
               onChange={(e) => onConfigChange({ darkMode: e.target.checked })}
+              className={ctrl.checkboxInput}
             />
             Dark mode
           </label>
         </div>
 
-        <div className={ctrl.group}>
-          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
+        <div className={ctrl.checkboxGroup}>
+          <label className={ctrl.checkboxLabel}>
             <input
               type="checkbox"
               checked={config.showWatermark}
               onChange={(e) => onConfigChange({ showWatermark: e.target.checked })}
+              className={ctrl.checkboxInput}
             />
             Show watermark
           </label>
         </div>
 
-        <div className={ctrl.group}>
-          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
+        <div className={ctrl.checkboxGroup}>
+          <label className={ctrl.checkboxLabel}>
             <input
               type="checkbox"
               checked={config.showRules}
               onChange={(e) => onConfigChange({ showRules: e.target.checked })}
+              className={ctrl.checkboxInput}
             />
             Show rules section
           </label>
@@ -554,23 +554,25 @@ export function MarketPageMaker({
           </div>
         )}
 
-        <div className={ctrl.group}>
-          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
+        <div className={ctrl.checkboxGroup}>
+          <label className={ctrl.checkboxLabel}>
             <input
               type="checkbox"
               checked={config.showRelatedMarkets}
               onChange={(e) => onConfigChange({ showRelatedMarkets: e.target.checked })}
+              className={ctrl.checkboxInput}
             />
             Show "People are also buying" section
           </label>
         </div>
 
-        <div className={ctrl.group}>
-          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
+        <div className={ctrl.checkboxGroup}>
+          <label className={ctrl.checkboxLabel}>
             <input
               type="checkbox"
               checked={config.showReviewPage}
               onChange={(e) => onConfigChange({ showReviewPage: e.target.checked })}
+              className={ctrl.checkboxInput}
             />
             Show review step before submit
           </label>
@@ -578,14 +580,14 @@ export function MarketPageMaker({
       </div>
 
       {/* Export Buttons */}
-      <div className={ctrl.footer}>
-        <button className={ctrl.btnExport} onClick={onExport}>
+      <div className="mt-5 flex gap-2">
+        <button className={`${ctrl.btnExport} flex-1`} onClick={onExport}>
           <DownloadIcon />
           Export as PNG
         </button>
-        <button className={ctrl.btnRegen} onClick={onCopyToClipboard}>
+        <button className={`${ctrl.btnExport} flex-1`} onClick={onCopyToClipboard}>
           <CopyIcon />
-          Copy to Clipboard
+          Copy
         </button>
       </div>
     </div>

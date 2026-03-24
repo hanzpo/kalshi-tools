@@ -68,7 +68,6 @@ function calculateAmericanPayout(wager: number, odds: number): number {
   return Math.round((wager * (1 + fractionalReturn)) * 100) / 100;
 }
 
-const BRAND_GREEN = '#09C285';
 
 export function TradeSlipMaker({
   config,
@@ -381,11 +380,7 @@ export function TradeSlipMaker({
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                className="rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 transition-[border-color,background-color] duration-150 cursor-pointer mb-1"
-                style={{
-                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
-                  backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
-                }}
+                className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDragging ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
               >
                 <input
                   id="bet-image"
@@ -396,10 +391,7 @@ export function TradeSlipMaker({
                 />
                 <label
                   htmlFor="bet-image"
-                  className="cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em]"
-                  style={{
-                    color: isDragging ? BRAND_GREEN : '#6b7280',
-                  }}
+                  className={`cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em] ${isDragging ? 'text-brand' : 'text-text-muted'}`}
                 >
                   {isDragging ? (
                     <>
@@ -443,20 +435,22 @@ export function TradeSlipMaker({
 
             <div className={ctrl.group}>
               <label>Trade Side</label>
-              <div className={ctrl.segmented}>
+              <div className={ctrl.colorToggle}>
                 {(['Yes', 'No', 'Custom'] as const).map((side) => {
-                  const sideColor = side === 'Yes' ? '#0f9b6c' : side === 'No' ? '#d91616' : '#666666';
+                  const isActive = config.tradeSide === side;
+                  const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : side === 'No' ? 'text-[#d91616]' : 'text-[#666]';
+                  const activeCls = isActive
+                    ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
+                    : side === 'No' ? 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
+                    : 'font-semibold border-[#666] bg-[#666]/[0.125]'
+                    : 'font-medium';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
+                      className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
                       onClick={() => onConfigChange({ tradeSide: side })}
-                      aria-pressed={config.tradeSide === side}
-                      style={{
-                        color: sideColor,
-                        fontWeight: config.tradeSide === side ? 600 : 500,
-                      }}
+                      aria-pressed={isActive}
                     >
                       {side}
                     </button>
@@ -578,20 +572,21 @@ export function TradeSlipMaker({
 
             <div className={ctrl.group}>
               <label>Trade Side</label>
-              <div className={ctrl.segmented}>
+              <div className={ctrl.colorToggle}>
                 {(['Yes', 'No'] as const).map((side) => {
-                  const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
+                  const isActive = config.tradeSide === side;
+                  const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : 'text-[#d91616]';
+                  const activeCls = isActive
+                    ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
+                    : 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
+                    : 'font-medium';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
+                      className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
                       onClick={() => onConfigChange({ tradeSide: side })}
-                      aria-pressed={config.tradeSide === side}
-                      style={{
-                        color: sideColor,
-                        fontWeight: config.tradeSide === side ? 600 : 500,
-                      }}
+                      aria-pressed={isActive}
                     >
                       {side}
                     </button>
@@ -606,11 +601,7 @@ export function TradeSlipMaker({
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                className="rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 transition-[border-color,background-color] duration-150 cursor-pointer mb-1"
-                style={{
-                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
-                  backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
-                }}
+                className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDragging ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
               >
                 <input
                   id="bet-image-old"
@@ -621,10 +612,7 @@ export function TradeSlipMaker({
                 />
                 <label
                   htmlFor="bet-image-old"
-                  className="cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em]"
-                  style={{
-                    color: isDragging ? BRAND_GREEN : '#6b7280',
-                  }}
+                  className={`cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em] ${isDragging ? 'text-brand' : 'text-text-muted'}`}
                 >
                   {isDragging ? (
                     <>
@@ -670,11 +658,7 @@ export function TradeSlipMaker({
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                className="rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 transition-[border-color,background-color] duration-150 cursor-pointer mb-1"
-                style={{
-                  border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
-                  backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
-                }}
+                className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDragging ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
               >
                 <input
                   id="bet-image-horizontal"
@@ -685,10 +669,7 @@ export function TradeSlipMaker({
                 />
                 <label
                   htmlFor="bet-image-horizontal"
-                  className="cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em]"
-                  style={{
-                    color: isDragging ? BRAND_GREEN : '#6b7280',
-                  }}
+                  className={`cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em] ${isDragging ? 'text-brand' : 'text-text-muted'}`}
                 >
                   {isDragging ? (
                     <>
@@ -720,20 +701,21 @@ export function TradeSlipMaker({
 
             <div className={ctrl.group}>
               <label>Trade Side</label>
-              <div className={ctrl.segmented}>
+              <div className={ctrl.colorToggle}>
                 {(['Yes', 'No'] as const).map((side) => {
-                  const sideColor = side === 'Yes' ? '#0f9b6c' : '#d91616';
+                  const isActive = config.tradeSide === side;
+                  const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : 'text-[#d91616]';
+                  const activeCls = isActive
+                    ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
+                    : 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
+                    : 'font-medium';
                   return (
                     <button
                       key={side}
                       type="button"
-                      className={`${ctrl.segmentedOption}${config.tradeSide === side ? ` ${ctrl.segmentedOptionActive}` : ''}`}
+                      className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
                       onClick={() => onConfigChange({ tradeSide: side })}
-                      aria-pressed={config.tradeSide === side}
-                      style={{
-                        color: sideColor,
-                        fontWeight: config.tradeSide === side ? 600 : 500,
-                      }}
+                      aria-pressed={isActive}
                     >
                       {side}
                     </button>
@@ -944,10 +926,7 @@ export function TradeSlipMaker({
                         onDragOver={(e) => handleLegDragOver(leg.id, e)}
                         onDragLeave={handleLegDragLeave}
                         onDrop={(e) => handleLegDrop(leg.id, e)}
-                        className={`${ctrl.comboImageUpload} rounded-lg transition-[border-color] duration-200`}
-                        style={{
-                          border: `1.5px dashed ${draggingLegId === leg.id ? BRAND_GREEN : '#444'}`,
-                        }}
+                        className={`${ctrl.comboImageUpload} rounded-lg border-[1.5px] border-dashed transition-[border-color] duration-200 ${draggingLegId === leg.id ? 'border-brand' : 'border-[#444]'}`}
                       >
                         {leg.image ? (
                           <>
@@ -1026,13 +1005,13 @@ export function TradeSlipMaker({
               <p className={ctrl.helpText}>Expected payout: ${payout.toLocaleString()}</p>
             </div>
 
-            <div className={ctrl.group}>
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className={ctrl.checkboxGroup}>
+              <label className={ctrl.checkboxLabel}>
                 <input
                   type="checkbox"
                   checked={config.customPayout != null}
                   onChange={(e) => onConfigChange({ customPayout: e.target.checked ? payout : undefined })}
-                  className="size-[18px] cursor-pointer accent-[#00C688]"
+                  className={ctrl.checkboxInput}
                 />
                 Custom Payout
               </label>
@@ -1040,7 +1019,7 @@ export function TradeSlipMaker({
                 <input
                   id="custom-payout"
                   type="number"
-                  className={ctrl.input}
+                  className={`${ctrl.input} mt-1.5`}
                   placeholder="e.g., 5000"
                   value={config.customPayout}
                   onChange={(e) => onConfigChange({ customPayout: parseFloat(e.target.value) || 0 })}
@@ -1084,13 +1063,13 @@ export function TradeSlipMaker({
                 Enter positive or negative odds (e.g., -110 or +250). Potential payout: ${payout.toLocaleString()}
               </p>
             </div>
-            <div className={ctrl.group}>
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className={ctrl.checkboxGroup}>
+              <label className={ctrl.checkboxLabel}>
                 <input
                   type="checkbox"
                   checked={config.customPayout != null}
                   onChange={(e) => onConfigChange({ customPayout: e.target.checked ? payout : undefined })}
-                  className="size-[18px] cursor-pointer accent-[#00C688]"
+                  className={ctrl.checkboxInput}
                 />
                 Custom Payout
               </label>
@@ -1098,7 +1077,7 @@ export function TradeSlipMaker({
                 <input
                   id="custom-payout-old"
                   type="number"
-                  className={ctrl.input}
+                  className={`${ctrl.input} mt-1.5`}
                   placeholder="e.g., 5000"
                   value={config.customPayout}
                   onChange={(e) => onConfigChange({ customPayout: parseFloat(e.target.value) || 0 })}
@@ -1180,78 +1159,65 @@ export function TradeSlipMaker({
         )}
 
         {!isSingleOldMode && !isComboOldMode && !isHorizontalMode && (
-          <div className={ctrl.group}>
-            <label
-              htmlFor="show-timestamp-bet"
-              className="flex items-center gap-2 cursor-pointer"
-            >
+          <div className={ctrl.checkboxGroup}>
+            <label htmlFor="show-timestamp-bet" className={ctrl.checkboxLabel}>
               <input
                 id="show-timestamp-bet"
                 type="checkbox"
                 checked={config.showTimestamp}
                 onChange={(e) => onConfigChange({ showTimestamp: e.target.checked })}
-                className="size-[18px] cursor-pointer accent-[#09C285]"
+                className={ctrl.checkboxInput}
               />
-              <span>Show Date/Time</span>
+              Show Date/Time
             </label>
             <p className={ctrl.helpText}>Display purchase date and time on trade slip</p>
           </div>
         )}
 
-        <div className={ctrl.group}>
-          <label
-            htmlFor="show-watermark-bet"
-            className="flex items-center gap-2 cursor-pointer"
-          >
+        <div className={ctrl.checkboxGroup}>
+          <label htmlFor="show-watermark-bet" className={ctrl.checkboxLabel}>
             <input
               id="show-watermark-bet"
               type="checkbox"
               checked={config.showWatermark}
               onChange={(e) => onConfigChange({ showWatermark: e.target.checked })}
-              className="size-[18px] cursor-pointer accent-[#09C285]"
+              className={ctrl.checkboxInput}
             />
-            <span>Show Watermark</span>
+            Show Watermark
           </label>
           <p className={ctrl.helpText}>Display watermark on trade slip</p>
         </div>
 
+        <div className={ctrl.checkboxGroup}>
+          <label htmlFor="show-cashed-out" className={ctrl.checkboxLabel}>
+            <input
+              id="show-cashed-out"
+              type="checkbox"
+              checked={config.showCashedOut}
+              onChange={(e) => onConfigChange({ showCashedOut: e.target.checked })}
+              className={ctrl.checkboxInput}
+            />
+            Show "Cashed out" Badge
+          </label>
+          <p className={ctrl.helpText}>Display cashed out badge in corner</p>
+        </div>
 
-        <div className={`${ctrl.group} mb-0`}>
-            <label
-              htmlFor="show-cashed-out"
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <input
-                id="show-cashed-out"
-                type="checkbox"
-                checked={config.showCashedOut}
-                onChange={(e) => onConfigChange({ showCashedOut: e.target.checked })}
-                className="size-[18px] cursor-pointer accent-[#09C285]"
-              />
-              <span>Show "Cashed out" Badge</span>
-            </label>
-            <p className={ctrl.helpText}>Display cashed out badge in corner</p>
-          </div>
-
-        <div className={`${ctrl.group} mb-0`}>
-          <label
-            htmlFor="is-paid-out"
-            className="flex items-center gap-2 cursor-pointer"
-          >
+        <div className={ctrl.checkboxGroup}>
+          <label htmlFor="is-paid-out" className={ctrl.checkboxLabel}>
             <input
               id="is-paid-out"
               type="checkbox"
               checked={config.isPaidOut}
               onChange={(e) => onConfigChange({ isPaidOut: e.target.checked })}
-              className="size-[18px] cursor-pointer accent-[#09C285]"
+              className={ctrl.checkboxInput}
             />
-            <span>Paid Out</span>
+            Paid Out
           </label>
           <p className={ctrl.helpText}>Show as a paid out trade slip</p>
         </div>
       </div>
 
-      <div className="flex gap-2 mt-5">
+      <div className="mt-5 flex gap-2">
         <button
           onClick={onExport}
           className={`${ctrl.btnExport} flex-1`}
