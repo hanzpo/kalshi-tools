@@ -1,50 +1,11 @@
-@font-face {
-  font-family: 'Graphik';
-  src: url('/Graphik-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Graphik';
-  src: url('/Graphik-Semibold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Graphik Condensed App';
-  src: url('/GraphikCondensed-Regular-Trial.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Graphik Condensed App';
-  src: url('/GraphikCondensed-Medium-Trial.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ── Root container ── */
+/* ── Root container (background + font-family) ── */
 .bracket-preview {
   width: 590px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24px 0 72px;
-  position: relative;
   background: #0b0d0c;
   font-family: 'Graphik', 'Inter', system-ui, sans-serif;
-  overflow: hidden;
-  box-sizing: border-box;
 }
 
-/* Green glow - layered gradients matching Figma */
+/* ── Green glow ::before pseudo-element ── */
 .bracket-preview::before {
   content: '';
   position: absolute;
@@ -59,18 +20,12 @@
   z-index: 0;
 }
 
-/* ── Header ── */
-.bracket-header {
-  text-align: center;
-  width: 100%;
-  margin-bottom: -48px;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+/* ── R64 view width override ── */
+.bracket-preview--r64 {
+  width: 800px;
 }
 
+/* ── Subtitle (font-feature-settings) ── */
 .bracket-subtitle {
   font-family: 'Graphik', 'Inter', system-ui, sans-serif;
   font-size: 16.5px;
@@ -79,73 +34,21 @@
   text-transform: uppercase;
   color: rgba(255,255,255,0.55);
   line-height: 27px;
-  margin: 0;
   font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
 }
 
+/* ── Title (font-feature-settings + custom font) ── */
 .bracket-title {
   font-family: 'Graphik Condensed App', 'Barlow Condensed', system-ui, sans-serif;
   font-weight: 500;
   font-size: 45px;
   line-height: 54px;
   color: rgba(255,255,255,0.9);
-  margin: 0;
-  white-space: pre-line;
   text-transform: uppercase;
   font-feature-settings: 'case' 1, 'lnum' 1, 'pnum' 1;
 }
 
-/* ── Bracket container ── */
-.bracket-container {
-  width: 590px;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ── Bracket body ── */
-.bracket-body {
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-/* ── Half (top or bottom) ── */
-.bracket-half {
-  display: flex;
-  gap: 0;
-  width: 100%;
-  justify-content: center;
-  align-items: stretch;
-  height: 477px;
-}
-
-.bracket-half--top {
-  align-items: flex-start;
-}
-
-.bracket-half--bottom {
-  align-items: flex-end;
-}
-
-/* ── Region side ── */
-.bracket-region-side {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.bracket-region-side--right {
-  flex-direction: row-reverse;
-}
-
-/* ── Region name label (centered in each quadrant) ── */
+/* ── Region name label ── */
 .bracket-region-name {
   position: absolute;
   top: 50%;
@@ -161,100 +64,6 @@
   pointer-events: none;
   white-space: nowrap;
   z-index: 1;
-}
-
-/* ── Round column ── */
-.bracket-round-col {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.bracket-round-col--r32,
-.bracket-round-col--s16,
-.bracket-round-col--e8 {
-  width: 60px;
-}
-
-/* ── Matchup row ── */
-.bracket-matchup-row {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  min-height: 1px;
-  min-width: 1px;
-  width: 100%;
-}
-
-.bracket-matchup-row--right {
-  flex-direction: row-reverse;
-}
-
-/* ── Bracket connector ── */
-.bracket-connector {
-  display: flex;
-  height: 60px;
-  align-items: center;
-  width: 12px;
-  max-width: 12px;
-  flex-shrink: 0;
-}
-
-.bracket-connector-inner {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.bracket-connector-left,
-.bracket-connector-right {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
-  min-height: 1px;
-  min-width: 1px;
-}
-
-.bracket-connector-top-left {
-  flex: 1;
-  border-right: 1px solid rgba(255,255,255,0.1);
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.bracket-connector-bottom-left {
-  flex: 1;
-  border-right: 1px solid rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.bracket-connector-top-right {
-  flex: 1;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.bracket-connector-bottom-right {
-  flex: 1;
-}
-
-/* Mirrored connector (right side regions) */
-.bracket-connector--mirrored .bracket-connector-inner {
-  transform: scaleX(-1);
-}
-
-.bracket-connector--mirrored .bracket-connector-top-left {
-  border-right: 1px solid rgba(255,255,255,0.1);
-  border-left: none;
-}
-
-.bracket-connector--mirrored .bracket-connector-bottom-left {
-  border-right: 1px solid rgba(255,255,255,0.1);
-  border-left: none;
 }
 
 /* ── Team square ── */
@@ -301,16 +110,7 @@
   box-shadow: none;
 }
 
-.bracket-team-inner {
-  width: 100%;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
+/* ── Team name (font-feature-settings) ── */
 .bracket-team-name {
   display: flex;
   align-items: center;
@@ -341,75 +141,37 @@
   line-height: 1;
 }
 
-/* ── Center finals row ── */
-.bracket-center-row {
-  width: 100%;
-  height: 81px;
-  display: grid;
-  grid-template-columns: 1fr 44px 36px 201px 36px 44px 1fr;
-  align-items: center;
+/* ── Championship line ::after pseudo-element ── */
+.bracket-championship-line {
+  height: 0;
+  width: 12px;
+  flex-shrink: 0;
   position: relative;
-  z-index: 3;
 }
 
-.bracket-semifinal-labels {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-self: flex-start;
-  z-index: 4;
+.bracket-championship-line::after {
+  content: '';
+  position: absolute;
+  top: -0.5px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
 }
 
-.bracket-semifinal-labels--left {
-  grid-column: 2;
-  margin-top: 7.5px;
+/* ── Champion label (font-feature-settings) ── */
+.bracket-champion-label {
+  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: 1.32px;
+  text-transform: uppercase;
+  color: #0AC285;
+  line-height: 27px;
+  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
 }
 
-.bracket-semifinal-labels--right {
-  grid-column: 6;
-  margin-top: 13.5px;
-}
-
-.bracket-semifinal-label {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  text-align: center;
-  opacity: 1;
-  transition: opacity 0.12s ease, transform 0.12s ease;
-}
-
-.bracket-semifinal-label:hover:not(:disabled) {
-  transform: scale(1.04);
-}
-
-.bracket-semifinal-label:disabled {
-  cursor: default;
-  opacity: 0.32;
-}
-
-.bracket-semifinal-label--selected {
-}
-
-.bracket-semifinal-label--left {
-  width: 44px;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 9px;
-  padding: 3px;
-  background: rgba(255,255,255,0.02);
-}
-
-.bracket-semifinal-label--right {
-  width: 44px;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 9px;
-  padding: 3px;
-  background: rgba(255,255,255,0.02);
-}
-
+/* ── Semifinal label inner (font-feature-settings) ── */
 .bracket-semifinal-label-inner {
   box-sizing: border-box;
   display: flex;
@@ -429,181 +191,7 @@
   font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
 }
 
-.bracket-center-matchup {
-  grid-column: 4;
-  width: 201px;
-  height: 81px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bracket-championship-row {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  width: 201px;
-  height: 81px;
-}
-
-.bracket-championship-row .bracket-team {
-  position: relative;
-  z-index: 2;
-}
-
-.bracket-center-slot {
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-}
-
-.bracket-championship-line {
-  height: 0;
-  width: 12px;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.bracket-championship-line::after {
-  content: '';
-  position: absolute;
-  top: -0.5px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(255,255,255,0.1);
-}
-
-.bracket-champion-wrap {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 240px;
-  height: 240px;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.bracket-champion-label {
-  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
-  font-size: 16.5px;
-  font-weight: 600;
-  letter-spacing: 1.32px;
-  text-transform: uppercase;
-  color: #0AC285;
-  line-height: 27px;
-  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
-}
-
-.bracket-champion-ring {
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(128,128,128,0.02);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 108px;
-  padding-top: 6px;
-  box-sizing: border-box;
-}
-
-/* ── Kalshi watermark ── */
-.bracket-watermark {
-  color: #0AC285;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bracket-watermark svg {
-  width: 81px;
-  height: 24px;
-}
-
-/* ── Region labels (legacy, unused but kept for compat) ── */
-.bracket-region-labels {
-  display: none;
-}
-
-.bracket-region-label {
-  flex: 1;
-  text-align: center;
-  font-family: 'Graphik', 'Inter', system-ui, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 1.32px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.9);
-  line-height: 27px;
-  font-feature-settings: 'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1;
-}
-
-/* ── R64 (Round of 64) view ── */
-.bracket-preview--r64 {
-  width: 800px;
-}
-
-.bracket-preview--r64 .bracket-container {
-  width: 800px;
-}
-
-.bracket-preview--r64 .bracket-half {
-  height: 560px;
-}
-
-/* R64 matchup column (seed pairs + connectors + winners) */
-.bracket-r64-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-/* Each R64 matchup row: seed pair → connector → winner */
-.bracket-r64-matchup {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  min-height: 1px;
-  width: 100%;
-}
-
-.bracket-r64-matchup--right {
-  flex-direction: row-reverse;
-}
-
-/* Seed pair container */
-.bracket-seed-pair {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex-shrink: 0;
-}
-
-/* Individual seed badge */
-.bracket-seed-badge {
-  width: 36px;
-  height: 18px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.bracket-seed-badge--empty {
-  background: rgba(255,255,255,0.06);
-}
-
+/* ── Seed badge name (font-feature-settings) ── */
 .bracket-seed-badge-name {
   font-family: 'Graphik', 'Inter', system-ui, sans-serif;
   font-size: 7.5px;

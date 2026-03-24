@@ -542,7 +542,7 @@ export default function MarketPageBuilder() {
           </button>
         </div>
         {!isPanelCollapsed && (
-          <div className="flex-1 overflow-y-auto overflow-x-hidden [&_.sticky]:static [&_.rounded-lg]:rounded-none [&_.border]:border-none [&_.shadow-\\[0_1px_3px_rgba\\(0\\,0\\,0\\,0\\.3\\)\\]]:shadow-none">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden [&_.sticky]:static [&_.rounded-lg]:rounded-none [&_.border]:border-none [&_.shadow-sm]:shadow-none">
             <MarketPageMaker
               config={config}
               onConfigChange={handleConfigChange}

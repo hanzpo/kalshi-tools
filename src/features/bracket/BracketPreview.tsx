@@ -44,7 +44,7 @@ function TeamSquare({
   if (!team) {
     return (
       <div className={`bracket-team bracket-team--empty ${size === 'lg' ? 'bracket-team--champion' : ''}`}>
-        <div className="bracket-team-inner" style={{ background: 'rgba(255,255,255,0.06)' }}>
+        <div className="flex w-full flex-1 items-center justify-center rounded-[6px] overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
           <span className="bracket-team-name" style={{ color: 'rgba(255,255,255,0.15)' }}>?</span>
         </div>
       </div>
@@ -56,7 +56,7 @@ function TeamSquare({
       className={`bracket-team ${size === 'lg' ? 'bracket-team--champion' : ''}`}
       onClick={onClick}
     >
-      <div className="bracket-team-inner" style={{ background: team.bgColor }}>
+      <div className="flex w-full flex-1 items-center justify-center rounded-[6px] overflow-hidden" style={{ background: team.bgColor }}>
         <span className="bracket-team-name" style={{ color: textColorForBg(team.bgColor) }}>
           {team.name}
         </span>
@@ -67,10 +67,10 @@ function TeamSquare({
 
 function SeedBadge({ team }: { team: BracketTeam | null }) {
   if (!team) {
-    return <div className="bracket-seed-badge bracket-seed-badge--empty" />;
+    return <div className="w-[36px] h-[18px] rounded-[4px] flex items-center justify-center shrink-0 bg-[rgba(255,255,255,0.06)]" />;
   }
   return (
-    <div className="bracket-seed-badge" style={{ background: team.bgColor }}>
+    <div className="w-[36px] h-[18px] rounded-[4px] flex items-center justify-center shrink-0" style={{ background: team.bgColor }}>
       <span className="bracket-seed-badge-name" style={{ color: textColorForBg(team.bgColor) }}>
         {team.name}
       </span>
@@ -81,17 +81,17 @@ function SeedBadge({ team }: { team: BracketTeam | null }) {
 function Connector({ height = 40, mirrored = false }: { height?: number; mirrored?: boolean }) {
   return (
     <div
-      className={`bracket-connector ${mirrored ? 'bracket-connector--mirrored' : ''}`}
+      className="flex items-center w-[12px] max-w-[12px] shrink-0"
       style={{ height }}
     >
-      <div className="bracket-connector-inner">
-        <div className="bracket-connector-left">
-          <div className="bracket-connector-top-left" />
-          <div className="bracket-connector-bottom-left" />
+      <div className={`flex flex-1 h-full items-center justify-between ${mirrored ? '-scale-x-100' : ''}`}>
+        <div className="flex flex-1 flex-col h-full min-h-px min-w-px">
+          <div className="flex-1 border-r border-t border-[rgba(255,255,255,0.1)]" />
+          <div className="flex-1 border-r border-b border-[rgba(255,255,255,0.1)]" />
         </div>
-        <div className="bracket-connector-right">
-          <div className="bracket-connector-top-right" />
-          <div className="bracket-connector-bottom-right" />
+        <div className="flex flex-1 flex-col h-full min-h-px min-w-px">
+          <div className="flex-1 border-b border-[rgba(255,255,255,0.1)]" />
+          <div className="flex-1" />
         </div>
       </div>
     </div>
@@ -115,7 +115,7 @@ function RegionBracket({
   const baseGame = regionIndex * 8;
 
   const r64Col = view === 'r32' ? (
-    <div className="bracket-round-col">
+    <div className="flex flex-col gap-[12px] items-center justify-center h-full">
       {Array.from({ length: 8 }, (_, i) => {
         const gameIdx = baseGame + i;
         const [teamA, teamB] = getMatchupParticipants(config, gameIdx);
@@ -135,15 +135,15 @@ function RegionBracket({
       })}
     </div>
   ) : (
-    <div className="bracket-r64-col">
+    <div className="flex flex-col items-center justify-center h-full">
       {Array.from({ length: 8 }, (_, i) => {
         const gameIdx = baseGame + i;
         const [teamA, teamB] = getMatchupParticipants(config, gameIdx);
         const currentWinner = getWinner(config, gameIdx);
         const currentPick = config.picks[gameIdx];
         return (
-          <div key={i} className={`bracket-r64-matchup ${mirrored ? 'bracket-r64-matchup--right' : ''}`}>
-            <div className="bracket-seed-pair">
+          <div key={i} className={`flex flex-1 items-center min-h-px w-full ${mirrored ? 'flex-row-reverse' : ''}`}>
+            <div className="flex flex-col gap-[2px] shrink-0">
               <SeedBadge team={teamA} />
               <SeedBadge team={teamB} />
             </div>
@@ -166,14 +166,14 @@ function RegionBracket({
     gameBase: number,
     connectorHeight: number,
   ) => (
-    <div className="bracket-round-col bracket-round-col--r32">
+    <div className="flex flex-col gap-[12px] items-center justify-center h-full w-[60px]">
       {Array.from({ length: count }, (_, i) => {
         const gameIdx = gameBase + i;
         const [tA, tB] = getMatchupParticipants(config, gameIdx);
         const currentW = getWinner(config, gameIdx);
         const currentPick = config.picks[gameIdx];
         return (
-          <div key={i} className={`bracket-matchup-row ${mirrored ? 'bracket-matchup-row--right' : ''}`}>
+          <div key={i} className={`flex flex-1 items-center min-h-px min-w-px w-full ${mirrored ? 'flex-row-reverse' : ''}`}>
             <Connector height={connectorHeight} mirrored={mirrored} />
             <TeamSquare
               team={currentW || tA || tB}
@@ -196,8 +196,8 @@ function RegionBracket({
   const s16Col = makeRoundCol(2, s16Base, 120);
 
   const e8Col = (
-    <div className="bracket-round-col bracket-round-col--e8">
-      <div className={`bracket-matchup-row ${mirrored ? 'bracket-matchup-row--right' : ''}`}>
+    <div className="flex flex-col gap-[12px] items-center justify-center h-full w-[60px]">
+      <div className={`flex flex-1 items-center min-h-px min-w-px w-full ${mirrored ? 'flex-row-reverse' : ''}`}>
         <Connector height={240} mirrored={mirrored} />
         {(() => {
           const [tA, tB] = getMatchupParticipants(config, e8Game);
@@ -219,7 +219,7 @@ function RegionBracket({
 
   if (mirrored) {
     return (
-      <div className="bracket-region-side bracket-region-side--right">
+      <div className="flex flex-1 h-full items-center justify-center relative flex-row-reverse">
         <span className="bracket-region-name">{regionName}</span>
         {r64Col}
         {r32Col}
@@ -230,7 +230,7 @@ function RegionBracket({
   }
 
   return (
-    <div className="bracket-region-side">
+    <div className="flex flex-1 h-full items-center justify-center relative">
       <span className="bracket-region-name">{regionName}</span>
       {r64Col}
       {r32Col}
@@ -255,12 +255,12 @@ function FinalFourLabels({
   const currentWinner = getWinner(config, gameIndex);
 
   return (
-    <div className={`bracket-semifinal-labels bracket-semifinal-labels--${side}`}>
+    <div className={`flex flex-col gap-[6px] self-start z-[4] ${side === 'left' ? 'col-start-2 mt-[7.5px]' : '[grid-column:6] mt-[13.5px]'}`}>
       {[teamA, teamB].map((team, index) => (
         <button
           key={index}
           type="button"
-          className={`bracket-semifinal-label bracket-semifinal-label--${side} ${team && currentWinner === team ? 'bracket-semifinal-label--selected' : ''}`}
+          className={`box-border p-[3px] m-0 bg-[rgba(255,255,255,0.02)] cursor-pointer text-center transition-[opacity,transform] duration-[120ms] ease-linear w-[44px] border border-[rgba(255,255,255,0.1)] rounded-[9px] hover:enabled:scale-[1.04] disabled:cursor-default disabled:opacity-[0.32] ${team && currentWinner === team ? 'bracket-semifinal-label--selected' : ''}`}
           onClick={() => {
             if (!teamA || !teamB) return;
             onPick(gameIndex, index);
@@ -290,37 +290,37 @@ export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
   const f4RightWinner = getWinner(config, 61);
 
   return (
-    <div className={`bracket-preview ${view === 'r64' ? 'bracket-preview--r64' : ''}`} id={BRACKET_PREVIEW_ID}>
+    <div className={`bracket-preview flex flex-col items-center pt-[24px] pb-[72px] relative overflow-hidden box-border ${view === 'r64' ? 'bracket-preview--r64' : ''}`} id={BRACKET_PREVIEW_ID}>
       {/* Header */}
-      <div className="bracket-header">
-        <p className="bracket-subtitle">{DEFAULT_BRACKET_SUBTITLE}</p>
-        <p className="bracket-title">{DEFAULT_BRACKET_TITLE}</p>
+      <div className="text-center w-full mb-[-48px] relative z-[2] flex flex-col">
+        <p className="bracket-subtitle m-0">{DEFAULT_BRACKET_SUBTITLE}</p>
+        <p className="bracket-title m-0 whitespace-pre-line">{DEFAULT_BRACKET_TITLE}</p>
       </div>
 
-      <div className="bracket-container">
-        <div className="bracket-body">
-          <div className="bracket-half bracket-half--top">
+      <div className={`flex flex-col items-center p-0 ${view === 'r64' ? 'w-[800px]' : 'w-[590px]'}`}>
+        <div className="w-full relative flex flex-col">
+          <div className={`flex w-full justify-center ${view === 'r64' ? 'h-[560px]' : 'h-[477px]'} items-start`}>
             <RegionBracket config={config} regionIndex={0} onPick={onPick} view={view} />
             <RegionBracket config={config} regionIndex={2} mirrored onPick={onPick} view={view} />
           </div>
 
-          <div className="bracket-center-row">
+          <div className="w-full h-[81px] grid grid-cols-[1fr_44px_36px_201px_36px_44px_1fr] items-center relative z-[3]">
             <FinalFourLabels config={config} onPick={onPick} gameIndex={60} side="left" />
 
-            <div className="bracket-center-matchup">
-              <div className="bracket-championship-row">
+            <div className="[grid-column:4] w-[201px] h-[81px] relative flex items-center justify-center">
+              <div className="relative z-[3] flex items-center justify-center w-[201px] h-[81px]">
                 {f4LeftWinner ? (
                   <TeamSquare team={f4LeftWinner} />
                 ) : (
-                  <div className="bracket-center-slot" />
+                  <div className="w-[48px] h-[48px] shrink-0" />
                 )}
                 <div className="bracket-championship-line" />
 
-                <div className="bracket-champion-wrap">
-                  <div className="bracket-champion-ring">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] z-[1] pointer-events-none">
+                  <div className="w-[240px] h-[240px] rounded-full border border-[rgba(255,255,255,0.1)] bg-[rgba(128,128,128,0.02)] flex flex-col items-center justify-center gap-[108px] pt-[6px] box-border">
                     <span className="bracket-champion-label">Champion</span>
-                    <div className="bracket-watermark">
-                      <svg viewBox="0 0 772 226" fill="none">
+                    <div className="text-[#0AC285] flex items-center justify-center">
+                      <svg className="w-[81px] h-[24px]" viewBox="0 0 772 226" fill="none">
                         <path
                           d="M255.677 58.1911C210.683 58.1911 183.381 78.5114 181.206 113.922H228.062C229.924 100.374 238.611 93.2917 253.814 93.2917C269.018 93.2917 277.396 100.064 277.088 110.842C276.775 119.156 271.501 122.852 258.16 124.7L238.923 127.164C195.484 132.398 175.002 148.717 175.002 177.967C175.002 207.218 195.48 226 229.611 226C251.331 226 267.776 218.302 278.017 203.522V222.61H326.422V117.924C326.422 78.5114 302.532 58.1911 255.677 58.1911ZM245.44 192.437C231.478 192.437 223.72 186.281 223.72 174.887C223.72 164.109 230.545 158.875 249.473 156.105L258.16 154.873C265.845 153.8 272.17 152.274 277.396 150.131V166.267C277.396 181.663 264.368 192.437 245.44 192.437ZM343.488 3.38607H393.135V222.61H343.488V3.38607ZM105.23 105.628L179.66 222.61H115.118L54.3009 121.934V222.61H0V3.38607H54.3009V99.102L119.464 3.38607H177.489L105.23 105.628ZM716.145 26.1705C716.145 12.0062 728.557 0 744.073 0C759.588 0 772 12.0062 772 26.1705C772 40.3347 759.588 52.3409 744.073 52.3409C728.557 52.3409 716.145 40.6407 716.145 26.1705ZM544.868 172.423C544.868 208.446 518.494 225.996 474.743 225.996C430.991 225.996 403.997 206.908 402.447 172.113H448.369C450.232 185.351 456.435 192.743 474.434 192.743C489.95 192.743 497.395 186.587 497.395 177.347C497.395 168.107 488.396 163.489 465.747 160.107C422.616 154.257 405.242 141.631 405.242 109.304C405.242 75.1293 436.582 58.1911 471.643 58.1911C509.186 58.1911 536.493 71.4293 540.218 108.688H495.225C493.054 96.9877 486.225 91.1376 471.951 91.1376C458.61 91.1376 451.161 97.2937 451.161 105.608C451.161 114.844 458.61 118.23 480.638 121.31C523.148 127.16 544.868 137.934 544.868 172.423ZM719.249 61.5771H768.896V222.61H719.249V61.5771ZM702.183 115.77V222.61H652.536V124.39C652.536 107.146 645.399 98.2197 629.884 98.2197C614.368 98.2197 603.51 108.072 603.51 127.47V222.61H553.863V3.38607H603.51V85.5617C611.32 70.1734 627.761 58.1911 651.603 58.1911C681.393 58.1911 702.179 76.9734 702.179 115.766L702.183 115.77Z"
                           fill="currentColor"
@@ -343,7 +343,7 @@ export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
                 {f4RightWinner ? (
                   <TeamSquare team={f4RightWinner} />
                 ) : (
-                  <div className="bracket-center-slot" />
+                  <div className="w-[48px] h-[48px] shrink-0" />
                 )}
               </div>
             </div>
@@ -351,7 +351,7 @@ export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
             <FinalFourLabels config={config} onPick={onPick} gameIndex={61} side="right" />
           </div>
 
-          <div className="bracket-half bracket-half--bottom">
+          <div className={`flex w-full justify-center ${view === 'r64' ? 'h-[560px]' : 'h-[477px]'} items-end`}>
             <RegionBracket config={config} regionIndex={1} onPick={onPick} view={view} />
             <RegionBracket config={config} regionIndex={3} mirrored onPick={onPick} view={view} />
           </div>

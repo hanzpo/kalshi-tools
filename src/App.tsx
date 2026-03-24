@@ -33,7 +33,7 @@ function AppContent() {
   }, [isOverlayViewer]);
 
   return (
-    <div className={`flex min-h-screen flex-col${isOverlayViewer ? ' !bg-transparent' : ''}`}>
+    <div className={`flex min-h-screen flex-col ${isOverlayViewer ? 'bg-transparent' : 'bg-dark'}`}>
       <Suspense fallback={<div className="flex flex-1 items-center justify-center font-medium text-text-primary">Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />

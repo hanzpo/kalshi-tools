@@ -521,19 +521,16 @@ export function ControlPanel({
               onDragOver={handleUrlDragOver}
               onDragLeave={handleUrlDragLeave}
               onDrop={handleUrlDrop}
+              className="rounded-[5px] p-3 transition-[border-color,background-color] duration-150 mb-1"
               style={{
                 border: `1.5px dashed ${isDraggingUrl ? '#09C285' : '#444'}`,
-                borderRadius: '5px',
-                padding: '12px',
                 backgroundColor: isDraggingUrl ? '#0d2e1f' : '#1e1e1e',
-                transition: 'border-color 0.15s, background-color 0.15s',
-                marginBottom: '4px'
               }}
             >
-              <div style={{ display: 'flex', gap: '8px' }}>
+              <div className="flex gap-2">
                 <input
                   type="text"
-                  className={ctrl.input}
+                  className={`${ctrl.input} flex-1 m-0`}
                   placeholder="Paste Kalshi URL or drag & drop"
                   value={urlInput}
                   onChange={(e) => {
@@ -546,24 +543,15 @@ export function ControlPanel({
                     }
                   }}
                   disabled={isImporting}
-                  style={{ flex: 1, margin: 0 }}
                 />
                 <button
                   onClick={() => handleUrlImport(urlInput)}
                   disabled={isImporting || !urlInput.trim()}
+                  className="px-4 py-2 border-none rounded-[5px] font-medium text-[13px] transition-colors duration-150 flex items-center gap-1.5"
                   style={{
-                    padding: '8px 16px',
-                    border: 'none',
                     backgroundColor: isImporting || !urlInput.trim() ? '#333' : '#09C285',
                     color: isImporting || !urlInput.trim() ? '#9ca3af' : 'white',
-                    borderRadius: '5px',
                     cursor: isImporting || !urlInput.trim() ? 'not-allowed' : 'pointer',
-                    fontWeight: 500,
-                    fontSize: '13px',
-                    transition: 'background-color 0.15s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
                   }}
                 >
                   {isImporting ? (
@@ -581,7 +569,7 @@ export function ControlPanel({
               </div>
             </div>
             {importError && (
-              <p className={ctrl.helpText} style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <p className={`${ctrl.helpText} text-[#dc2626] flex items-center gap-1`}>
                 <WarningIcon size={14} />
                 {importError}
               </p>
@@ -621,18 +609,10 @@ export function ControlPanel({
               onDragOver={handleLeftDragOver}
               onDragLeave={handleLeftDragLeave}
               onDrop={handleLeftDrop}
+              className="rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 transition-[border-color,background-color] duration-150 cursor-pointer mb-1"
               style={{
                 border: `1.5px dashed ${isDraggingLeft ? '#09C285' : '#444'}`,
-                borderRadius: '5px',
-                padding: '16px 12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: '48px',
                 backgroundColor: isDraggingLeft ? '#0d2e1f' : '#1e1e1e',
-                transition: 'border-color 0.15s, background-color 0.15s',
-                cursor: 'pointer',
-                marginBottom: '4px'
               }}
             >
               <input
@@ -640,21 +620,13 @@ export function ControlPanel({
                 type="file"
                 accept="image/jpeg,image/png,image/jpg"
                 onChange={handleLeftImageChange}
-                style={{ display: 'none' }}
+                className="hidden"
               />
               <label
                 htmlFor="left-image"
+                className="cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em]"
                 style={{
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
                   color: isDraggingLeft ? '#09C285' : '#9ca3af',
-                  fontWeight: 500,
-                  fontSize: '13px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.02em'
                 }}
               >
                 {isDraggingLeft ? (
@@ -685,18 +657,10 @@ export function ControlPanel({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            className="rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 transition-[border-color,background-color] duration-150 cursor-pointer mb-1"
             style={{
               border: `1.5px dashed ${isDragging ? '#09C285' : '#444'}`,
-              borderRadius: '5px',
-              padding: '16px 12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: '48px',
               backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
-              transition: 'border-color 0.15s, background-color 0.15s',
-              cursor: 'pointer',
-              marginBottom: '4px'
             }}
           >
             <input
@@ -704,22 +668,13 @@ export function ControlPanel({
               type="file"
               accept="image/jpeg,image/png,image/jpg"
               onChange={handleImageChange}
-              className={ctrl.fileInput}
-              style={{ display: 'none' }}
+              className={`${ctrl.fileInput} hidden`}
             />
             <label
               htmlFor="market-image"
+              className="cursor-pointer flex items-center justify-center gap-2 font-medium text-[13px] uppercase tracking-[0.02em]"
               style={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
                 color: isDragging ? '#09C285' : '#9ca3af',
-                fontWeight: 500,
-                fontSize: '13px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.02em'
               }}
             >
               {isDragging ? (
@@ -759,21 +714,9 @@ export function ControlPanel({
           <label htmlFor="market-type">Market Type</label>
           <select
             id="market-type"
-            className={ctrl.input}
+            className={`${ctrl.input} mt-0 px-2.5 py-2 border border-[#333] rounded-[5px] bg-[#141414] text-sm text-[#e5e7eb] cursor-pointer transition-[border-color] duration-150 w-full`}
             value={config.marketType}
             onChange={(e) => handleMarketTypeChange(e.target.value as MarketType)}
-            style={{
-              marginTop: '0',
-              padding: '8px 10px',
-              border: '1px solid #333',
-              borderRadius: '5px',
-              backgroundColor: '#141414',
-              fontSize: '14px',
-              color: '#e5e7eb',
-              cursor: 'pointer',
-              transition: 'border-color 0.15s',
-              width: '100%',
-            }}
           >
             <option value="binary">Binary (Yes/No)</option>
             <option value="multi">Multi-Outcome</option>
@@ -791,18 +734,13 @@ export function ControlPanel({
         {config.marketType === 'multi' && (
         <>
           <div className={ctrl.group}>
-            <label htmlFor="mutually-exclusive" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+            <label htmlFor="mutually-exclusive" className="flex items-center gap-2 cursor-pointer">
               <input
                 id="mutually-exclusive"
                 type="checkbox"
                 checked={config.mutuallyExclusive !== false}
                 onChange={(e) => onConfigChange({ mutuallyExclusive: e.target.checked })}
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  cursor: 'pointer',
-                  accentColor: '#09C285',
-                }}
+                className="size-4 cursor-pointer accent-[#09C285]"
               />
               <span>Mutually Exclusive (odds sum to 100%)</span>
             </label>
@@ -814,48 +752,25 @@ export function ControlPanel({
           </div>
           <div className={ctrl.group}>
             <label>Outcomes</label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+            <div className="flex flex-col gap-3 mt-2">
               {config.outcomes.map((outcome, index) => (
                 <div
                   key={outcome.id}
-                  style={{
-                    border: '1px solid #2a2a2a',
-                    borderRadius: '6px',
-                    padding: '12px',
-                    backgroundColor: '#252525',
-                  }}
+                  className="border border-[#2a2a2a] rounded-md p-3 bg-[#252525]"
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <div style={{ position: 'relative' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="relative">
                       <button
                         type="button"
                         onClick={() => setColorPickerOpen(colorPickerOpen === outcome.id ? null : outcome.id)}
-                        style={{
-                          width: '28px',
-                          height: '28px',
-                          backgroundColor: outcome.color,
-                          border: '1px solid #333',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          flexShrink: 0,
-                          padding: 0,
-                        }}
+                        className="size-7 border border-[#333] rounded cursor-pointer shrink-0 p-0"
+                        style={{ backgroundColor: outcome.color }}
                         title="Choose color"
                       />
                       {colorPickerOpen === outcome.id && (
                         <div
                           ref={colorPickerRef}
-                          style={{
-                            position: 'absolute',
-                            top: '36px',
-                            left: 0,
-                            zIndex: 1000,
-                            backgroundColor: '#1e1e1e',
-                            borderRadius: '6px',
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
-                            padding: '12px',
-                            border: '1px solid #333',
-                          }}
+                          className="absolute top-9 left-0 z-[1000] bg-[#1e1e1e] rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.4)] p-3 border border-[#333]"
                         >
                           <HexColorPicker
                             color={outcome.color}
@@ -869,34 +784,19 @@ export function ControlPanel({
                       value={outcome.name}
                       onChange={(e) => handleOutcomeChange(outcome.id, { name: e.target.value })}
                       placeholder={`Outcome ${index + 1}`}
-                      style={{
-                        flex: 1,
-                        padding: '6px 10px',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '4px',
-                        fontSize: '14px',
-                      }}
+                      className="flex-1 px-2.5 py-1.5 border border-[#e5e7eb] rounded text-sm"
                     />
                     {config.outcomes.length > 2 && (
                       <button
                         onClick={() => handleRemoveOutcome(outcome.id)}
-                        style={{
-                          padding: '6px 10px',
-                          border: '1px solid #fecaca',
-                          backgroundColor: 'transparent',
-                          color: '#dc2626',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '12px',
-                          fontWeight: '500',
-                        }}
+                        className="px-2.5 py-1.5 border border-[#fecaca] bg-transparent text-[#dc2626] rounded cursor-pointer text-xs font-medium"
                       >
                         Remove
                       </button>
                     )}
                   </div>
                   <div>
-                    <label style={{ fontSize: '13px', color: '#6b7280', display: 'block', marginBottom: '4px' }}>
+                    <label className="text-[13px] text-[#6b7280] block mb-1">
                       Odds: {outcome.currentOdds}%
                     </label>
                     <input
@@ -913,19 +813,7 @@ export function ControlPanel({
             </div>
             <button
               onClick={handleAddOutcome}
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginTop: '12px',
-                border: '1.5px dashed #d1d5db',
-                backgroundColor: 'transparent',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '13px',
-                fontWeight: '500',
-                color: '#6b7280',
-                transition: 'border-color 0.15s, color 0.15s',
-              }}
+              className="w-full p-2.5 mt-3 border-[1.5px] border-dashed border-[#d1d5db] bg-transparent rounded-md cursor-pointer text-[13px] font-medium text-[#6b7280] transition-[border-color,color] duration-150"
             >
               + Add Outcome
             </button>
@@ -955,7 +843,7 @@ export function ControlPanel({
             <span>100%</span>
           </div>
           {config.customTrendData && (
-            <p className={ctrl.helpText} style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <p className={`${ctrl.helpText} text-[#dc2626] mt-2 flex items-center gap-1`}>
               <WarningIcon size={14} />
               Adjusting odds will reset your custom trend
             </p>
@@ -985,7 +873,7 @@ export function ControlPanel({
             />
             <p className={ctrl.helpText}>Enter the forecasted numerical value</p>
             {config.customTrendData && (
-              <p className={ctrl.helpText} style={{ color: '#dc2626', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <p className={`${ctrl.helpText} text-[#dc2626] mt-2 flex items-center gap-1`}>
                 <WarningIcon size={14} />
                 Adjusting value will reset your custom trend
               </p>
@@ -1017,7 +905,7 @@ export function ControlPanel({
             {config.customTrendData ? 'Redraw Trend' : 'Draw Custom Trend'}
           </button>
           {config.customTrendData ? (
-            <p className={ctrl.helpText} style={{ color: '#09C285', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <p className={`${ctrl.helpText} text-[#09C285] font-semibold flex items-center gap-1`}>
               <CheckIcon size={14} />
               Using your custom drawn trend
             </p>
@@ -1035,18 +923,13 @@ export function ControlPanel({
         <div className={ctrl.sectionTitle}>Chart Settings</div>
 
         <div className={ctrl.group}>
-          <label htmlFor="dark-mode" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+          <label htmlFor="dark-mode" className="flex items-center gap-2 cursor-pointer">
             <input
               id="dark-mode"
               type="checkbox"
               checked={config.darkMode === true}
               onChange={(e) => onConfigChange({ darkMode: e.target.checked })}
-              style={{
-                width: '16px',
-                height: '16px',
-                cursor: 'pointer',
-                accentColor: '#09C285',
-              }}
+              className="size-4 cursor-pointer accent-[#09C285]"
             />
             <span>Dark Mode</span>
           </label>
@@ -1077,7 +960,7 @@ export function ControlPanel({
 
         <div className={ctrl.group}>
           <label>Time Horizon</label>
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <div className="flex gap-1.5 flex-wrap">
             {(['6H', '1D', '1W', '1M', 'ALL'] as TimeHorizon[]).map((horizon) => (
               <button
                 key={horizon}
@@ -1086,18 +969,11 @@ export function ControlPanel({
                   onRegenerateData();
                   trackEvent('time_horizon_change', { tool: mode, horizon });
                 }}
+                className="px-2.5 py-1.5 border rounded cursor-pointer font-medium transition-[border-color,background-color,color] duration-150 text-xs min-w-10"
                 style={{
-                  padding: '6px 10px',
-                  border: '1px solid',
                   borderColor: config.timeHorizon === horizon ? '#09C285' : '#333',
                   backgroundColor: config.timeHorizon === horizon ? '#0d2e1f' : '#1e1e1e',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontWeight: 500,
                   color: config.timeHorizon === horizon ? '#09C285' : '#9ca3af',
-                  transition: 'border-color 0.15s, background-color 0.15s, color 0.15s',
-                  fontSize: '12px',
-                  minWidth: '40px',
                 }}
               >
                 {horizon}
@@ -1115,27 +991,13 @@ export function ControlPanel({
       <div className={ctrl.group}>
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          style={{
-            width: '100%',
-            padding: '10px',
-            border: '1px solid #333',
-            backgroundColor: '#1e1e1e',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '13px',
-            fontWeight: '500',
-            color: '#d1d5db',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            transition: 'background-color 0.15s',
-          }}
+          className="w-full p-2.5 border border-[#333] bg-[#1e1e1e] rounded-[5px] cursor-pointer text-[13px] font-medium text-[#d1d5db] flex items-center justify-between transition-colors duration-150"
         >
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="flex items-center gap-2">
             <SettingsIcon size={16} />
             Advanced Settings
           </span>
-          <span style={{ 
+          <span style={{
             transform: showAdvanced ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.15s',
           }}>
@@ -1145,13 +1007,7 @@ export function ControlPanel({
       </div>
 
       {showAdvanced && (
-        <div style={{
-          border: '1px solid #2a2a2a',
-          borderRadius: '6px',
-          padding: '16px',
-          backgroundColor: '#252525',
-          marginTop: '-4px',
-        }}>
+        <div className="border border-[#2a2a2a] rounded-md p-4 bg-[#252525] -mt-1">
           <div className={ctrl.group}>
             <label htmlFor="volume">Volume</label>
             <input
@@ -1206,19 +1062,14 @@ export function ControlPanel({
             <p className={ctrl.helpText}>Chart end date (default: today)</p>
           </div>
 
-          <div className={ctrl.group} style={{ marginBottom: 0 }}>
-            <label htmlFor="show-watermark" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+          <div className={`${ctrl.group} mb-0`}>
+            <label htmlFor="show-watermark" className="flex items-center gap-2 cursor-pointer">
               <input
                 id="show-watermark"
                 type="checkbox"
                 checked={config.showWatermark}
                 onChange={(e) => onConfigChange({ showWatermark: e.target.checked })}
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  cursor: 'pointer',
-                  accentColor: '#09C285',
-                }}
+                className="size-4 cursor-pointer accent-[#09C285]"
               />
               <span>Show Watermark</span>
             </label>
@@ -1227,28 +1078,25 @@ export function ControlPanel({
         </div>
       )}
 
-      <button 
-        onClick={onRegenerateData} 
-        className={ctrl.btnRegen}
-        style={{ marginTop: '20px' }}
+      <button
+        onClick={onRegenerateData}
+        className={`${ctrl.btnRegen} mt-5`}
       >
         <RefreshIcon size={16} />
         Regenerate Data
       </button>
 
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <button 
-          onClick={onExport} 
-          className={ctrl.btnExport}
-          style={{ flex: 1 }}
+      <div className="flex gap-2">
+        <button
+          onClick={onExport}
+          className={`${ctrl.btnExport} flex-1`}
         >
           <DownloadIcon size={16} />
           Export as PNG
         </button>
-        <button 
-          onClick={onCopyToClipboard} 
-          className={ctrl.btnExport}
-          style={{ flex: 1 }}
+        <button
+          onClick={onCopyToClipboard}
+          className={`${ctrl.btnExport} flex-1`}
         >
           <CopyIcon size={16} />
           Copy

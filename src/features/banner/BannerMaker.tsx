@@ -120,18 +120,10 @@ export function BannerMaker({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            className="mb-1 flex min-h-[48px] cursor-pointer items-center justify-center rounded-[5px] px-3 py-4 transition-[border-color,background-color] duration-150"
             style={{
               border: `1.5px dashed ${isDragging ? BRAND_GREEN : '#444'}`,
-              borderRadius: '5px',
-              padding: '16px 12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: '48px',
               backgroundColor: isDragging ? '#0d2e1f' : '#1e1e1e',
-              transition: 'border-color 0.15s, background-color 0.15s',
-              cursor: 'pointer',
-              marginBottom: '4px',
             }}
           >
             <input
@@ -140,21 +132,12 @@ export function BannerMaker({
               accept="image/jpeg,image/png,image/jpg"
               onChange={handleImageChange}
               className="hidden"
-              style={{ display: 'none' }}
             />
             <label
               htmlFor="banner-image"
+              className="flex cursor-pointer items-center justify-center gap-2 text-[13px] font-medium uppercase tracking-[0.02em]"
               style={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
                 color: isDragging ? BRAND_GREEN : '#6b7280',
-                fontWeight: 500,
-                fontSize: '13px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.02em',
               }}
             >
               {isDragging ? (
@@ -327,16 +310,14 @@ export function BannerMaker({
       <div className="mt-5 flex gap-2">
         <button
           onClick={onExport}
-          className={ctrl.btnExport}
-          style={{ flex: 1 }}
+          className={`${ctrl.btnExport} flex-1`}
         >
           <DownloadIcon size={16} />
           Export as PNG
         </button>
         <button
           onClick={onCopyToClipboard}
-          className={ctrl.btnExport}
-          style={{ flex: 1 }}
+          className={`${ctrl.btnExport} flex-1`}
         >
           <CopyIcon size={16} />
           Copy

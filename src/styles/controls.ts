@@ -1,7 +1,7 @@
 /** Shared Tailwind class strings for control panel form elements */
 export const ctrl = {
   /** Main control panel wrapper */
-  panel: 'sticky top-6 h-fit rounded-lg border border-dark-border bg-dark-surface p-6 text-text-primary shadow-[0_1px_3px_rgba(0,0,0,0.3)] max-lg:static max-lg:mb-4 max-lg:p-5 max-md:p-4',
+  panel: 'sticky top-6 h-fit rounded-lg border border-dark-border bg-dark-surface p-6 text-text-primary shadow-sm shadow-black/30 max-lg:static max-lg:mb-4 max-lg:p-5 max-md:p-4',
   /** Back button at top */
   backBtn: 'mb-4 inline-flex cursor-pointer items-center gap-1 rounded border-none bg-transparent px-0 py-1 text-[13px] font-medium text-text-secondary transition-colors duration-150 hover:text-gray-300',
   /** Panel title */
@@ -13,7 +13,7 @@ export const ctrl = {
   /** Section title */
   sectionTitle: 'mb-3 border-b border-dark-border-light pb-2 text-[10px] font-semibold uppercase tracking-[0.06em] text-text-secondary',
   /** Control group wrapper */
-  group: 'mb-4 max-md:mb-3.5 [&_label]:mb-1.5 [&_label]:block [&_label]:text-[11px] [&_label]:font-semibold [&_label]:uppercase [&_label]:tracking-[0.04em] [&_label]:text-brand',
+  group: 'mb-4 max-md:mb-3.5 [&>label]:mb-1.5 [&>label]:block [&>label]:text-[11px] [&>label]:font-semibold [&>label]:uppercase [&>label]:tracking-[0.04em] [&>label]:text-brand',
   /** Text/select input */
   input: 'w-full rounded-[5px] border border-dark-border-light bg-dark px-2.5 py-2 text-sm text-text-primary transition-[border-color] duration-150 placeholder:text-[#555] hover:border-[#444] focus:border-brand focus:outline-none',
   /** File input */
@@ -37,7 +37,7 @@ export const ctrl = {
   /** Segmented option */
   segmentedOption: 'flex-1 cursor-pointer rounded border-none bg-transparent px-2.5 py-1.5 text-[13px] font-medium text-text-secondary transition-[background-color,color] duration-150 hover:text-gray-300',
   /** Active segmented option */
-  segmentedOptionActive: 'bg-dark-surface text-brand shadow-[0_1px_2px_rgba(0,0,0,0.2)]',
+  segmentedOptionActive: 'bg-dark-surface text-brand shadow-sm shadow-black/20',
   /** Regenerate button */
   btnRegen: 'mb-1.5 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-elevated px-2.5 py-2.5 text-[13px] font-medium text-text-secondary transition-[background-color] duration-150 hover:bg-dark-border-light hover:text-gray-300',
   /** Export button */

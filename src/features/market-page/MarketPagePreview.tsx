@@ -131,11 +131,10 @@ export function MarketPagePreview({
   return (
     <div
       id={MARKET_PAGE_PREVIEW_ID}
-      className={`kmp flex min-h-screen w-full flex-col antialiased transition-[background-color,color] duration-200 ${isDark ? 'kmp-dark' : ''}`}
-      style={{ background: v('surface'), color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', system-ui, sans-serif" }}
+      className={`kmp flex min-h-screen w-full flex-col bg-[var(--kmp-surface)] text-[var(--kmp-text-primary)] antialiased transition-[background-color,color] duration-200 ${isDark ? 'kmp-dark' : ''}`}
     >
       {/* ═══ Navigation Bar ═══ */}
-      <nav className="kmp-nav sticky top-0 z-[100] w-full" style={{ background: v('surface') }}>
+      <nav className="kmp-nav sticky top-0 z-[100] w-full bg-[var(--kmp-surface)]">
         {/* Main nav row */}
         <div className="mx-auto flex h-14 max-w-[1320px] items-center justify-between px-6">
           <div className="flex items-center gap-0">
@@ -152,15 +151,14 @@ export function MarketPagePreview({
               ].map((item) => (
                 <a
                   key={item.label}
-                  className="flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-[13px] no-underline"
-                  style={{ color: v('text-primary'), letterSpacing: '1.04px', lineHeight: '20px', fontWeight: 600, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                  className="flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold leading-5 tracking-[1.04px] text-[var(--kmp-text-primary)] no-underline"
                 >
                   {item.label}
                   {item.badge && (
-                    <span className="text-[12px]" style={{ color: '#D91616', fontWeight: 500, lineHeight: '18px' }}>{item.badge}</span>
+                    <span className="text-[12px] font-medium leading-[18px] text-[#D91616]">{item.badge}</span>
                   )}
                   {item.dropdown && (
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.5 }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="opacity-50">
                       <path d="M7 10l5 5 5-5z" />
                     </svg>
                   )}
@@ -171,44 +169,38 @@ export function MarketPagePreview({
           <div className="flex items-center gap-3">
             {/* Search bar — 400px max, pill shape, subtle bg */}
             <div
-              className="kmp-nav-search flex w-[400px] cursor-pointer items-center rounded-full"
-              style={{
-                background: v('bg'),
-                fontFamily: "Inter, 'Inter Fallback', sans-serif",
-                height: 38,
-                paddingLeft: 16,
-                paddingRight: 16,
-              }}
+              className="kmp-nav-search flex h-[38px] w-[400px] cursor-pointer items-center rounded-full bg-[var(--kmp-bg)] px-4"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: v('text-tertiary'), flexShrink: 0, marginRight: 8 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2 shrink-0 text-[var(--kmp-text-tertiary)]">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-              <span className="text-[16px]" style={{ color: v('text-tertiary'), lineHeight: '24px' }}>Trade on anything</span>
+              <span className="text-[16px] leading-6 text-[var(--kmp-text-tertiary)]">Trade on anything</span>
             </div>
             {/* Log in */}
             <button
-              className="cursor-pointer rounded-full border bg-transparent text-[13px] font-normal"
-              style={{ color: v('yes'), borderColor: v('border'), fontFamily: "Inter, 'Inter Fallback', sans-serif", padding: '8px 12px', height: 40 }}
+              className="h-10 cursor-pointer rounded-full border border-[var(--kmp-border)] bg-transparent px-3 py-2 text-[13px] font-normal text-[var(--kmp-yes)]"
             >
               Log in
             </button>
             {/* Sign up */}
             <button
-              className="cursor-pointer rounded-full border-none text-[13px] font-normal"
-              style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff', fontFamily: "Inter, 'Inter Fallback', sans-serif", padding: '8px 12px', height: 40 }}
+              className="h-10 cursor-pointer rounded-full border-none px-3 py-2 text-[13px] font-normal"
+              style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff' }}
             >
               Sign up
             </button>
           </div>
         </div>
         {/* Sub-nav row */}
-        <div className="mx-auto flex max-w-[1320px] items-center gap-4 px-6 pb-2" style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}` }}>
+        <div
+          className="mx-auto flex max-w-[1320px] items-center gap-4 px-6 pb-2"
+          style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}` }}
+        >
           {SUB_NAV_ITEMS.map((item) => (
             <a
               key={item}
-              className="cursor-pointer whitespace-nowrap py-1 text-[15px] no-underline"
-              style={{ color: v('text-primary'), lineHeight: '22px', fontWeight: 500, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+              className="cursor-pointer whitespace-nowrap py-1 text-[15px] font-medium leading-[22px] text-[var(--kmp-text-primary)] no-underline"
             >
               {item}
             </a>
@@ -224,7 +216,7 @@ export function MarketPagePreview({
           <header className="kmp-header mb-6">
             <div className="flex items-start gap-4">
               {/* Market image */}
-              <div className="kmp-header-image size-20 shrink-0 overflow-hidden rounded-lg" style={{ background: v('bg') }}>
+              <div className="kmp-header-image size-20 shrink-0 overflow-hidden rounded-lg bg-[var(--kmp-bg)]">
                 {config.image ? (
                   <img src={config.image} alt={config.title} className="size-full object-cover" draggable={false} />
                 ) : (
@@ -232,16 +224,16 @@ export function MarketPagePreview({
                 )}
               </div>
               {/* Title column: breadcrumb + title sit next to the image */}
-              <div className="flex min-w-0 flex-1 flex-col gap-1" style={{ marginRight: 24 }}>
+              <div className="mr-6 flex min-w-0 flex-1 flex-col gap-1">
                 {/* Breadcrumb – small text above the title */}
-                <div className="flex items-center gap-1 text-[15px]" style={{ lineHeight: '22px', color: v('text-primary'), fontWeight: 500, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                <div className="flex items-center gap-1 text-[15px] font-medium leading-[22px] text-[var(--kmp-text-primary)]">
                   <span className="cursor-pointer">{config.category || 'Politics'}</span>
-                  <span className="text-[13px]" style={{ color: v('text-primary'), fontWeight: 400, lineHeight: '20px' }}>·</span>
+                  <span className="text-[13px] font-normal leading-5 text-[var(--kmp-text-primary)]">·</span>
                   <span className="cursor-pointer">{config.subcategory || 'Congress'}</span>
                 </div>
                 <h1
-                  className="kmp-title m-0 text-[30px] font-medium leading-[36px]"
-                  style={{ color: v('text-primary'), fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
+                  className="kmp-title m-0 text-[30px] font-medium leading-[36px] text-[var(--kmp-text-primary)]"
+                  style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
                 >
                   {config.title || 'Market Title'}
                 </h1>
@@ -249,25 +241,25 @@ export function MarketPagePreview({
               {/* Action icons */}
               <div className="kmp-header-actions flex shrink-0 items-center gap-1">
               {/* Calendar */}
-              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent" style={{ color: v('text-primary') }}>
+              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-[var(--kmp-text-primary)]">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
               </button>
               {/* Comment */}
-              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent" style={{ color: v('text-primary') }}>
+              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-[var(--kmp-text-primary)]">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </button>
               {/* Share */}
-              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent" style={{ color: v('text-primary') }}>
+              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-[var(--kmp-text-primary)]">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" />
                 </svg>
               </button>
               {/* Download */}
-              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent" style={{ color: v('text-primary') }}>
+              <button className="flex size-10 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-[var(--kmp-text-primary)]">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
@@ -285,10 +277,10 @@ export function MarketPagePreview({
                     className="size-2 rounded-full"
                     style={{ backgroundColor: getOutcomeColor(outcome.color || OUTCOME_COLORS[index % OUTCOME_COLORS.length], isDark) }}
                   />
-                  <span className="text-[15px] font-normal" style={{ color: v('text-primary'), lineHeight: '22px', fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                  <span className="text-[15px] font-normal leading-[22px] text-[var(--kmp-text-primary)]">
                     {outcome.name}
                   </span>
-                  <span className="text-[16px] font-normal" style={{ color: v('text-primary') }}>
+                  <span className="text-[16px] font-normal text-[var(--kmp-text-primary)]">
                     {outcome.yesPrice}%
                   </span>
                 </div>
@@ -346,26 +338,24 @@ export function MarketPagePreview({
           </div>
 
           {/* Chart Footer */}
-          <div className="flex items-center justify-between py-3" style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}>
-            <span className="text-[13px] font-normal" style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+          <div
+            className="flex items-center justify-between py-3"
+            style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}
+          >
+            <span className="text-[13px] font-normal text-[var(--kmp-text-primary)]">
               {volume} vol
             </span>
             <div className="flex items-center gap-1">
               {['1D', '1W', '1M', 'ALL'].map((range) => (
                 <button
                   key={range}
-                  className={`cursor-pointer rounded-md border-none px-2 py-1 text-[13px] ${config.chartTimeRange === range ? 'font-semibold' : 'font-normal'}`}
-                  style={{
-                    color: config.chartTimeRange === range ? v('text-primary') : v('text-tertiary'),
-                    background: 'transparent',
-                    fontFamily: "Inter, 'Inter Fallback', sans-serif",
-                  }}
+                  className={`cursor-pointer rounded-md border-none bg-transparent px-2 py-1 text-[13px] ${config.chartTimeRange === range ? 'font-semibold text-[var(--kmp-text-primary)]' : 'font-normal text-[var(--kmp-text-tertiary)]'}`}
                 >
                   {range}
                 </button>
               ))}
               {/* Settings icon */}
-              <button className="flex items-center justify-center p-1.5" style={{ color: v('text-secondary'), background: 'transparent', border: 'none', cursor: 'pointer' }}>
+              <button className="flex cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-[var(--kmp-text-secondary)]">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
                 </svg>
@@ -376,21 +366,19 @@ export function MarketPagePreview({
           {/* Markets Header */}
           <div className="kmp-markets-header flex items-center py-3">
             <div className="kmp-markets-header-left flex-1" />
-            <div className="kmp-markets-header-center text-[13px] font-normal" style={{ color: v('text-secondary'), width: 100, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+            <div className="kmp-markets-header-center w-[100px] text-[13px] font-normal text-[var(--kmp-text-secondary)]">
               Chance
             </div>
-            <div className="kmp-markets-header-right flex items-center justify-end gap-1" style={{ width: 288 }}>
+            <div className="kmp-markets-header-right flex w-[288px] items-center justify-end gap-1">
               <button
-                className="flex size-8 cursor-pointer items-center justify-center rounded-md border-none bg-transparent"
-                style={{ color: v('text-tertiary') }}
+                className="flex size-8 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-[var(--kmp-text-tertiary)]"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
                 </svg>
               </button>
               <button
-                className="flex size-8 cursor-pointer items-center justify-center rounded-md border-none bg-transparent"
-                style={{ color: v('text-tertiary') }}
+                className="flex size-8 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-[var(--kmp-text-tertiary)]"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8" />
@@ -407,12 +395,12 @@ export function MarketPagePreview({
               return (
                 <div
                   key={outcome.id}
-                  className={`kmp-market-row flex cursor-pointer items-center gap-3 ${config.selectedOutcome === outcome.id ? 'selected' : ''}`}
-                  style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`, padding: '16px 12px', margin: '0 -12px' }}
+                  className={`kmp-market-row -mx-3 flex cursor-pointer items-center gap-3 px-3 py-4 ${config.selectedOutcome === outcome.id ? 'selected' : ''}`}
+                  style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}
                   onClick={() => onOutcomeSelect(outcome.id)}
                 >
                   {/* Outcome image */}
-                  <div className="size-12 shrink-0 overflow-hidden rounded-lg" style={{ background: v('bg') }}>
+                  <div className="size-12 shrink-0 overflow-hidden rounded-lg bg-[var(--kmp-bg)]">
                     {outcome.image ? (
                       <img src={outcome.image} alt={outcome.name} className="size-full object-cover" draggable={false} />
                     ) : (
@@ -421,23 +409,29 @@ export function MarketPagePreview({
                   </div>
                   {/* Outcome name */}
                   <div className="kmp-market-info min-w-0 flex-1">
-                    <span className="text-[15px] font-normal" style={{ color: v('text-primary'), lineHeight: '22px', fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                    <span className="text-[15px] font-normal leading-[22px] text-[var(--kmp-text-primary)]">
                       {outcome.name}
                     </span>
                   </div>
                   {/* Chance percentage */}
-                  <div className="kmp-market-chance flex items-baseline gap-1.5" style={{ width: 100 }}>
+                  <div className="kmp-market-chance flex w-[100px] items-baseline gap-1.5">
                     {isResolvedNo ? (
-                      <span className="text-[24px] font-medium" style={{ color: v('no'), fontFamily: "'Barlow Condensed', 'Inter', sans-serif", lineHeight: '28px' }}>
+                      <span
+                        className="text-[24px] font-medium leading-7 text-[var(--kmp-no)]"
+                        style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
+                      >
                         No
                       </span>
                     ) : (
                       <>
-                        <span className="text-[24px] font-medium" style={{ color: v('text-primary'), fontFamily: "'Barlow Condensed', 'Inter', sans-serif", lineHeight: '28px' }}>
+                        <span
+                          className="text-[24px] font-medium leading-7 text-[var(--kmp-text-primary)]"
+                          style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
+                        >
                           {outcome.yesPrice}%
                         </span>
                         {outcome.change !== 0 && (
-                          <span className="text-[12px] font-medium" style={{ color: outcome.change > 0 ? v('yes') : v('no'), lineHeight: '18px', fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                          <span className={`text-[12px] font-medium leading-[18px] ${outcome.change > 0 ? 'text-[var(--kmp-yes)]' : 'text-[var(--kmp-no)]'}`}>
                             {outcome.change > 0 ? '▲' : '▼'}&thinsp;{Math.abs(outcome.change)}
                           </span>
                         )}
@@ -446,10 +440,9 @@ export function MarketPagePreview({
                   </div>
                   {/* Yes/No buttons */}
                   {!isResolvedNo && config.eventStatus !== 'closed' && (
-                    <div className="kmp-market-buttons flex justify-end gap-2" style={{ width: 288 }}>
+                    <div className="kmp-market-buttons flex w-[288px] justify-end gap-2">
                       <button
-                        className={`kmp-btn kmp-btn-yes flex h-8 cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal ${index === 0 ? 'selected' : ''}`}
-                        style={{ width: 136, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                        className={`kmp-btn kmp-btn-yes flex h-8 w-[136px] cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal ${index === 0 ? 'selected' : ''}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           onOutcomeSelect(outcome.id);
@@ -459,8 +452,7 @@ export function MarketPagePreview({
                         Yes <span className="ml-1">{outcome.yesPrice}¢</span>
                       </button>
                       <button
-                        className="kmp-btn kmp-btn-no flex h-8 cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal"
-                        style={{ width: 136, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                        className="kmp-btn kmp-btn-no flex h-8 w-[136px] cursor-pointer items-center justify-center gap-1 px-3 text-[13px] font-normal"
                         onClick={(e) => {
                           e.stopPropagation();
                           onOutcomeSelect(outcome.id);
@@ -476,8 +468,7 @@ export function MarketPagePreview({
             })}
             {config.outcomes.length > 3 && (
               <button
-                className="cursor-pointer border-none bg-transparent py-3 text-left text-[15px] font-normal"
-                style={{ color: v('text-primary'), lineHeight: '22px', fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                className="cursor-pointer border-none bg-transparent py-3 text-left text-[15px] font-normal leading-[22px] text-[var(--kmp-text-primary)]"
               >
                 More markets
               </button>
@@ -486,57 +477,56 @@ export function MarketPagePreview({
 
           {/* Market Rules Section */}
           {config.showRules && (
-            <section style={{ marginTop: 32, marginBottom: 24, paddingBottom: 16 }}>
+            <section className="mb-6 mt-8 pb-4">
               <button
                 className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent pb-3 pt-0 text-left"
-                style={{ fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
                 onClick={() => toggleSection('rules')}
               >
-                <h2 className="m-0 text-[24px] font-medium leading-[28px]" style={{ color: v('text-primary'), fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}>
+                <h2
+                  className="m-0 text-[24px] font-medium leading-7 text-[var(--kmp-text-primary)]"
+                  style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
+                >
                   Market Rules
                 </h2>
                 <svg
-                  className={`transition-transform duration-200 ${expandedSections.rules ? 'rotate-180' : ''}`}
+                  className={`text-[var(--kmp-text-tertiary)] transition-transform duration-200 ${expandedSections.rules ? 'rotate-180' : ''}`}
                   width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                  style={{ color: v('text-tertiary') }}
                 >
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </button>
               {/* Thin divider below heading */}
-              <div style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`, marginBottom: 16 }} />
+              <div className="mb-4" style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }} />
               {expandedSections.rules && (
                 <div className="pb-4">
                   {/* Outcome selector dropdown */}
                   {config.selectedOutcome && (
                     <div className="mb-3 flex items-center justify-between">
                       <div className="flex cursor-pointer items-center gap-1">
-                        <span className="text-[15px] font-medium" style={{ color: v('yes') }}>
+                        <span className="text-[15px] font-medium text-[var(--kmp-yes)]">
                           {selectedOutcome?.name}
                         </span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ color: v('yes') }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-[var(--kmp-yes)]">
                           <path d="M7 10l5 5 5-5z" />
                         </svg>
                       </div>
                       {/* Info icon */}
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: v('text-tertiary') }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--kmp-text-tertiary)]">
                         <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
                       </svg>
                     </div>
                   )}
-                  <p className="mb-4 text-[15px] leading-[1.6]" style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                  <p className="mb-4 text-[15px] leading-[1.6] text-[var(--kmp-text-primary)]">
                     {config.rulesText || 'This market will resolve to "Yes" if the specified outcome occurs.'}
                   </p>
                   <div className="flex gap-2">
                     <button
-                      className="cursor-pointer rounded-lg border px-3 py-2 text-[13px] font-normal"
-                      style={{ color: v('yes'), borderColor: v('border'), background: 'transparent', fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                      className="cursor-pointer rounded-lg border border-[var(--kmp-border)] bg-transparent px-3 py-2 text-[13px] font-normal text-[var(--kmp-yes)]"
                     >
                       View full rules
                     </button>
                     <button
-                      className="cursor-pointer rounded-lg border px-3 py-2 text-[13px] font-normal"
-                      style={{ color: v('yes'), borderColor: v('border'), background: 'transparent', fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                      className="cursor-pointer rounded-lg border border-[var(--kmp-border)] bg-transparent px-3 py-2 text-[13px] font-normal text-[var(--kmp-yes)]"
                     >
                       Help center
                     </button>
@@ -550,28 +540,26 @@ export function MarketPagePreview({
           <section style={{ borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}>
             <button
               className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent py-4 text-left"
-              style={{ fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
               onClick={() => toggleSection('timeline')}
             >
               <div className="flex items-center gap-2">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: v('text-secondary') }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--kmp-text-secondary)]">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
-                <span className="text-[16px] font-normal" style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                <span className="text-[16px] font-normal text-[var(--kmp-text-primary)]">
                   Timeline and payout
                 </span>
               </div>
               <svg
-                className={`transition-transform duration-200 ${expandedSections.timeline ? 'rotate-180' : ''}`}
+                className={`text-[var(--kmp-text-tertiary)] transition-transform duration-200 ${expandedSections.timeline ? 'rotate-180' : ''}`}
                 width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                style={{ color: v('text-tertiary') }}
               >
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
             {expandedSections.timeline && (
               <div className="pb-4">
-                <p className="mb-3 text-[15px] leading-[1.6]" style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                <p className="mb-3 text-[15px] leading-[1.6] text-[var(--kmp-text-primary)]">
                   Contracts pay out $1.00 if the outcome is correct.
                 </p>
               </div>
@@ -582,23 +570,21 @@ export function MarketPagePreview({
           <section style={{ borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}>
             <button
               className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent py-4 text-left"
-              style={{ fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
               onClick={() => toggleSection('about')}
             >
-              <span className="text-[16px] font-normal" style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+              <span className="text-[16px] font-normal text-[var(--kmp-text-primary)]">
                 About
               </span>
               <svg
-                className={`transition-transform duration-200 ${expandedSections.about ? 'rotate-180' : ''}`}
+                className={`text-[var(--kmp-text-tertiary)] transition-transform duration-200 ${expandedSections.about ? 'rotate-180' : ''}`}
                 width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                style={{ color: v('text-tertiary') }}
               >
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
             {expandedSections.about && (
               <div className="pb-4">
-                <p className="mb-3 text-[15px] leading-[1.6]" style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                <p className="mb-3 text-[15px] leading-[1.6] text-[var(--kmp-text-primary)]">
                   This market tracks the outcome of the event described in the title. Trade based on your predictions.
                 </p>
               </div>
@@ -607,25 +593,27 @@ export function MarketPagePreview({
 
           {/* Related Markets */}
           {config.showRelatedMarkets && config.relatedMarkets.length > 0 && (
-            <section className="pt-4" style={{ borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}>
-              <h2 className="mb-4 text-lg font-semibold" style={{ color: v('text-primary') }}>People are also buying</h2>
+            <section
+              className="pt-4"
+              style={{ borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}
+            >
+              <h2 className="mb-4 text-lg font-semibold text-[var(--kmp-text-primary)]">People are also buying</h2>
               <div className="flex flex-col gap-1">
                 {config.relatedMarkets.map((market) => (
                   <div key={market.id} className="kmp-related-item flex cursor-pointer items-center gap-3 py-2">
-                    <div className="size-10 shrink-0 overflow-hidden rounded-full" style={{ background: v('bg') }}>
+                    <div className="size-10 shrink-0 overflow-hidden rounded-full bg-[var(--kmp-bg)]">
                       {market.image ? (
                         <img src={market.image} alt={market.title} className="size-full object-cover" draggable={false} />
                       ) : (
                         <div className="kmp-related-image-placeholder size-full" style={{ background: 'linear-gradient(135deg, #e0e0e0 0%, #f0f0f0 100%)' }} />
                       )}
                     </div>
-                    <span className="text-[15px] font-medium" style={{ color: v('text-primary') }}>{market.title}</span>
+                    <span className="text-[15px] font-medium text-[var(--kmp-text-primary)]">{market.title}</span>
                   </div>
                 ))}
               </div>
               <button
-                className="mt-3 cursor-pointer border-none bg-transparent p-0 text-sm font-medium hover:underline"
-                style={{ color: v('yes'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                className="mt-3 cursor-pointer border-none bg-transparent p-0 text-sm font-medium text-[var(--kmp-yes)] hover:underline"
               >
                 Show more
               </button>
@@ -634,7 +622,7 @@ export function MarketPagePreview({
 
           {/* Watermark */}
           {config.showWatermark && (
-            <div className="kmp-watermark py-6 text-center text-[11px]" style={{ color: 'rgba(128, 128, 128, 0.4)' }}>
+            <div className="kmp-watermark py-6 text-center text-[11px] text-[rgba(128,128,128,0.4)]">
               kalshi.tools
             </div>
           )}
@@ -657,15 +645,15 @@ export function MarketPagePreview({
                     )}
                   </div>
                   <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="text-[13px] font-normal leading-5" style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                    <span className="text-[13px] font-normal leading-5 text-[var(--kmp-text-primary)]">
                       {config.title}
                     </span>
-                    <span className="flex items-center gap-1 text-[15px] font-semibold leading-[22px]" style={{ fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>
+                    <span className="flex items-center gap-1 text-[15px] font-semibold leading-[22px]">
                       <span style={{ color: config.selectedSide === 'Yes' ? v('yes') : v('no') }}>
                         Buy {config.selectedSide}
                       </span>
-                      <span style={{ color: v('text-primary') }}>·</span>
-                      <span style={{ color: v('text-primary') }}>
+                      <span className="text-[var(--kmp-text-primary)]">·</span>
+                      <span className="text-[var(--kmp-text-primary)]">
                         {selectedOutcome?.name}
                       </span>
                     </span>
@@ -674,21 +662,18 @@ export function MarketPagePreview({
                 {/* Buy / Sell toggle + Dollars */}
                 <div className="mb-2 flex items-center gap-1">
                   <button
-                    className="kmp-sidebar-toggle active cursor-pointer px-3 py-0 text-[13px] font-normal leading-[30px]"
-                    style={{ fontFamily: "Inter, 'Inter Fallback', sans-serif", height: 32 }}
+                    className="kmp-sidebar-toggle active h-8 cursor-pointer px-3 py-0 text-[13px] font-normal leading-[30px]"
                   >
                     Buy
                   </button>
                   <button
-                    className="kmp-sidebar-toggle cursor-pointer px-3 py-0 text-[13px] font-normal leading-[30px]"
-                    style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif", height: 32 }}
+                    className="kmp-sidebar-toggle h-8 cursor-pointer px-3 py-0 text-[13px] font-normal leading-[30px] text-[var(--kmp-text-primary)]"
                   >
                     Sell
                   </button>
                   <div className="flex-1" />
                   <button
-                    className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent p-0 text-[13px] font-normal"
-                    style={{ color: v('text-primary'), fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                    className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent p-0 text-[13px] font-normal text-[var(--kmp-text-primary)]"
                   >
                     Dollars
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -700,7 +685,6 @@ export function MarketPagePreview({
                 <div className="mb-3 flex gap-2">
                   <button
                     className={`kmp-sidebar-yes flex h-8 flex-1 cursor-pointer items-center justify-center gap-1.5 text-[13px] font-normal ${config.selectedSide === 'Yes' ? 'active' : ''}`}
-                    style={{ fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
                     onClick={() => {
                       onSideSelect('Yes');
                       const outcome = config.outcomes.find(o => o.id === config.selectedOutcome);
@@ -711,7 +695,6 @@ export function MarketPagePreview({
                   </button>
                   <button
                     className={`kmp-sidebar-no flex h-8 flex-1 cursor-pointer items-center justify-center gap-1.5 text-[13px] font-normal ${config.selectedSide === 'No' ? 'active' : ''}`}
-                    style={{ fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
                     onClick={() => {
                       onSideSelect('No');
                       const outcome = config.outcomes.find(o => o.id === config.selectedOutcome);
@@ -725,13 +708,12 @@ export function MarketPagePreview({
                 <div className="mb-3">
                   <div className="kmp-sidebar-input-wrapper flex items-center justify-between px-4 py-[13px]">
                     <div className="flex flex-col gap-0.5">
-                      <label className="block text-[13px] leading-5" style={{ color: v('text-primary'), fontWeight: 500, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}>Amount</label>
-                      <span className="kmp-sidebar-input-sublabel cursor-pointer text-[12px] leading-[18px]" style={{ fontWeight: 500 }}>Earn 3.25% Interest</span>
+                      <label className="block text-[13px] font-medium leading-5 text-[var(--kmp-text-primary)]">Amount</label>
+                      <span className="kmp-sidebar-input-sublabel cursor-pointer text-[12px] font-medium leading-[18px]">Earn 3.25% Interest</span>
                     </div>
                     <input
                       type="text"
-                      className="kmp-sidebar-input w-[120px] border-none bg-transparent pl-2 text-right text-[30px] tracking-[-0.6px] outline-none"
-                      style={{ color: v('text-primary'), fontWeight: 600, fontFamily: "Inter, 'Inter Fallback', sans-serif" }}
+                      className="kmp-sidebar-input w-[120px] border-none bg-transparent pl-2 text-right text-[30px] font-semibold tracking-[-0.6px] text-[var(--kmp-text-primary)] outline-none"
                       placeholder="$0"
                       value={amountInput ? `$${amountInput}` : ''}
                       onChange={(e) => {
@@ -744,13 +726,8 @@ export function MarketPagePreview({
                 </div>
                 {/* Sign up to trade / Submit button */}
                 <button
-                  className="w-full cursor-pointer rounded-lg border-none px-4 py-3 text-[13px] font-normal transition-[opacity,transform] duration-75 hover:opacity-80 active:scale-[0.97]"
-                  style={{
-                    background: '#28CC95',
-                    color: isDark ? 'rgba(0,0,0,0.9)' : '#fff',
-                    height: 48,
-                    fontFamily: "Inter, 'Inter Fallback', sans-serif",
-                  }}
+                  className="h-12 w-full cursor-pointer rounded-lg border-none px-4 py-3 text-[13px] font-normal transition-[opacity,transform] duration-75 hover:opacity-80 active:scale-[0.97]"
+                  style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff' }}
                   onClick={() => {
                     if (config.showReviewPage) {
                       onSidebarStateChange('review');
@@ -778,48 +755,47 @@ export function MarketPagePreview({
                     )}
                   </div>
                   <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="text-[13px] font-normal leading-5" style={{ color: v('text-primary') }}>{config.title}</span>
+                    <span className="text-[13px] font-normal leading-5 text-[var(--kmp-text-primary)]">{config.title}</span>
                     <span className="flex items-center gap-1 text-[15px] font-semibold leading-[22px]">
                       <span style={{ color: config.selectedSide === 'Yes' ? v('yes') : v('no') }}>Buy {config.selectedSide}</span>
-                      <span style={{ color: v('text-primary') }}>·</span>
-                      <span style={{ color: v('text-primary') }}>{selectedOutcome?.name}</span>
+                      <span className="text-[var(--kmp-text-primary)]">·</span>
+                      <span className="text-[var(--kmp-text-primary)]">{selectedOutcome?.name}</span>
                     </span>
                   </div>
                 </div>
-                <div className="mb-4 flex items-center justify-between border-b py-4" style={{ borderColor: v('border') }}>
-                  <span className="text-base font-semibold" style={{ color: v('text-primary') }}>Review order</span>
+                <div className="mb-4 flex items-center justify-between border-b border-b-[var(--kmp-border)] py-4">
+                  <span className="text-base font-semibold text-[var(--kmp-text-primary)]">Review order</span>
                   <KalshiLogo className="h-4" style={{ color: v('brand') }} />
                 </div>
                 <div className="mb-5">
-                  <div className="flex items-center justify-between border-b py-3" style={{ borderColor: v('border-light') }}>
-                    <span className="flex items-center gap-1.5 text-sm" style={{ color: v('text-secondary') }}>
+                  <div className="flex items-center justify-between border-b border-b-[var(--kmp-border-light)] py-3">
+                    <span className="flex items-center gap-1.5 text-sm text-[var(--kmp-text-secondary)]">
                       Estimated cost
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: v('text-tertiary') }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--kmp-text-tertiary)]">
                         <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
                       </svg>
                     </span>
-                    <span className="text-sm font-semibold" style={{ color: v('text-primary') }}>${config.orderAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-sm font-semibold text-[var(--kmp-text-primary)]">${config.orderAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
-                  <div className="flex items-center justify-between border-b py-3" style={{ borderColor: v('border-light') }}>
-                    <span className="flex items-center gap-1.5 text-sm" style={{ color: v('text-secondary') }}>Odds</span>
-                    <span className="text-sm font-semibold" style={{ color: v('yes') }}>{config.limitPrice}% chance</span>
+                  <div className="flex items-center justify-between border-b border-b-[var(--kmp-border-light)] py-3">
+                    <span className="flex items-center gap-1.5 text-sm text-[var(--kmp-text-secondary)]">Odds</span>
+                    <span className="text-sm font-semibold text-[var(--kmp-yes)]">{config.limitPrice}% chance</span>
                   </div>
                   <div className="flex items-center justify-between py-4">
-                    <span className="flex items-center gap-1.5 text-sm" style={{ color: v('text-secondary') }}>
+                    <span className="flex items-center gap-1.5 text-sm text-[var(--kmp-text-secondary)]">
                       Payout if {config.selectedSide}
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: v('text-tertiary') }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--kmp-text-tertiary)]">
                         <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
                       </svg>
                     </span>
-                    <span className="text-[28px] font-bold" style={{ color: v('yes') }}>
+                    <span className="text-[28px] font-bold text-[var(--kmp-yes)]">
                       ${config.limitPrice > 0 ? Math.floor((config.orderAmount * 100) / config.limitPrice).toLocaleString() : '0'}
                     </span>
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <button
-                    className="flex size-12 cursor-pointer items-center justify-center rounded-lg border"
-                    style={{ borderColor: v('border'), background: 'transparent', color: v('text-primary') }}
+                    className="flex size-12 cursor-pointer items-center justify-center rounded-lg border border-[var(--kmp-border)] bg-transparent text-[var(--kmp-text-primary)]"
                     onClick={() => onSidebarStateChange('trading')}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -840,7 +816,7 @@ export function MarketPagePreview({
             {sidebarState === 'confirmation' && (
               <div className="text-left">
                 <div className="mb-5 flex items-start justify-between">
-                  <div className="size-14 overflow-hidden rounded-lg" style={{ background: v('bg') }}>
+                  <div className="size-14 overflow-hidden rounded-lg bg-[var(--kmp-bg)]">
                     {selectedOutcome?.image ? (
                       <img src={selectedOutcome.image} alt="" className="size-full object-cover" draggable={false} />
                     ) : config.image ? (
@@ -851,28 +827,28 @@ export function MarketPagePreview({
                   </div>
                   <KalshiLogo className="h-4" style={{ color: v('brand') }} />
                 </div>
-                <div className="mb-1 text-sm" style={{ color: v('text-secondary') }}>{config.title}</div>
-                <div className="mb-6 text-xl font-bold" style={{ color: v('text-primary') }}>{selectedOutcome?.name}</div>
+                <div className="mb-1 text-sm text-[var(--kmp-text-secondary)]">{config.title}</div>
+                <div className="mb-6 text-xl font-bold text-[var(--kmp-text-primary)]">{selectedOutcome?.name}</div>
                 <div className="mb-6">
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-sm" style={{ color: v('text-secondary') }}>Cost</span>
-                    <span className="text-sm font-semibold" style={{ color: v('text-primary') }}>${config.orderAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-sm text-[var(--kmp-text-secondary)]">Cost</span>
+                    <span className="text-sm font-semibold text-[var(--kmp-text-primary)]">${config.orderAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-sm" style={{ color: v('text-secondary') }}>Odds</span>
-                    <span className="text-sm font-semibold" style={{ color: v('yes') }}>{config.limitPrice}% chance</span>
+                    <span className="text-sm text-[var(--kmp-text-secondary)]">Odds</span>
+                    <span className="text-sm font-semibold text-[var(--kmp-yes)]">{config.limitPrice}% chance</span>
                   </div>
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-sm" style={{ color: v('text-secondary') }}>Payout if {config.selectedSide}</span>
-                    <span className="text-[28px] font-bold" style={{ color: v('yes') }}>
+                    <span className="text-sm text-[var(--kmp-text-secondary)]">Payout if {config.selectedSide}</span>
+                    <span className="text-[28px] font-bold text-[var(--kmp-yes)]">
                       ${config.limitPrice > 0 ? Math.floor((config.orderAmount * 100) / config.limitPrice).toLocaleString() : '0'}
                     </span>
                   </div>
-                  <div className="-mt-1 text-right text-[13px]" style={{ color: v('text-tertiary') }}>{config.eventDate}</div>
+                  <div className="-mt-1 text-right text-[13px] text-[var(--kmp-text-tertiary)]">{config.eventDate}</div>
                 </div>
                 <button
-                  className="w-full cursor-pointer rounded-lg border-none px-4 py-3 text-[13px] font-normal transition-[opacity,transform] duration-75 hover:opacity-80 active:scale-[0.97]"
-                  style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff', height: 48 }}
+                  className="h-12 w-full cursor-pointer rounded-lg border-none px-4 py-3 text-[13px] font-normal transition-[opacity,transform] duration-75 hover:opacity-80 active:scale-[0.97]"
+                  style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff' }}
                   onClick={() => onSidebarStateChange('trading')}
                 >
                   Done

@@ -170,15 +170,9 @@ export function MarketPageMaker({
         <div className={ctrl.group}>
           <label>Image</label>
           <div
-            className={ctrl.comboImagePlaceholder}
+            className={`${ctrl.comboImagePlaceholder} w-full flex flex-col items-center gap-2 p-4`}
             style={{
               borderColor: isDragging ? '#09C285' : undefined,
-              width: '100%',
-              padding: '16px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
             }}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -186,11 +180,11 @@ export function MarketPageMaker({
             onClick={() => document.getElementById('market-image-input')?.click()}
           >
             {config.image ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div className="flex items-center gap-2">
                 <img
                   src={config.image}
                   alt="Market"
-                  style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }}
+                  className="size-12 rounded-lg object-cover"
                 />
                 <button
                   className={ctrl.comboImageClear}
@@ -214,7 +208,7 @@ export function MarketPageMaker({
             type="file"
             accept="image/*"
             onChange={handleFileInput}
-            style={{ display: 'none' }}
+            className="hidden"
           />
         </div>
       </div>
@@ -280,12 +274,12 @@ export function MarketPageMaker({
           {config.outcomes.map((outcome, index) => (
             <div key={outcome.id} className={ctrl.comboLeg}>
               <div className={ctrl.comboLegHeader}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div className="flex items-center gap-2">
                   <input
                     type="color"
                     value={outcome.color}
                     onChange={(e) => handleOutcomeChange(outcome.id, { color: e.target.value })}
-                    style={{ width: '24px', height: '24px', padding: 0, border: 'none', cursor: 'pointer' }}
+                    className="size-6 cursor-pointer border-none p-0"
                   />
                   <span className={ctrl.comboLegTitle}>Outcome {index + 1}</span>
                 </div>
@@ -298,7 +292,7 @@ export function MarketPageMaker({
                 </button>
               </div>
               <div className={ctrl.comboLegBody}>
-                <div className={ctrl.comboLegControl} style={{ flex: '1 1 100%' }}>
+                <div className={`${ctrl.comboLegControl} flex-[1_1_100%]`}>
                   <label className={ctrl.comboLegLabel}>Name</label>
                   <input
                     type="text"
@@ -308,7 +302,7 @@ export function MarketPageMaker({
                     onChange={(e) => handleOutcomeChange(outcome.id, { name: e.target.value })}
                   />
                 </div>
-                <div className={ctrl.comboLegControl} style={{ flex: '1 1 100%' }}>
+                <div className={`${ctrl.comboLegControl} flex-[1_1_100%]`}>
                   <label className={ctrl.comboLegLabel}>Subtitle (optional)</label>
                   <input
                     type="text"
@@ -318,44 +312,31 @@ export function MarketPageMaker({
                     onChange={(e) => handleOutcomeChange(outcome.id, { subtitle: e.target.value })}
                   />
                 </div>
-                <div className={ctrl.comboLegControl} style={{ flex: '1 1 100%' }}>
+                <div className={`${ctrl.comboLegControl} flex-[1_1_100%]`}>
                   <label className={ctrl.comboLegLabel}>Image</label>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="flex items-center gap-2">
                     {outcome.image ? (
                       <>
                         <img
                           src={outcome.image}
                           alt={outcome.name}
-                          style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '8px' }}
+                          className="size-10 rounded-lg object-cover"
                         />
                         <button
-                          className={ctrl.comboImageClear}
+                          className={`${ctrl.comboImageClear} px-2 py-1 text-xs`}
                           onClick={() => handleOutcomeChange(outcome.id, { image: null })}
-                          style={{ padding: '4px 8px', fontSize: '12px' }}
                         >
                           Remove
                         </button>
                       </>
                     ) : (
-                      <label
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          padding: '8px 12px',
-                          background: '#252525',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          fontSize: '13px',
-                          color: '#6b7280',
-                        }}
-                      >
+                      <label className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#252525] px-3 py-2 text-[13px] text-[#6b7280]">
                         <UploadIcon />
                         Upload image
                         <input
                           type="file"
                           accept="image/*"
-                          style={{ display: 'none' }}
+                          className="hidden"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) onOutcomeImageUpload(outcome.id, file);
@@ -381,10 +362,9 @@ export function MarketPageMaker({
                     <label className={ctrl.comboLegLabel}>No Price (¢)</label>
                     <input
                       type="number"
-                      className={ctrl.input}
+                      className={`${ctrl.input} bg-[#252525]`}
                       value={outcome.noPrice}
                       disabled
-                      style={{ backgroundColor: '#252525' }}
                     />
                   </div>
                 </div>
@@ -410,9 +390,8 @@ export function MarketPageMaker({
                   </div>
                 </div>
                 <button
-                  className={ctrl.btnDraw}
+                  className={`${ctrl.btnDraw} mt-2 w-full`}
                   onClick={() => onDrawOutcomeTrend(outcome.id)}
-                  style={{ width: '100%', marginTop: '8px' }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 19l7-7 3 3-7 7-3-3z" />
@@ -461,7 +440,7 @@ export function MarketPageMaker({
           </div>
         </div>
 
-        <button className={ctrl.btnRegen} onClick={onRegenerateData} style={{ width: '100%' }}>
+        <button className={`${ctrl.btnRegen} w-full`} onClick={onRegenerateData}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M23 4v6h-6" />
             <path d="M1 20v-6h6" />
@@ -480,42 +459,29 @@ export function MarketPageMaker({
 
         <div className={ctrl.group}>
           <label>Profile Picture</label>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="flex items-center gap-2">
             {config.profileImage ? (
               <>
                 <img
                   src={config.profileImage}
                   alt="Profile"
-                  style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }}
+                  className="size-10 rounded-full object-cover"
                 />
                 <button
-                  className={ctrl.comboImageClear}
+                  className={`${ctrl.comboImageClear} px-2 py-1 text-xs`}
                   onClick={() => onConfigChange({ profileImage: null })}
-                  style={{ padding: '4px 8px', fontSize: '12px' }}
                 >
                   Remove
                 </button>
               </>
             ) : (
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 12px',
-                  background: '#252525',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  color: '#6b7280',
-                }}
-              >
+              <label className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#252525] px-3 py-2 text-[13px] text-[#6b7280]">
                 <UploadIcon />
                 Upload profile picture
                 <input
                   type="file"
                   accept="image/*"
-                  style={{ display: 'none' }}
+                  className="hidden"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) onProfileImageUpload(file);
@@ -543,7 +509,7 @@ export function MarketPageMaker({
         <div className={ctrl.sectionTitle}>Display Options</div>
 
         <div className={ctrl.group}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
+          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
             <input
               type="checkbox"
               checked={config.darkMode === true}
@@ -554,7 +520,7 @@ export function MarketPageMaker({
         </div>
 
         <div className={ctrl.group}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
+          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
             <input
               type="checkbox"
               checked={config.showWatermark}
@@ -565,7 +531,7 @@ export function MarketPageMaker({
         </div>
 
         <div className={ctrl.group}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
+          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
             <input
               type="checkbox"
               checked={config.showRules}
@@ -579,18 +545,17 @@ export function MarketPageMaker({
           <div className={ctrl.group}>
             <label>Rules Text</label>
             <textarea
-              className={ctrl.input}
+              className={`${ctrl.input} resize-y`}
               placeholder="Enter market rules..."
               value={config.rulesText}
               onChange={(e) => onConfigChange({ rulesText: e.target.value })}
               rows={4}
-              style={{ resize: 'vertical' }}
             />
           </div>
         )}
 
         <div className={ctrl.group}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
+          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
             <input
               type="checkbox"
               checked={config.showRelatedMarkets}
@@ -601,7 +566,7 @@ export function MarketPageMaker({
         </div>
 
         <div className={ctrl.group}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'none', color: '#d1d5db' }}>
+          <label className="flex items-center gap-2 normal-case text-[#d1d5db]">
             <input
               type="checkbox"
               checked={config.showReviewPage}

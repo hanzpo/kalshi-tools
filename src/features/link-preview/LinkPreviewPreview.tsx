@@ -181,22 +181,19 @@ export function LinkPreviewPreview({ config, data, leftImage, onTimeHorizonChang
             </>
           ) : (
             <>
-              <div className="flex flex-wrap gap-2" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              <div className="flex flex-wrap gap-2">
                 {config.outcomes.map((outcome) => (
-                  <div key={outcome.id} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <div key={outcome.id} className="flex items-center gap-1">
                     <div
+                      className="size-2 shrink-0 rounded-full"
                       style={{
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
                         backgroundColor: outcome.color,
-                        flexShrink: 0,
                       }}
                     />
-                    <span style={{ fontSize: '11px', fontWeight: '500', color: secondaryTextColor }}>
+                    <span className="text-[11px] font-medium" style={{ color: secondaryTextColor }}>
                       {outcome.name}
                     </span>
-                    <span style={{ fontSize: '12px', fontWeight: '600', color: textColor }}>
+                    <span className="text-xs font-semibold" style={{ color: textColor }}>
                       {outcome.currentOdds === 0 ? '1' : Math.min(outcome.currentOdds, 99)}%
                     </span>
                   </div>
