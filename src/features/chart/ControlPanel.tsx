@@ -152,18 +152,12 @@ export function ControlPanel({
       const items = Array.from(event.clipboardData?.items ?? []);
 
       // Check for Kalshi URL in pasted text first
-      const textItem = items.find((item) => item.type === 'text/plain');
-      if (textItem && onImportKalshiMarket) {
-        textItem.getAsString(async (text) => {
-          if (isKalshiUrl(text)) {
-            setUrlInput(text);
-            await handleUrlImport(text);
-          }
-        });
-        // If we found text, check if it's a URL before blocking other paste handling
+      if (onImportKalshiMarket) {
         const clipboardText = event.clipboardData?.getData('text/plain');
         if (clipboardText && isKalshiUrl(clipboardText)) {
           event.preventDefault();
+          setUrlInput(clipboardText);
+          handleUrlImport(clipboardText);
           return;
         }
       }

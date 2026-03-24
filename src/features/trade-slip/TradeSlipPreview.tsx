@@ -1,6 +1,4 @@
 import { TradeSlipConfig, ComboEvent, ComboMarket } from '../../types';
-import { PrizePickPreview } from './PrizePickPreview';
-import { CoinbasePreview } from './CoinbasePreview';
 import { calculateSinglePayout, calculateAmericanPayout, formatAmericanOdds } from '../../lib/payoutHelpers';
 import './TradeSlipPreview.css';
 
@@ -152,26 +150,10 @@ function formatTimestamp(customTimestamp?: string): string {
 
 export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const isCombo = config.mode === 'combo';
-  const isPrizePick = config.mode === 'prizepick';
-  const isCoinbase = config.mode === 'coinbase';
   const isSingleOld = config.mode === 'single-old';
   const isComboOld = config.mode === 'combo-old';
   const isHorizontal = config.mode === 'horizontal';
   const isChampionship = config.mode === 'championship';
-  if (isPrizePick) {
-    return <PrizePickPreview config={config} />;
-  }
-
-  if (isCoinbase) {
-    return <CoinbasePreview config={{
-      coinbasePredictions: config.coinbasePredictions,
-      coinbaseWager: config.coinbaseWager,
-      coinbasePayout: config.coinbasePayout,
-      coinbasePlayType: config.coinbasePlayType,
-      showWatermark: config.showWatermark,
-    }} />;
-  }
-
   if (isHorizontal) {
     const horizontalPayout = config.customPayout != null ? config.customPayout : calculateSinglePayout(config.wager, config.odds);
     const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';

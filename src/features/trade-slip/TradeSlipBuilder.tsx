@@ -80,18 +80,6 @@ export default function TradeSlipBuilder() {
     ],
     comboPayout: 1920,
     comboCost: 99.84,
-    prizePickPlayers: [],
-    prizePickWager: 1000,
-    prizePickPayout: 25000,
-    prizePickType: '6-Pick Power Play',
-    prizePickShowTeam: true,
-    prizePickShowPosition: true,
-    prizePickShowNumber: true,
-    prizePickShowScore: true,
-    coinbasePredictions: [],
-    coinbaseWager: 1000,
-    coinbasePayout: 25000,
-    coinbasePlayType: '',
     championshipSecondaryColor: '#0a3d2e',
   });
 
@@ -139,8 +127,6 @@ export default function TradeSlipBuilder() {
     let nameSource: string;
     if (config.mode === 'single') {
       nameSource = outcomeName || marketName || titleName || 'trade-slip';
-    } else if (config.mode === 'coinbase') {
-      nameSource = config.coinbasePlayType?.trim() || 'coinbase-slip';
     } else {
       nameSource = titleName || 'trade-slip';
     }

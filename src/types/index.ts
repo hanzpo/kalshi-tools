@@ -14,8 +14,5 @@ export type {
   ComboMarket,
   ComboEvent,
   ComboCategory,
-  PrizePickPlayer,
-  CoinbasePrediction,
   TradeSlipConfig,
-  CoinbaseConfig,
 } from './trade-slip';

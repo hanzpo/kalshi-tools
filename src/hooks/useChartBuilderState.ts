@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MarketConfig, DataPoint } from '../types';
 import { generateMarketData, generateForecastData, generateVolume, getDateRangeForTimeHorizon } from '../lib/dataGenerator';
@@ -91,25 +91,8 @@ export function useChartBuilderState({
     }
   }, [enableUrlDecode, location.search]);
 
-  // Initial data generation
-  useEffect(() => {
-    regenerateData();
-  }, []);
-
-  // Regenerate on market type / time changes
-  useEffect(() => {
-    regenerateData();
-  }, [config.marketType, config.timeHorizon, config.startDate, config.endDate]);
-
-  // Regenerate when multi outcomes change
-  useEffect(() => {
-    if (config.marketType === 'multi') {
-      regenerateData();
-    }
-  }, [config.marketType, config.outcomes.length]);
-
-  function regenerateData(sourceConfig: MarketConfig = configRef.current) {
-    const current = sourceConfig;
+  const regenerateData = useCallback((sourceConfig?: MarketConfig) => {
+    const current = sourceConfig && 'marketType' in sourceConfig ? sourceConfig : configRef.current;
     const { startDate, endDate } = current.timeHorizon === 'ALL'
       ? { startDate: current.startDate, endDate: current.endDate }
       : getDateRangeForTimeHorizon(current.timeHorizon, current.endDate);
@@ -149,7 +132,24 @@ export function useChartBuilderState({
 
       setData(baseData);
     }
-  }
+  }, []);
+
+  // Initial data generation
+  useEffect(() => {
+    regenerateData();
+  }, [regenerateData]);
+
+  // Regenerate on market type / time changes
+  useEffect(() => {
+    regenerateData();
+  }, [regenerateData, config.marketType, config.timeHorizon, config.startDate, config.endDate]);
+
+  // Regenerate when multi outcomes change
+  useEffect(() => {
+    if (config.marketType === 'multi') {
+      regenerateData();
+    }
+  }, [regenerateData, config.marketType, config.outcomes.length]);
 
   function handleConfigChange(updates: Partial<MarketConfig>) {
     updateConfig((prev) => ({ ...prev, ...updates }));

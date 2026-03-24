@@ -176,7 +176,7 @@ export function createDefaultConfig(): BracketConfig {
 }
 
 // Standard bracket matchup order: 1v16, 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15
-export const SEED_MATCHUPS: [number, number][] = [
+const SEED_MATCHUPS: [number, number][] = [
   [0, 15],  // 1 vs 16
   [7, 8],   // 8 vs 9
   [4, 11],  // 5 vs 12
@@ -203,7 +203,7 @@ function resolveTeam(config: BracketConfig, team: BracketTeam): BracketTeam {
 }
 
 // Get the two teams in a given R64 matchup for a region
-export function getR64Matchup(region: BracketRegion, matchupIndex: number): [BracketTeam, BracketTeam] {
+function getR64Matchup(region: BracketRegion, matchupIndex: number): [BracketTeam, BracketTeam] {
   const [a, b] = SEED_MATCHUPS[matchupIndex];
   return [region.teams[a], region.teams[b]];
 }

@@ -1,4 +1,4 @@
-export type TradeSlipMode = 'single' | 'combo' | 'single-old' | 'combo-old' | 'prizepick' | 'coinbase' | 'horizontal' | 'championship';
+export type TradeSlipMode = 'single' | 'combo' | 'single-old' | 'combo-old' | 'horizontal' | 'championship';
 
 export interface ComboLeg {
   id: string;
@@ -28,35 +28,6 @@ export interface ComboCategory {
   events: ComboEvent[];
 }
 
-export interface PrizePickPlayer {
-  id: string;
-  playerName: string;
-  team: string;
-  position: string;
-  number: string;
-  opponent: string;
-  homeScore: string;
-  awayScore: string;
-  statType: string;
-  statValue: number;
-  image: string | null;
-  league: string;
-  gameStatus: string;
-}
-
-export interface CoinbasePrediction {
-  id: string;
-  assetName: string;
-  ticker: string;
-  predictionType: string;
-  targetValue: number;
-  currentValue: number;
-  timeframe: string;
-  status: string;
-  percentChange: number;
-  image: string | null;
-}
-
 export interface TradeSlipConfig {
   mode: TradeSlipMode;
   title: string;
@@ -81,27 +52,8 @@ export interface TradeSlipConfig {
   comboCategories: ComboCategory[];
   comboPayout: number;
   comboCost: number;
-  prizePickPlayers: PrizePickPlayer[];
-  prizePickWager: number;
-  prizePickPayout: number;
-  prizePickType: string;
-  prizePickShowTeam: boolean;
-  prizePickShowPosition: boolean;
-  prizePickShowNumber: boolean;
-  prizePickShowScore: boolean;
-  coinbasePredictions: CoinbasePrediction[];
-  coinbaseWager: number;
-  coinbasePayout: number;
-  coinbasePlayType: string;
   isPaidOut: boolean;
   customPayout?: number;
   championshipSecondaryColor: string;
 }
 
-export interface CoinbaseConfig {
-  coinbasePredictions: CoinbasePrediction[];
-  coinbaseWager: number;
-  coinbasePayout: number;
-  coinbasePlayType: string;
-  showWatermark: boolean;
-}

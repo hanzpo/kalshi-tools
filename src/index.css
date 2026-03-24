@@ -86,25 +86,6 @@
   --color-surface-light: #ffffff;
   --color-border-light: #e5e7eb;
 
-  /* Coinbase brand */
-  --color-cb: #0052FF;
-  --color-cb-bg: #0A0B0D;
-  --color-cb-card: #111214;
-  --color-cb-card-header: #161719;
-  --color-cb-header: #050506;
-  --color-cb-border: #1E2025;
-  --color-cb-text: #8A919E;
-  --color-cb-won: #00C278;
-  --color-cb-lost: #d91616;
-
-  /* PrizePick brand */
-  --color-pp: #6dff00;
-  --color-pp-bg: #12131f;
-  --color-pp-card: #111320;
-  --color-pp-card-header: #1e202d;
-  --color-pp-header: #040613;
-  --color-pp-border: #292935;
-  --color-pp-text: #c9c7d2;
 
   --animate-toast-up: toast-up 0.25s ease-out;
 }

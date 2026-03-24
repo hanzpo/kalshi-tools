@@ -1,6 +1,6 @@
 import { BracketPlayInId } from '../../types/bracket';
 
-export const PLAY_IN_IDS: BracketPlayInId[] = ['south-16', 'west-11', 'midwest-11', 'midwest-16'];
+const PLAY_IN_IDS: BracketPlayInId[] = ['south-16', 'west-11', 'midwest-11', 'midwest-16'];
 
 export interface EncodedBracketState {
   picks: (number | null)[];
