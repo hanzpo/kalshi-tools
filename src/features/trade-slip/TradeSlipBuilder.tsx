@@ -81,6 +81,7 @@ export default function TradeSlipBuilder() {
     comboPayout: 1920,
     comboCost: 99.84,
     championshipSecondaryColor: '#0a3d2e',
+    championshipTitle: 'CHAMPIONSHIP',
   });
 
   const [cropperImage, setCropperImage] = useState<string | null>(null);

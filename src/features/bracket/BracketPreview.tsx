@@ -5,9 +5,13 @@ import {
   getMatchupParticipants,
   getWinner,
 } from './bracketData';
-import './BracketPreview.css';
 
 export const BRACKET_PREVIEW_ID = 'bracket-preview';
+
+const GRAPHIK_FONT = "'Graphik', 'Inter', system-ui, sans-serif";
+const GRAPHIK_CONDENSED_FONT = "'Graphik Condensed App', 'Barlow Condensed', system-ui, sans-serif";
+const FEATURE_SETTINGS = "'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1";
+const FEATURE_SETTINGS_ALT = "'case' 1, 'lnum' 1, 'pnum' 1";
 
 const LIGHT_TEXT = 'rgba(255,255,255,0.95)';
 const DARK_TEXT = '#0a1128';
@@ -41,11 +45,16 @@ function TeamSquare({
   onClick?: () => void;
   size?: 'sm' | 'lg';
 }) {
+  const isLg = size === 'lg';
+
   if (!team) {
     return (
-      <div className={`bracket-team bracket-team--empty ${size === 'lg' ? 'bracket-team--champion' : ''}`}>
+      <div className={`${isLg ? 'w-[81px] h-[81px]' : 'size-12'} rounded-xl border-2 border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] flex flex-col items-stretch justify-stretch p-[5px] shrink-0 cursor-default select-none transition-[transform,box-shadow,opacity] duration-100 relative box-border z-[2] opacity-25 hover:scale-100 hover:shadow-none`}>
         <div className="flex w-full flex-1 items-center justify-center rounded-[6px] overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
-          <span className="bracket-team-name" style={{ color: 'rgba(255,255,255,0.15)' }}>?</span>
+          <span
+            className={`flex items-center justify-center w-full h-full ${isLg ? 'text-[17px] tracking-[1.2px]' : 'text-[10px] tracking-[0.72px]'} font-semibold uppercase whitespace-nowrap text-center leading-none`}
+            style={{ fontFamily: GRAPHIK_FONT, fontFeatureSettings: FEATURE_SETTINGS, color: 'rgba(255,255,255,0.15)' }}
+          >?</span>
         </div>
       </div>
     );
@@ -53,11 +62,14 @@ function TeamSquare({
 
   return (
     <div
-      className={`bracket-team ${size === 'lg' ? 'bracket-team--champion' : ''}`}
+      className={`${isLg ? 'w-[81px] h-[81px]' : 'size-12'} rounded-xl border-2 border-[rgba(255,255,255,0.1)] bg-[#0b0d0c] flex flex-col items-stretch justify-stretch p-[5px] shrink-0 cursor-pointer select-none transition-[transform,box-shadow,opacity] duration-100 relative box-border z-[2] hover:scale-[1.12] hover:shadow-[0_3px_18px_rgba(0,0,0,0.5)] hover:z-[5] active:scale-95`}
       onClick={onClick}
     >
       <div className="flex w-full flex-1 items-center justify-center rounded-[6px] overflow-hidden" style={{ background: team.bgColor }}>
-        <span className="bracket-team-name" style={{ color: textColorForBg(team.bgColor) }}>
+        <span
+          className={`flex items-center justify-center w-full h-full ${isLg ? 'text-[17px] tracking-[1.2px]' : 'text-[10px] tracking-[0.72px]'} font-semibold uppercase whitespace-nowrap text-center leading-none`}
+          style={{ fontFamily: GRAPHIK_FONT, fontFeatureSettings: FEATURE_SETTINGS, color: textColorForBg(team.bgColor) }}
+        >
           {team.name}
         </span>
       </div>
@@ -71,7 +83,10 @@ function SeedBadge({ team }: { team: BracketTeam | null }) {
   }
   return (
     <div className="w-[36px] h-[18px] rounded-[4px] flex items-center justify-center shrink-0" style={{ background: team.bgColor }}>
-      <span className="bracket-seed-badge-name" style={{ color: textColorForBg(team.bgColor) }}>
+      <span
+        className="text-[7.5px] font-semibold tracking-[0.4px] uppercase whitespace-nowrap leading-none"
+        style={{ fontFamily: GRAPHIK_FONT, fontFeatureSettings: FEATURE_SETTINGS, color: textColorForBg(team.bgColor) }}
+      >
         {team.name}
       </span>
     </div>
@@ -220,7 +235,10 @@ function RegionBracket({
   if (mirrored) {
     return (
       <div className="flex flex-1 h-full items-center justify-center relative flex-row-reverse">
-        <span className="bracket-region-name">{regionName}</span>
+        <span
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[16.5px] font-semibold tracking-[1.32px] uppercase text-white/90 leading-[27px] pointer-events-none whitespace-nowrap z-[1]"
+          style={{ fontFamily: GRAPHIK_FONT }}
+        >{regionName}</span>
         {r64Col}
         {r32Col}
         {s16Col}
@@ -231,7 +249,10 @@ function RegionBracket({
 
   return (
     <div className="flex flex-1 h-full items-center justify-center relative">
-      <span className="bracket-region-name">{regionName}</span>
+      <span
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[16.5px] font-semibold tracking-[1.32px] uppercase text-white/90 leading-[27px] pointer-events-none whitespace-nowrap z-[1]"
+        style={{ fontFamily: GRAPHIK_FONT }}
+      >{regionName}</span>
       {r64Col}
       {r32Col}
       {s16Col}
@@ -252,7 +273,6 @@ function FinalFourLabels({
   side: 'left' | 'right';
 }) {
   const [teamA, teamB] = getMatchupParticipants(config, gameIndex);
-  const currentWinner = getWinner(config, gameIndex);
 
   return (
     <div className={`flex flex-col gap-[6px] self-start z-[4] ${side === 'left' ? 'col-start-2 mt-[7.5px]' : '[grid-column:6] mt-[13.5px]'}`}>
@@ -260,7 +280,7 @@ function FinalFourLabels({
         <button
           key={index}
           type="button"
-          className={`box-border p-[3px] m-0 bg-[rgba(255,255,255,0.02)] cursor-pointer text-center transition-[opacity,transform] duration-[120ms] ease-linear w-[44px] border border-[rgba(255,255,255,0.1)] rounded-[9px] hover:enabled:scale-[1.04] disabled:cursor-default disabled:opacity-[0.32] ${team && currentWinner === team ? 'bracket-semifinal-label--selected' : ''}`}
+          className="box-border p-[3px] m-0 bg-[rgba(255,255,255,0.02)] cursor-pointer text-center transition-[opacity,transform] duration-[120ms] ease-linear w-[44px] border border-[rgba(255,255,255,0.1)] rounded-[9px] hover:enabled:scale-[1.04] disabled:cursor-default disabled:opacity-[0.32]"
           onClick={() => {
             if (!teamA || !teamB) return;
             onPick(gameIndex, index);
@@ -268,8 +288,10 @@ function FinalFourLabels({
           disabled={!teamA || !teamB}
         >
           <span
-            className="bracket-semifinal-label-inner"
+            className="box-border flex items-center justify-center w-full h-6 px-px rounded-md text-[11px] font-semibold tracking-[0.88px] uppercase whitespace-nowrap leading-none"
             style={{
+              fontFamily: GRAPHIK_FONT,
+              fontFeatureSettings: FEATURE_SETTINGS,
               background: team?.bgColor ?? 'rgba(255,255,255,0.04)',
               color: team ? textColorForBg(team.bgColor) : 'rgba(255,255,255,0.18)',
             }}
@@ -290,11 +312,24 @@ export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
   const f4RightWinner = getWinner(config, 61);
 
   return (
-    <div className={`bracket-preview flex flex-col items-center pt-[24px] pb-[72px] relative overflow-hidden box-border ${view === 'r64' ? 'bracket-preview--r64' : ''}`} id={BRACKET_PREVIEW_ID}>
+    <div
+      className={`${view === 'r64' ? 'w-[800px]' : 'w-[590px]'} bg-[#0b0d0c] flex flex-col items-center pt-[24px] pb-[72px] relative overflow-hidden box-border`}
+      style={{ fontFamily: GRAPHIK_FONT }}
+      id={BRACKET_PREVIEW_ID}
+    >
+      {/* Green glow overlay (replaces ::before pseudo-element) */}
+      <div className="absolute inset-x-0 top-0 h-[300px] pointer-events-none z-0" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(11,13,12,1) 100%), linear-gradient(90deg, rgba(10,194,133,0.08) 10%, rgba(10,194,133,0.5) 50%, rgba(10,194,133,0.08) 90%)' }} />
+
       {/* Header */}
       <div className="text-center w-full mb-[-48px] relative z-[2] flex flex-col">
-        <p className="bracket-subtitle m-0">{DEFAULT_BRACKET_SUBTITLE}</p>
-        <p className="bracket-title m-0 whitespace-pre-line">{DEFAULT_BRACKET_TITLE}</p>
+        <p
+          className="text-[16.5px] font-semibold tracking-[1.32px] uppercase text-[rgba(255,255,255,0.55)] leading-[27px] m-0"
+          style={{ fontFamily: GRAPHIK_FONT, fontFeatureSettings: FEATURE_SETTINGS }}
+        >{DEFAULT_BRACKET_SUBTITLE}</p>
+        <p
+          className="text-[45px] font-medium leading-[54px] text-white/90 uppercase m-0 whitespace-pre-line"
+          style={{ fontFamily: GRAPHIK_CONDENSED_FONT, fontFeatureSettings: FEATURE_SETTINGS_ALT }}
+        >{DEFAULT_BRACKET_TITLE}</p>
       </div>
 
       <div className={`flex flex-col items-center p-0 ${view === 'r64' ? 'w-[800px]' : 'w-[590px]'}`}>
@@ -314,11 +349,14 @@ export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
                 ) : (
                   <div className="w-[48px] h-[48px] shrink-0" />
                 )}
-                <div className="bracket-championship-line" />
+                <div className="h-0 w-3 shrink-0 relative"><div className="absolute -top-px inset-x-0 h-px bg-[rgba(255,255,255,0.1)]" /></div>
 
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] z-[1] pointer-events-none">
                   <div className="w-[240px] h-[240px] rounded-full border border-[rgba(255,255,255,0.1)] bg-[rgba(128,128,128,0.02)] flex flex-col items-center justify-center gap-[108px] pt-[6px] box-border">
-                    <span className="bracket-champion-label">Champion</span>
+                    <span
+                      className="text-[16.5px] font-semibold tracking-[1.32px] uppercase text-[#0AC285] leading-[27px]"
+                      style={{ fontFamily: GRAPHIK_FONT, fontFeatureSettings: FEATURE_SETTINGS }}
+                    >Champion</span>
                     <div className="text-[#0AC285] flex items-center justify-center">
                       <svg className="w-[81px] h-[24px]" viewBox="0 0 772 226" fill="none">
                         <path
@@ -339,7 +377,7 @@ export function BracketPreview({ config, onPick, view = 'r32' }: Props) {
                   }}
                 />
 
-                <div className="bracket-championship-line" />
+                <div className="h-0 w-3 shrink-0 relative"><div className="absolute -top-px inset-x-0 h-px bg-[rgba(255,255,255,0.1)]" /></div>
                 {f4RightWinner ? (
                   <TeamSquare team={f4RightWinner} />
                 ) : (

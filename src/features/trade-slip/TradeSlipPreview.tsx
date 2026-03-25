@@ -1,6 +1,5 @@
 import { TradeSlipConfig, ComboEvent, ComboMarket } from '../../types';
 import { calculateSinglePayout, calculateAmericanPayout, formatAmericanOdds } from '../../lib/payoutHelpers';
-import './TradeSlipPreview.css';
 
 interface TradeSlipPreviewProps {
   config: TradeSlipConfig;
@@ -271,7 +270,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
       <div className="flex min-h-full w-full items-center justify-center p-[clamp(16px,3vw,32px)]">
         <div
           id="trade-slip-preview"
-          className="championship-preview"
+          className="relative flex flex-col items-center justify-end gap-[3px] w-[clamp(300px,75vw,361px)] max-w-[361px] px-4 pt-4 pb-3 rounded-2xl overflow-visible font-sans leading-[0]"
           style={{
             '--champ-primary': primaryColor,
             '--champ-primary-25': `rgba(${pc.r},${pc.g},${pc.b},0.25)`,
@@ -280,6 +279,8 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
             '--champ-secondary': secondaryColor,
             '--champ-secondary-25': `rgba(${scLight.r},${scLight.g},${scLight.b},0.25)`,
             '--champ-secondary-035': `rgba(${scLight.r},${scLight.g},${scLight.b},0.035)`,
+            border: `1px solid var(--champ-primary-18, rgba(40, 204, 149, 0.18))`,
+            background: `linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--champ-secondary, rgb(10,12,15)) 100%), linear-gradient(90deg, var(--champ-secondary-25, rgba(40,204,149,0.25)) 10%, var(--champ-secondary-035, rgba(40,204,149,0.035)) 50%, var(--champ-secondary-25, rgba(40,204,149,0.25)) 90%), linear-gradient(90deg, var(--champ-secondary, rgb(10,12,15)) 0%, var(--champ-secondary, rgb(10,12,15)) 100%)`,
           } as React.CSSProperties}
         >
           {config.showCashedOut && (
@@ -287,37 +288,43 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
           )}
 
           {/* Bracket decorations */}
-          <div className="championship-bracket-left">
-            <div className="championship-bracket-line" />
-            <div className="championship-bracket-round1" />
-            <div className="championship-bracket-round2">
-              <div className="championship-bracket-slot" />
-              <div className="championship-bracket-slot" />
+          <div className="absolute top-[15px] -left-px flex items-center z-[1]">
+            <div className="w-6 h-px" style={{ background: 'linear-gradient(to right, var(--champ-primary-18), var(--champ-primary))' }} />
+            <div className="w-3 h-9 box-border" style={{ borderLeft: '1px solid var(--champ-primary)', borderTop: '1px solid var(--champ-primary)', borderBottom: '1px solid var(--champ-primary)' }} />
+            <div className="flex flex-col gap-2 h-[54px] justify-center">
+              <div className="w-9 flex-[1_0_0] min-h-px box-border" style={{ borderLeft: '1px solid var(--champ-primary)', borderTop: '1px solid var(--champ-primary)', borderBottom: '1px solid var(--champ-primary)' }} />
+              <div className="w-9 flex-[1_0_0] min-h-px box-border" style={{ borderLeft: '1px solid var(--champ-primary)', borderTop: '1px solid var(--champ-primary)', borderBottom: '1px solid var(--champ-primary)' }} />
             </div>
           </div>
-          <div className="championship-bracket-right">
-            <div className="championship-bracket-line" />
-            <div className="championship-bracket-round1" />
-            <div className="championship-bracket-round2">
-              <div className="championship-bracket-slot" />
-              <div className="championship-bracket-slot" />
+          <div className="absolute top-[15px] -right-px flex flex-row-reverse items-center z-[1]">
+            <div className="w-6 h-px" style={{ background: 'linear-gradient(to left, var(--champ-primary-18), var(--champ-primary))' }} />
+            <div className="w-3 h-9 box-border" style={{ borderRight: '1px solid var(--champ-primary)', borderTop: '1px solid var(--champ-primary)', borderBottom: '1px solid var(--champ-primary)' }} />
+            <div className="flex flex-col gap-2 h-[54px] justify-center">
+              <div className="w-9 flex-[1_0_0] min-h-px box-border" style={{ borderRight: '1px solid var(--champ-primary)', borderTop: '1px solid var(--champ-primary)', borderBottom: '1px solid var(--champ-primary)' }} />
+              <div className="w-9 flex-[1_0_0] min-h-px box-border" style={{ borderRight: '1px solid var(--champ-primary)', borderTop: '1px solid var(--champ-primary)', borderBottom: '1px solid var(--champ-primary)' }} />
             </div>
           </div>
 
           {/* Titles */}
           <div className="relative flex w-full shrink-0 flex-col items-start gap-0 text-center leading-[0]">
             <div className="w-full font-sans text-[11px] font-semibold uppercase tracking-[0.88px] leading-4 text-white/55">Men's College Basketball</div>
-            <div className="championship-title">CHAMPIONSHIP</div>
+            <div className="w-full text-[30px] font-semibold leading-[30px] tracking-[-0.3px]" style={{ fontFamily: "'Graphik Condensed App', 'Barlow Condensed', sans-serif", color: 'var(--champ-primary, rgba(255, 255, 255, 0.9))', fontFeatureSettings: "'case' 1, 'lnum' 1, 'pnum' 1" }}>{config.championshipTitle || 'CHAMPIONSHIP'}</div>
           </div>
 
           {/* Basketball graphic — flows after header, behind trade slip */}
           <div className="h-[280px] w-[324px] shrink-0 opacity-[0.56] pointer-events-none">
             <div
-              className="championship-graphic"
+              className="block w-[324px] h-[280px]"
               style={{
                 backgroundColor: primaryColor,
                 maskImage: 'url(/championship-basketball.png)',
                 WebkitMaskImage: 'url(/championship-basketball.png)',
+                maskSize: 'contain',
+                maskRepeat: 'no-repeat',
+                maskPosition: 'center',
+                WebkitMaskSize: 'contain',
+                WebkitMaskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
               }}
             />
           </div>
@@ -342,9 +349,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   >
                     <span>{tradeSideText}</span>
                     {outcomeText && (
-                      <span className="trade-slip-answer-outcome">
-                        {outcomeText}
-                      </span>
+                      <><span className="mx-1.5 font-bold text-white/90">&middot;</span><span className="text-white/90">{outcomeText}</span></>
                     )}
                   </div>
                 </div>
@@ -376,7 +381,10 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                 <div className="flex flex-col gap-0 mt-0 mb-0">
                   <div className="flex items-start justify-between gap-4 mt-0 pt-0">
                     <span className="flex-[1_0_0] flex items-start p-0 text-sm font-normal leading-5 text-white/50">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
-                    <span className="trade-slip-payout">
+                    <span
+                      className="text-right text-[30px] font-medium leading-9"
+                      style={{ color: '#00C688', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
+                    >
                       ${championshipPayout.toLocaleString()}
                     </span>
                   </div>
@@ -389,7 +397,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               </div>
             </div>
             {/* Scalloped edge */}
-            <div className="trade-slip-scalloped-edge" />
+            <div className="block h-1.5 w-full -mt-px" style={{ backgroundImage: 'radial-gradient(circle at 50% 100%, transparent 5px, rgba(0,0,0,0.75) 5.5px)', backgroundSize: '14px 6px', backgroundRepeat: 'repeat-x', backgroundPosition: '0 0' }} />
           </div>
 
           {config.showWatermark && (
@@ -510,10 +518,10 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               )}
             </div>
             {/* Scalloped edge */}
-            <div className="trade-slip-scalloped-edge" />
+            <div className="block h-1.5 w-full -mt-px" style={{ backgroundImage: 'radial-gradient(circle at 50% 100%, transparent 5px, rgba(0,0,0,0.75) 5.5px)', backgroundSize: '14px 6px', backgroundRepeat: 'repeat-x', backgroundPosition: '0 0' }} />
           </>
         ) : isComboOld ? (
-          <div className="trade-slip-content-old flex flex-col gap-[clamp(16px,3vw,22px)] rounded-t-[clamp(8px,2vw,12px)] bg-white p-[clamp(24px,4vw,32px)] m-0 relative">
+          <div className="flex flex-col gap-[clamp(16px,3vw,22px)] rounded-t-[clamp(8px,2vw,12px)] bg-white p-[clamp(24px,4vw,32px)] m-0 relative" style={{ '--d': '7px', mask: 'linear-gradient(#000 0 0), radial-gradient(circle var(--d) at var(--d) 100%, #000 calc(var(--d) - 1px), transparent var(--d)) left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x', WebkitMask: 'linear-gradient(#000 0 0), radial-gradient(circle var(--d) at var(--d) 100%, #000 calc(var(--d) - 1px), transparent var(--d)) left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x', WebkitMaskComposite: 'destination-out', maskComposite: 'exclude' } as React.CSSProperties}>
             <div className="flex flex-row items-start justify-between mb-0 min-h-[clamp(15px,3vw,20px)]">
               <span className="text-[clamp(16px,3vw,18px)] font-medium text-black leading-[1.3]">{comboOldTitle}</span>
               <div className="flex items-start justify-end shrink-0">
@@ -579,7 +587,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
             </div>
           </div>
         ) : isSingleOld ? (
-          <div className="trade-slip-content-old bg-white rounded-t-[clamp(8px,2vw,12px)] mx-[clamp(8px,2vw,16px)] p-[clamp(16px,3vw,22px)] relative">
+          <div className="bg-white rounded-t-[clamp(8px,2vw,12px)] mx-[clamp(8px,2vw,16px)] p-[clamp(16px,3vw,22px)] relative" style={{ '--d': '7px', mask: 'linear-gradient(#000 0 0), radial-gradient(circle var(--d) at var(--d) 100%, #000 calc(var(--d) - 1px), transparent var(--d)) left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x', WebkitMask: 'linear-gradient(#000 0 0), radial-gradient(circle var(--d) at var(--d) 100%, #000 calc(var(--d) - 1px), transparent var(--d)) left bottom / calc(var(--d) * 2) calc(var(--d) * 2) repeat-x', WebkitMaskComposite: 'destination-out', maskComposite: 'exclude' } as React.CSSProperties}>
             <div className="flex items-start justify-between mb-[clamp(12px,2vw,18px)] min-h-[clamp(15px,3vw,20px)]">
               <div className="mb-[clamp(8px,1.5vw,12px)] self-start">
                 {config.image && (
@@ -660,9 +668,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   >
                     <span>{tradeSideText}</span>
                     {outcomeText && (
-                      <span className="trade-slip-answer-outcome">
-                        {outcomeText}
-                      </span>
+                      <><span className="mx-1.5 font-bold text-white/90">&middot;</span><span className="text-white/90">{outcomeText}</span></>
                     )}
                   </div>
                 </div>
@@ -688,7 +694,10 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                 <div className="flex flex-col gap-0 mt-0 -mb-4">
                   <div className="flex items-start justify-between gap-4 mt-0 pt-0">
                     <span className="flex-[1_0_0] flex items-start p-0 text-sm font-normal leading-5 text-white/50">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
-                    <span className="trade-slip-payout">
+                    <span
+                      className="text-right text-[30px] font-medium leading-9"
+                      style={{ color: '#00C688', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
+                    >
                       ${payout.toLocaleString()}
                     </span>
                   </div>
@@ -701,7 +710,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               </div>
             </div>
             {/* Scalloped edge */}
-            <div className="trade-slip-scalloped-edge" />
+            <div className="block h-1.5 w-full -mt-px" style={{ backgroundImage: 'radial-gradient(circle at 50% 100%, transparent 5px, rgba(0,0,0,0.75) 5.5px)', backgroundSize: '14px 6px', backgroundRepeat: 'repeat-x', backgroundPosition: '0 0' }} />
           </>
         )}
 

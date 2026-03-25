@@ -1111,6 +1111,21 @@ export function TradeSlipMaker({
           </div>
         )}
 
+        {/* Championship title */}
+        {isChampionshipMode && (
+          <div className={ctrl.group}>
+            <label htmlFor="championship-title">Championship Title</label>
+            <input
+              id="championship-title"
+              type="text"
+              className={ctrl.input}
+              value={config.championshipTitle || 'CHAMPIONSHIP'}
+              onChange={(e) => onConfigChange({ championshipTitle: e.target.value })}
+              placeholder="CHAMPIONSHIP"
+            />
+          </div>
+        )}
+
         {/* Secondary color picker - championship only */}
         {isChampionshipMode && (
           <div className={ctrl.group}>

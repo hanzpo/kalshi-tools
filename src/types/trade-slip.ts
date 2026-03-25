@@ -55,5 +55,6 @@ export interface TradeSlipConfig {
   isPaidOut: boolean;
   customPayout?: number;
   championshipSecondaryColor: string;
+  championshipTitle: string;
 }
 
