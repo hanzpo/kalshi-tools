@@ -1,7 +1,6 @@
-export const OUTCOME_COLORS = ['#09C285', '#4662f5', '#191919'];
+const OUTCOME_COLORS = ['#09C285', '#4662f5', '#191919'];
 
-export function generateRandomColor(): string {
-  // Generate a vibrant, saturated color
+function generateRandomColor(): string {
   const hue = Math.floor(Math.random() * 360);
   const saturation = 65 + Math.floor(Math.random() * 20); // 65-85%
   const lightness = 45 + Math.floor(Math.random() * 15); // 45-60%
