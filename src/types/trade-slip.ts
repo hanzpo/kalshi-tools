@@ -12,6 +12,7 @@ export interface ComboMarket {
   text: string; // e.g., "Philadelphia" or "Total game point is 47 or more"
   prefix?: string; // e.g., "No" or "Yes" - optional prefix shown before the text
   resolved?: boolean; // Whether this market has been resolved (shows green check vs grey circle)
+  odds?: number; // Implied probability as percentage (1-99), used for auto-compute payout
 }
 
 export interface ComboEvent {
@@ -52,6 +53,8 @@ export interface TradeSlipConfig {
   comboCategories: ComboCategory[];
   comboPayout: number;
   comboCost: number;
+  comboAutoCompute: boolean;
+  comboVig: number; // Vig percentage (0-50), default ~10
   isPaidOut: boolean;
   customPayout?: number;
   championshipSecondaryColor: string;

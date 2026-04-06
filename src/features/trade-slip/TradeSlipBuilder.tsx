@@ -80,6 +80,8 @@ export default function TradeSlipBuilder() {
     ],
     comboPayout: 1920,
     comboCost: 99.84,
+    comboAutoCompute: false,
+    comboVig: 10,
     championshipSecondaryColor: '#0a3d2e',
     championshipTitle: 'CHAMPIONSHIP',
   });

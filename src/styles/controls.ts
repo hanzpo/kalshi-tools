@@ -16,6 +16,8 @@ export const ctrl = {
   group: 'mb-4 max-md:mb-3.5 [&>label]:mb-1.5 [&>label]:block [&>label]:text-[11px] [&>label]:font-semibold [&>label]:uppercase [&>label]:tracking-[0.04em] [&>label]:text-brand',
   /** Text/select input */
   input: 'w-full rounded-[5px] border border-dark-border-light bg-dark px-2.5 py-2 text-sm text-text-primary transition-[border-color] duration-150 placeholder:text-[#555] hover:border-[#444] focus:border-brand focus:outline-none',
+  /** Text/select input without w-full (for use in flex rows where width is controlled externally) */
+  inputInline: 'rounded-[5px] border border-dark-border-light bg-dark px-2.5 py-2 text-sm text-text-primary transition-[border-color] duration-150 placeholder:text-[#555] hover:border-[#444] focus:border-brand focus:outline-none',
   /** File input */
   fileInput: 'w-full cursor-pointer rounded-[5px] border border-dark-border-light bg-dark p-2 text-[13px] text-text-primary',
   /** Help text below inputs */

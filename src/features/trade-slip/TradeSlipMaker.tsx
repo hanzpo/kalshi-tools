@@ -55,6 +55,16 @@ function createLeg(): ComboLeg {
 
 
 
+function computeComboPayout(config: TradeSlipConfig): number {
+  const allMarkets = config.comboCategories?.flatMap(c => c.events.flatMap(e => e.markets)) ?? [];
+  const marketsWithOdds = allMarkets.filter(m => m.odds && m.odds > 0 && m.odds < 100);
+  if (marketsWithOdds.length === 0) return config.comboPayout;
+  const combinedProb = marketsWithOdds.reduce((acc, m) => acc * (m.odds! / 100), 1);
+  if (combinedProb <= 0) return config.comboPayout;
+  const fairPayout = config.comboCost / combinedProb;
+  return Math.round(fairPayout * (1 - config.comboVig / 100) * 100) / 100;
+}
+
 export function TradeSlipMaker({
   config,
   onConfigChange,
@@ -240,7 +250,11 @@ export function TradeSlipMaker({
         }),
       };
     });
-    onConfigChange({ comboCategories: updatedCategories });
+    const changes: Partial<TradeSlipConfig> = { comboCategories: updatedCategories };
+    if (config.comboAutoCompute && 'odds' in updates) {
+      changes.comboPayout = computeComboPayout({ ...config, comboCategories: updatedCategories });
+    }
+    onConfigChange(changes);
   }
 
   function handleAddMarket(categoryId: string, eventId: string) {
@@ -484,6 +498,80 @@ export function TradeSlipMaker({
             <div className={ctrl.sectionTitle}>Financials</div>
 
             <div className={ctrl.group}>
+              <label htmlFor="combo-cost">Cost ($)</label>
+              <input
+                id="combo-cost"
+                type="number"
+                className={ctrl.input}
+                placeholder="e.g., 99.84"
+                value={config.comboCost || ''}
+                onChange={(e) => {
+                  const cost = parseFloat(e.target.value) || 0;
+                  const changes: Partial<TradeSlipConfig> = { comboCost: cost };
+                  if (config.comboAutoCompute) {
+                    changes.comboPayout = computeComboPayout({ ...config, comboCost: cost });
+                  }
+                  onConfigChange(changes);
+                }}
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div className={ctrl.checkboxGroup}>
+              <label className={ctrl.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={config.comboAutoCompute}
+                  onChange={(e) => {
+                    const autoCompute = e.target.checked;
+                    if (autoCompute) {
+                      const computedPayout = computeComboPayout(config);
+                      onConfigChange({ comboAutoCompute: autoCompute, comboPayout: computedPayout });
+                    } else {
+                      onConfigChange({ comboAutoCompute: autoCompute });
+                    }
+                  }}
+                  className={ctrl.checkboxInput}
+                />
+                Auto-compute Payout
+              </label>
+              <p className={ctrl.helpText}>Calculate payout from per-market odds below</p>
+            </div>
+
+            {config.comboAutoCompute && (
+              <div className={ctrl.group}>
+                <label htmlFor="combo-vig">Vig (%)</label>
+                <div className={ctrl.sliderWrapper}>
+                  <input
+                    id="combo-vig"
+                    type="range"
+                    className="slider-input"
+                    value={config.comboVig}
+                    onChange={(e) => {
+                      const vig = Number(e.target.value);
+                      const computedPayout = computeComboPayout({ ...config, comboVig: vig });
+                      onConfigChange({ comboVig: vig, comboPayout: computedPayout });
+                    }}
+                    min="0"
+                    max="50"
+                    step="1"
+                  />
+                  <div className={ctrl.sliderValue}>{config.comboVig}%</div>
+                </div>
+                <p className={ctrl.helpText}>
+                  Combined odds: {(() => {
+                    const allMarkets = config.comboCategories?.flatMap(c => c.events.flatMap(e => e.markets)) ?? [];
+                    const marketsWithOdds = allMarkets.filter(m => m.odds && m.odds > 0 && m.odds < 100);
+                    if (marketsWithOdds.length === 0) return 'set odds on each market';
+                    const combined = marketsWithOdds.reduce((acc, m) => acc * (m.odds! / 100), 1);
+                    return `${(combined * 100).toFixed(2)}% (${marketsWithOdds.length}/${allMarkets.length} legs)`;
+                  })()}
+                </p>
+              </div>
+            )}
+
+            <div className={ctrl.group}>
               <label htmlFor="combo-payout">Payout Amount ($)</label>
               <input
                 id="combo-payout"
@@ -494,21 +582,14 @@ export function TradeSlipMaker({
                 onChange={(e) => onConfigChange({ comboPayout: parseFloat(e.target.value) || 0 })}
                 min="0"
                 step="1"
+                disabled={config.comboAutoCompute}
+                style={config.comboAutoCompute ? { opacity: 0.6, cursor: 'not-allowed' } : undefined}
               />
+              {config.comboAutoCompute && (
+                <p className={ctrl.helpText}>Computed from per-market odds and vig</p>
+              )}
             </div>
-            <div className={ctrl.group}>
-              <label htmlFor="combo-cost">Cost ($)</label>
-              <input
-                id="combo-cost"
-                type="number"
-                className={ctrl.input}
-                placeholder="e.g., 99.84"
-                value={config.comboCost || ''}
-                onChange={(e) => onConfigChange({ comboCost: parseFloat(e.target.value) || 0 })}
-                min="0"
-                step="0.01"
-              />
-            </div>
+
             <div className={ctrl.group}>
               <label htmlFor="combo-timestamp">Purchase Date/Time (Optional)</label>
               <input
@@ -796,14 +877,14 @@ export function TradeSlipMaker({
                               <div className="flex items-center gap-1.5">
                                 <input
                                   type="text"
-                                  placeholder="Prefix (e.g., No)"
+                                  placeholder="Prefix"
                                   value={market.prefix || ''}
                                   onChange={(e) => handleMarketChange(category.id, event.id, market.id, { prefix: e.target.value || undefined })}
-                                  className={`${ctrl.input} w-20 shrink-0`}
+                                  className={`${ctrl.inputInline} w-16 shrink-0`}
                                 />
                                 <input
                                   type="text"
-                                  className={`${ctrl.input} flex-1`}
+                                  className={`${ctrl.inputInline} min-w-0 flex-1`}
                                   placeholder="Market text (e.g., Philadelphia)"
                                   value={market.text}
                                   onChange={(e) => handleMarketChange(category.id, event.id, market.id, { text: e.target.value })}
@@ -820,6 +901,22 @@ export function TradeSlipMaker({
                                   />
                                 </label>
                               </div>
+                              {config.comboAutoCompute && (
+                                <div className="flex items-center gap-1.5 mt-1">
+                                  <span className="text-[10px] font-medium text-text-secondary shrink-0">Odds</span>
+                                  <input
+                                    type="number"
+                                    className={`${ctrl.inputInline} w-16 shrink-0 text-center`}
+                                    placeholder="%"
+                                    value={market.odds ?? ''}
+                                    onChange={(e) => handleMarketChange(category.id, event.id, market.id, { odds: parseFloat(e.target.value) || undefined })}
+                                    min="1"
+                                    max="99"
+                                    step="1"
+                                  />
+                                  <span className="text-[10px] text-text-muted">%</span>
+                                </div>
+                              )}
                             </div>
                           ))}
                           <button
