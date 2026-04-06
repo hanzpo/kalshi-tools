@@ -54,7 +54,7 @@ export interface TradeSlipConfig {
   comboPayout: number;
   comboCost: number;
   comboAutoCompute: boolean;
-  comboVig: number; // Vig percentage (0-50), default ~10
+  comboSpread: number; // Spread percentage (0-50), default ~10
   isPaidOut: boolean;
   customPayout?: number;
   championshipSecondaryColor: string;

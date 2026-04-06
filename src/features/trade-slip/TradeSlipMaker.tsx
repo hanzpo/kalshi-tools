@@ -62,7 +62,7 @@ function computeComboPayout(config: TradeSlipConfig): number {
   const combinedProb = marketsWithOdds.reduce((acc, m) => acc * (m.odds! / 100), 1);
   if (combinedProb <= 0) return config.comboPayout;
   const fairPayout = config.comboCost / combinedProb;
-  return Math.round(fairPayout * (1 - config.comboVig / 100) * 100) / 100;
+  return Math.round(fairPayout * (1 - config.comboSpread / 100) * 100) / 100;
 }
 
 export function TradeSlipMaker({
@@ -541,23 +541,23 @@ export function TradeSlipMaker({
 
             {config.comboAutoCompute && (
               <div className={ctrl.group}>
-                <label htmlFor="combo-vig">Vig (%)</label>
+                <label htmlFor="combo-spread">Spread (%)</label>
                 <div className={ctrl.sliderWrapper}>
                   <input
-                    id="combo-vig"
+                    id="combo-spread"
                     type="range"
                     className="slider-input"
-                    value={config.comboVig}
+                    value={config.comboSpread}
                     onChange={(e) => {
-                      const vig = Number(e.target.value);
-                      const computedPayout = computeComboPayout({ ...config, comboVig: vig });
-                      onConfigChange({ comboVig: vig, comboPayout: computedPayout });
+                      const spread = Number(e.target.value);
+                      const computedPayout = computeComboPayout({ ...config, comboSpread: spread });
+                      onConfigChange({ comboSpread: spread, comboPayout: computedPayout });
                     }}
                     min="0"
                     max="50"
                     step="1"
                   />
-                  <div className={ctrl.sliderValue}>{config.comboVig}%</div>
+                  <div className={ctrl.sliderValue}>{config.comboSpread}%</div>
                 </div>
                 <p className={ctrl.helpText}>
                   Combined odds: {(() => {
@@ -586,7 +586,7 @@ export function TradeSlipMaker({
                 style={config.comboAutoCompute ? { opacity: 0.6, cursor: 'not-allowed' } : undefined}
               />
               {config.comboAutoCompute && (
-                <p className={ctrl.helpText}>Computed from per-market odds and vig</p>
+                <p className={ctrl.helpText}>Computed from per-market odds and spread</p>
               )}
             </div>
 
