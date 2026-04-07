@@ -10,7 +10,7 @@ interface TradeSlipPreviewProps {
 const KalshiDivider = () => (
   <div className="flex w-full items-center gap-2">
     <div className="h-px flex-1 bg-white/12" />
-    <KalshiLogo className="shrink-0 text-[#09C285]/25" />
+    <KalshiLogo className="shrink-0 text-white/16" />
     <div className="h-px flex-1 bg-white/12" />
   </div>
 );
