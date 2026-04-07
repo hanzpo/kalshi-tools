@@ -3,9 +3,6 @@ import { useLocation } from 'react-router-dom';
 import {
   startEngagementTracking,
   startErrorTracking,
-  startOutboundLinkTracking,
-  startPerformanceTracking,
-  startScrollTracking,
   trackPageView,
   trackSessionStart,
 } from '../lib/analytics';
@@ -32,20 +29,14 @@ export function useAnalytics(): void {
       hasTrackedInitialRef.current = true;
     }
     previousPathRef.current = path;
-
-    return startScrollTracking();
   }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
-    const stopOutbound = startOutboundLinkTracking();
     const stopErrors = startErrorTracking();
-    const stopPerf = startPerformanceTracking();
     const stopEngagement = startEngagementTracking();
 
     return () => {
-      stopOutbound();
       stopErrors();
-      stopPerf();
       stopEngagement();
     };
   }, []);

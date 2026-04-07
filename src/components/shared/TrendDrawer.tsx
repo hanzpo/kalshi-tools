@@ -9,6 +9,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,11 +19,11 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
     if (!ctx) return;
 
     // Clear canvas
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#141414';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw grid
-    ctx.strokeStyle = '#e5e7eb';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1;
 
     // Horizontal lines
@@ -44,7 +45,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
     }
 
     // Draw percentage labels
-    ctx.fillStyle = '#6b7280';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
     ctx.font = '12px Inter, sans-serif';
     ctx.textAlign = 'right';
     for (let i = 0; i <= 10; i++) {
@@ -67,7 +68,41 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
       }
       ctx.stroke();
     }
-  }, [points]);
+
+    // Draw cursor crosshair + percentage tooltip
+    if (cursorPos) {
+      const pct = Math.round(((canvas.height - cursorPos.y) / canvas.height) * 100);
+      const clamped = Math.max(0, Math.min(100, pct));
+
+      // Horizontal guide line
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, cursorPos.y);
+      ctx.lineTo(canvas.width, cursorPos.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Tooltip pill
+      const label = `${clamped}%`;
+      ctx.font = 'bold 12px Inter, sans-serif';
+      const textWidth = ctx.measureText(label).width;
+      const pillW = textWidth + 12;
+      const pillH = 22;
+      const pillX = Math.min(cursorPos.x + 12, canvas.width - pillW - 4);
+      const pillY = Math.max(cursorPos.y - pillH - 6, 4);
+
+      ctx.fillStyle = '#09C285';
+      ctx.beginPath();
+      ctx.roundRect(pillX, pillY, pillW, pillH, 4);
+      ctx.fill();
+
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'left';
+      ctx.fillText(label, pillX + 6, pillY + 16);
+    }
+  }, [points, cursorPos]);
 
   function getCanvasCoordinates(
     e: React.MouseEvent<HTMLCanvasElement> | React.Touch,
@@ -96,17 +131,24 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
   }
 
   function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
-    if (!isDrawing) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const coords = getCanvasCoordinates(e, canvas);
-    setPoints((prev) => [...prev, coords]);
+    setCursorPos(coords);
+
+    if (isDrawing) {
+      setPoints((prev) => [...prev, coords]);
+    }
   }
 
   function handleMouseUp() {
     setIsDrawing(false);
+  }
+
+  function handleMouseLeave() {
+    setIsDrawing(false);
+    setCursorPos(null);
   }
 
   function handleTouchStart(e: React.TouchEvent<HTMLCanvasElement>) {
@@ -129,12 +171,14 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
 
     const touch = e.touches[0];
     const coords = getCanvasCoordinates(touch, canvas);
+    setCursorPos(coords);
     setPoints((prev) => [...prev, coords]);
   }
 
   function handleTouchEnd(e: React.TouchEvent<HTMLCanvasElement>) {
     e.preventDefault();
     setIsDrawing(false);
+    setCursorPos(null);
   }
 
   function handleClear() {
@@ -208,7 +252,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
           Click and drag to draw a line from left to right showing your custom market trend
         </p>
 
-        <div className="overflow-hidden rounded-lg border-2 border-[#333] bg-white max-md:max-w-full">
+        <div className="overflow-hidden rounded-lg border-2 border-[#333] bg-[#141414] max-md:max-w-full">
           <canvas
             ref={canvasRef}
             width={600}
@@ -217,7 +261,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}

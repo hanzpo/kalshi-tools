@@ -1,11 +1,6 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
 import { MarketPageConfig, MarketOutcome, OUTCOME_COLORS } from '../../types/market-page';
-import {
-  UploadIcon,
-  DownloadIcon,
-  CopyIcon,
-  ArrowLeftIcon
-} from '../../components/ui/Icons';
+import { Upload as UploadIcon, Download as DownloadIcon, Copy as CopyIcon, ArrowLeft as ArrowLeftIcon } from 'lucide-react';
 import { trackEvent } from '../../lib/analytics';
 import { ctrl } from '../../styles/controls';
 
@@ -125,7 +120,7 @@ export function MarketPageMaker({
       </button>
       <h2 className={ctrl.title}>Market Page</h2>
       <p className={ctrl.subtitle}>
-        Create a pixel-perfect Kalshi market page with customizable outcomes, chart, and rules.
+        Kalshi market page mockup generator
       </p>
 
       {/* Market Info Section */}
@@ -443,9 +438,8 @@ export function MarketPageMaker({
           </svg>
           Regenerate All Trends
         </button>
-        <p className={ctrl.helpText}>
-          Use the "Draw Trend" button on each outcome above to customize individual chart lines.
-        </p>
+
+
       </div>
 
       {/* User Profile Section */}

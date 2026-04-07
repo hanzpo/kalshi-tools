@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { scaleLinear } from '@visx/scale';
-import { LinePath } from '@visx/shape';
-import { GridRows } from '@visx/grid';
-import { curveLinear } from '@visx/curve';
-import { MarketPageConfig, OUTCOME_COLORS } from '../../types/market-page';
+import { MarketPageConfig } from '../../types/market-page';
+import { MarketPageNav } from './MarketPageNav';
+import { MarketPageChart } from './MarketPageChart';
+import { MarketPageSidebar } from './MarketPageSidebar';
+import { v } from './helpers';
 
 interface MarketPagePreviewProps {
   config: MarketPageConfig;
@@ -17,27 +18,6 @@ interface MarketPagePreviewProps {
 }
 
 const MARKET_PAGE_PREVIEW_ID = 'market-page-preview';
-
-// Kalshi logo SVG
-function KalshiLogo({ className, style }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <svg className={className} style={style} width="55" height="16" viewBox="0 0 772 226" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M255.677 58.1911C210.683 58.1911 183.381 78.5114 181.206 113.922H228.062C229.924 100.374 238.611 93.2917 253.814 93.2917C269.018 93.2917 277.396 100.064 277.088 110.842C276.775 119.156 271.501 122.852 258.16 124.7L238.923 127.164C195.484 132.398 175.002 148.717 175.002 177.967C175.002 207.218 195.48 226 229.611 226C251.331 226 267.776 218.302 278.017 203.522V222.61H326.422V117.924C326.422 78.5114 302.532 58.1911 255.677 58.1911ZM245.44 192.437C231.478 192.437 223.72 186.281 223.72 174.887C223.72 164.109 230.545 158.875 249.473 156.105L258.16 154.873C265.845 153.8 272.17 152.274 277.396 150.131V166.267C277.396 181.663 264.368 192.437 245.44 192.437ZM343.488 3.38607H393.135V222.61H343.488V3.38607ZM105.23 105.628L179.66 222.61H115.118L54.3009 121.934V222.61H0V3.38607H54.3009V99.102L119.464 3.38607H177.489L105.23 105.628ZM716.145 26.1705C716.145 12.0062 728.557 0 744.073 0C759.588 0 772 12.0062 772 26.1705C772 40.3347 759.588 52.3409 744.073 52.3409C728.557 52.3409 716.145 40.6407 716.145 26.1705ZM544.868 172.423C544.868 208.446 518.494 225.996 474.743 225.996C430.991 225.996 403.997 206.908 402.447 172.113H448.369C450.232 185.351 456.435 192.743 474.434 192.743C489.95 192.743 497.395 186.587 497.395 177.347C497.395 168.107 488.396 163.489 465.747 160.107C422.616 154.257 405.242 141.631 405.242 109.304C405.242 75.1293 436.582 58.1911 471.643 58.1911C509.186 58.1911 536.493 71.4293 540.218 108.688H495.225C493.054 96.9877 486.225 91.1376 471.951 91.1376C458.61 91.1376 451.161 97.2937 451.161 105.608C451.161 114.844 458.61 118.23 480.638 121.31C523.148 127.16 544.868 137.934 544.868 172.423ZM719.249 61.5771H768.896V222.61H719.249V61.5771ZM702.183 115.77V222.61H652.536V124.39C652.536 107.146 645.399 98.2197 629.884 98.2197C614.368 98.2197 603.51 108.072 603.51 127.47V222.61H553.863V3.38607H603.51V85.5617C611.32 70.1734 627.761 58.1911 651.603 58.1911C681.393 58.1911 702.179 76.9734 702.179 115.766L702.183 115.77Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-// Get outcome color, swapping black for white in dark mode
-function getOutcomeColor(color: string, isDarkMode: boolean): string {
-  if (isDarkMode && color === '#000000') return '#ffffff';
-  return color;
-}
-
-/** Shorthand for var(--kmp-*) inline style */
-const v = (name: string) => `var(--kmp-${name})`;
-
-// Sub-nav category labels
-const SUB_NAV_ITEMS = ['Trending', 'Politics', 'Sports', 'Culture', 'Crypto', 'Climate', 'Economics', 'Mentions', 'Companies', 'Financials', 'Tech & Science'];
 
 export function MarketPagePreview({
   config,
@@ -54,7 +34,6 @@ export function MarketPagePreview({
     timeline: false,
     about: false,
   });
-  const [amountInput, setAmountInput] = useState('');
 
   // Chart scales for visx
   const chartScales = useMemo(() => {
@@ -130,80 +109,7 @@ export function MarketPagePreview({
       id={MARKET_PAGE_PREVIEW_ID}
       className={`kmp flex min-h-screen w-full flex-col bg-[var(--kmp-surface)] text-[var(--kmp-text-primary)] antialiased transition-[background-color,color] duration-200 ${isDark ? 'kmp-dark' : ''}`}
     >
-      {/* ═══ Navigation Bar ═══ */}
-      <nav className="sticky top-0 z-[100] w-full bg-[var(--kmp-surface)]">
-        {/* Main nav row */}
-        <div className="mx-auto flex h-14 max-w-[1320px] items-center justify-between px-6">
-          <div className="flex items-center gap-0">
-            <button className="flex cursor-pointer items-center border-none bg-none p-0 pr-4" onClick={onLogoClick}>
-              <KalshiLogo style={{ color: '#28CC95', width: 80, height: 24 }} />
-            </button>
-            <div className="flex items-center gap-0">
-              {[
-                { label: 'MARKETS', badge: null },
-                { label: 'LIVE', badge: '21' },
-                { label: 'SOCIAL', badge: null },
-                { label: 'FAIRNESS', badge: null, dropdown: true },
-                { label: 'RESEARCH', badge: null },
-              ].map((item) => (
-                <a
-                  key={item.label}
-                  className="flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold leading-5 tracking-[1.04px] text-[var(--kmp-text-primary)] no-underline"
-                >
-                  {item.label}
-                  {item.badge && (
-                    <span className="text-[12px] font-medium leading-[18px] text-[#D91616]">{item.badge}</span>
-                  )}
-                  {item.dropdown && (
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="opacity-50">
-                      <path d="M7 10l5 5 5-5z" />
-                    </svg>
-                  )}
-                </a>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Search bar — 400px max, pill shape, subtle bg */}
-            <div
-              className="flex h-[38px] w-[400px] cursor-pointer items-center rounded-full bg-[var(--kmp-bg)] px-4"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2 shrink-0 text-[var(--kmp-text-tertiary)]">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <span className="text-[16px] leading-6 text-[var(--kmp-text-tertiary)]">Trade on anything</span>
-            </div>
-            {/* Log in */}
-            <button
-              className="h-10 cursor-pointer rounded-full border border-[var(--kmp-border)] bg-transparent px-3 py-2 text-[13px] font-normal text-[var(--kmp-yes)]"
-            >
-              Log in
-            </button>
-            {/* Sign up */}
-            <button
-              className="h-10 cursor-pointer rounded-full border-none px-3 py-2 text-[13px] font-normal"
-              style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff' }}
-            >
-              Sign up
-            </button>
-          </div>
-        </div>
-        {/* Sub-nav row */}
-        <div
-          className="mx-auto flex max-w-[1320px] items-center gap-4 px-6 pb-2"
-          style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}` }}
-        >
-          {SUB_NAV_ITEMS.map((item) => (
-            <a
-              key={item}
-              className="cursor-pointer whitespace-nowrap py-1 text-[15px] font-normal leading-[22px] text-[var(--kmp-text-secondary)] no-underline"
-            >
-              {item}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <MarketPageNav isDark={isDark} onLogoClick={onLogoClick} />
 
       {/* ═══ Main Layout ═══ */}
       <div className="mx-auto flex w-full max-w-[1320px] flex-1 gap-10 px-6 pt-6">
@@ -222,7 +128,7 @@ export function MarketPagePreview({
               </div>
               {/* Title column: breadcrumb + title sit next to the image */}
               <div className="mr-6 flex min-w-0 flex-1 flex-col gap-1">
-                {/* Breadcrumb – small text above the title */}
+                {/* Breadcrumb */}
                 <div className="flex items-center gap-1 text-[15px] font-medium leading-[22px] text-[var(--kmp-text-primary)]">
                   <span className="cursor-pointer">{config.category || 'Politics'}</span>
                   <span className="text-[13px] font-normal leading-5 text-[var(--kmp-text-primary)]">·</span>
@@ -265,100 +171,13 @@ export function MarketPagePreview({
             </div>
           </header>
 
-          {/* Chart Legend */}
-          <div className="mb-2 flex items-center justify-between">
-            <div className="flex flex-wrap gap-4">
-              {topOutcomes.map((outcome, index) => (
-                <div key={outcome.id} className="flex items-center gap-2">
-                  <span
-                    className="size-2 rounded-full"
-                    style={{ backgroundColor: getOutcomeColor(outcome.color || OUTCOME_COLORS[index % OUTCOME_COLORS.length], isDark) }}
-                  />
-                  <span className="text-[15px] font-normal leading-[22px] text-[var(--kmp-text-primary)]">
-                    {outcome.name}
-                  </span>
-                  <span className="text-[16px] font-normal text-[var(--kmp-text-primary)]">
-                    {outcome.yesPrice}%
-                  </span>
-                </div>
-              ))}
-            </div>
-            <KalshiLogo style={{ color: v('brand'), height: 14, width: 'auto' }} />
-          </div>
-
-          {/* Chart */}
-          <div className="mb-2 w-full">
-            <svg className="block h-auto w-full" viewBox="0 0 650 180" preserveAspectRatio="xMidYMid meet">
-              {chartScales && (
-                <GridRows
-                  scale={chartScales.yScale}
-                  width={chartScales.width - chartScales.padding.right}
-                  left={chartScales.padding.left}
-                  stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}
-                  strokeDasharray="4 4"
-                  strokeWidth={1}
-                  tickValues={[0, 25, 50, 75, 100]}
-                />
-              )}
-
-              {/* Y-axis labels */}
-              <g>
-                {['100%', '75%', '50%', '25%', '0%'].map((label, i) => (
-                  <text key={i} x="615" y={15 + i * 37} style={{ fontSize: 11, fill: v('text-tertiary'), fontFamily: "'Inter', sans-serif" }}>
-                    {label}
-                  </text>
-                ))}
-              </g>
-
-              {/* Chart lines */}
-              {chartScales && config.outcomes.map((outcome) => (
-                <LinePath
-                  key={outcome.id}
-                  data={config.chartData}
-                  x={(_d, i) => chartScales.xScale(i) ?? 0}
-                  y={(d) => chartScales.yScale(d[`value_${outcome.id}`] ?? d.value) ?? 0}
-                  stroke={getOutcomeColor(outcome.color, isDark)}
-                  strokeWidth={2}
-                  curve={curveLinear}
-                />
-              ))}
-
-              {/* X-axis month labels */}
-              <g>
-                {['Oct', 'Dec', 'Jan', 'Feb', 'Mar'].map((label, i) => (
-                  <text key={i} x={20 + i * 140} y="175" style={{ fontSize: 11, fill: v('text-tertiary'), fontFamily: "'Inter', sans-serif" }}>
-                    {label}
-                  </text>
-                ))}
-              </g>
-            </svg>
-          </div>
-
-          {/* Chart Footer */}
-          <div
-            className="flex items-center justify-between py-3"
-            style={{ borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}` }}
-          >
-            <span className="text-[13px] font-normal text-[var(--kmp-text-primary)]">
-              {volume} vol
-            </span>
-            <div className="flex items-center gap-1">
-              {['1D', '1W', '1M', 'ALL'].map((range) => (
-                <button
-                  key={range}
-                  className={`cursor-pointer rounded-md border-none bg-transparent px-2 py-1 text-[13px] ${config.chartTimeRange === range ? 'font-semibold text-[var(--kmp-text-primary)]' : 'font-normal text-[var(--kmp-text-tertiary)]'}`}
-                >
-                  {range}
-                </button>
-              ))}
-              {/* Settings icon */}
-              <button className="flex cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-[var(--kmp-text-secondary)]">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
-                </svg>
-              </button>
-            </div>
-          </div>
+          <MarketPageChart
+            chartScales={chartScales}
+            config={config}
+            isDark={isDark}
+            volume={volume}
+            topOutcomes={topOutcomes}
+          />
 
           {/* Markets Header */}
           <div className="flex items-center py-3">
@@ -638,265 +457,16 @@ export function MarketPagePreview({
         </div>
 
         {/* ─── Sidebar ─── */}
-        <div className="w-[352px] shrink-0">
-          <div
-            className="sticky top-[107px]"
-            style={{
-              background: v('sidebar-bg'),
-              boxShadow: isDark
-                ? 'rgba(0, 0, 0, 0.3) 0px 0px 4px 0px, rgba(0, 0, 0, 0.15) 0px 4px 8px 0px'
-                : 'rgba(0, 0, 0, 0.1) 0px 0px 4px 0px, rgba(0, 0, 0, 0.05) 0px 4px 8px 0px',
-              borderRadius: 16,
-              padding: 16,
-            }}
-          >
-            {sidebarState === 'trading' && (
-              <>
-                {/* Sidebar header: image + title + Buy Yes/No label */}
-                <div className="mb-3 flex gap-3">
-                  <div className="size-14 min-w-[56px] shrink-0 overflow-hidden rounded-lg">
-                    {selectedOutcome?.image ? (
-                      <img src={selectedOutcome.image} alt="" className="size-full object-cover" draggable={false} />
-                    ) : config.image ? (
-                      <img src={config.image} alt="" className="size-full object-cover" draggable={false} />
-                    ) : (
-                      <div className="size-full" style={{ background: isDark ? 'rgba(255, 255, 255, 0.06)' : 'linear-gradient(135deg, #e0e0e0 0%, #f0f0f0 100%)' }} />
-                    )}
-                  </div>
-                  <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="text-[16px] font-normal leading-5 text-[var(--kmp-text-primary)]">
-                      {config.title}
-                    </span>
-                    <span className="flex items-center gap-1 text-[15px] font-semibold leading-[22px]">
-                      <span style={{ color: config.selectedSide === 'Yes' ? v('yes') : v('no') }}>
-                        Buy {config.selectedSide}
-                      </span>
-                      <span className="text-[var(--kmp-text-primary)]">·</span>
-                      <span className="text-[var(--kmp-text-primary)]">
-                        {selectedOutcome?.name}
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                {/* Buy / Sell toggle + Dollars */}
-                <div className="mb-2 flex items-center gap-1">
-                  <button
-                    className="h-8 cursor-pointer rounded-full border px-3 py-0 text-[13px] font-normal leading-[30px]"
-                    style={{
-                      background: isDark ? 'rgba(40,204,149,0.16)' : 'rgba(10,194,133,0.12)',
-                      color: v('yes'),
-                      borderColor: isDark ? 'rgba(40,204,149,0.32)' : 'rgba(10,194,133,0.16)',
-                    }}
-                  >
-                    Buy
-                  </button>
-                  <button
-                    className="h-8 cursor-pointer rounded-full border px-3 py-0 text-[13px] font-normal leading-[30px] text-[var(--kmp-text-primary)]"
-                    style={{ borderColor: v('border') }}
-                  >
-                    Sell
-                  </button>
-                  <div className="flex-1" />
-                  <button
-                    className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent p-0 text-[13px] font-normal text-[var(--kmp-text-primary)]"
-                  >
-                    Dollars
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 10l5 5 5-5z" />
-                    </svg>
-                  </button>
-                </div>
-                {/* Yes / No price buttons */}
-                <div className="mb-3 flex gap-2">
-                  <button
-                    className="flex h-8 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full border text-[13px] font-normal text-[var(--kmp-yes)]"
-                    style={{
-                      background: config.selectedSide === 'Yes' ? 'var(--kmp-yes-bg)' : 'transparent',
-                      borderColor: config.selectedSide === 'Yes' ? 'var(--kmp-yes)' : 'var(--kmp-border)',
-                    }}
-                    onClick={() => {
-                      onSideSelect('Yes');
-                      const outcome = config.outcomes.find(o => o.id === config.selectedOutcome);
-                      if (outcome) onLimitPriceChange(outcome.yesPrice);
-                    }}
-                  >
-                    Yes <span className="ml-1">{selectedOutcome?.yesPrice}¢</span>
-                  </button>
-                  <button
-                    className="flex h-8 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full border text-[13px] font-normal text-[var(--kmp-no)]"
-                    style={{
-                      background: config.selectedSide === 'No' ? v('no-bg') : 'transparent',
-                      borderColor: config.selectedSide === 'No' ? 'var(--kmp-no)' : 'var(--kmp-border)',
-                    }}
-                    onClick={() => {
-                      onSideSelect('No');
-                      const outcome = config.outcomes.find(o => o.id === config.selectedOutcome);
-                      if (outcome) onLimitPriceChange(outcome.noPrice);
-                    }}
-                  >
-                    No <span className="ml-1">{selectedOutcome?.noPrice}¢</span>
-                  </button>
-                </div>
-                {/* Amount input */}
-                <div className="mb-3">
-                  <div
-                    className="flex items-center justify-between rounded-lg px-4 py-[13px]"
-                    style={{
-                      background: v('amount-bg'),
-                      border: `1px solid ${isDark ? 'rgba(255,255,255,0.16)' : 'rgba(0,0,0,0.16)'}`,
-                    }}
-                  >
-                    <div className="flex flex-col gap-0.5">
-                      <label className="block text-[13px] font-medium leading-5 text-[var(--kmp-text-primary)]">Amount</label>
-                      <span className="cursor-pointer text-[12px] font-medium leading-[18px]" style={{ color: v('yes') }}>Earn 3.25% Interest</span>
-                    </div>
-                    <input
-                      type="text"
-                      className="w-[120px] appearance-none border-none bg-transparent pl-2 text-right text-[30px] font-semibold tracking-[-0.6px] text-[var(--kmp-text-primary)] outline-none"
-                      placeholder="$0"
-                      style={{ MozAppearance: 'textfield' } as React.CSSProperties}
-                      value={amountInput ? `$${amountInput}` : ''}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/[^0-9.]/g, '');
-                        setAmountInput(val);
-                        onAmountChange(Number(val) || 0);
-                      }}
-                    />
-                  </div>
-                </div>
-                {/* Sign up to trade / Submit button */}
-                <button
-                  className="h-12 w-full cursor-pointer rounded-full border-none px-4 py-3 text-[13px] font-normal transition-[opacity,transform] duration-75 hover:opacity-80 active:scale-[0.97]"
-                  style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff' }}
-                  onClick={() => {
-                    if (config.showReviewPage) {
-                      onSidebarStateChange('review');
-                      return;
-                    }
-                    onSubmitOrder();
-                    onSidebarStateChange('confirmation');
-                  }}
-                >
-                  {config.showReviewPage ? 'Review' : 'Sign up to trade'}
-                </button>
-              </>
-            )}
-
-            {sidebarState === 'review' && (
-              <>
-                <div className="mb-3 flex gap-3">
-                  <div className="size-14 min-w-[56px] shrink-0 overflow-hidden rounded-lg">
-                    {selectedOutcome?.image ? (
-                      <img src={selectedOutcome.image} alt="" className="size-full object-cover" draggable={false} />
-                    ) : config.image ? (
-                      <img src={config.image} alt="" className="size-full object-cover" draggable={false} />
-                    ) : (
-                      <div className="size-full" style={{ background: isDark ? 'rgba(255, 255, 255, 0.06)' : 'linear-gradient(135deg, #e0e0e0 0%, #f0f0f0 100%)' }} />
-                    )}
-                  </div>
-                  <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="text-[13px] font-normal leading-5 text-[var(--kmp-text-primary)]">{config.title}</span>
-                    <span className="flex items-center gap-1 text-[15px] font-semibold leading-[22px]">
-                      <span style={{ color: config.selectedSide === 'Yes' ? v('yes') : v('no') }}>Buy {config.selectedSide}</span>
-                      <span className="text-[var(--kmp-text-primary)]">·</span>
-                      <span className="text-[var(--kmp-text-primary)]">{selectedOutcome?.name}</span>
-                    </span>
-                  </div>
-                </div>
-                <div className="mb-4 flex items-center justify-between border-b border-b-[var(--kmp-border)] py-4">
-                  <span className="text-base font-semibold text-[var(--kmp-text-primary)]">Review order</span>
-                  <KalshiLogo className="h-4" style={{ color: v('brand') }} />
-                </div>
-                <div className="mb-5">
-                  <div className="flex items-center justify-between border-b border-b-[var(--kmp-border-light)] py-3">
-                    <span className="flex items-center gap-1.5 text-sm text-[var(--kmp-text-secondary)]">
-                      Estimated cost
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--kmp-text-tertiary)]">
-                        <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
-                      </svg>
-                    </span>
-                    <span className="text-sm font-semibold text-[var(--kmp-text-primary)]">${config.orderAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-b-[var(--kmp-border-light)] py-3">
-                    <span className="flex items-center gap-1.5 text-sm text-[var(--kmp-text-secondary)]">Odds</span>
-                    <span className="text-sm font-semibold text-[var(--kmp-yes)]">{config.limitPrice}% chance</span>
-                  </div>
-                  <div className="flex items-center justify-between py-4">
-                    <span className="flex items-center gap-1.5 text-sm text-[var(--kmp-text-secondary)]">
-                      Payout if {config.selectedSide}
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--kmp-text-tertiary)]">
-                        <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
-                      </svg>
-                    </span>
-                    <span className="text-[28px] font-bold text-[var(--kmp-yes)]">
-                      ${config.limitPrice > 0 ? Math.floor((config.orderAmount * 100) / config.limitPrice).toLocaleString() : '0'}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <button
-                    className="flex size-12 cursor-pointer items-center justify-center rounded-lg border border-[var(--kmp-border)] bg-transparent text-[var(--kmp-text-primary)]"
-                    onClick={() => onSidebarStateChange('trading')}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    className="flex-1 cursor-pointer rounded-full border-none px-4 py-3 text-[13px] font-normal transition-[opacity,transform] duration-75 hover:opacity-80 active:scale-[0.97]"
-                    style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff' }}
-                    onClick={() => { onSubmitOrder(); onSidebarStateChange('confirmation'); }}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </>
-            )}
-
-            {sidebarState === 'confirmation' && (
-              <div className="text-left">
-                <div className="mb-5 flex items-start justify-between">
-                  <div className="size-14 overflow-hidden rounded-lg bg-[var(--kmp-bg)]">
-                    {selectedOutcome?.image ? (
-                      <img src={selectedOutcome.image} alt="" className="size-full object-cover" draggable={false} />
-                    ) : config.image ? (
-                      <img src={config.image} alt="" className="size-full object-cover" draggable={false} />
-                    ) : (
-                      <div className="size-full" style={{ background: isDark ? 'rgba(255, 255, 255, 0.06)' : 'linear-gradient(135deg, #e0e0e0 0%, #f0f0f0 100%)' }} />
-                    )}
-                  </div>
-                  <KalshiLogo className="h-4" style={{ color: v('brand') }} />
-                </div>
-                <div className="mb-1 text-sm text-[var(--kmp-text-secondary)]">{config.title}</div>
-                <div className="mb-6 text-xl font-bold text-[var(--kmp-text-primary)]">{selectedOutcome?.name}</div>
-                <div className="mb-6">
-                  <div className="flex items-center justify-between py-2">
-                    <span className="text-sm text-[var(--kmp-text-secondary)]">Cost</span>
-                    <span className="text-sm font-semibold text-[var(--kmp-text-primary)]">${config.orderAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                  </div>
-                  <div className="flex items-center justify-between py-2">
-                    <span className="text-sm text-[var(--kmp-text-secondary)]">Odds</span>
-                    <span className="text-sm font-semibold text-[var(--kmp-yes)]">{config.limitPrice}% chance</span>
-                  </div>
-                  <div className="flex items-center justify-between py-2">
-                    <span className="text-sm text-[var(--kmp-text-secondary)]">Payout if {config.selectedSide}</span>
-                    <span className="text-[28px] font-bold text-[var(--kmp-yes)]">
-                      ${config.limitPrice > 0 ? Math.floor((config.orderAmount * 100) / config.limitPrice).toLocaleString() : '0'}
-                    </span>
-                  </div>
-                  <div className="-mt-1 text-right text-[13px] text-[var(--kmp-text-tertiary)]">{config.eventDate}</div>
-                </div>
-                <button
-                  className="h-12 w-full cursor-pointer rounded-full border-none px-4 py-3 text-[13px] font-normal transition-[opacity,transform] duration-75 hover:opacity-80 active:scale-[0.97]"
-                  style={{ background: '#28CC95', color: isDark ? 'rgba(0,0,0,0.9)' : '#fff' }}
-                  onClick={() => onSidebarStateChange('trading')}
-                >
-                  Done
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        <MarketPageSidebar
+          config={config}
+          isDark={isDark}
+          sidebarState={sidebarState}
+          onSideSelect={onSideSelect}
+          onSubmitOrder={onSubmitOrder}
+          onAmountChange={onAmountChange}
+          onLimitPriceChange={onLimitPriceChange}
+          onSidebarStateChange={onSidebarStateChange}
+        />
       </div>
     </div>
   );

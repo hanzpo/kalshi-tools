@@ -1,5 +1,5 @@
 import { useImageUpload } from '../../hooks/useImageUpload';
-import { UploadIcon, ImageIcon } from './Icons';
+import { Upload as UploadIcon, Image as ImageIcon } from 'lucide-react';
 
 interface ImageUploaderProps {
   id: string;

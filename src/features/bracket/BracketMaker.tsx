@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { BracketConfig, BracketPlayInId } from '../../types/bracket';
 import type { BracketView } from './BracketBuilder';
-import {
-  ArrowLeftIcon,
-  DownloadIcon,
-  CopyIcon,
-} from '../../components/ui/Icons';
+import { ArrowLeft as ArrowLeftIcon, Download as DownloadIcon, Copy as CopyIcon } from 'lucide-react';
 import { ctrl } from '../../styles/controls';
 
 function textColorForBg(hex: string): string {

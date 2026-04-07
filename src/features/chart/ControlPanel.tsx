@@ -2,20 +2,7 @@ import { ChangeEvent, useState, DragEvent, useRef, useEffect, useCallback } from
 import { HexColorPicker } from 'react-colorful';
 import { MarketConfig, MarketType, Outcome, TimeHorizon } from '../../types';
 import { getOutcomeColor } from '../../lib/colorGenerator';
-import {
-  ImageIcon,
-  UploadIcon,
-  PencilIcon,
-  RefreshIcon,
-  DownloadIcon,
-  CopyIcon,
-  SettingsIcon,
-  ChevronDownIcon,
-  CheckIcon,
-  WarningIcon,
-  ArrowLeftIcon,
-  LinkIcon
-} from '../../components/ui/Icons';
+import { Image as ImageIcon, Upload as UploadIcon, Pencil as PencilIcon, RotateCw as RefreshIcon, Download as DownloadIcon, Copy as CopyIcon, Settings as SettingsIcon, ChevronDown as ChevronDownIcon, Check as CheckIcon, TriangleAlert as WarningIcon, ArrowLeft as ArrowLeftIcon, Link as LinkIcon } from 'lucide-react';
 import { trackEvent } from '../../lib/analytics';
 import { isKalshiUrl, importKalshiMarket, KalshiImportResult } from '../../lib/kalshiApi';
 import { ctrl } from '../../styles/controls';
@@ -467,38 +454,34 @@ export function ControlPanel({
 
       {/* Import from Kalshi */}
       {mode === 'chart' && onImportKalshiMarket && (
-        <div className={ctrl.section}>
-          <div className={ctrl.sectionTitle}>Import from Kalshi</div>
-          <div className={ctrl.group}>
-            <label>Market URL</label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                className={`${ctrl.input} flex-1`}
-                placeholder="Paste Kalshi URL"
-                value={urlInput}
-                onChange={(e) => {
-                  setUrlInput(e.target.value);
-                  setImportError(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleUrlImport(urlInput);
-                }}
-                disabled={isImporting}
-              />
-              <button
-                onClick={() => handleUrlImport(urlInput)}
-                disabled={isImporting || !urlInput.trim()}
-                className={`shrink-0 px-4 py-2 border-none rounded-[5px] font-medium text-[13px] transition-colors duration-150 flex items-center gap-1.5 ${isImporting || !urlInput.trim() ? 'cursor-not-allowed bg-[#333] text-text-secondary' : 'cursor-pointer bg-brand text-white'}`}
-              >
-                {isImporting ? <><RefreshIcon size={14} /> Importing...</> : <><LinkIcon size={14} /> Import</>}
-              </button>
-            </div>
-            <p className={`${ctrl.helpText} ${importError ? 'text-[#dc2626] flex items-center gap-1' : ''}`}>
-              {importError ? <><WarningIcon size={14} />{importError}</> : 'Paste a link like kalshi.com/markets/TICKER or Ctrl+V anywhere'}
-            </p>
-          </div>
+        <div className="mb-3 flex gap-2">
+          <input
+            type="text"
+            className={`${ctrl.input} flex-1`}
+            placeholder="Paste Kalshi URL or Ctrl+V"
+            value={urlInput}
+            onChange={(e) => {
+              setUrlInput(e.target.value);
+              setImportError(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleUrlImport(urlInput);
+            }}
+            disabled={isImporting}
+          />
+          <button
+            onClick={() => handleUrlImport(urlInput)}
+            disabled={isImporting || !urlInput.trim()}
+            className={`shrink-0 px-3 py-1.5 border-none rounded-[5px] font-medium text-[13px] transition-colors duration-150 flex items-center gap-1.5 ${isImporting || !urlInput.trim() ? 'cursor-not-allowed bg-[#333] text-text-secondary' : 'cursor-pointer bg-brand text-white'}`}
+          >
+            {isImporting ? <><RefreshIcon size={14} /> Importing...</> : <><LinkIcon size={14} /> Import</>}
+          </button>
         </div>
+      )}
+      {importError && (
+        <p className={`${ctrl.helpText} -mt-2 mb-3 flex items-center gap-1 text-[#dc2626]`}>
+          <WarningIcon size={14} />{importError}
+        </p>
       )}
 
       {/* Content Section */}
@@ -516,7 +499,7 @@ export function ControlPanel({
               value={config.searchQuery || ''}
               onChange={(e) => onConfigChange({ searchQuery: e.target.value })}
             />
-            <p className={ctrl.helpText}>The search query displayed in the Google search bar</p>
+
           </div>
         )}
 
@@ -558,7 +541,6 @@ export function ControlPanel({
                 )}
               </label>
             </div>
-            <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
           </div>
         )}
 
@@ -594,7 +576,6 @@ export function ControlPanel({
               )}
             </label>
           </div>
-          <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
         </div>
 
         <div className={ctrl.group}>
@@ -626,13 +607,8 @@ export function ControlPanel({
             <option value="multi">Multi-Outcome</option>
             <option value="forecast">Forecast</option>
           </select>
-          <p className={ctrl.helpText}>
-            {config.marketType === 'binary'
-              ? 'Single yes/no outcome market'
-              : config.marketType === 'multi'
-              ? 'Multiple bracket/outcome market'
-              : 'Unbounded numerical forecast market'}
-          </p>
+
+
         </div>
 
         {config.marketType === 'multi' && (
@@ -648,11 +624,8 @@ export function ControlPanel({
               />
               Mutually Exclusive (odds sum to 100%)
             </label>
-            <p className={ctrl.helpText}>
-              {config.mutuallyExclusive !== false
-                ? 'Outcomes are mutually exclusive - changing one adjusts others to keep total at 100%'
-                : 'Outcomes are independent - each can have any odds value'}
-            </p>
+
+
           </div>
           <div className={ctrl.group}>
             <label>Outcomes</label>
@@ -775,7 +748,8 @@ export function ControlPanel({
               min="0"
               step="1"
             />
-            <p className={ctrl.helpText}>Enter the forecasted numerical value</p>
+
+
             {config.customTrendData && (
               <p className={`${ctrl.helpText} text-[#dc2626] mt-2 flex items-center gap-1`}>
                 <WarningIcon size={14} />
@@ -796,26 +770,22 @@ export function ControlPanel({
                 onConfigChange({ forecastUnit: e.target.value });
               }}
             />
-            <p className={ctrl.helpText}>Unit to display after the forecast value (e.g., K, $, etc.)</p>
+
+
           </div>
         </>
       )}
 
       {(config.marketType === 'binary' || config.marketType === 'forecast') && (
         <div className={ctrl.group}>
-          <label>Market Trend (Optional)</label>
           <button onClick={onOpenTrendDrawer} className={ctrl.btnDraw}>
             <PencilIcon size={16} />
             {config.customTrendData ? 'Redraw Trend' : 'Draw Custom Trend'}
           </button>
-          {config.customTrendData ? (
+          {config.customTrendData && (
             <p className={`${ctrl.helpText} text-[#09C285] font-semibold flex items-center gap-1`}>
               <CheckIcon size={14} />
               Using your custom drawn trend
-            </p>
-          ) : (
-            <p className={ctrl.helpText}>
-              Using random walk default • Draw your own trend line
             </p>
           )}
         </div>
@@ -879,11 +849,8 @@ export function ControlPanel({
               </button>
             ))}
           </div>
-          <p className={ctrl.helpText}>
-            {config.timeHorizon === 'ALL'
-              ? 'Custom date range (use Advanced Settings)'
-              : `Last ${config.timeHorizon === '6H' ? '6 hours' : config.timeHorizon === '1D' ? 'day' : config.timeHorizon === '1W' ? 'week' : 'month'}`}
-          </p>
+
+
         </div>
       </div>
 

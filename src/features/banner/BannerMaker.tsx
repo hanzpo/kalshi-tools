@@ -1,12 +1,6 @@
 import { ChangeEvent, useState, DragEvent } from 'react';
 import { BannerConfig, BannerVariant } from '../../types';
-import {
-  ImageIcon,
-  UploadIcon,
-  DownloadIcon,
-  CopyIcon,
-  ArrowLeftIcon,
-} from '../../components/ui/Icons';
+import { Image as ImageIcon, Upload as UploadIcon, Download as DownloadIcon, Copy as CopyIcon, ArrowLeft as ArrowLeftIcon } from 'lucide-react';
 import { trackEvent } from '../../lib/analytics';
 import { ctrl } from '../../styles/controls';
 
@@ -145,7 +139,8 @@ export function BannerMaker({
               )}
             </label>
           </div>
-          <p className={ctrl.helpText}>Supports JPG, PNG formats. Or press Ctrl+V to paste.</p>
+
+
         </div>
 
         <div className={ctrl.group}>
@@ -228,16 +223,13 @@ export function BannerMaker({
           <div className={ctrl.colorToggle}>
             {(['Yes', 'No'] as const).map((side) => {
               const isActive = config.tradeSide === side;
-              const colorCls = side === 'Yes' ? 'text-[#0f9b6c]' : 'text-[#d91616]';
-              const activeCls = isActive
-                ? side === 'Yes' ? 'font-semibold border-[#0f9b6c] bg-[#0f9b6c]/[0.125]'
-                : 'font-semibold border-[#d91616] bg-[#d91616]/[0.125]'
-                : 'font-medium';
+              const color = side === 'Yes' ? '#0f9b6c' : '#d91616';
               return (
                 <button
                   key={side}
                   type="button"
-                  className={`${ctrl.colorOption} ${colorCls} ${activeCls}`}
+                  className={`${ctrl.colorOption} ${isActive ? 'font-semibold' : 'font-medium'}`}
+                  style={isActive ? { borderColor: color, backgroundColor: `${color}20`, color } : { color }}
                   onClick={() => onConfigChange({ tradeSide: side })}
                   aria-pressed={isActive}
                 >
@@ -272,18 +264,23 @@ export function BannerMaker({
 
         <div className={ctrl.group}>
           <label>Trend</label>
-          <div className={ctrl.segmented}>
-            {(['up', 'down'] as const).map((dir) => (
-              <button
-                key={dir}
-                type="button"
-                className={`${ctrl.segmentedOption} ${config.trendDirection === dir ? ctrl.segmentedOptionActive : ''}`}
-                onClick={() => onConfigChange({ trendDirection: dir })}
-                aria-pressed={config.trendDirection === dir}
-              >
-                {dir === 'up' ? 'Up' : 'Down'}
-              </button>
-            ))}
+          <div className={ctrl.colorToggle}>
+            {(['up', 'down'] as const).map((dir) => {
+              const isActive = config.trendDirection === dir;
+              const color = dir === 'up' ? '#0f9b6c' : '#d91616';
+              return (
+                <button
+                  key={dir}
+                  type="button"
+                  className={`${ctrl.colorOption} ${isActive ? 'font-semibold' : 'font-medium'}`}
+                  style={isActive ? { borderColor: color, backgroundColor: `${color}20`, color } : { color }}
+                  onClick={() => onConfigChange({ trendDirection: dir })}
+                  aria-pressed={isActive}
+                >
+                  {dir === 'up' ? 'Up' : 'Down'}
+                </button>
+              );
+            })}
           </div>
         </div>
 
