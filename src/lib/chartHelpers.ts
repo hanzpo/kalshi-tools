@@ -27,6 +27,17 @@ export function generateDefaultTrend(targetOdds: number): number[] {
   return defaultTrend;
 }
 
+export function formatNumberWithUnit(value: number, unit: string): string {
+  return `${value.toFixed(0)}${unit}`;
+}
+
+export function adjustOutcomeColor(color: string, isDarkMode: boolean): string {
+  if (isDarkMode && color === '#000000') {
+    return '#ffffff';
+  }
+  return color;
+}
+
 export function generateDefaultForecastTrend(targetValue: number): number[] {
   const defaultTrend: number[] = [];
   const startValue = targetValue * (0.7 + Math.random() * 0.2);

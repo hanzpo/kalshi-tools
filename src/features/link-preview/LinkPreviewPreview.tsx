@@ -7,6 +7,7 @@ import { GridRows } from '@visx/grid';
 import { curveLinear } from '@visx/curve';
 import { MarketConfig, DataPoint } from '../../types';
 import { generateChange, formatVolume, getDateRangeForTimeHorizon, generateDateLabels } from '../../lib/dataGenerator';
+import { formatNumberWithUnit } from '../../lib/chartHelpers';
 import { Image as ImageIcon } from 'lucide-react';
 
 interface LinkPreviewPreviewProps {
@@ -14,14 +15,6 @@ interface LinkPreviewPreviewProps {
   data: DataPoint[];
   leftImage: string | null;
   onTimeHorizonChange?: (timeHorizon: string) => void;
-}
-
-function formatNumberWithUnit(value: number, unit: string): string {
-  return `${value.toFixed(0)}${unit}`;
-}
-
-function formatNumberForDisplay(value: number, unit: string): string {
-  return `${value.toFixed(0)}${unit}`;
 }
 
 export function LinkPreviewPreview({ config, data, leftImage, onTimeHorizonChange }: LinkPreviewPreviewProps) {
@@ -160,7 +153,7 @@ export function LinkPreviewPreview({ config, data, leftImage, onTimeHorizonChang
                     className="text-[clamp(24px,4vw,36px)] font-bold leading-none"
                     style={{ color: textColor }}
                   >
-                    {formatNumberForDisplay(config.forecastValue ?? 128000, config.forecastUnit || 'K')}
+                    {formatNumberWithUnit(config.forecastValue ?? 128000, config.forecastUnit || 'K')}
                   </span>
                   <span className="text-[clamp(10px,1.5vw,14px)] font-medium text-[#6b7280]">forecast</span>
                 </div>

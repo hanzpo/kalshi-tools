@@ -7,29 +7,12 @@ import { GridRows } from '@visx/grid';
 import { curveLinear } from '@visx/curve';
 import { MarketConfig, DataPoint } from '../../types';
 import { generateChange, formatVolume, getDateRangeForTimeHorizon, generateDateLabels } from '../../lib/dataGenerator';
+import { formatNumberWithUnit, adjustOutcomeColor } from '../../lib/chartHelpers';
 
 interface ChartPreviewProps {
   config: MarketConfig;
   data: DataPoint[];
   onTimeHorizonChange?: (timeHorizon: string) => void;
-}
-
-function formatNumberWithUnit(value: number, unit: string): string {
-  // Display the exact value with the unit, no auto-formatting
-  return `${value.toFixed(0)}${unit}`;
-}
-
-function formatNumberForDisplay(value: number, unit: string): string {
-  // Display the exact value with the unit, no auto-formatting
-  return `${value.toFixed(0)}${unit}`;
-}
-
-// Get outcome color, swapping black for white in dark mode
-function getOutcomeColor(color: string, isDarkMode: boolean): string {
-  if (isDarkMode && color === '#000000') {
-    return '#ffffff';
-  }
-  return color;
 }
 
 export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreviewProps) {
@@ -228,7 +211,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
                     color: textColor
                   }}
                 >
-                  {formatNumberForDisplay(config.forecastValue ?? 128000, config.forecastUnit || 'K')}
+                  {formatNumberWithUnit(config.forecastValue ?? 128000, config.forecastUnit || 'K')}
                 </span>
                 <span className="mt-0.5 whitespace-nowrap text-lg font-normal text-text-muted">forecast</span>
               </div>
@@ -257,7 +240,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
                   <div
                     className="size-3 rounded-full shrink-0"
                     style={{
-                      backgroundColor: getOutcomeColor(outcome.color, isDark),
+                      backgroundColor: adjustOutcomeColor(outcome.color, isDark),
                     }}
                   />
                   <span className="text-sm font-medium" style={{ color: secondaryTextColor }}>
@@ -371,7 +354,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
                 ) : (
                   <>
                     {config.outcomes.map((outcome) => {
-                      const color = getOutcomeColor(outcome.color, isDark);
+                      const color = adjustOutcomeColor(outcome.color, isDark);
                       return (
                         <g key={outcome.id}>
                           <LinePath
