@@ -162,61 +162,63 @@ export function BracketMaker({
         </div>
       </div>
 
-      {/* Share */}
-      <button onClick={onShare} className={ctrl.btnExport}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="18" cy="5" r="3" />
-          <circle cx="6" cy="12" r="3" />
-          <circle cx="18" cy="19" r="3" />
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-        </svg>
-        Share Bracket
-      </button>
+      {/* Actions */}
+      <div className="mt-2 flex flex-col gap-2">
+        <button onClick={onShare} className={ctrl.btnExport}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+          Share Bracket
+        </button>
 
-      {shareUrl && (
-        <div className="mb-1.5 flex items-center gap-2 rounded-[5px] border border-dark-border-light bg-dark px-3 py-2">
-          <input
-            type="text"
-            value={shareUrl}
-            readOnly
-            className="flex-1 bg-transparent text-xs text-text-secondary outline-none"
-            onClick={(e) => (e.target as HTMLInputElement).select()}
-          />
+        {shareUrl && (
+          <div className="flex items-center gap-2 rounded-[5px] border border-dark-border-light bg-dark px-3 py-2">
+            <input
+              type="text"
+              value={shareUrl}
+              readOnly
+              className="flex-1 bg-transparent text-xs text-text-secondary outline-none"
+              onClick={(e) => (e.target as HTMLInputElement).select()}
+            />
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(shareUrl);
+              }}
+              className="text-xs font-medium text-brand hover:text-brand-light"
+            >
+              Copy
+            </button>
+          </div>
+        )}
+
+        <div className="flex gap-2">
           <button
-            onClick={() => {
-              navigator.clipboard.writeText(shareUrl);
-            }}
-            className="text-xs font-medium text-brand hover:text-brand-light"
+            onClick={onExport}
+            className={`${ctrl.btnRegen} flex-1`}
           >
+            <DownloadIcon size={14} />
+            Download
+          </button>
+          <button
+            onClick={onCopyToClipboard}
+            className={`${ctrl.btnRegen} flex-1`}
+          >
+            <CopyIcon size={14} />
             Copy
           </button>
         </div>
-      )}
 
-      <div className="flex gap-2">
         <button
-          onClick={onExport}
-          className={`${ctrl.btnRegen} flex-1`}
+          onClick={onRandomize}
+          className={ctrl.btnRegen}
         >
-          <DownloadIcon size={14} />
-          Download
-        </button>
-        <button
-          onClick={onCopyToClipboard}
-          className={`${ctrl.btnRegen} flex-1`}
-        >
-          <CopyIcon size={14} />
-          Copy
+          Randomize
         </button>
       </div>
-
-      <button
-        onClick={onRandomize}
-        className={ctrl.btnRegen}
-      >
-        Randomize
-      </button>
     </div>
   );
 }

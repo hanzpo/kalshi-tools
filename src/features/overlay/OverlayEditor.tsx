@@ -206,8 +206,8 @@ export function OverlayEditor({
           <label className={`${oe.label} !mb-0`}>Live Data</label>
           <span style={{
             fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
-            background: wsStatus === 'connected' ? '#09C28522' : wsStatus === 'connecting' ? '#F59E0B22' : '#333',
-            color: wsStatus === 'connected' ? '#09C285' : wsStatus === 'connecting' ? '#F59E0B' : '#6b7280',
+            background: wsStatus === 'connected' ? '#00DD9422' : wsStatus === 'connecting' ? '#F59E0B22' : '#1C1E23',
+            color: wsStatus === 'connected' ? '#00DD94' : wsStatus === 'connecting' ? '#F59E0B' : '#6b7280',
           }}>
             {wsStatus === 'connected' ? 'WebSocket' : wsStatus === 'connecting' ? 'Connecting...' : wsStatus === 'error' ? 'No API Key' : 'Polling (3s)'}
           </span>

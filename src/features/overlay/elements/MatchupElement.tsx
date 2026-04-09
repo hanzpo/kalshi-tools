@@ -172,7 +172,7 @@ function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange
       if (ticker !== lastFetchedRef.current) {
         lastFetchedRef.current = ticker;
         setLoading(true);
-        const colors = ['#09C285', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899'];
+        const colors = ['#00DD94', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899'];
 
         try {
           const { markets } = await fetchKalshiEvent(ticker);
@@ -302,7 +302,7 @@ registerElement<MatchupProps>({
     props: {
       type: 'matchup', ticker: '', marketUrl: '', pollInterval: 30,
       team1Name: 'TEAM1', team2Name: 'TEAM2',
-      team1Color: '#09C285', team2Color: '#3B82F6',
+      team1Color: '#00DD94', team2Color: '#3B82F6',
       showOdds: true, showPayout: true, payoutWager: 100,
       vsStyle: 'text',
       nameFont: "'Sohne Schmal', 'Barlow Condensed', sans-serif",

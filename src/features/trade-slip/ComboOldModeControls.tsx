@@ -97,7 +97,7 @@ export function ComboOldModeControls({ config, onConfigChange, handlers }: Combo
                       onDragOver={(e) => handleLegDragOver(leg.id, e)}
                       onDragLeave={handleLegDragLeave}
                       onDrop={(e) => handleLegDrop(leg.id, e)}
-                      className={`${ctrl.comboImageUpload} rounded-lg border-[1.5px] border-dashed transition-[border-color] duration-200 ${draggingLegId === leg.id ? 'border-brand' : 'border-[#444]'}`}
+                      className={`${ctrl.comboImageUpload} rounded-lg border-[1.5px] border-dashed transition-[border-color] duration-200 ${draggingLegId === leg.id ? 'border-brand' : 'border-dark-border-light'}`}
                     >
                       {leg.image ? (
                         <>

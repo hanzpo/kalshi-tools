@@ -24,7 +24,7 @@ export function LinkPreviewPreview({ config, data, leftImage, onTimeHorizonChang
   const changeValue = parseFloat(change);
   const isPositive = changeValue >= 0;
 
-  const chartColor = isPositive ? '#09C285' : '#D91616';
+  const chartColor = isPositive ? '#00DD94' : '#D91616';
   const bgColor = '#ffffff';
   const textColor = '#000000';
   const secondaryTextColor = '#6b7280';

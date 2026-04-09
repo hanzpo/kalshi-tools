@@ -23,7 +23,7 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
   const isPositive = changeValue >= 0;
 
   const isDark = config.darkMode === true;
-  const chartColor = isPositive ? '#09C285' : '#D91616';
+  const chartColor = isPositive ? '#00DD94' : '#D91616';
   const bgColor = isDark ? '#141414' : '#ffffff';
   const textColor = isDark ? '#ffffff' : '#000000';
   const secondaryTextColor = isDark ? '#9ca3af' : '#6b7280';

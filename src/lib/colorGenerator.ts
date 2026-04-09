@@ -1,4 +1,4 @@
-const OUTCOME_COLORS = ['#09C285', '#4662f5', '#191919'];
+const OUTCOME_COLORS = ['#00DD94', '#4662f5', '#191919'];
 
 function generateRandomColor(): string {
   const hue = Math.floor(Math.random() * 360);

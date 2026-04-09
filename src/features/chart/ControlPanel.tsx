@@ -510,7 +510,7 @@ export function ControlPanel({
               onDragOver={handleLeftDragOver}
               onDragLeave={handleLeftDragLeave}
               onDrop={handleLeftDrop}
-              className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDraggingLeft ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
+              className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDraggingLeft ? 'border-brand bg-[#01201A]' : 'border-dark-border-light bg-dark-surface'}`}
             >
               <input
                 id="left-image"
@@ -550,7 +550,7 @@ export function ControlPanel({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDragging ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
+            className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDragging ? 'border-brand bg-[#01201A]' : 'border-dark-border-light bg-dark-surface'}`}
           >
             <input
               id="market-image"
@@ -783,7 +783,7 @@ export function ControlPanel({
             {config.customTrendData ? 'Redraw Trend' : 'Draw Custom Trend'}
           </button>
           {config.customTrendData && (
-            <p className={`${ctrl.helpText} text-[#09C285] font-semibold flex items-center gap-1`}>
+            <p className={`${ctrl.helpText} text-[#00DD94] font-semibold flex items-center gap-1`}>
               <CheckIcon size={14} />
               Using your custom drawn trend
             </p>
@@ -843,7 +843,7 @@ export function ControlPanel({
                   onRegenerateData();
                   trackEvent('time_horizon_change', { tool: mode, horizon });
                 }}
-                className={`px-2.5 py-1.5 border rounded cursor-pointer font-medium transition-[border-color,background-color,color] duration-150 text-xs min-w-10 ${config.timeHorizon === horizon ? 'border-brand bg-[#0d2e1f] text-brand' : 'border-dark-border-light bg-dark-surface text-text-secondary'}`}
+                className={`px-2.5 py-1.5 border rounded cursor-pointer font-medium transition-[border-color,background-color,color] duration-150 text-xs min-w-10 ${config.timeHorizon === horizon ? 'border-brand bg-[#01201A] text-brand' : 'border-dark-border-light bg-dark-surface text-text-secondary'}`}
               >
                 {horizon}
               </button>
@@ -854,23 +854,21 @@ export function ControlPanel({
         </div>
       </div>
 
-      <div className={ctrl.group}>
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full p-2.5 border border-[#333] bg-[#1e1e1e] rounded-[5px] cursor-pointer text-[13px] font-medium text-[#d1d5db] flex items-center justify-between transition-colors duration-150"
-        >
-          <span className="flex items-center gap-2">
-            <SettingsIcon size={16} />
-            Advanced Settings
-          </span>
-          <span className={`transition-transform duration-150 ${showAdvanced ? 'rotate-180' : ''}`}>
-            <ChevronDownIcon size={16} />
-          </span>
-        </button>
-      </div>
+      <button
+        onClick={() => setShowAdvanced(!showAdvanced)}
+        className="w-full p-2.5 border border-dark-border-light bg-dark-surface rounded-[5px] cursor-pointer text-[13px] font-medium text-text-primary flex items-center justify-between transition-colors duration-150"
+      >
+        <span className="flex items-center gap-2">
+          <SettingsIcon size={16} />
+          Advanced Settings
+        </span>
+        <span className={`transition-transform duration-150 ${showAdvanced ? 'rotate-180' : ''}`}>
+          <ChevronDownIcon size={16} />
+        </span>
+      </button>
 
       {showAdvanced && (
-        <div className="border border-[#2a2a2a] rounded-md p-4 bg-[#252525] -mt-1">
+        <div className="border border-dark-border rounded-md p-4 bg-dark-elevated -mt-1">
           <div className={ctrl.group}>
             <label htmlFor="volume">Volume</label>
             <input
@@ -941,29 +939,31 @@ export function ControlPanel({
         </div>
       )}
 
-      <button
-        onClick={onRegenerateData}
-        className={`${ctrl.btnRegen} mt-5`}
-      >
-        <RefreshIcon size={16} />
-        Regenerate Data
-      </button>
+      <div className="mt-2 flex flex-col gap-2">
+        <button
+          onClick={onRegenerateData}
+          className={ctrl.btnRegen}
+        >
+          <RefreshIcon size={16} />
+          Regenerate Data
+        </button>
 
-      <div className="flex gap-2">
-        <button
-          onClick={onExport}
-          className={`${ctrl.btnExport} flex-1`}
-        >
-          <DownloadIcon size={16} />
-          Export as PNG
-        </button>
-        <button
-          onClick={onCopyToClipboard}
-          className={`${ctrl.btnExport} flex-1`}
-        >
-          <CopyIcon size={16} />
-          Copy
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={onExport}
+            className={`${ctrl.btnExport} flex-1`}
+          >
+            <DownloadIcon size={16} />
+            Export as PNG
+          </button>
+          <button
+            onClick={onCopyToClipboard}
+            className={`${ctrl.btnExport} flex-1`}
+          >
+            <CopyIcon size={16} />
+            Copy
+          </button>
+        </div>
       </div>
     </div>
   );

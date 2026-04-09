@@ -161,7 +161,7 @@ export function DraggableElement({
       position: 'absolute',
       width: handleSize,
       height: handleSize,
-      background: '#09C285',
+      background: '#00DD94',
       border: '1px solid #fff',
       borderRadius: 2,
       zIndex: 9999,
@@ -190,7 +190,7 @@ export function DraggableElement({
         height: element.height,
         zIndex: element.zIndex,
         cursor: editMode ? (element.locked ? 'default' : isDragging ? 'grabbing' : 'grab') : 'default',
-        outline: selected && editMode ? `2px solid ${element.locked ? '#F59E0B' : '#09C285'}` : 'none',
+        outline: selected && editMode ? `2px solid ${element.locked ? '#F59E0B' : '#00DD94'}` : 'none',
         outlineOffset: 1,
         userSelect: 'none',
       }}

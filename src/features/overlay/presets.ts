@@ -35,7 +35,7 @@ export const PRESETS: OverlayPreset[] = [
           width: 600,
           height: 200,
           zIndex: 1,
-          props: { type: 'market', ticker: '', marketUrl: '', variant: 'expanded', pollInterval: 30, showTitle: true, showVolume: true, accentColor: '#09C285' },
+          props: { type: 'market', ticker: '', marketUrl: '', variant: 'expanded', pollInterval: 30, showTitle: true, showVolume: true, accentColor: '#00DD94' },
         },
         {
           id: 'preset_logo_1',
@@ -67,7 +67,7 @@ export const PRESETS: OverlayPreset[] = [
           width: 460,
           height: 180,
           zIndex: 1,
-          props: { type: 'market', ticker: '', marketUrl: '', variant: 'expanded', pollInterval: 30, showTitle: true, showVolume: true, accentColor: '#09C285' },
+          props: { type: 'market', ticker: '', marketUrl: '', variant: 'expanded', pollInterval: 30, showTitle: true, showVolume: true, accentColor: '#00DD94' },
         },
         {
           id: 'preset_logo_1',
@@ -109,7 +109,7 @@ export const PRESETS: OverlayPreset[] = [
           width: 440,
           height: 130,
           zIndex: 1,
-          props: { type: 'market', ticker: '', marketUrl: '', variant: 'compact', pollInterval: 30, showTitle: true, showVolume: false, accentColor: '#09C285' },
+          props: { type: 'market', ticker: '', marketUrl: '', variant: 'compact', pollInterval: 30, showTitle: true, showVolume: false, accentColor: '#00DD94' },
         },
         {
           id: 'preset_market_2',
@@ -119,7 +119,7 @@ export const PRESETS: OverlayPreset[] = [
           width: 440,
           height: 130,
           zIndex: 1,
-          props: { type: 'market', ticker: '', marketUrl: '', variant: 'compact', pollInterval: 30, showTitle: true, showVolume: false, accentColor: '#09C285' },
+          props: { type: 'market', ticker: '', marketUrl: '', variant: 'compact', pollInterval: 30, showTitle: true, showVolume: false, accentColor: '#00DD94' },
         },
         {
           id: 'preset_market_3',
@@ -129,7 +129,7 @@ export const PRESETS: OverlayPreset[] = [
           width: 440,
           height: 130,
           zIndex: 1,
-          props: { type: 'market', ticker: '', marketUrl: '', variant: 'compact', pollInterval: 30, showTitle: true, showVolume: false, accentColor: '#09C285' },
+          props: { type: 'market', ticker: '', marketUrl: '', variant: 'compact', pollInterval: 30, showTitle: true, showVolume: false, accentColor: '#00DD94' },
         },
         {
           id: 'preset_logo_1',
@@ -263,7 +263,7 @@ export const PRESETS: OverlayPreset[] = [
           width: 880,
           height: 420,
           zIndex: 1,
-          props: { type: 'market', ticker: '', marketUrl: '', variant: 'expanded', pollInterval: 30, showTitle: true, showVolume: true, accentColor: '#09C285' },
+          props: { type: 'market', ticker: '', marketUrl: '', variant: 'expanded', pollInterval: 30, showTitle: true, showVolume: true, accentColor: '#00DD94' },
         },
         {
           id: 'preset_market_2',
@@ -320,7 +320,7 @@ export const PRESETS: OverlayPreset[] = [
           props: {
             type: 'matchup', ticker: '', marketUrl: '', pollInterval: 30,
             team1Name: 'SEA', team2Name: 'NE',
-            team1Color: '#09C285', team2Color: '#3B82F6',
+            team1Color: '#00DD94', team2Color: '#3B82F6',
             showOdds: true, showPayout: true, payoutWager: 100,
             variant: 'large', vsStyle: 'text',
           },
@@ -345,8 +345,8 @@ export const PRESETS: OverlayPreset[] = [
             type: 'trade-feed',
             ticker: '', marketUrl: '', pollInterval: 15, maxTrades: 5,
             showDot: true, headerText: 'Live Trade', headerColor: '#ffffff',
-            dotColor: '#ef4444', amountColor: '#09C285',
-            outcomeMap: '{"SEA":"#09C285","NE":"#3B82F6"}',
+            dotColor: '#ef4444', amountColor: '#00DD94',
+            outcomeMap: '{"SEA":"#00DD94","NE":"#3B82F6"}',
             fontSize: 40, lineSpacing: 1.4, showSide: false, useAcronyms: true,
           },
         },

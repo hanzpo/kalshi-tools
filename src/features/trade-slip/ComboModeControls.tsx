@@ -251,7 +251,7 @@ export function ComboModeControls({ config, onConfigChange, handlers }: ComboMod
                                   type="checkbox"
                                   checked={market.resolved || false}
                                   onChange={(e) => handleMarketChange(category.id, event.id, market.id, { resolved: e.target.checked })}
-                                  className="size-4 cursor-pointer accent-[#09C285]"
+                                  className="size-4 cursor-pointer accent-[#00DD94]"
                                 />
                               </label>
                             </div>

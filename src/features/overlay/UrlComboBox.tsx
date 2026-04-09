@@ -59,7 +59,7 @@ export function UrlComboBox({ value, onChange, placeholder }: {
               color: 'var(--color-text-muted, #6b7280)',
               transition: 'color 150ms, border-color 150ms',
             }}
-            onMouseEnter={e => { (e.target as HTMLElement).style.color = '#09C285'; }}
+            onMouseEnter={e => { (e.target as HTMLElement).style.color = '#00DD94'; }}
             onMouseLeave={e => { (e.target as HTMLElement).style.color = ''; }}
             title="Reuse URL from scene"
           >
@@ -92,7 +92,7 @@ export function UrlComboBox({ value, onChange, placeholder }: {
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(9,194,133,0.08)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
             >
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#09C285' }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#00DD94' }}>
                 {shortLabel(url)}
               </span>
               <span style={{

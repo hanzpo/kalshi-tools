@@ -445,7 +445,7 @@ registerElement<MatchupChartProps>({
       pollInterval: 30,
       team1Name: '',
       team2Name: '',
-      team1Color: '#09C285',
+      team1Color: '#00DD94',
       team2Color: '#3B82F6',
       showLabels: true,
       labelSize: 36,

@@ -57,7 +57,7 @@ function ClassicBanner({ config }: BannerPreviewProps) {
         <h2 className="m-0 flex-1 text-[26px] font-bold leading-[1.2] text-[#1a1a1a]">
           {config.title || 'Will this happen?'}
         </h2>
-        <div className="flex shrink-0 items-start pt-1 text-[#09C285]">
+        <div className="flex shrink-0 items-start pt-1 text-[#00DD94]">
           <KalshiLogo />
         </div>
       </div>
@@ -83,7 +83,7 @@ function ClassicBanner({ config }: BannerPreviewProps) {
               <div
                 className={`h-0 w-0 border-x-[8px] border-x-transparent ${
                   config.trendDirection === 'up'
-                    ? 'border-b-[12px] border-b-[#09C285]'
+                    ? 'border-b-[12px] border-b-[#00DD94]'
                     : 'border-t-[12px] border-t-[#ef4444]'
                 }`}
               />
@@ -116,7 +116,7 @@ function HorizontalBanner({ config }: BannerPreviewProps) {
     >
       {/* Left: Kalshi logo */}
       <div className="flex shrink-0 items-center">
-        <KalshiLogoLarge color="#09C285" />
+        <KalshiLogoLarge color="#00DD94" />
       </div>
 
       {/* Vertical divider */}
@@ -141,7 +141,7 @@ function HorizontalBanner({ config }: BannerPreviewProps) {
           <span className="text-[20px] font-bold" style={{ color: textColor }}>
             {config.outcome || config.tradeSide}
           </span>
-          <span className="text-[22px] font-bold" style={{ color: '#09C285' }}>
+          <span className="text-[22px] font-bold" style={{ color: '#00DD94' }}>
             {config.odds}%
           </span>
           {config.change && (
@@ -149,7 +149,7 @@ function HorizontalBanner({ config }: BannerPreviewProps) {
               <div
                 className={`h-0 w-0 border-x-[6px] border-x-transparent ${
                   config.trendDirection === 'up'
-                    ? 'border-b-[9px] border-b-[#09C285]'
+                    ? 'border-b-[9px] border-b-[#00DD94]'
                     : 'border-t-[9px] border-t-[#ef4444]'
                 }`}
               />

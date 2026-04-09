@@ -572,7 +572,7 @@ export function MarketPageMaker({
       </div>
 
       {/* Export Buttons */}
-      <div className="mt-5 flex gap-2">
+      <div className="mt-2 flex gap-2">
         <button className={`${ctrl.btnExport} flex-1`} onClick={onExport}>
           <DownloadIcon />
           Export as PNG

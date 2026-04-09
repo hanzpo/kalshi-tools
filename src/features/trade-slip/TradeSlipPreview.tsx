@@ -62,7 +62,7 @@ const ComboMarketItem = ({ market, position }: ComboMarketItemProps) => (
     <div className="flex-1 py-1 font-sans text-[13px] font-normal leading-5 text-white/90">
       {market.prefix && (
         <>
-          <span className={market.prefix === 'Yes' ? 'text-[#00C688]' : market.prefix === 'No' ? 'text-[#ff4d6a]' : 'text-white/90'}>{market.prefix}</span>
+          <span className={market.prefix === 'Yes' ? 'text-[#00CE8E]' : market.prefix === 'No' ? 'text-[#ff4d6a]' : 'text-white/90'}>{market.prefix}</span>
           <span className="text-white/90"> · </span>
         </>
       )}
@@ -141,7 +141,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
     const horizontalPayout = config.customPayout != null ? config.customPayout : calculateSinglePayout(config.wager, config.odds);
     const marketName = (config.marketName?.trim() || config.title.trim()) || 'Market name goes here';
     const isYes = config.tradeSide === 'Yes';
-    const sideColor = isYes ? '#00C688' : '#ff4d6a';
+    const sideColor = isYes ? '#00CE8E' : '#ff4d6a';
     const bgColor = config.backgroundColor || '#28CC95';
 
     return (
@@ -167,7 +167,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               <div className="my-2 max-w-full break-words font-sans text-[clamp(18px,3.5vw,24px)] font-semibold leading-[1.3] text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.5)] [hyphens:auto] [overflow-wrap:break-word] max-[600px]:text-base">{marketName}</div>
               <div className="mt-auto flex gap-2">
                 <div
-                  className={`flex-1 cursor-default rounded-lg bg-[#00C688] px-4 py-2.5 text-center font-sans text-sm font-semibold uppercase tracking-[0.02em] text-white transition-transform duration-150 max-[600px]:px-3 max-[600px]:py-2 max-[600px]:text-xs ${isYes ? 'opacity-100 shadow-[0_4px_12px_rgba(0,198,136,0.4)]' : 'opacity-40'}`}
+                  className={`flex-1 cursor-default rounded-lg bg-[#00CE8E] px-4 py-2.5 text-center font-sans text-sm font-semibold uppercase tracking-[0.02em] text-white transition-transform duration-150 max-[600px]:px-3 max-[600px]:py-2 max-[600px]:text-xs ${isYes ? 'opacity-100 shadow-[0_4px_12px_rgba(0,206,142,0.4)]' : 'opacity-40'}`}
                 >
                   Yes
                 </div>
@@ -220,8 +220,8 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
     const tradeColor = config.tradeSide === 'No'
       ? '#ff4d6a'
       : config.tradeSide === 'Custom'
-        ? (config.customSideColor || '#00C688')
-        : '#00C688';
+        ? (config.customSideColor || '#00CE8E')
+        : '#00CE8E';
     const tradeSideText = config.tradeSide === 'Custom'
       ? (config.customSideText || 'Custom')
       : config.tradeSide;
@@ -338,7 +338,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               {/* Kalshi Divider — green for championship */}
               <div className="flex w-full items-center gap-2">
                 <div className="h-px flex-1 bg-white/12" />
-                <KalshiLogo className="shrink-0" style={{ color: '#09C285' }} />
+                <KalshiLogo className="shrink-0" style={{ color: '#00DD94' }} />
                 <div className="h-px flex-1 bg-white/12" />
               </div>
 
@@ -361,7 +361,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                     <span className="flex-[1_0_0] flex items-start p-0 text-sm font-normal leading-5 text-white/50">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
                     <span
                       className="text-right text-[30px] font-medium leading-9"
-                      style={{ color: '#00C688', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
+                      style={{ color: '#00CE8E', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
                     >
                       ${championshipPayout.toLocaleString()}
                     </span>
@@ -400,8 +400,8 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
   const tradeColor = config.tradeSide === 'No'
     ? '#ff4d6a'
     : config.tradeSide === 'Custom'
-      ? (config.customSideColor || '#00C688')
-      : '#00C688';
+      ? (config.customSideColor || '#00CE8E')
+      : '#00CE8E';
   const tradeSideText = config.tradeSide === 'Custom'
     ? (config.customSideText || 'Custom')
     : config.tradeSide;
@@ -415,7 +415,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
     : 'Combo';
 
   // Old single trade color
-  const oldTradeColor = config.tradeSide === 'No' ? '#d91616' : '#00C688';
+  const oldTradeColor = config.tradeSide === 'No' ? '#d91616' : '#00CE8E';
 
   // For old modes, use the static CSS background; for new modes, use inline style
   const useOldStyle = isSingleOld || isComboOld;
@@ -430,7 +430,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
             : isComboOld
               ? 'relative flex flex-col w-[clamp(320px,90vw,500px)] max-w-[500px] rounded-[clamp(8px,2vw,12px)] p-0 pb-[clamp(2px,0.5vw,4px)] shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-visible font-sans bg-[rgb(34,34,34)]'
               : isSingleOld
-                ? 'relative flex flex-col w-[clamp(320px,90vw,500px)] max-w-[500px] rounded-[clamp(16px,3vw,20px)] px-0 py-[clamp(18px,3vw,24px)] pb-[clamp(18px,3vw,28px)] shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-visible font-sans bg-gradient-to-b from-[#00D395] to-[#00C688]'
+                ? 'relative flex flex-col w-[clamp(320px,90vw,500px)] max-w-[500px] rounded-[clamp(16px,3vw,20px)] px-0 py-[clamp(18px,3vw,24px)] pb-[clamp(18px,3vw,28px)] shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-visible font-sans bg-gradient-to-b from-[#00DD94] to-[#00CE8E]'
                 : 'relative flex flex-col w-[clamp(300px,75vw,360px)] max-w-[360px] rounded-[clamp(12px,3vw,16px)] p-3.5 pb-3 shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-visible font-sans'
         }
         style={
@@ -507,9 +507,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   href="https://kalshi.com/?utm_source=kalshitools"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex text-[#09C285] no-underline transition-[transform,opacity] duration-200 hover:opacity-85 hover:-translate-y-px"
+                  className="inline-flex text-[#00DD94] no-underline transition-[transform,opacity] duration-200 hover:opacity-85 hover:-translate-y-px"
                 >
-                  <KalshiLogo className="shrink-0 text-[#09C285]" />
+                  <KalshiLogo className="shrink-0 text-[#00DD94]" />
                 </a>
               </div>
             </div>
@@ -557,7 +557,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                 )}
                 <div className="flex items-center justify-between mt-0 pt-0">
                   <span className="text-[clamp(16px,3vw,20px)] text-[#666] font-normal leading-[1.3]">{config.isPaidOut ? 'Paid out' : 'Payout if right'}</span>
-                  <span className="text-[clamp(32px,7vw,48px)] text-[#00C688] font-bold leading-none">
+                  <span className="text-[clamp(32px,7vw,48px)] text-[#00CE8E] font-bold leading-none">
                     ${payout.toLocaleString()}
                   </span>
                 </div>
@@ -581,9 +581,9 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   href="https://kalshi.com/?utm_source=kalshitools"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex text-[#09C285] no-underline transition-[transform,opacity] duration-200 hover:opacity-85 hover:-translate-y-px"
+                  className="inline-flex text-[#00DD94] no-underline transition-[transform,opacity] duration-200 hover:opacity-85 hover:-translate-y-px"
                 >
-                  <KalshiLogo className="shrink-0 text-[#09C285]" />
+                  <KalshiLogo className="shrink-0 text-[#00DD94]" />
                 </a>
               </div>
             </div>
@@ -620,7 +620,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
               </div>
               <div className="flex items-start justify-between gap-4 mt-0 pt-0">
                 <span className="text-[clamp(16px,3vw,20px)] text-[#666] font-normal leading-[1.3]">{config.isPaidOut ? 'Paid out' : 'Payout if win'}</span>
-                <span className="text-[clamp(24px,6vw,36px)] text-[#00C688] font-bold font-sans leading-[1.1]">
+                <span className="text-[clamp(24px,6vw,36px)] text-[#00CE8E] font-bold font-sans leading-[1.1]">
                   ${payout.toLocaleString()}
                 </span>
               </div>
@@ -674,7 +674,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                     <span className="flex-[1_0_0] flex items-start p-0 text-sm font-normal leading-5 text-white/50">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
                     <span
                       className="text-right text-[30px] font-medium leading-9"
-                      style={{ color: '#00C688', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
+                      style={{ color: '#00CE8E', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
                     >
                       ${payout.toLocaleString()}
                     </span>

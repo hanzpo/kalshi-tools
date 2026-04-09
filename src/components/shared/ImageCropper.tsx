@@ -118,13 +118,13 @@ export function ImageCropper({ imageSrc, onCropComplete, onCancel, aspectRatio =
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="cursor-pointer rounded-lg border border-[#333] bg-[#252525] px-[22px] py-[11px] text-[15px] font-semibold text-[#d1d5db] transition-all duration-200 hover:border-[#444] hover:bg-[#333]"
+            className="cursor-pointer rounded-lg border border-dark-border-light bg-dark-elevated px-[22px] py-[11px] text-[15px] font-semibold text-text-primary transition-all duration-200 hover:border-brand/30 hover:bg-dark-border-light"
           >
             Cancel
           </button>
           <button
             onClick={handleComplete}
-            className="cursor-pointer rounded-lg border-none bg-[#09C285] px-[22px] py-[11px] text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#08a770] hover:shadow-[0_2px_8px_rgba(9,194,133,0.25)]"
+            className="cursor-pointer rounded-lg border-none bg-[#00DD94] px-[22px] py-[11px] text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#00BB7D] hover:shadow-[0_2px_8px_rgba(0,221,148,0.25)]"
           >
             Apply Crop
           </button>

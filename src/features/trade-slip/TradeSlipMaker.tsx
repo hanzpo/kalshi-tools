@@ -374,7 +374,7 @@ export function TradeSlipMaker({
         </div>
       </div>
 
-      <div className="mt-5 flex gap-2">
+      <div className="mt-2 flex gap-2">
         <button
           onClick={onExport}
           className={`${ctrl.btnExport} flex-1`}

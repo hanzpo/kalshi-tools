@@ -575,7 +575,7 @@ registerElement<MarketProps>({
       pollInterval: 30,
       showTitle: true,
       showVolume: true,
-      accentColor: '#09C285',
+      accentColor: '#00DD94',
       bgOpacity: 1,
     },
   },

@@ -186,7 +186,7 @@ function ImagePropsEditor({ props, onChange }: { props: ImageProps; onChange: (p
   const stipple = props.stipple ?? false;
   const dotSize = props.stippleDotSize ?? 3;
   const spacing = props.stippleSpacing ?? 6;
-  const tintColor = props.tintColor ?? '#09C285';
+  const tintColor = props.tintColor ?? '#00DD94';
   const tintOp = props.tintOpacity ?? 0;
   const tintBlend = props.tintBlendMode ?? 'multiply';
 
@@ -201,7 +201,7 @@ function ImagePropsEditor({ props, onChange }: { props: ImageProps; onChange: (p
           onDrop={handleDrop}
           onClick={() => fileRef.current?.click()}
           style={{
-            border: `2px dashed ${dragging ? '#09C285' : 'rgba(255,255,255,0.15)'}`,
+            border: `2px dashed ${dragging ? '#00DD94' : 'rgba(255,255,255,0.15)'}`,
             borderRadius: 8, padding: '10px 12px', textAlign: 'center', cursor: 'pointer',
             background: dragging ? 'rgba(9,194,133,0.05)' : 'rgba(255,255,255,0.02)',
             fontSize: 12, color: 'rgba(255,255,255,0.5)', transition: 'all 150ms',
@@ -334,7 +334,7 @@ registerElement<ImageProps>({
       type: 'image', src: '', objectFit: 'contain', opacity: 1, borderRadius: 0,
       grayscale: 0, brightness: 1, contrast: 1,
       stipple: false, stippleDotSize: 3, stippleSpacing: 6,
-      tintColor: '#09C285', tintOpacity: 0, tintBlendMode: 'multiply',
+      tintColor: '#00DD94', tintOpacity: 0, tintBlendMode: 'multiply',
     },
   },
   Renderer: ImageRenderer,

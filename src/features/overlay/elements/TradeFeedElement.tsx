@@ -50,7 +50,7 @@ function parseOutcomeMap(raw: string): Record<string, ParsedOutcome> {
     const result: Record<string, ParsedOutcome> = {};
     for (const [key, val] of Object.entries(parsed)) {
       if (typeof val === 'string') {
-        // Shorthand: {"SEA": "#09C285"} -> label=key, color=val
+        // Shorthand: {"SEA": "#00DD94"} -> label=key, color=val
         result[key] = { label: key, acronym: key, color: val };
       } else if (val && typeof val === 'object' && 'label' in (val as any)) {
         const entry = val as ParsedOutcome;
@@ -183,7 +183,7 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
             animation: isNew ? 'tradeFadeIn 0.4s ease-out' : undefined,
             opacity: i === 0 ? 1 : Math.max(0.5, 1 - i * 0.08),
           }}>
-            <span style={{ fontSize, fontWeight: 700, color: props.amountColor || '#09C285', fontVariantNumeric: 'tabular-nums', textShadow: shadow }}>
+            <span style={{ fontSize, fontWeight: 700, color: props.amountColor || '#00DD94', fontVariantNumeric: 'tabular-nums', textShadow: shadow }}>
               {amount}
             </span>
             <span style={{ fontSize: fontSize * 0.75, fontWeight: 500, color: 'rgba(255,255,255,0.6)', textShadow: shadow }}>
@@ -193,7 +193,7 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
               {label}
             </span>
             {sideLabel && (
-              <span style={{ fontSize: fontSize * 0.55, fontWeight: 600, color: trade.side === 'yes' ? '#09C285' : '#ef4444', opacity: 0.7, textShadow: shadow }}>
+              <span style={{ fontSize: fontSize * 0.55, fontWeight: 600, color: trade.side === 'yes' ? '#00DD94' : '#ef4444', opacity: 0.7, textShadow: shadow }}>
                 {sideLabel}
               </span>
             )}
@@ -319,7 +319,7 @@ function TradeFeedPropsEditor({ props, onChange }: { props: TradeFeedProps; onCh
           const { markets } = await fetchKalshiEvent(ticker);
           if (markets.length > 1) {
             const map: Record<string, { label: string; acronym: string; color: string }> = {};
-            const colors = ['#09C285', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+            const colors = ['#00DD94', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
             markets.forEach((m, i) => {
               const suffix = m.ticker.split('-').pop() || m.ticker;
               const label = m.yes_sub_title || m.title || suffix;
@@ -377,7 +377,7 @@ function TradeFeedPropsEditor({ props, onChange }: { props: TradeFeedProps; onCh
       <div className={oe.row}>
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Amount Color</span>
-          <input type="color" className={oe.color} value={props.amountColor || '#09C285'} onChange={e => onChange({ ...props, amountColor: e.target.value })} />
+          <input type="color" className={oe.color} value={props.amountColor || '#00DD94'} onChange={e => onChange({ ...props, amountColor: e.target.value })} />
         </div>
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Max Trades</span>
@@ -435,8 +435,8 @@ registerElement<TradeFeedProps>({
       headerText: 'Live Trade',
       headerColor: '#ffffff',
       dotColor: '#ef4444',
-      amountColor: '#09C285',
-      outcomeMap: '{"SEA":"#09C285","NE":"#3B82F6"}',
+      amountColor: '#00DD94',
+      outcomeMap: '{"SEA":"#00DD94","NE":"#3B82F6"}',
       fontSize: 36,
       lineSpacing: 1.4,
       showSide: false,

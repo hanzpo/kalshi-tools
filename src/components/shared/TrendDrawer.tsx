@@ -56,7 +56,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
 
     // Draw points
     if (points.length > 1) {
-      ctx.strokeStyle = '#09C285';
+      ctx.strokeStyle = '#00DD94';
       ctx.lineWidth = 3;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -93,7 +93,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
       const pillX = Math.min(cursorPos.x + 12, canvas.width - pillW - 4);
       const pillY = Math.max(cursorPos.y - pillH - 6, 4);
 
-      ctx.fillStyle = '#09C285';
+      ctx.fillStyle = '#00DD94';
       ctx.beginPath();
       ctx.roundRect(pillX, pillY, pillW, pillH, 4);
       ctx.fill();
@@ -271,20 +271,20 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
         <div className="flex justify-between gap-3 max-md:flex-col">
           <button
             onClick={handleClear}
-            className="cursor-pointer rounded-lg border border-[#333] bg-[#252525] px-[22px] py-[11px] text-[15px] font-semibold text-[#d1d5db] transition-all duration-200 hover:border-[#444] hover:bg-[#333] max-md:flex-1"
+            className="cursor-pointer rounded-lg border border-dark-border-light bg-dark-elevated px-[22px] py-[11px] text-[15px] font-semibold text-text-primary transition-all duration-200 hover:border-brand/30 hover:bg-dark-border-light max-md:flex-1"
           >
             Clear
           </button>
           <div className="flex gap-3 max-md:w-full">
             <button
               onClick={onCancel}
-              className="cursor-pointer rounded-lg border border-[#333] bg-[#252525] px-[22px] py-[11px] text-[15px] font-semibold text-[#d1d5db] transition-all duration-200 hover:border-[#444] hover:bg-[#333] max-md:flex-1"
+              className="cursor-pointer rounded-lg border border-dark-border-light bg-dark-elevated px-[22px] py-[11px] text-[15px] font-semibold text-text-primary transition-all duration-200 hover:border-brand/30 hover:bg-dark-border-light max-md:flex-1"
             >
               Cancel
             </button>
             <button
               onClick={handleApply}
-              className="cursor-pointer rounded-lg border-none bg-[#09C285] px-[22px] py-[11px] text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#08a770] hover:shadow-[0_2px_8px_rgba(9,194,133,0.25)] max-md:flex-1"
+              className="cursor-pointer rounded-lg border-none bg-[#00DD94] px-[22px] py-[11px] text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#00BB7D] hover:shadow-[0_2px_8px_rgba(0,221,148,0.25)] max-md:flex-1"
             >
               Apply Trend
             </button>

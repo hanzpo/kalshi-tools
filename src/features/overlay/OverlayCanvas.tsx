@@ -229,7 +229,7 @@ export function OverlayCanvas({
               top: g.type === 'h' ? g.pos : 0,
               width: g.type === 'v' ? 1 : '100%',
               height: g.type === 'h' ? 1 : '100%',
-              background: '#09C285',
+              background: '#00DD94',
               opacity: 0.6,
               zIndex: 99999,
               pointerEvents: 'none',

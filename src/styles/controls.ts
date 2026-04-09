@@ -3,9 +3,9 @@ export const ctrl = {
   /** Main control panel wrapper */
   panel: 'sticky top-6 h-fit rounded-lg border border-dark-border bg-dark-surface p-5 text-text-primary shadow-sm shadow-black/30 max-lg:static max-lg:mb-4 max-lg:p-4 max-md:p-3.5',
   /** Back button at top */
-  backBtn: 'mb-3 inline-flex cursor-pointer items-center gap-1 rounded border-none bg-transparent px-0 py-0.5 text-[13px] font-medium text-text-secondary transition-colors duration-150 hover:text-gray-300',
+  backBtn: 'mb-3 inline-flex cursor-pointer items-center gap-1 rounded border-none bg-transparent px-0 py-0.5 text-[13px] font-medium text-text-secondary transition-colors duration-150 hover:text-text-primary',
   /** Panel title */
-  title: 'mb-0.5 text-lg font-semibold tracking-tight text-gray-100 max-md:text-base',
+  title: 'mb-0.5 text-lg font-semibold tracking-tight text-white max-md:text-base',
   /** Panel subtitle */
   subtitle: 'mb-4 text-[12px] leading-relaxed text-text-secondary max-md:mb-3',
   /** Grouped section with background */
@@ -15,9 +15,9 @@ export const ctrl = {
   /** Control group wrapper */
   group: 'mb-3 [&>label]:mb-1 [&>label]:block [&>label]:text-[11px] [&>label]:font-semibold [&>label]:uppercase [&>label]:tracking-[0.04em] [&>label]:text-brand',
   /** Text/select input */
-  input: 'w-full rounded-[5px] border border-dark-border-light bg-dark px-2.5 py-1.5 text-sm text-text-primary transition-[border-color] duration-150 placeholder:text-[#555] hover:border-[#444] focus:border-brand focus:outline-none',
+  input: 'w-full rounded-[5px] border border-dark-border-light bg-dark px-2.5 py-1.5 text-sm text-text-primary transition-[border-color] duration-150 placeholder:text-text-muted/50 hover:border-dark-border focus:border-brand focus:outline-none',
   /** Text/select input without w-full (for use in flex rows where width is controlled externally) */
-  inputInline: 'rounded-[5px] border border-dark-border-light bg-dark px-2.5 py-1.5 text-sm text-text-primary transition-[border-color] duration-150 placeholder:text-[#555] hover:border-[#444] focus:border-brand focus:outline-none',
+  inputInline: 'rounded-[5px] border border-dark-border-light bg-dark px-2.5 py-1.5 text-sm text-text-primary transition-[border-color] duration-150 placeholder:text-text-muted/50 hover:border-dark-border focus:border-brand focus:outline-none',
   /** File input */
   fileInput: 'w-full cursor-pointer rounded-[5px] border border-dark-border-light bg-dark p-1.5 text-[13px] text-text-primary',
   /** Help text below inputs */
@@ -25,25 +25,25 @@ export const ctrl = {
   /** Slider labels row */
   sliderLabels: 'mt-0.5 flex justify-between text-[11px] text-text-secondary',
   /** Slider value display */
-  sliderValue: 'text-right text-[13px] font-medium text-gray-300',
+  sliderValue: 'text-right text-[13px] font-medium text-text-primary',
   /** Slider wrapper */
   sliderWrapper: 'flex flex-col gap-1',
   /** Color toggle row */
   colorToggle: 'flex gap-1.5 max-[480px]:flex-col',
   /** Color option button */
-  colorOption: 'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-surface px-2 py-1.5 text-[13px] font-medium text-text-secondary transition-[border-color,background-color,color] duration-150 hover:border-[#444]',
+  colorOption: 'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-surface px-2 py-1.5 text-[13px] font-medium text-text-secondary transition-[border-color,background-color,color] duration-150 hover:border-dark-border',
   /** Segmented control wrapper */
   segmented: 'flex gap-0.5 rounded-[5px] bg-dark p-0.5',
   /** Segmented option */
-  segmentedOption: 'flex-1 cursor-pointer rounded px-2 py-1 text-[13px] font-medium text-text-secondary transition-[background-color,color] duration-150 hover:text-gray-300',
+  segmentedOption: 'flex-1 cursor-pointer rounded px-2 py-1 text-[13px] font-medium text-text-secondary transition-[background-color,color] duration-150 hover:text-text-primary',
   /** Active segmented option */
-  segmentedOptionActive: 'bg-dark-surface text-gray-100 ring-1 ring-inset ring-[rgba(255,255,255,0.1)]',
+  segmentedOptionActive: 'bg-dark-surface text-white ring-1 ring-inset ring-brand/20',
   /** Regenerate button */
-  btnRegen: 'mb-1 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-elevated px-2.5 py-2 text-[13px] font-medium text-text-secondary transition-[background-color] duration-150 hover:bg-dark-border-light hover:text-gray-300',
+  btnRegen: 'flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border border-dark-border-light bg-dark-elevated px-2.5 py-2 text-[13px] font-medium text-text-secondary transition-[background-color] duration-150 hover:bg-dark-border-light hover:text-text-primary',
   /** Export button */
-  btnExport: 'mb-1 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-brand px-2.5 py-2 text-[13px] font-medium text-white transition-[background-color] duration-150 hover:bg-[#07a972]',
+  btnExport: 'flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-brand px-2.5 py-2 text-[13px] font-semibold text-brand-dark transition-[background-color] duration-150 hover:bg-[#00BB7D]',
   /** Draw button */
-  btnDraw: 'mb-1 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-[#3b82f6] px-2.5 py-2 text-[13px] font-medium text-white transition-[background-color] duration-150 hover:bg-[#2563eb]',
+  btnDraw: 'flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-[#3b82f6] px-2.5 py-2 text-[13px] font-medium text-white transition-[background-color] duration-150 hover:bg-[#2563eb]',
   /** Checkbox group wrapper (label + helpText) — no auto-styling on label */
   checkboxGroup: 'mb-2.5 [&>p]:mt-0.5',
   /** Checkbox label */
@@ -59,7 +59,7 @@ export const ctrl = {
   /** Combo leg header row */
   comboLegHeader: 'mb-2 flex items-center justify-between',
   /** Combo leg title */
-  comboLegTitle: 'text-xs font-semibold text-gray-300',
+  comboLegTitle: 'text-xs font-semibold text-text-primary',
   /** Combo leg remove button */
   comboLegRemove: 'cursor-pointer rounded-[3px] border-none bg-transparent px-1.5 py-0.5 text-[11px] font-medium text-[#dc2626] transition-[background-color] duration-150 hover:bg-[#3d1c1c] disabled:cursor-not-allowed disabled:opacity-40',
   /** Combo leg body */
@@ -71,7 +71,7 @@ export const ctrl = {
   /** Single control in a combo leg */
   comboLegControl: 'flex min-w-[140px] flex-1 flex-col gap-1',
   /** Add combo leg button */
-  comboLegAdd: 'w-full cursor-pointer rounded-[5px] border-[1.5px] border-dashed border-[#444] bg-transparent p-1.5 text-xs font-medium text-text-muted transition-[border-color,color] duration-150 hover:border-brand hover:text-brand',
+  comboLegAdd: 'w-full cursor-pointer rounded-[5px] border-[1.5px] border-dashed border-dark-border-light bg-transparent p-1.5 text-xs font-medium text-text-muted transition-[border-color,color] duration-150 hover:border-brand hover:text-brand',
   /** Combo image upload row */
   comboImageUpload: 'flex items-center gap-1.5',
   /** Combo leg image thumbnail */
@@ -79,5 +79,5 @@ export const ctrl = {
   /** Clear image button */
   comboImageClear: 'cursor-pointer rounded border border-[#5c2020] bg-transparent px-2 py-1 text-[11px] font-medium text-[#dc2626] transition-[background-color] duration-150 hover:bg-[#3d1c1c]',
   /** Image placeholder button */
-  comboImagePlaceholder: 'inline-flex cursor-pointer items-center justify-center rounded border-[1.5px] border-dashed border-[#444] px-3 py-1.5 text-[11px] font-medium text-text-muted transition-[border-color,color] duration-150 hover:border-brand hover:text-brand',
+  comboImagePlaceholder: 'inline-flex cursor-pointer items-center justify-center rounded border-[1.5px] border-dashed border-dark-border-light px-3 py-1.5 text-[11px] font-medium text-text-muted transition-[border-color,color] duration-150 hover:border-brand hover:text-brand',
 } as const;

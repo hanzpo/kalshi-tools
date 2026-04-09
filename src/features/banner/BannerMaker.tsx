@@ -113,7 +113,7 @@ export function BannerMaker({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className={`mb-1 flex min-h-[48px] cursor-pointer items-center justify-center rounded-[5px] border-[1.5px] border-dashed px-3 py-4 transition-[border-color,background-color] duration-150 ${isDragging ? 'border-brand bg-[#0d2e1f]' : 'border-[#444] bg-dark-surface'}`}
+            className={`mb-1 flex min-h-[48px] cursor-pointer items-center justify-center rounded-[5px] border-[1.5px] border-dashed px-3 py-4 transition-[border-color,background-color] duration-150 ${isDragging ? 'border-brand bg-[#01201A]' : 'border-dark-border-light bg-dark-surface'}`}
           >
             <input
               id="banner-image"
@@ -297,7 +297,7 @@ export function BannerMaker({
         </div>
       </div>
 
-      <div className="mt-5 flex gap-2">
+      <div className="mt-2 flex gap-2">
         <button
           onClick={onExport}
           className={`${ctrl.btnExport} flex-1`}
