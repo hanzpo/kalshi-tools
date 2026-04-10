@@ -178,7 +178,7 @@ function MarketRenderer({ props, width, height, liveData }: {
         background: 'rgba(255,255,255,0.04)', borderRadius: 10 * s,
         border: '2px dashed rgba(255,255,255,0.12)',
         color: 'rgba(255,255,255,0.35)', fontSize: Math.max(11, 14 * s),
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Kalshi Sans, sans-serif',
       }}>
         Paste a Kalshi market URL
       </div>
@@ -192,7 +192,7 @@ function MarketRenderer({ props, width, height, liveData }: {
         background: 'rgba(239,68,68,0.06)', borderRadius: 10 * s,
         border: '1px solid rgba(239,68,68,0.15)',
         color: '#ef4444', fontSize: Math.max(11, 14 * s),
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Kalshi Sans, sans-serif',
       }}>
         Failed to load market
       </div>
@@ -205,7 +205,7 @@ function MarketRenderer({ props, width, height, liveData }: {
         width, height, display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: 'rgba(255,255,255,0.04)', borderRadius: 10 * s,
         color: 'rgba(255,255,255,0.35)', fontSize: Math.max(11, 14 * s),
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Kalshi Sans, sans-serif',
       }}>
         Loading…
       </div>
@@ -239,7 +239,7 @@ function MarketRenderer({ props, width, height, liveData }: {
         background: `rgba(0,0,0,${props.bgOpacity ?? 1})`, backdropFilter: (props.bgOpacity ?? 1) < 1 ? 'blur(16px)' : undefined,
         borderRadius: 10 * s,
         border: `1px solid rgba(255,255,255,0.06)`,
-        overflow: 'hidden', fontFamily: 'Inter, sans-serif',
+        overflow: 'hidden', fontFamily: 'Kalshi Sans, sans-serif',
       }}>
 
         <div style={{
@@ -368,7 +368,7 @@ function MarketRenderer({ props, width, height, liveData }: {
       background: `rgba(0,0,0,${props.bgOpacity ?? 1})`, backdropFilter: (props.bgOpacity ?? 1) < 1 ? 'blur(16px)' : undefined,
       borderRadius: 10 * s,
       border: `1px solid ${hexToRgba(chartColor, 0.15)}`,
-      overflow: 'hidden', fontFamily: 'Inter, sans-serif',
+      overflow: 'hidden', fontFamily: 'Kalshi Sans, sans-serif',
     }}>
       {/* Top accent glow */}
       <div style={{

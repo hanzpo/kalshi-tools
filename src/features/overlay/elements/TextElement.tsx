@@ -23,10 +23,9 @@ export interface TextProps {
 }
 
 const FONT_OPTIONS = [
-  { value: 'Inter, sans-serif', label: 'Inter' },
-  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
-  { value: "'Matricha', 'Barlow Condensed', sans-serif", label: 'Matricha' },
-  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
+  { value: "'Kalshi Sans', sans-serif", label: 'Kalshi Sans' },
+  { value: "'Sohne Schmal', 'Kalshi Sans', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Matricha', 'Kalshi Sans', sans-serif", label: 'Matricha' },
   { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
   { value: "'Oswald', sans-serif", label: 'Oswald' },
   { value: 'Impact, sans-serif', label: 'Impact' },
@@ -42,7 +41,7 @@ function TextRenderer({ props, width, height }: { props: TextProps; width: numbe
       width, height, fontSize: props.fontSize, fontWeight: props.fontWeight,
       color: props.color, textAlign: props.textAlign, backgroundColor: props.backgroundColor,
       padding: props.padding, borderRadius: props.borderRadius, boxSizing: 'border-box',
-      fontFamily: props.fontFamily || 'Inter, sans-serif', lineHeight: props.lineHeight || 1.2,
+      fontFamily: props.fontFamily || 'Kalshi Sans, sans-serif', lineHeight: props.lineHeight || 1.2,
       letterSpacing: props.letterSpacing || 0,
       textShadow: props.textShadow || 'none',
       textTransform: props.textTransform || 'none',
@@ -91,7 +90,7 @@ function TextPropsEditor({ props, onChange }: { props: TextProps; onChange: (p: 
       <div className={oe.row}>
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Font</span>
-          <select className={oe.select} value={props.fontFamily || 'Inter, sans-serif'} onChange={e => onChange({ ...props, fontFamily: e.target.value })}>
+          <select className={oe.select} value={props.fontFamily || 'Kalshi Sans, sans-serif'} onChange={e => onChange({ ...props, fontFamily: e.target.value })}>
             {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
           </select>
         </div>
@@ -163,7 +162,7 @@ registerElement<TextProps>({
   ),
   defaults: {
     width: 300, height: 60, zIndex: 1,
-    props: { type: 'text', text: 'Headline Text', fontSize: 32, fontWeight: 700, color: '#ffffff', textAlign: 'left', backgroundColor: 'transparent', padding: 8, borderRadius: 0, letterSpacing: 0, textShadow: '', textTransform: 'none', fontStyle: 'normal', lineHeight: 1.2, strokeColor: '#000000', strokeWidth: 0, fontFamily: 'Inter, sans-serif' },
+    props: { type: 'text', text: 'Headline Text', fontSize: 32, fontWeight: 700, color: '#ffffff', textAlign: 'left', backgroundColor: 'transparent', padding: 8, borderRadius: 0, letterSpacing: 0, textShadow: '', textTransform: 'none', fontStyle: 'normal', lineHeight: 1.2, strokeColor: '#000000', strokeWidth: 0, fontFamily: 'Kalshi Sans, sans-serif' },
   },
   Renderer: TextRenderer,
   PropsEditor: TextPropsEditor,

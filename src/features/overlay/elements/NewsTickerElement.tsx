@@ -231,7 +231,7 @@ function NewsTickerRenderer({ props, width, height }: {
         background: 'rgba(255,255,255,0.05)', borderRadius: props.borderRadius,
         border: '2px dashed rgba(255,255,255,0.15)',
         color: 'rgba(255,255,255,0.4)', fontSize: 14,
-        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+        fontFamily: 'Kalshi Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       }}>
         Paste a Kalshi event URL to show news ticker
       </div>
@@ -246,7 +246,7 @@ function NewsTickerRenderer({ props, width, height }: {
         background: 'rgba(239,68,68,0.1)', borderRadius: props.borderRadius,
         border: '1px solid rgba(239,68,68,0.3)',
         color: '#ef4444', fontSize: 13,
-        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+        fontFamily: 'Kalshi Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       }}>
         Failed to load ticker data
       </div>
@@ -260,7 +260,7 @@ function NewsTickerRenderer({ props, width, height }: {
         width, height, display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: bgColor, borderRadius: props.borderRadius,
         color: textColor, opacity: 0.5, fontSize,
-        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+        fontFamily: 'Kalshi Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       }}>
         Loading...
       </div>
@@ -327,7 +327,7 @@ function NewsTickerRenderer({ props, width, height }: {
         borderRadius: props.borderRadius,
         display: 'flex',
         alignItems: 'stretch',
-        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+        fontFamily: 'Kalshi Sans, -apple-system, BlinkMacSystemFont, sans-serif',
         boxSizing: 'border-box',
       }}>
         {/* Kalshi Logo */}

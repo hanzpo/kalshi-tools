@@ -18,7 +18,7 @@ function DisclaimerRenderer({ props, width, height }: {
   return (
     <div style={{
       width, height, fontSize: props.fontSize || 9, color: props.color || '#ffffff',
-      opacity: props.opacity ?? 0.3, fontFamily: 'Inter, sans-serif', lineHeight: 1.4,
+      opacity: props.opacity ?? 0.3, fontFamily: 'Kalshi Sans, sans-serif', lineHeight: 1.4,
       overflow: 'hidden', boxSizing: 'border-box', padding: '4px 0',
     }}>
       {props.text}

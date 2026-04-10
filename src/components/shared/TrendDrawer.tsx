@@ -46,7 +46,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
 
     // Draw percentage labels
     ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-    ctx.font = '12px Inter, sans-serif';
+    ctx.font = '12px Kalshi Sans, sans-serif';
     ctx.textAlign = 'right';
     for (let i = 0; i <= 10; i++) {
       const y = (i / 10) * canvas.height;
@@ -86,7 +86,7 @@ export function TrendDrawer({ onComplete, onCancel }: TrendDrawerProps) {
 
       // Tooltip pill
       const label = `${clamped}%`;
-      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.font = 'bold 12px Kalshi Sans, sans-serif';
       const textWidth = ctx.measureText(label).width;
       const pillW = textWidth + 12;
       const pillH = 22;

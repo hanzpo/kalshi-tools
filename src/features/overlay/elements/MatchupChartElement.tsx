@@ -141,7 +141,7 @@ function MatchupChartRenderer({ props, width, height, liveData }: {
         background: 'rgba(255,255,255,0.04)', borderRadius: 10 * s,
         border: '2px dashed rgba(255,255,255,0.12)',
         color: 'rgba(255,255,255,0.35)', fontSize: Math.max(11, 14 * s),
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Kalshi Sans, sans-serif',
       }}>
         Paste a matchup event URL
       </div>
@@ -155,7 +155,7 @@ function MatchupChartRenderer({ props, width, height, liveData }: {
         width, height, display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: 'rgba(255,255,255,0.04)', borderRadius: 10 * s,
         color: 'rgba(255,255,255,0.35)', fontSize: Math.max(11, 14 * s),
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Kalshi Sans, sans-serif',
       }}>
         Loading…
       </div>
@@ -206,7 +206,7 @@ function MatchupChartRenderer({ props, width, height, liveData }: {
   return (
     <div style={{
       width, height, position: 'relative', overflow: 'hidden',
-      fontFamily: 'Inter, sans-serif',
+      fontFamily: 'Kalshi Sans, sans-serif',
     }}>
       <svg width={chartWidth} height={height} style={{ position: 'absolute', left: 0, top: 0 }}>
         <defs>

@@ -69,7 +69,7 @@ export function MarketPageChart({ chartScales, config, isDark, volume, topOutcom
           {/* Y-axis labels */}
           <g>
             {['100%', '75%', '50%', '25%', '0%'].map((label, i) => (
-              <text key={i} x="615" y={15 + i * 37} style={{ fontSize: 11, fill: v('text-tertiary'), fontFamily: "'Inter', sans-serif" }}>
+              <text key={i} x="615" y={15 + i * 37} style={{ fontSize: 11, fill: v('text-tertiary'), fontFamily: "'Kalshi Sans', sans-serif" }}>
                 {label}
               </text>
             ))}
@@ -91,7 +91,7 @@ export function MarketPageChart({ chartScales, config, isDark, volume, topOutcom
           {/* X-axis month labels */}
           <g>
             {['Oct', 'Dec', 'Jan', 'Feb', 'Mar'].map((label, i) => (
-              <text key={i} x={20 + i * 140} y="175" style={{ fontSize: 11, fill: v('text-tertiary'), fontFamily: "'Inter', sans-serif" }}>
+              <text key={i} x={20 + i * 140} y="175" style={{ fontSize: 11, fill: v('text-tertiary'), fontFamily: "'Kalshi Sans', sans-serif" }}>
                 {label}
               </text>
             ))}
