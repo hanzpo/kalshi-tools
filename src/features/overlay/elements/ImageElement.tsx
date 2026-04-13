@@ -125,7 +125,7 @@ function ImageRenderer({ props, width, height }: { props: ImageProps; width: num
 
   if (!props.src) {
     return (
-      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: props.borderRadius, border: '2px dashed rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.4)', fontSize: 13, fontFamily: 'Kalshi Sans, sans-serif' }}>
+      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: props.borderRadius, border: '2px dashed rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.4)', fontSize: 13, fontFamily: 'Inter, sans-serif' }}>
         No image
       </div>
     );
@@ -143,7 +143,7 @@ function ImageRenderer({ props, width, height }: { props: ImageProps; width: num
   return (
     <div style={{ width, height, position: 'relative', borderRadius: props.borderRadius, overflow: 'hidden' }}>
       {processing && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, zIndex: 2, fontFamily: 'Kalshi Sans, sans-serif' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, zIndex: 2, fontFamily: 'Inter, sans-serif' }}>
           Processing…
         </div>
       )}

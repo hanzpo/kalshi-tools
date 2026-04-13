@@ -28,9 +28,10 @@ export interface TradeFeedProps {
 }
 
 const FONT_OPTIONS = [
-  { value: "'Kalshi Sans', sans-serif", label: 'Kalshi Sans' },
-  { value: "'Sohne Schmal', 'Kalshi Sans', sans-serif", label: 'Söhne Schmal' },
-  { value: "'Matricha', 'Kalshi Sans', sans-serif", label: 'Matricha' },
+  { value: 'Inter, sans-serif', label: 'Inter' },
+  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Matricha', 'Barlow Condensed', sans-serif", label: 'Matricha' },
+  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
   { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
   { value: "'Oswald', sans-serif", label: 'Oswald' },
   { value: 'Impact, sans-serif', label: 'Impact' },
@@ -104,7 +105,7 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
 
   if (!props.ticker) {
     return (
-      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '2px dashed rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.4)', fontSize: 14, fontFamily: 'Kalshi Sans, sans-serif' }}>
+      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '2px dashed rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.4)', fontSize: 14, fontFamily: 'Inter, sans-serif' }}>
         Paste a Kalshi market URL to show live trades
       </div>
     );
@@ -112,7 +113,7 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
 
   if (liveData?.status === 'error') {
     return (
-      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(239,68,68,0.1)', borderRadius: 12, border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', fontSize: 14, fontFamily: 'Kalshi Sans, sans-serif' }}>
+      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(239,68,68,0.1)', borderRadius: 12, border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', fontSize: 14, fontFamily: 'Inter, sans-serif' }}>
         Failed to load trades
       </div>
     );
@@ -120,7 +121,7 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
 
   if (!liveData || !liveData.trades) {
     return (
-      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: 12, color: 'rgba(255,255,255,0.4)', fontSize: 14, fontFamily: 'Kalshi Sans, sans-serif' }}>
+      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: 12, color: 'rgba(255,255,255,0.4)', fontSize: 14, fontFamily: 'Inter, sans-serif' }}>
         Loading trades...
       </div>
     );
@@ -128,13 +129,13 @@ function TradeFeedRenderer({ props, width, height, liveData }: {
 
   if (visibleTrades.length === 0) {
     return (
-      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 14, fontFamily: 'Kalshi Sans, sans-serif' }}>
+      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 14, fontFamily: 'Inter, sans-serif' }}>
         No recent trades
       </div>
     );
   }
 
-  const font = props.fontFamily || 'Kalshi Sans, sans-serif';
+  const font = props.fontFamily || 'Inter, sans-serif';
   const shadow = props.textShadow || 'none';
 
   return (
@@ -396,7 +397,7 @@ function TradeFeedPropsEditor({ props, onChange }: { props: TradeFeedProps; onCh
       <div className={oe.row}>
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Font</span>
-          <select className={oe.select} value={props.fontFamily || 'Kalshi Sans, sans-serif'} onChange={e => onChange({ ...props, fontFamily: e.target.value })}>
+          <select className={oe.select} value={props.fontFamily || 'Inter, sans-serif'} onChange={e => onChange({ ...props, fontFamily: e.target.value })}>
             {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
           </select>
         </div>
@@ -441,7 +442,7 @@ registerElement<TradeFeedProps>({
       showSide: false,
       useAcronyms: true,
       textShadow: '0 2px 12px rgba(0,0,0,0.8)',
-      fontFamily: 'Kalshi Sans, sans-serif',
+      fontFamily: 'Inter, sans-serif',
     },
   },
   Renderer: TradeFeedRenderer,

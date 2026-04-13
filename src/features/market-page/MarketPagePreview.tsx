@@ -136,7 +136,7 @@ export function MarketPagePreview({
                 </div>
                 <h1
                   className="m-0 text-[30px] font-medium leading-[36px] text-[var(--kmp-text-primary)]"
-                  style={{ fontFamily: "'Kalshi Sans', sans-serif" }}
+                  style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
                 >
                   {config.title || 'Market Title'}
                 </h1>
@@ -236,7 +236,7 @@ export function MarketPagePreview({
                     {isResolvedNo ? (
                       <span
                         className="text-[24px] font-medium leading-7 text-[var(--kmp-no)]"
-                        style={{ fontFamily: "'Kalshi Sans', sans-serif" }}
+                        style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
                       >
                         No
                       </span>
@@ -244,7 +244,7 @@ export function MarketPagePreview({
                       <>
                         <span
                           className="text-[24px] font-medium leading-7 text-[var(--kmp-text-primary)]"
-                          style={{ fontFamily: "'Kalshi Sans', sans-serif" }}
+                          style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
                         >
                           {outcome.yesPrice}%
                         </span>
@@ -312,7 +312,7 @@ export function MarketPagePreview({
               >
                 <h2
                   className="m-0 text-[24px] font-medium leading-7 text-[var(--kmp-text-primary)]"
-                  style={{ fontFamily: "'Kalshi Sans', sans-serif" }}
+                  style={{ fontFamily: "'Barlow Condensed', 'Inter', sans-serif" }}
                 >
                   Market Rules
                 </h2>

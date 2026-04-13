@@ -26,20 +26,22 @@ export interface MatchupProps {
 }
 
 const FONT_OPTIONS = [
-  { value: "'Sohne Schmal', 'Kalshi Sans', sans-serif", label: 'Söhne Schmal' },
-  { value: "'Kalshi Sans', sans-serif", label: 'Kalshi Sans' },
+  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
   { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
   { value: "'Oswald', sans-serif", label: 'Oswald' },
+  { value: 'Inter, sans-serif', label: 'Inter' },
   { value: 'Impact, sans-serif', label: 'Impact' },
   { value: "'Arial Black', sans-serif", label: 'Arial Black' },
 ];
 
 const ODDS_FONT_OPTIONS = [
-  { value: "'Matricha', 'Kalshi Sans', sans-serif", label: 'Matricha' },
-  { value: "'Sohne Schmal', 'Kalshi Sans', sans-serif", label: 'Söhne Schmal' },
-  { value: "'Kalshi Sans', sans-serif", label: 'Kalshi Sans' },
+  { value: "'Matricha', 'Barlow Condensed', sans-serif", label: 'Matricha' },
+  { value: "'Sohne Schmal', 'Barlow Condensed', sans-serif", label: 'Söhne Schmal' },
+  { value: "'Barlow Condensed', sans-serif", label: 'Barlow Condensed' },
   { value: "'Bebas Neue', sans-serif", label: 'Bebas Neue' },
   { value: "'Oswald', sans-serif", label: 'Oswald' },
+  { value: 'Inter, sans-serif', label: 'Inter' },
 ];
 
 function MatchupRenderer({ props, width, height, liveData }: {
@@ -75,15 +77,15 @@ function MatchupRenderer({ props, width, height, liveData }: {
 
   if (!props.ticker && !liveData) {
     return (
-      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '2px dashed rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.4)', fontSize: 14, fontFamily: "'Kalshi Sans', sans-serif" }}>
+      <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '2px dashed rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.4)', fontSize: 14, fontFamily: 'Inter, sans-serif' }}>
         Set team names & paste market URL
       </div>
     );
   }
 
-  const nameFont = props.nameFont || "'Sohne Schmal', 'Kalshi Sans', sans-serif";
-  const oddsFont = props.oddsFont || "'Matricha', 'Kalshi Sans', sans-serif";
-  const payoutFont = props.payoutFont || "'Kalshi Sans', sans-serif";
+  const nameFont = props.nameFont || "'Sohne Schmal', 'Barlow Condensed', sans-serif";
+  const oddsFont = props.oddsFont || "'Matricha', 'Barlow Condensed', sans-serif";
+  const payoutFont = props.payoutFont || 'Inter, sans-serif';
   const shadow = props.textShadow || 'none';
 
   return (
@@ -94,7 +96,7 @@ function MatchupRenderer({ props, width, height, liveData }: {
           {props.team1Name || 'TEAM1'}
         </span>
         {props.vsStyle !== 'hidden' && (
-          <span style={{ fontSize: vsFontSize, fontWeight: 500, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic', lineHeight: 1, textShadow: shadow, fontFamily: "'Kalshi Sans', sans-serif" }}>
+          <span style={{ fontSize: vsFontSize, fontWeight: 500, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic', lineHeight: 1, textShadow: shadow, fontFamily: 'Inter, sans-serif' }}>
             {props.vsStyle === 'slash' ? '/' : 'vs'}
           </span>
         )}
@@ -242,13 +244,13 @@ function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange
       <div className={oe.row}>
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Name Font</span>
-          <select className={oe.select} value={props.nameFont || "'Sohne Schmal', 'Kalshi Sans', sans-serif"} onChange={e => onChange({ ...props, nameFont: e.target.value })}>
+          <select className={oe.select} value={props.nameFont || "'Sohne Schmal', 'Barlow Condensed', sans-serif"} onChange={e => onChange({ ...props, nameFont: e.target.value })}>
             {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
           </select>
         </div>
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Odds Font</span>
-          <select className={oe.select} value={props.oddsFont || "'Matricha', 'Kalshi Sans', sans-serif"} onChange={e => onChange({ ...props, oddsFont: e.target.value })}>
+          <select className={oe.select} value={props.oddsFont || "'Matricha', 'Barlow Condensed', sans-serif"} onChange={e => onChange({ ...props, oddsFont: e.target.value })}>
             {ODDS_FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
           </select>
         </div>
@@ -256,9 +258,9 @@ function MatchupPropsEditor({ props, onChange }: { props: MatchupProps; onChange
       <div className={oe.row}>
         <div className={oe.field}>
           <span className={oe.fieldLabel}>Payout Font</span>
-          <select className={oe.select} value={props.payoutFont || "'Kalshi Sans', sans-serif"} onChange={e => onChange({ ...props, payoutFont: e.target.value })}>
+          <select className={oe.select} value={props.payoutFont || 'Inter, sans-serif'} onChange={e => onChange({ ...props, payoutFont: e.target.value })}>
             {ODDS_FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-            <option value="'Kalshi Sans', sans-serif">Kalshi Sans</option>
+            <option value="Inter, sans-serif">Inter</option>
           </select>
         </div>
       </div>
@@ -303,9 +305,9 @@ registerElement<MatchupProps>({
       team1Color: '#00DD94', team2Color: '#3B82F6',
       showOdds: true, showPayout: true, payoutWager: 100,
       vsStyle: 'text',
-      nameFont: "'Sohne Schmal', 'Kalshi Sans', sans-serif",
-      oddsFont: "'Matricha', 'Kalshi Sans', sans-serif",
-      payoutFont: "'Kalshi Sans', sans-serif",
+      nameFont: "'Sohne Schmal', 'Barlow Condensed', sans-serif",
+      oddsFont: "'Matricha', 'Barlow Condensed', sans-serif",
+      payoutFont: 'Inter, sans-serif',
       textShadow: '0 2px 12px rgba(0,0,0,0.8)',
     },
   },

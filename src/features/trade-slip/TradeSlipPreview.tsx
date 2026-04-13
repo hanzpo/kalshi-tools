@@ -288,7 +288,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
           {/* Titles */}
           <div className="relative flex w-full shrink-0 flex-col items-start gap-0 text-center leading-[0]">
             <div className="w-full font-sans text-[11px] font-semibold uppercase tracking-[0.88px] leading-4 text-white/55">Men's College Basketball</div>
-            <div className="w-full text-[30px] font-semibold leading-[30px] tracking-[-0.3px]" style={{ fontFamily: "'Kalshi Sans', sans-serif", color: 'var(--champ-primary, rgba(255, 255, 255, 0.9))', fontFeatureSettings: "'case' 1, 'lnum' 1, 'pnum' 1" }}>{config.championshipTitle || 'CHAMPIONSHIP'}</div>
+            <div className="w-full text-[30px] font-semibold leading-[30px] tracking-[-0.3px]" style={{ fontFamily: "'Graphik Condensed App', 'Barlow Condensed', sans-serif", color: 'var(--champ-primary, rgba(255, 255, 255, 0.9))', fontFeatureSettings: "'case' 1, 'lnum' 1, 'pnum' 1" }}>{config.championshipTitle || 'CHAMPIONSHIP'}</div>
           </div>
 
           {/* Basketball graphic — flows after header, behind trade slip */}
@@ -361,7 +361,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                     <span className="flex-[1_0_0] flex items-start p-0 text-sm font-normal leading-5 text-white/50">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
                     <span
                       className="text-right text-[30px] font-medium leading-9"
-                      style={{ color: '#00CE8E', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Kalshi Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}
+                      style={{ color: '#00CE8E', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
                     >
                       ${championshipPayout.toLocaleString()}
                     </span>
@@ -454,7 +454,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                   <ComboStrokeIcon />
                   <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.88px] leading-[18px] text-white/90">COMBO</span>
                 </div>
-                <div className="font-[Kalshi_Sans,-apple-system,BlinkMacSystemFont,sans-serif] text-2xl font-medium leading-7 text-white/90">
+                <div className="font-[Barlow_Condensed,Inter,-apple-system,BlinkMacSystemFont,sans-serif] text-2xl font-medium leading-7 text-white/90">
                   {(() => {
                     const totalMarkets = config.comboCategories?.reduce(
                       (sum, cat) => sum + cat.events.reduce(
@@ -466,7 +466,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                     return (
                       <>
                         {totalMarkets} market{totalMarkets !== 1 ? 's' : ''} pay{' '}
-                        <span className="font-[Kalshi_Sans,-apple-system,BlinkMacSystemFont,sans-serif] text-[#28CC95]">
+                        <span className="font-[Graphik_Condensed_App,Barlow_Condensed,Inter,-apple-system,BlinkMacSystemFont,sans-serif] text-[#28CC95]">
                           ${(config.comboPayout || 0).toLocaleString()}
                         </span>
                       </>
@@ -674,7 +674,7 @@ export function TradeSlipPreview({ config }: TradeSlipPreviewProps) {
                     <span className="flex-[1_0_0] flex items-start p-0 text-sm font-normal leading-5 text-white/50">{config.isPaidOut ? 'Paid out' : 'Max payout'}</span>
                     <span
                       className="text-right text-[30px] font-medium leading-9"
-                      style={{ color: '#00CE8E', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Kalshi Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}
+                      style={{ color: '#00CE8E', fontVariantNumeric: 'lining-nums proportional-nums', fontFeatureSettings: "'case' on, 'ss05' on", fontFamily: "'Graphik Condensed App', 'Barlow Condensed', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
                     >
                       ${payout.toLocaleString()}
                     </span>

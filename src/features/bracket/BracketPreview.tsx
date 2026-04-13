@@ -8,8 +8,8 @@ import {
 
 export const BRACKET_PREVIEW_ID = 'bracket-preview';
 
-const GRAPHIK_FONT = "'Kalshi Sans', system-ui, sans-serif";
-const GRAPHIK_CONDENSED_FONT = "'Kalshi Sans', system-ui, sans-serif";
+const GRAPHIK_FONT = "'Graphik', 'Inter', system-ui, sans-serif";
+const GRAPHIK_CONDENSED_FONT = "'Graphik Condensed App', 'Barlow Condensed', system-ui, sans-serif";
 const FEATURE_SETTINGS = "'case' 1, 'ss05' 1, 'lnum' 1, 'tnum' 1";
 const FEATURE_SETTINGS_ALT = "'case' 1, 'lnum' 1, 'pnum' 1";
 
