@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import { trackEvent } from "../../lib/analytics";
-import { SeoContentBlock } from "../seo/SeoContentBlock";
-import { seoPages } from "../../seo/routes";
 
 export function LandingPage() {
   const handleToolClick = (tool: string) => {
@@ -61,10 +59,6 @@ export function LandingPage() {
           </Link>
         ))}
       </div>
-
-      <div className="px-6 pb-16 max-[960px]:px-5 max-[960px]:pb-12">
-        <SeoContentBlock content={seoPages['/'].content} />
-      </div>
     </div>
   );
 }
@@ -93,17 +87,6 @@ const tools = [
     ),
   },
   {
-    id: 'search',
-    name: 'Search',
-    path: '/search',
-    description: 'Create Kalshi-style search result cards and browse page visuals for market discovery and promotional graphics.',
-    icon: (
-      <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="6" /><path d="M20 20l-4.35-4.35" />
-      </svg>
-    ),
-  },
-  {
     id: 'market-page',
     name: 'Market Page',
     path: '/market-page',
@@ -126,17 +109,6 @@ const tools = [
     ),
   },
   {
-    id: 'link-preview',
-    name: 'Link Preview',
-    path: '/link-preview',
-    description: 'Build social preview cards that combine a market headline, chart, and image into a compact shareable graphic.',
-    icon: (
-      <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M10 14L21 3" /><path d="M16 3h5v5" /><path d="M5 7H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-1" />
-      </svg>
-    ),
-  },
-  {
     id: 'overlay',
     name: 'Overlay',
     path: '/overlay?edit',
@@ -144,17 +116,6 @@ const tools = [
     icon: (
       <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /><path d="M7 9l3 3-3 3" /><path d="M13 13h4" />
-      </svg>
-    ),
-  },
-  {
-    id: 'bracket',
-    name: 'Bracket',
-    path: '/bracket',
-    description: 'Create shareable bracket graphics with picks, randomization, export, and link sharing for tournament-style content.',
-    icon: (
-      <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M7 6h10" /><path d="M7 12h10" /><path d="M7 18h10" /><path d="M7 6a2 2 0 1 0 0 4" /><path d="M17 12a2 2 0 1 0 0 4" /><path d="M7 18a2 2 0 1 0 0-4" />
       </svg>
     ),
   },

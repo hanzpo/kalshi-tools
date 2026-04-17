@@ -2,10 +2,7 @@ import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useLocation, useSearchParams } from 'react-router-dom';
 import { LandingPage } from './components/layout/LandingPage';
 import { Footer } from './components/layout/Footer';
-import { NotFoundPage } from './components/layout/NotFoundPage';
 import { useAnalytics } from './hooks/useAnalytics';
-import { usePageSeo } from './hooks/usePageSeo';
-import { resolveSeoPage } from './seo/routes';
 
 const ChartBuilder = lazy(() => import('./features/chart/ChartBuilder'));
 const TradeSlipBuilder = lazy(() => import('./features/trade-slip/TradeSlipBuilder'));
@@ -23,9 +20,6 @@ function AppContent() {
   const [searchParams] = useSearchParams();
   const isOverlayViewer = location.pathname === '/overlay' && !searchParams.has('edit');
   const isBracketRender = location.pathname === '/bracket/render';
-  const seoPage = resolveSeoPage(location.pathname, searchParams.has('edit'));
-
-  usePageSeo(seoPage);
 
   useEffect(() => {
     if (isOverlayViewer) {
@@ -52,7 +46,7 @@ function AppContent() {
           <Route path="/banner" element={<BannerBuilder />} />
           <Route path="/bracket" element={<BracketBuilder />} />
           <Route path="/bracket/render" element={<BracketRenderPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<LandingPage />} />
         </Routes>
       </Suspense>
       {!isOverlayViewer && !isBracketRender && <Footer />}

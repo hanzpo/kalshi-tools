@@ -3,13 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { BannerConfig } from '../../types';
 import { BannerMaker } from './BannerMaker';
 import { BannerPreview, BANNER_PREVIEW_ID } from './BannerPreview';
-import { SeoContentBlock } from '../../components/seo/SeoContentBlock';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { Toast } from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { useExport } from '../../hooks/useExport';
 import { useImagePaste } from '../../hooks/useImageUpload';
-import { seoPages } from '../../seo/routes';
 import { layout } from '../../styles/layout';
 
 export default function BannerBuilder() {
@@ -85,8 +83,6 @@ export default function BannerBuilder() {
           <BannerPreview config={config} />
         </div>
       </div>
-
-      <SeoContentBlock content={seoPages['/banner'].content} />
 
       {cropperImage && (
         <ImageCropper

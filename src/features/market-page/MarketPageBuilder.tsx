@@ -4,7 +4,6 @@ import confetti from 'canvas-confetti';
 import { MarketPageConfig, ChartDataPoint, SubmittedOrder, MarketOutcome, OUTCOME_COLORS } from '../../types/market-page';
 import { MarketPageMaker } from './MarketPageMaker';
 import { MarketPagePreview, MARKET_PAGE_PREVIEW_ID } from './MarketPagePreview';
-import { SeoContentBlock } from '../../components/seo/SeoContentBlock';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { TrendDrawer } from '../../components/shared/TrendDrawer';
 import { Toast } from '../../components/ui/Toast';
@@ -12,7 +11,6 @@ import { useToast } from '../../hooks/useToast';
 import { useExport } from '../../hooks/useExport';
 import { useImagePaste } from '../../hooks/useImageUpload';
 import { trackEvent } from '../../lib/analytics';
-import { seoPages } from '../../seo/routes';
 
 function generateChartDataForOutcomes(outcomes: MarketOutcome[]): ChartDataPoint[] {
   return generateChartDataWithCustomTrends(outcomes);
@@ -430,96 +428,90 @@ export default function MarketPageBuilder() {
   }
 
   return (
-    <div className="bg-[#141414] font-sans text-text-primary">
-      <div className="relative h-screen overflow-hidden">
-        {/* Full-page preview */}
-        <div className="size-full overflow-auto [&_.kmp]:min-h-full">
-          <MarketPagePreview
-            config={config}
-            onOutcomeSelect={handleOutcomeSelect}
-            onSideSelect={handleSideSelect}
-            onSubmitOrder={handleSubmitOrder}
-            onAmountChange={(amount) => handleConfigChange({ orderAmount: amount })}
-            onLimitPriceChange={(price) => handleConfigChange({ limitPrice: price })}
-            onSidebarStateChange={(state) => handleConfigChange({ sidebarState: state })}
-            onLogoClick={() => navigate('/')}
-          />
-        </div>
+    <div className="fixed inset-0 bg-[#141414] overflow-hidden">
+      {/* Full-page preview */}
+      <div className="size-full overflow-auto [&_.kmp]:min-h-full">
+        <MarketPagePreview
+          config={config}
+          onOutcomeSelect={handleOutcomeSelect}
+          onSideSelect={handleSideSelect}
+          onSubmitOrder={handleSubmitOrder}
+          onAmountChange={(amount) => handleConfigChange({ orderAmount: amount })}
+          onLimitPriceChange={(price) => handleConfigChange({ limitPrice: price })}
+          onSidebarStateChange={(state) => handleConfigChange({ sidebarState: state })}
+          onLogoClick={() => navigate('/')}
+        />
+      </div>
 
-        {/* Floating control panel */}
+      {/* Floating control panel */}
+      <div
+        ref={panelRef}
+        className={`fixed z-[1000] flex flex-col overflow-hidden rounded-xl bg-[#1e1e1e] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_2px_8px_rgba(0,0,0,0.3)] transition-shadow duration-200 hover:shadow-[0_12px_48px_rgba(0,0,0,0.5),0_4px_12px_rgba(0,0,0,0.3)] ${isPanelCollapsed ? 'h-auto w-[180px]' : 'w-[380px] max-h-[calc(100vh-40px)] max-md:w-[calc(100%-40px)] max-md:max-w-[360px]'}`}
+        style={{
+          left: panelPosition.x,
+          top: panelPosition.y,
+          cursor: isDragging ? 'grabbing' : 'default',
+        }}
+      >
         <div
-          ref={panelRef}
-          className={`fixed z-[1000] flex flex-col overflow-hidden rounded-xl bg-[#1e1e1e] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_2px_8px_rgba(0,0,0,0.3)] transition-shadow duration-200 hover:shadow-[0_12px_48px_rgba(0,0,0,0.5),0_4px_12px_rgba(0,0,0,0.3)] ${isPanelCollapsed ? 'h-auto w-[180px]' : 'w-[380px] max-h-[calc(100vh-40px)] max-md:w-[calc(100%-40px)] max-md:max-w-[360px]'}`}
-          style={{
-            left: panelPosition.x,
-            top: panelPosition.y,
-            cursor: isDragging ? 'grabbing' : 'default',
-          }}
+          className="flex shrink-0 select-none items-center gap-2 border-b border-[#333] bg-[#252525] px-4 py-3"
+          onMouseDown={handleMouseDown}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
         >
-          <div
-            className="flex shrink-0 select-none items-center gap-2 border-b border-[#333] bg-[#252525] px-4 py-3"
-            onMouseDown={handleMouseDown}
-            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-          >
-            <div className="flex items-center justify-center text-gray-400">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="8" cy="6" r="2" />
-                <circle cx="16" cy="6" r="2" />
-                <circle cx="8" cy="12" r="2" />
-                <circle cx="16" cy="12" r="2" />
-                <circle cx="8" cy="18" r="2" />
-                <circle cx="16" cy="18" r="2" />
-              </svg>
-            </div>
-            <span className="flex-1 text-sm font-semibold text-gray-200">Controls</span>
-            <button
-              className="flex size-7 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-gray-400 transition-[background-color,color] duration-150 hover:bg-[#333] hover:text-gray-300"
-              onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="transition-transform duration-200"
-                style={{ transform: isPanelCollapsed ? 'rotate(180deg)' : 'none' }}
-              >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
+          <div className="flex items-center justify-center text-gray-400">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="8" cy="6" r="2" />
+              <circle cx="16" cy="6" r="2" />
+              <circle cx="8" cy="12" r="2" />
+              <circle cx="16" cy="12" r="2" />
+              <circle cx="8" cy="18" r="2" />
+              <circle cx="16" cy="18" r="2" />
+            </svg>
           </div>
-          {!isPanelCollapsed && (
-            <div className="flex-1 overflow-y-auto overflow-x-hidden [&_.sticky]:static [&_.rounded-lg]:rounded-none [&_.border]:border-none [&_.shadow-sm]:shadow-none">
-              <MarketPageMaker
-                config={config}
-                onConfigChange={handleConfigChange}
-                onImageUpload={handleImageUpload}
-                onOutcomeImageUpload={handleOutcomeImageUpload}
-                onProfileImageUpload={handleProfileImageUpload}
-                onExport={handleExport}
-                onCopyToClipboard={handleCopyToClipboard}
-                onBack={() => navigate('/')}
-                onDrawOutcomeTrend={handleDrawOutcomeTrend}
-                onRegenerateData={handleRegenerateData}
-              />
-            </div>
-          )}
+          <span className="flex-1 text-sm font-semibold text-gray-200">Controls</span>
+          <button
+            className="flex size-7 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-gray-400 transition-[background-color,color] duration-150 hover:bg-[#333] hover:text-gray-300"
+            onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="transition-transform duration-200"
+              style={{ transform: isPanelCollapsed ? 'rotate(180deg)' : 'none' }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
         </div>
-
-        {cropperImage && (
-          <ImageCropper imageSrc={cropperImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />
+        {!isPanelCollapsed && (
+          <div className="flex-1 overflow-y-auto overflow-x-hidden [&_.sticky]:static [&_.rounded-lg]:rounded-none [&_.border]:border-none [&_.shadow-sm]:shadow-none">
+            <MarketPageMaker
+              config={config}
+              onConfigChange={handleConfigChange}
+              onImageUpload={handleImageUpload}
+              onOutcomeImageUpload={handleOutcomeImageUpload}
+              onProfileImageUpload={handleProfileImageUpload}
+              onExport={handleExport}
+              onCopyToClipboard={handleCopyToClipboard}
+              onBack={() => navigate('/')}
+              onDrawOutcomeTrend={handleDrawOutcomeTrend}
+              onRegenerateData={handleRegenerateData}
+            />
+          </div>
         )}
-
-        {showTrendDrawer && <TrendDrawer onComplete={handleTrendDrawComplete} onCancel={handleTrendDrawCancel} />}
-
-        <Toast message={toastMessage} />
       </div>
 
-      <div className="px-6 pt-10 pb-20 max-lg:px-5 max-md:px-4">
-        <SeoContentBlock content={seoPages['/market-page'].content} />
-      </div>
+      {cropperImage && (
+        <ImageCropper imageSrc={cropperImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />
+      )}
+
+      {showTrendDrawer && <TrendDrawer onComplete={handleTrendDrawComplete} onCancel={handleTrendDrawCancel} />}
+
+      <Toast message={toastMessage} />
     </div>
   );
 }
