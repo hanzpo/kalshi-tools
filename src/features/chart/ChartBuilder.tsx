@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { MarketConfig } from '../../types';
 import { ControlPanel } from './ControlPanel';
 import { ChartPreview } from './ChartPreview';
+import { SeoContentBlock } from '../../components/seo/SeoContentBlock';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { TrendDrawer } from '../../components/shared/TrendDrawer';
 import { Toast } from '../../components/ui/Toast';
@@ -9,6 +10,7 @@ import { getOutcomeColor } from '../../lib/colorGenerator';
 import { useChartBuilderState } from '../../hooks/useChartBuilderState';
 import { trackEvent } from '../../lib/analytics';
 import { KalshiImportResult } from '../../lib/kalshiApi';
+import { seoPages } from '../../seo/routes';
 import { layout } from '../../styles/layout';
 
 const CHART_PREVIEW_ID = 'chart-preview';
@@ -101,6 +103,8 @@ export default function ChartBuilder() {
           />
         </div>
       </div>
+
+      <SeoContentBlock content={seoPages['/chart'].content} />
 
       {cropperImage && (
         <ImageCropper imageSrc={cropperImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />

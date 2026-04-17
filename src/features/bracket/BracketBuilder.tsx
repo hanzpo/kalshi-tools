@@ -12,11 +12,13 @@ import {
 } from './bracketData';
 import { BracketMaker } from './BracketMaker';
 import { BracketPreview, BRACKET_PREVIEW_ID } from './BracketPreview';
+import { SeoContentBlock } from '../../components/seo/SeoContentBlock';
 import { Toast } from '../../components/ui/Toast';
 import { captureElementAsPng, copyDataUrlToClipboard, downloadDataUrl } from '../../lib/imageExport';
 import { createFileName } from '../../lib/chartHelpers';
 import { useToast } from '../../hooks/useToast';
 import { trackEvent } from '../../lib/analytics';
+import { seoPages } from '../../seo/routes';
 import { layout } from '../../styles/layout';
 
 export type BracketView = 'r32' | 'r64';
@@ -147,6 +149,8 @@ export default function BracketBuilder() {
           <BracketPreview config={config} onPick={handlePick} view={bracketView} />
         </div>
       </div>
+
+      <SeoContentBlock content={seoPages['/bracket'].content} />
 
       <Toast message={toastMessage} />
     </div>

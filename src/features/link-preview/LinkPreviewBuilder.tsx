@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ControlPanel } from '../chart/ControlPanel';
 import { LinkPreviewPreview } from './LinkPreviewPreview';
+import { SeoContentBlock } from '../../components/seo/SeoContentBlock';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { TrendDrawer } from '../../components/shared/TrendDrawer';
 import { Toast } from '../../components/ui/Toast';
 import { useChartBuilderState } from '../../hooks/useChartBuilderState';
 import { trackEvent } from '../../lib/analytics';
+import { seoPages } from '../../seo/routes';
 import { layout } from '../../styles/layout';
 
 const PREVIEW_ID = 'link-preview';
@@ -101,6 +103,8 @@ export default function LinkPreviewBuilder() {
           />
         </div>
       </div>
+
+      <SeoContentBlock content={seoPages['/link-preview'].content} />
 
       {cropperImage && (
         <ImageCropper

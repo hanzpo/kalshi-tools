@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { TradeSlipConfig } from '../../types';
 import { TradeSlipMaker } from './TradeSlipMaker';
 import { TradeSlipPreview } from './TradeSlipPreview';
+import { SeoContentBlock } from '../../components/seo/SeoContentBlock';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { Toast } from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { useExport } from '../../hooks/useExport';
 import { useImagePaste } from '../../hooks/useImageUpload';
 import { trackEvent } from '../../lib/analytics';
+import { seoPages } from '../../seo/routes';
 import { layout } from '../../styles/layout';
 
 const TRADE_SLIP_PREVIEW_ID = 'trade-slip-preview';
@@ -155,6 +157,8 @@ export default function TradeSlipBuilder() {
           <TradeSlipPreview config={config} />
         </div>
       </div>
+
+      <SeoContentBlock content={seoPages['/trade-slip'].content} />
 
       {cropperImage && (
         <ImageCropper

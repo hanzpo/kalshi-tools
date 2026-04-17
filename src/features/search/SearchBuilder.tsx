@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { ControlPanel } from '../chart/ControlPanel';
 import { ChartPreview } from '../chart/ChartPreview';
+import { SeoContentBlock } from '../../components/seo/SeoContentBlock';
 import { ImageCropper } from '../../components/shared/ImageCropper';
 import { TrendDrawer } from '../../components/shared/TrendDrawer';
 import { Toast } from '../../components/ui/Toast';
 import { useChartBuilderState } from '../../hooks/useChartBuilderState';
 import { trackEvent } from '../../lib/analytics';
+import { seoPages } from '../../seo/routes';
 import { layout } from '../../styles/layout';
 
 const CHART_PREVIEW_ID = 'chart-preview';
@@ -62,6 +64,8 @@ export default function SearchBuilder() {
           />
         </div>
       </div>
+
+      <SeoContentBlock content={seoPages['/search'].content} />
 
       {cropperImage && (
         <ImageCropper imageSrc={cropperImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />
