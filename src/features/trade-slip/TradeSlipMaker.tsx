@@ -129,21 +129,12 @@ export function TradeSlipMaker({
           <>
             <div className={ctrl.group}>
               <label htmlFor="bet-odds">Odds (%)</label>
-              <div className={ctrl.sliderWrapper}>
-                <input
-                  id="bet-odds"
-                  type="range"
-                  className="slider-input"
-                  value={config.odds}
-                  onChange={(e) => onConfigChange({ odds: Math.round(Number(e.target.value) * 10) / 10 })}
-                  min="0.1"
-                  max="99.9"
-                  step="0.1"
-                />
-                <div className="flex items-center justify-end gap-1.5">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5">
                   <input
                     type="number"
-                    className={`${ctrl.inputInline} w-20 py-1 text-right`}
+                    aria-label="Odds percent"
+                    className={`${ctrl.inputInline} w-24 py-1 pl-2 pr-1`}
                     value={config.odds}
                     onChange={(e) => {
                       const raw = parseFloat(e.target.value);
@@ -155,8 +146,18 @@ export function TradeSlipMaker({
                     max="99.9"
                     step="0.1"
                   />
-                  <span className="text-[13px] text-text-primary">% chance</span>
+                  <span className="text-[13px] text-text-secondary">% chance</span>
                 </div>
+                <input
+                  id="bet-odds"
+                  type="range"
+                  className="slider-input"
+                  value={config.odds}
+                  onChange={(e) => onConfigChange({ odds: Math.round(Number(e.target.value) * 10) / 10 })}
+                  min="0.1"
+                  max="99.9"
+                  step="0.1"
+                />
               </div>
               <p className={ctrl.helpText}>Expected payout: ${payout.toLocaleString()}</p>
             </div>
@@ -254,8 +255,6 @@ export function TradeSlipMaker({
                 min="0"
                 step="1"
               />
-
-
             </div>
           </>
         ) : null}
@@ -339,8 +338,6 @@ export function TradeSlipMaker({
               />
               Show Date/Time
             </label>
-
-
           </div>
         )}
 
@@ -355,8 +352,6 @@ export function TradeSlipMaker({
             />
             Show Watermark
           </label>
-
-
         </div>
 
         <div className={ctrl.checkboxGroup}>
@@ -370,8 +365,6 @@ export function TradeSlipMaker({
             />
             Show "Cashed out" Badge
           </label>
-
-
         </div>
 
         <div className={ctrl.checkboxGroup}>
@@ -385,12 +378,10 @@ export function TradeSlipMaker({
             />
             Paid Out
           </label>
-
-
         </div>
       </div>
 
-      <div className="mt-2 flex gap-2">
+      <div className={ctrl.actions}>
         <button
           onClick={onExport}
           className={`${ctrl.btnExport} flex-1`}
