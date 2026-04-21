@@ -380,7 +380,7 @@ export function MarketPageMaker({
                   </div>
                 </div>
                 <button
-                  className={`${ctrl.btnDraw} mt-2 w-full`}
+                  className={ctrl.btnDraw}
                   onClick={() => onDrawOutcomeTrend(outcome.id)}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -430,7 +430,7 @@ export function MarketPageMaker({
           </div>
         </div>
 
-        <button className={`${ctrl.btnRegen} w-full`} onClick={onRegenerateData}>
+        <button className={ctrl.btnRegen} onClick={onRegenerateData}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M23 4v6h-6" />
             <path d="M1 20v-6h6" />
@@ -438,8 +438,6 @@ export function MarketPageMaker({
           </svg>
           Regenerate All Trends
         </button>
-
-
       </div>
 
       {/* User Profile Section */}
@@ -572,7 +570,7 @@ export function MarketPageMaker({
       </div>
 
       {/* Export Buttons */}
-      <div className="mt-2 flex gap-2">
+      <div className={ctrl.actions}>
         <button className={`${ctrl.btnExport} flex-1`} onClick={onExport}>
           <DownloadIcon />
           Export as PNG

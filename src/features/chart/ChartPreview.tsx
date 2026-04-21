@@ -208,12 +208,20 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
             />
           )}
           <div className="min-w-0">
-            <div
-              className="mb-2 text-[12px] font-medium tracking-[0.01em]"
-              style={{ color: secondaryTextColor }}
-            >
-              Kalshi Market
-            </div>
+            {config.showCategoryLabel !== false && (() => {
+              const parts = [config.category, config.subcategory]
+                .map((part) => part?.trim())
+                .filter(Boolean);
+              const label = parts.length > 0 ? parts.join(' · ') : 'Kalshi Market';
+              return (
+                <div
+                  className="mb-2 text-[12px] font-medium tracking-[0.01em]"
+                  style={{ color: secondaryTextColor }}
+                >
+                  {label}
+                </div>
+              );
+            })()}
             <h2
               className="max-w-[720px] leading-[0.95] tracking-[-0.02em]"
               style={{
@@ -237,23 +245,9 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
       </div>
 
       <div
-        className="mb-3.5 flex items-center justify-between border-b pb-3"
+        className="mb-3.5 flex items-center justify-end border-b pb-3"
         style={{ borderColor }}
       >
-        <div
-          className="grid size-9 place-items-center rounded-xl"
-          style={{
-            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
-            border: `1px solid ${borderColor}`,
-          }}
-        >
-          <div className="space-y-0.5">
-            <div className="h-[2px] w-4 rounded-full" style={{ backgroundColor: iconColor }} />
-            <div className="h-[2px] w-4 rounded-full" style={{ backgroundColor: iconColor }} />
-            <div className="h-[2px] w-4 rounded-full" style={{ backgroundColor: iconColor }} />
-          </div>
-        </div>
-
         <KalshiLogo
           width={58}
           height={17}
@@ -300,9 +294,9 @@ export function ChartPreview({ config, data, onTimeHorizonChange }: ChartPreview
       <div
         className="mb-3 w-full"
         style={{
-          aspectRatio: '4.15 / 1',
-          minHeight: '170px',
-          maxHeight: '205px',
+          aspectRatio: '3.1 / 1',
+          minHeight: '240px',
+          maxHeight: '300px',
         }}
       >
         <ParentSize>

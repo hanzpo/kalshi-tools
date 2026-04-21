@@ -44,6 +44,10 @@ export const ctrl = {
   btnExport: 'flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-brand px-2.5 py-2 text-[13px] font-semibold text-brand-dark transition-[background-color] duration-150 hover:bg-[#00BB7D]',
   /** Draw button */
   btnDraw: 'flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[5px] border-none bg-[#3b82f6] px-2.5 py-2 text-[13px] font-medium text-white transition-[background-color] duration-150 hover:bg-[#2563eb]',
+  /** Actions row (export + copy, etc.) at the bottom of a control panel */
+  actions: 'mt-2 flex gap-2',
+  /** Actions column (stacked buttons) at the bottom of a control panel */
+  actionsColumn: 'mt-2 flex flex-col gap-2',
   /** Checkbox group wrapper (label + helpText) — no auto-styling on label */
   checkboxGroup: 'mb-2.5 [&>p]:mt-0.5',
   /** Checkbox label */

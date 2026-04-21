@@ -47,6 +47,9 @@ export function useChartBuilderState({
     forecastValue: 128000,
     forecastUnit: 'K',
     mutuallyExclusive: true,
+    category: 'Kalshi',
+    subcategory: 'Market',
+    showCategoryLabel: true,
     ...initialOverrides,
   }));
 

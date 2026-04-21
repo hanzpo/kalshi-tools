@@ -510,7 +510,7 @@ export function ControlPanel({
               onDragOver={handleLeftDragOver}
               onDragLeave={handleLeftDragLeave}
               onDrop={handleLeftDrop}
-              className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDraggingLeft ? 'border-brand bg-[#01201A]' : 'border-dark-border-light bg-dark-surface'}`}
+              className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer ${isDraggingLeft ? 'border-brand bg-[#01201A]' : 'border-dark-border-light bg-dark-surface'}`}
             >
               <input
                 id="left-image"
@@ -550,7 +550,7 @@ export function ControlPanel({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer mb-1 ${isDragging ? 'border-brand bg-[#01201A]' : 'border-dark-border-light bg-dark-surface'}`}
+            className={`rounded-[5px] px-3 py-4 flex items-center justify-center min-h-12 border-[1.5px] border-dashed transition-[border-color,background-color] duration-150 cursor-pointer ${isDragging ? 'border-brand bg-[#01201A]' : 'border-dark-border-light bg-dark-surface'}`}
           >
             <input
               id="market-image"
@@ -578,6 +578,48 @@ export function ControlPanel({
           </div>
         </div>
 
+        {mode === 'chart' && (
+          <>
+            <div className={ctrl.group}>
+              <label htmlFor="category">Category</label>
+              <div className="flex items-center gap-2">
+                <input
+                  id="category"
+                  type="text"
+                  className={`${ctrl.inputInline} min-w-0 flex-1`}
+                  placeholder="e.g., Sports"
+                  value={config.category ?? ''}
+                  onChange={(e) => onConfigChange({ category: e.target.value })}
+                  disabled={config.showCategoryLabel === false}
+                />
+                <span className="text-text-muted" aria-hidden>·</span>
+                <input
+                  id="subcategory"
+                  type="text"
+                  className={`${ctrl.inputInline} min-w-0 flex-1`}
+                  placeholder="e.g., Basketball"
+                  value={config.subcategory ?? ''}
+                  onChange={(e) => onConfigChange({ subcategory: e.target.value })}
+                  disabled={config.showCategoryLabel === false}
+                />
+              </div>
+              <p className={ctrl.helpText}>Leave one blank to show a single label without the dot</p>
+            </div>
+            <div className={ctrl.checkboxGroup}>
+              <label htmlFor="show-category-label" className={ctrl.checkboxLabel}>
+                <input
+                  id="show-category-label"
+                  type="checkbox"
+                  checked={config.showCategoryLabel !== false}
+                  onChange={(e) => onConfigChange({ showCategoryLabel: e.target.checked })}
+                  className={ctrl.checkboxInput}
+                />
+                Show category above title
+              </label>
+            </div>
+          </>
+        )}
+
         <div className={ctrl.group}>
           <label htmlFor="market-title">Market Title</label>
           <input
@@ -599,7 +641,7 @@ export function ControlPanel({
           <label htmlFor="market-type">Market Type</label>
           <select
             id="market-type"
-            className={`${ctrl.input} mt-0 px-2.5 py-2 border border-[#333] rounded-[5px] bg-[#141414] text-sm text-[#e5e7eb] cursor-pointer transition-[border-color] duration-150 w-full`}
+            className={`${ctrl.input} cursor-pointer`}
             value={config.marketType}
             onChange={(e) => handleMarketTypeChange(e.target.value as MarketType)}
           >
@@ -939,7 +981,7 @@ export function ControlPanel({
         </div>
       )}
 
-      <div className="mt-2 flex flex-col gap-2">
+      <div className={ctrl.actionsColumn}>
         <button
           onClick={onRegenerateData}
           className={ctrl.btnRegen}

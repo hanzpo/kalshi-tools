@@ -27,6 +27,9 @@ export interface MarketConfig {
   mutuallyExclusive?: boolean; // For multi-outcome markets: true = odds sum to 100%, false = independent odds
   searchQuery?: string; // For Google search result builder
   darkMode?: boolean; // Enable dark mode for the chart
+  category?: string; // First half of breadcrumb above title (e.g., "Sports")
+  subcategory?: string; // Second half of breadcrumb above title (e.g., "Basketball")
+  showCategoryLabel?: boolean; // Whether to display the category breadcrumb
 }
 
 export interface DataPoint {

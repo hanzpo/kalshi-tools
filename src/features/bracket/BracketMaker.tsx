@@ -103,7 +103,7 @@ export function BracketMaker({
       </div>
 
       {!hintDismissed && (
-        <div className="mb-4 flex items-start gap-3 rounded-lg border border-dark-border bg-dark-elevated px-4 py-3">
+        <div className="mb-3 flex items-start gap-3 rounded-lg border border-dark-border bg-dark-elevated px-4 py-3">
           <p className="flex-1 text-xs leading-relaxed text-text-secondary">
             All 64 teams are available — tap any first-round matchup on the bracket to toggle the winner.
           </p>
@@ -163,7 +163,7 @@ export function BracketMaker({
       </div>
 
       {/* Actions */}
-      <div className="mt-2 flex flex-col gap-2">
+      <div className={ctrl.actionsColumn}>
         <button onClick={onShare} className={ctrl.btnExport}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="18" cy="5" r="3" />
