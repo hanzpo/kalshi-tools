@@ -203,13 +203,8 @@ function eventToImportResult(response: KalshiEventResponse): KalshiImportResult 
 
   const totalVolume = markets.reduce((sum, m) => sum + (m.volume || 0), 0);
 
-  // Build title with subtitle if available
-  const title = event.sub_title
-    ? `${event.title} ${event.sub_title}`
-    : event.title;
-
   return {
-    title,
+    title: event.title,
     image: null,
     marketType: 'multi',
     currentOdds: 50, // Not used for multi

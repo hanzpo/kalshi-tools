@@ -1,4 +1,4 @@
-const OUTCOME_COLORS = ['#00DD94', '#4662f5', '#191919'];
+const OUTCOME_COLORS = ['#2AD39C', '#4B73FF', '#191919'];
 
 function generateRandomColor(): string {
   const hue = Math.floor(Math.random() * 360);
@@ -13,4 +13,3 @@ export function getOutcomeColor(index: number): string {
   }
   return generateRandomColor();
 }
-

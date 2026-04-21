@@ -135,12 +135,28 @@ export function TradeSlipMaker({
                   type="range"
                   className="slider-input"
                   value={config.odds}
-                  onChange={(e) => onConfigChange({ odds: Number(e.target.value) })}
-                  min="1"
-                  max="99"
-                  step="1"
+                  onChange={(e) => onConfigChange({ odds: Math.round(Number(e.target.value) * 10) / 10 })}
+                  min="0.1"
+                  max="99.9"
+                  step="0.1"
                 />
-                <div className={ctrl.sliderValue}>{config.odds}% chance</div>
+                <div className="flex items-center justify-end gap-1.5">
+                  <input
+                    type="number"
+                    className={`${ctrl.inputInline} w-20 py-1 text-right`}
+                    value={config.odds}
+                    onChange={(e) => {
+                      const raw = parseFloat(e.target.value);
+                      if (!Number.isFinite(raw)) return;
+                      const clamped = Math.min(99.9, Math.max(0.1, raw));
+                      onConfigChange({ odds: Math.round(clamped * 10) / 10 });
+                    }}
+                    min="0.1"
+                    max="99.9"
+                    step="0.1"
+                  />
+                  <span className="text-[13px] text-text-primary">% chance</span>
+                </div>
               </div>
               <p className={ctrl.helpText}>Expected payout: ${payout.toLocaleString()}</p>
             </div>
